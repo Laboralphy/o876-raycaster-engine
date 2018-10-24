@@ -160,7 +160,7 @@ const COLORS = {
 class Rainbow {
 	/**
 	 * Concatenates an array of 4bits value into an int
-	 * @param ...n {number[]}
+	 * @param n {number[]}
 	 * @return {number}
 	 */
 	static nibbles(...n) {
@@ -278,8 +278,7 @@ class Rainbow {
 			return a;
 		}
 		
-		return 
-			fillArray([], c1, c2, 0, nSteps - 1)
+		return fillArray([], c1, c2, 0, nSteps - 1)
 			.map(c => Rainbow.rgba(c));
 	}
 	
@@ -306,7 +305,7 @@ class Rainbow {
 	 */
 	static gradient(oPalette) {
 		let aPalette = [];
-		let sColor = null;
+		let sColor;
 		let sLastColor = null;
 		let nPal;
 		let nLastPal = 0;

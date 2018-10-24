@@ -38,18 +38,18 @@ const testConfig = {
     plugins: [
     ],
     target: 'node'
-}
+};
 
 
 const exampleConfig = {
     mode: "development",
     entry: {
-        extest: path.resolve(__dirname, 'examples/test/index.js')
+        devtest: path.resolve(__dirname, 'examples/devtest/index.js')
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
         libraryTarget: 'umd',
-        filename: 'bundle.js',
+        filename: 'example-[name].js',
     },
     devtool: 'source-map',
     module: {
@@ -59,6 +59,6 @@ const exampleConfig = {
     plugins: [
     ],
     target: 'web'
-}
+};
 
 module.exports = [devConfig, testConfig, exampleConfig];

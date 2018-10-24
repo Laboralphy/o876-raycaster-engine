@@ -11,10 +11,10 @@ class World {
 		this.visual = {		// all things visual
 			fog: {			// fog setting (at long distance)
 				color: '',	// fog color
-				intensity: 0, // fog intensity
+				distance: 0, // distance where the fog at full intensity
 			},
 			filter: '',		// color filter for sprites (ambient color)
-			brightness: 0	// if > 0 then wall are emiting light that counters fog
+			brightness: 0	// base brightness
 		};
 	}
 }

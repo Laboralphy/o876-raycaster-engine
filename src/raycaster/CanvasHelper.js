@@ -14,19 +14,17 @@ class CanvasHelper {
 	
 	/**
 	 * Sets canvas image smoothing flag on or off
-	 * @param oContext HTMLContext2D
+	 * @param oCanvas {HTMLCanvasElement}
 	 * @param b {boolean} true = smoothing on // false = smoothing off
 	 */
 	static setImageSmoothing(oCanvas, b) {
 		let oContext = oCanvas.getContext('2d');
-		oContext.mozImageSmoothingEnabled = b;
-		oContext.msImageSmoothingEnabled = b;
 		oContext.imageSmoothingEnabled = b;
 	}
 	
 	/**
 	 * Returns canvas image smoothing flag
-	 * @param oContext HTMLContext2D
+     * @param oCanvas {HTMLCanvasElement}
 	 * @return {boolean} true = smoothing on // false = smoothing off
 	 */
 	static getImageSmoothing(oCanvas) {
@@ -36,6 +34,7 @@ class CanvasHelper {
 	
 	/**
 	 * Returns true if parameter is an instance of a real canvas
+     * @param c {*}
 	 * @return {boolean}
 	 */
 	static isCanvas(c) {
@@ -44,6 +43,7 @@ class CanvasHelper {
 
 	/**
 	 * Returns true if parameter is an instance of an image
+     * @param c {*}
 	 * @return {boolean}
 	 */
 	static isImage(c) {
@@ -115,10 +115,10 @@ class CanvasHelper {
 	static loadCanvas(sUrl) {
 		return new Promise((resolve, reject) => {
 			const image = new Image();
-			image.addEventListener('load', event => {
+			image.addEventListener('load', () => {
 				resolve(CanvasHelper.cloneCanvas(image));
 			});
-			image.addEventListener('error', event => {
+			image.addEventListener('error', () => {
 				reject(new Error('CanvasHelper.loadImage : Error while loading this image : ' + sUrl));
 			});
 			image.src = sUrl;
