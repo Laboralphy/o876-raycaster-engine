@@ -1,12 +1,11 @@
 import CanvasHelper from './CanvasHelper';
+import ShadedTileSet from './ShadedTileSet';
 
 
 /**
- * this class allows to add some properties to a 2-dimensional array in order to extend the basic definition of cells
- * in the raycaster map.
+ * this class allows to add some properties to each surface of a 2-dimensional array of cells
  */
-
-class MetaMap {
+class CellSurfaceManager {
     constructor() {
         this._map = null;
         this._width = 0;
@@ -21,7 +20,7 @@ class MetaMap {
      * @param w {number} new width
      * @param h {number} new height
      */
-    setSize(w, h) {
+    setMapSize(w, h) {
         this._map = [];
         let aBlock, aRow, x, y, nSide;
         this._width = w;
@@ -34,7 +33,7 @@ class MetaMap {
                     aBlock.push({
                         x,
                         y,
-                        surface: null,
+                        tileset: null,
                         diffuse: 0,
                         imageData: null,  // these are for the flat textures
                         imageData32: null
@@ -47,13 +46,13 @@ class MetaMap {
     }
 
     /**
-     * retrieves data corresponding to the wall of the cell with matching coordinate
+     * retrieves data corresponding to the surface of the cell with matching coordinate
      * @param x {number} cell coordinates
      * @param y {number} cell coordinates
      * @param nSide {number} wall index (0 - 5)
      * @returns {*}
      */
-    get(x, y, nSide) {
+    getSurface(x, y, nSide) {
         if (x < 0 || y < 0) {
             throw new Error('x or y out of bound ' + x + ', ' + y);
         }
@@ -61,40 +60,40 @@ class MetaMap {
     }
 
     /**
-     * sets data corresponding to the wall of the cell with matching coordinate
+     * sets data corresponding to the surface of the cell with matching coordinate
      * @param x {number} cell coordinates
      * @param y {number} cell coordinates
      * @param nSide {number} wall index (0 - 5)
      * @param xValue {*}
      */
-    set(x, y, nSide, xValue) {
+    setSurface(x, y, nSide, xValue) {
         this._map[y][x][nSide] = xValue;
     }
 
     /**
-     * Permet de faire tourner les textures additionnel générée avec cloneTexture
-     * Cela permet d'avoir 4 états de textures aditionnelle
-     * Par exemple on peut créer une texture additionnelle et la camoufler par
-     * rotation puis la faire réapparaitre.
-     * Cette opération est plus rapide que de tout redessiner
-     * @param x coordonnée bloc à tourner
-     * @param y
-     * @param n sens de rotation true ou false
+     * Rotates all wall surfaces of a cell.
+     * case 1 : wall-surface 0 becomes 3, wall-surface 1 becomes 0, wall-surface 2 becomes 1...
+     * case 2 : wall-surface 0 becomes 1, wall-surface 1 becomes 2, wall-surface 2 becomes 3...
+     * This mechanism is use to create a hidden texture, and show it when needed without redrawing it
+     * (because redrawing additional texture takes time)
+     * @param x {number} cell coordinates
+     * @param y {number} cell coordinates
+     * @param bClockwise {boolean} true = clockwise, false = counter clockwise... or not
      * true : 0 devient 3, 1 devient 0...
      * false : 0 devient 1, 1 devient 2, 2 devient 3, 3 devient 0
      */
-    rotateWallSurfaces(x, y, n) {
+    rotateWallSurfaces(x, y, bClockwise) {
         let mxy = this._map[y][x];
         let a = mxy
             .slice(0, 4)
-            .map(m => m.surface);
-        if (n) {
+            .map(m => m.tileset);
+        if (bClockwise) {
             a.push(a.shift());
         } else {
             a.unshift(a.pop());
         }
         a.forEach((m, i) => {
-            mxy[i].surface = m;
+            mxy[i].tileset = m;
         });
     }
 
@@ -111,16 +110,15 @@ class MetaMap {
     /**
      * create a copy of the texture of the specified wall.
      * returns the newly made canvas (so we can draw things on it).
-     * @param oTextures {*} wall textures
+     * @param oTileSet {ShadedTileSet} tileset of wall
      * @param iTexture {number} wall texture index
      * @param x {number} cell coordinate
      * @param y {number} cell coordinate
      * @param nSide {number} wall side index
-     * @return {HTMLCanvasElement}
      */
-    cloneTexture(oTextures, iTexture, x, y, nSide) {
+    cloneTexture(oTileSet, iTexture, x, y, nSide) {
         let oCanvas;
-        let oBlock = this.get(x, y, nSide);
+        let oSurface = this.getSurface(x, y, nSide);
         let w = this._wBlock;
         let h;
         if (nSide < 4) {
@@ -129,21 +127,21 @@ class MetaMap {
         } else {
             // flat texture
             h = w;
-            oBlock.imageData = null;
-            oBlock.imageData32 = null;
+            oSurface.imageData = null;
+            oSurface.imageData32 = null;
         }
-        if (oBlock.surface === null) {
-            oBlock.surface = oCanvas = CanvasHelper.createCanvas(w, h);
+        let nsts = oTileSet.createFragment(iTexture);
+        if (oSurface.tileset === null) {
+            oSurface.tileset = nsts;
         } else {
-            oCanvas = oBlock.surface;
+            oCanvas = oSurface.tileset;
         }
-        oCanvas.getContext('2d').drawImage(oTextures, iTexture * w, 0, w, h, 0, 0, w, h);
-        return oCanvas;
+        oCanvas.getContext('2d').drawImage(oTileSet, iTexture * w, 0, w, h, 0, 0, w, h);
     }
 
     removeClone(x, y, nSide) {
-        this.get(x, y, nSide).surface = null;
+        this.getSurface(x, y, nSide).tileset = null;
     }
 }
 
-export default MetaMap;
+export default CellSurfaceManager;

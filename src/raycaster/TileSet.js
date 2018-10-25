@@ -53,6 +53,19 @@ class TileSet {
 	getImage() {
 		return this._image;
 	}
+
+    /**
+	 * extract a tile into a new canvas
+     * @param iTile {number}
+	 * @return {HTMLCanvasElement}
+     */
+	getImageFragment(iTile) {
+		let oNewCanvas = CanvasHelper.createCanvas(this.getTileWidth(), this.getTileHeight());
+		let oContext = oNewCanvas.getContext('2d');
+		let r = this.getTileRect(iTile);
+		oContext.drawImage(this.getImage(), r.x, r.y, r.width, r.height, 0, 0, r.width, r.height);
+		return oNewCanvas;
+	}
 	
 	/**
 	 * Return the coordinates of the tile which index is given as parameter

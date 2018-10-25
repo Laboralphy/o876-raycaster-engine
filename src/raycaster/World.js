@@ -5,7 +5,7 @@
 class World {
 	constructor() {
 		this.metrics = {
-			height: 0,	// normal height of walls
+			height: 0,	// wallXed height of walls
 			spacing: 0, // size of a cell, on the floor
 		};
 		this.visual = {		// all things visual

@@ -16,7 +16,9 @@ async function main() {
 	let sts = new ShadedTileSet();
 	sts.setTileSet(ts);
 	sts.compute('#000000', '#808080', 0);
-	ctx.drawImage(sts._tileSets[5].getImage(), 0, 0);
+	let sts2 = sts.createFragment(3);
+    ctx.drawImage(sts2._tileSets[0].getImage(), 0, 0);
+    ctx.drawImage(sts2._tileSets[4].getImage(), 64, 96);
 }
 
 window.addEventListener('load', main);

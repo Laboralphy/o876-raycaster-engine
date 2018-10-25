@@ -2,6 +2,9 @@ import CanvasHelper from './CanvasHelper';
 import Rainbow from './Rainbow';
 import TileSet from './TileSet';
 
+
+const SHADING_LAYERS = 16;
+
 /**
  * This class manages several layers of tilesets,
  * layers have differents shade factors.
@@ -9,7 +12,42 @@ import TileSet from './TileSet';
  * in order to optimize rendering time
  */
 class ShadedTileSet {
-	
+
+	constructor() {
+		this._shadingLayers = SHADING_LAYERS;
+	}
+
+    /**
+	 * defines the number of shading layer (default 16)
+	 * the more layers, the smoother the shading looks
+     * @param n {number}
+     */
+    setShadingLayerCount(n) {
+        this._shadingLayers = n;
+    }
+
+    /**
+     * gets the number of shading layer
+     * @return {number}
+     */
+    getShadingLayerCount() {
+        return this._shadingLayers;
+    }
+
+    /**
+	 * This function will instanciate a TileSet before shading it
+	 * so the application using ShadedTileSet doesn't require to import TileSet any longer.
+     * @param oImage {Image|HTMLCanvasElement}
+     * @param w {number} size of a tile
+     * @param h {number}
+     */
+	setImage(oImage, w, h) {
+		let ts = new TileSet();
+		ts.setTileWidth(w);
+		ts.setTileHeight(h);
+		ts.setImage(oImage);
+		this.setTileSet(ts);
+	}
 	
 	setTileSet(ts) {
 		ts.rebuildOneRow();
@@ -22,15 +60,36 @@ class ShadedTileSet {
 	compute(sColorFog, sColorFilter, fAmbLightness) {
 		this._tileSets = [];
 		let ots = this._originalTileSet;
-		const SHADING_LAYERS = 16;
-		for (let i = 0; i < SHADING_LAYERS; ++i) {
-			let fFactor = Math.min(i / (SHADING_LAYERS - 1), 1) * (1 - fAmbLightness);
+		for (let i = 0; i < this._shadingLayers; ++i) {
+			let fFactor = Math.min(i / (this._shadingLayers - 1), 1) * (1 - fAmbLightness);
 			let ts = new TileSet();
 			ts.setTileWidth(ots.getTileWidth());
 			ts.setTileHeight(ots.getTileHeight());
 			ts.setImage(this.shadeImage(ots.getImage(), fFactor, sColorFog, sColorFilter));
 			this._tileSets.push(ts);
 		}
+	}
+
+
+    /**
+	 * extract a fragment (containing only one tile) of the shaded tileset into a new one
+     */
+	createFragment(iTile) {
+		const ots = this._originalTileSet;
+        const w = ots.getTileWidth();
+        const h = ots.getTileHeight();
+        const nsts = new ShadedTileSet();
+        nsts.setShadingLayerCount(this.getShadingLayerCount());
+        nsts._tileSets = [];
+		for (let i = 0, l = this.getShadingLayerCount(); i < l; ++i) {
+			let ts = this._tileSets[i];
+			let nts = new TileSet();
+			nts.setTileWidth(w);
+			nts.setTileHeight(h);
+			nts.setImage(ts.getImageFragment(iTile));
+            nsts._tileSets.push(nts);
+		}
+		return nsts;
 	}
 	
 	
@@ -60,7 +119,7 @@ class ShadedTileSet {
 		oCtx.globalCompositeOperation = 'source-over';
 		return oShaded;
 	}
-	
+
 	/**
 	 * Will apply a color filter to the given texture
 	 * The filter is an rbg structure with float factor values

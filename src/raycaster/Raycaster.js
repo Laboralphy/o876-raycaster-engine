@@ -1,7 +1,7 @@
 import TileSet from './TileSet';
 import ShadedTileSet from './ShadedTileSet';
 import MarkerRegistry from './MarkerRegistry';
-import MetaMap from './MetaMap';
+import CellSurfaceManager from './CellSurfaceManager';
 import * as CONSTS from './consts';
 
 
@@ -12,7 +12,8 @@ class Raycaster {
 		this._map = [];
         this._walls = []; // wall shaded tileset
         this._flats = []; // flat shaded tileset
-		this._metamap = new MetaMap();
+		this._csm = new CellSurfaceManager();
+
 	}
 
 
@@ -50,13 +51,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param height
      */
     static buildTileSet(oImage, width, height) {
-        const w = new TileSet();
-        w.setTileWidth(width);
-        w.setTileHeight(height);
-        w.setImage(oImage);
         const sw = new ShadedTileSet();
-        sw.setTileSet(w);
-        return sw
+        sw.setImage(oImage, width, height);
+        return sw;
     }
 
 
@@ -91,7 +88,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 row.push(0);
             }
 		});
-        this._metamap.setSize(nSize);
+        this._csm.setMapSize(nSize);
 	}
 
 	getMapSize() {
@@ -194,21 +191,21 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 		vSize,
 		nSpacing
     }) {
-        let fAngleLeft = fAngle - fViewAngle;
-        let fAngleRight = fAngle + fViewAngle;
-        let wx1 = Math.cos(fAngleLeft);
+        let fAngleLeft = fAngle - fViewAngle;       // angle value at the leftmost screen column
+        let fAngleRight = fAngle + fViewAngle;      // angle value at the rightmost screen column
+        let wx1 = Math.cos(fAngleLeft);             // w1 = (wx1, wy1) is a normalized position around camera for the leftmost point
         let wy1 = Math.sin(fAngleLeft);
-        let wx2 = Math.cos(fAngleRight);
+        let wx2 = Math.cos(fAngleRight);            // w2 = (wx2, wy2) is a normalized position around camera for the rightmost point
         let wy2 = Math.sin(fAngleRight);
-        let dx = (wx2 - wx1) / hSize;
+        let dx = (wx2 - wx1) / hSize;               // dx, dy help to determine all points between w1 and w2
         let dy = (wy2 - wy1) / hSize;
-        let fBx = wx1;
-        let fBy = wy1;
-        let xCam8 = xCamera / nSpacing | 0;
+        let fBx = wx1;                              // starting point for the raycasting process
+        let fBy = wy1;                              // (fBx, fBy) is meant to be modified by (dx, dy)
+        let xCam8 = xCamera / nSpacing | 0;         // cell where the camera is.
         let yCam8 = yCamera / nSpacing | 0;
         let i;
         let aZBuffer = [];
-        let scanSectors = new MarkerRegistry();
+        let scanSectors = new MarkerRegistry();     // registry of cells traversed by rays
         scanSectors.mark(xCam8, yCam8);
         // background
 
@@ -223,16 +220,22 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xl = b3d ? xLimitL : 0;
         let xr = b3d ? xLimitR : xScrSize;
 
-        let ctx = {
-        	resume: {
-        		b: false,
-				xi: 0,
-				yi: 0
+        let ctx = {         // raycasting context
+        	resume: {           // resume context
+        		b: false,       // next castRay must resume !
+				xi: 0,          // cell position of resuming
+				yi: 0           // ...
 			},
-			exterior: false,
-			distance: 0,
-			spacing: this._world.metrics.spacing,
-            nRayLimit: 100
+			exterior: false,    // the last ray hit an exterior line
+			distance: 0,        // the last computed distance (length of the last computed ray)
+            maxDistance: 100,   // maximum length of a ray. if a distance is greater than this value, the ray is not rendered
+			spacing: this._world.metrics.spacing,   // cell size
+            cellCode: 0,        // code of the last hit cell
+            xCell: 0,           // position of the last hit cell
+            yCell: 0,           // ...
+            wallSide: 0,        // side number of the wall of the last hitCell
+            wallXed: false,     // if true then the hit cell wall is X-axed
+            wallColumn: 0,      // index of the column of the last hit wall
 		};
 
         for (i = 0; i < vSize; ++i) {
@@ -257,7 +260,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXBlock = null; // meta data
         let oTexture; // texture data
         let iTexture; // offset inside the texture
-		let wWall = this._world.metrics.spacing;
+        let rTexture;
+		let wWall = ctx.spacing;
         let nMaxIterations = 6; // watchdog for performance
 
         if (!visibleRegistry) {
@@ -273,28 +277,28 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 // }
             } else if (ctx.distance >= 0) {
                 if (xScreen !== undefined) {
-                    oXBlock = this._metamap.get(ctx.xWall, ctx.yWall, ctx.nSideWall);
-                    if (oXBlock.surface) {
-                        oTexture = oXBlock.surface;
+                    oXBlock = this._csm.getSurface(ctx.xCell, ctx.yCell, ctx.cellSide);
+                    if (oXBlock.tileset) {
+                        oTexture = oXBlock.tileset;
                         iTexture = 0;
                     } else {
-                        oTexture = ctx._walls;
-                        iTexture = ctx.oWall.codes[ctx.nWallPanel & 0xFFF][ctx.nSideWall] * wWall; // **code12** code
+                        oTexture = this._walls;
+                        iTexture = ctx.oWall.codes[ctx.cellCode & 0xFFF][ctx.cellSide] * wWall; // **code12** code
                     }
                     /*
                     this.drawLine(
                     	xScreen,
 						ctx.distance,
 						iTexture,
-                        ctx.nWallPos | 0,
-						ctx.bSideWall,
+                        ctx.wallColumn | 0,
+						ctx.wallXed,
 						oTexture,
-                        ctx.nWallPanel,
+                        ctx.cellCode,
 						oXBlock.diffuse
 					);*/
                 }
                 if (ctx.resume.b) {
-                    exclusionRegistry.mark(ctx.xWall, ctx.yWall);
+                    exclusionRegistry.mark(ctx.xCell, ctx.yCell);
                 }
             }
             --nMaxIterations;
@@ -309,12 +313,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * Lorsque le rayon frappe un mur opaque, il s'arrete et la fonction renvoie la liste
      * des secteur traversé (visible).
      * La fonction mets à jour un objet contenant les propriétés suivantes :
-     *   nWallPanel    : Code du Paneau (texture) touché par le rayon
-     *   bSideWall     : Type de coté (X ou Y)
-     *   nSideWall     : Coté
-     *   nWallPos      : Position du point d'impact du rayon sur le mur
-     *   xWall         : position du mur sur la grille
-     *   yWall         :  "       "       "       "
+     *   cellCode    : Code du Paneau (texture) touché par le rayon
+     *   wallXed     : Type de coté (X ou Y)
+     *   cellSide     : Coté
+     *   wallColumn      : Position du point d'impact du rayon sur le mur
+     *   xCell         : position du mur sur la grille
+     *   yCell         :  "       "       "       "
      *   distance         : longueur du rayon
      * @param ctx objet de retour
      * @param x position de la camera
@@ -328,7 +332,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let side = 0;
         let map = this._map;
         let nMapSize = this.getMapSize();
-        let nScale = this._world.metrics.spacing;
+        let nScale = ctx.spacing;
 
         let
 			xi,  // the cell currently traversed
@@ -342,13 +346,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 			dyi,
 			xoff,
 			yoff,
-			cmax = ctx.nRayLimit,
-			oResume = ctx.resume;
+			cmax = ctx.maxDistance,
+			resume = ctx.resume;
 
-        if (oResume.b) {
+        if (resume.b) {
         	// the projet ray will continue from these coordinates
-            xi = oResume.xi;
-            yi = oResume.yi;
+            xi = resume.xi;
+            yi = resume.yi;
         } else {
         	// starting from the begining
             xi = x / nScale | 0;
@@ -473,7 +477,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             if (((xint / nScale | 0)) !== xi) {
                                 nPhys = nText = 0;
                             }
-                            if (nText !== 0	&& exclusionRegistryisMarked(xi, yi)) {
+                            if (nText !== 0	&& exclusionRegistry.isMarked(xi, yi)) {
                                 nPhys = nText = 0;
                             }
                         } else { // pas même mur -> wall
@@ -507,29 +511,29 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
         }
         if (c < cmax) {
-            ctx.nWallPanel = map[yi][xi];
-            ctx.bSideWall = side === 1;
-            ctx.nSideWall = side - 1;
-            ctx.nWallPos = ctx.bSideWall ? yint % ctx.spacing
+            ctx.cellCode = map[yi][xi];
+            ctx.wallXed = side === 1;
+            ctx.cellSide = side - 1;
+            ctx.wallColumn = ctx.wallXed ? yint % ctx.spacing
                 : xint % ctx.spacing;
-            if (ctx.bSideWall && dxi < 0) {
-                ctx.nWallPos = ctx.spacing - ctx.nWallPos;
-                ctx.nSideWall = 2;
+            if (ctx.wallXed && dxi < 0) {
+                ctx.wallColumn = ctx.spacing - ctx.wallColumn;
+                ctx.cellSide = 2;
             }
-            if (!ctx.bSideWall && dyi > 0) {
-                ctx.nWallPos = ctx.spacing - ctx.nWallPos;
-                ctx.nSideWall = 3;
+            if (!ctx.wallXed && dyi > 0) {
+                ctx.wallColumn = ctx.spacing - ctx.wallColumn;
+                ctx.cellSide = 3;
             }
-            ctx.xWall = xi;
-            ctx.yWall = yi;
+            ctx.xCell = xi;
+            ctx.yCell = yi;
             ctx.distance = t * nScale;
             ctx.exterior = false;
-            if (this.isWallTransparent(ctx.xWall, ctx.yWall)) {
-                oResume.b = true;
-                oResume.xi = xi;
-                oResume.yi = yi;
+            if (this.isWallTransparent(ctx.xCell, ctx.yCell)) {
+                resume.b = true;
+                resume.xi = xi;
+                resume.yi = yi;
             } else {
-                oResume.b = false;
+                resume.b = false;
             }
         } else {
             ctx.distance = t * nScale;
@@ -537,6 +541,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
     }
 
+    /**
+     * This function will return true if both ""
+     * @param nOfs
+     * @param x0
+     * @param y0
+     * @param xm
+     * @param ym
+     * @param fBx
+     * @param fBy
+     * @param ps
+     * @returns {boolean}
+     */
     static sameOffsetWall(nOfs, x0, y0, xm, ym, fBx, fBy, ps) {
         x0 += nOfs * fBx;
         y0 += nOfs * fBy;
