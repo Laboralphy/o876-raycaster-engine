@@ -108,7 +108,7 @@ class CellSurfaceManager {
     }
 
     /**
-     * create a copy of the texture of the specified wall.
+     * create a copy of the surface of the specified wall.
      * returns the newly made canvas (so we can draw things on it).
      * @param oTileSet {ShadedTileSet} tileset of wall
      * @param iTexture {number} wall texture index
@@ -116,27 +116,12 @@ class CellSurfaceManager {
      * @param y {number} cell coordinate
      * @param nSide {number} wall side index
      */
-    cloneTexture(oTileSet, iTexture, x, y, nSide) {
-        let oCanvas;
+    cloneSurface(oTileSet, iTexture, x, y, nSide) {
         let oSurface = this.getSurface(x, y, nSide);
-        let w = this._wBlock;
-        let h;
-        if (nSide < 4) {
-            // wall texture
-            h = this._hBlock;
-        } else {
-            // flat texture
-            h = w;
-            oSurface.imageData = null;
-            oSurface.imageData32 = null;
-        }
-        let nsts = oTileSet.createFragment(iTexture);
-        if (oSurface.tileset === null) {
-            oSurface.tileset = nsts;
-        } else {
-            oCanvas = oSurface.tileset;
-        }
-        oCanvas.getContext('2d').drawImage(oTileSet, iTexture * w, 0, w, h, 0, 0, w, h);
+        // in case of flat texture
+        oSurface.imageData = null;
+        oSurface.imageData32 = null;
+        oSurface.tileset = oTileSet.createFragment(iTexture);
     }
 
     removeClone(x, y, nSide) {

@@ -10,10 +10,12 @@ class Raycaster {
 	constructor() {
 		this._world = {};
 		this._map = [];
-        this._walls = []; // wall shaded tileset
-        this._flats = []; // flat shaded tileset
+        this._walls = null; // wall shaded tileset
+        this._flats = null; // flat shaded tileset
 		this._csm = new CellSurfaceManager();
-
+        this._cellCodes = []; // this is an array of array of sides
+        this._wallTextureWidth = 0; // wall texture width = floor texture width and height
+        this._wallTextureHeight = 0; // wall texture height
 	}
 
 
@@ -37,11 +39,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 	 * @param height {number} tile height
 	 */
     setWallTextures(oImage, width, height) {
+        this._wallTextureHeight = height;
+        this._wallTextureWidth = width;
         this._walls = this.buildTileSet(oImage, width, height);
     }
 
-    setFlatTextures(oImage, width, height) {
-        this._flats = this.buildTileSet(oImage, width, height);
+    setFlatTextures(oImage, width) {
+        this._wallTextureWidth = width;
+        this._flats = this.buildTileSet(oImage, width, width);
     }
 
     /**
@@ -88,36 +93,41 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 row.push(0);
             }
 		});
-        this._csm.setMapSize(nSize);
+        this._csm.setMapSize(nSize, nSize);
 	}
 
 	getMapSize() {
 		return this._map.length;
 	}
 
+    /**
+     * Associate a cell code with all textures (walls and flats)
+     * @param nCode {number}
+     * @param aTiles {{n, e, s, w, f, c}} structure of reference to wall tiles and flat tiles
+     * the structure of the aTiles parameter :
+     * {n: north-surface-wall, e: east-surface-wall, s: south-surface-wall, w: west-surface-wall, f: floor-surface, c: ceil-surface}
+     */
+    registerCellCode(nCode, {n, e, s, w, f, c}) {
+        this._cellCodes[nCode] = [n, e, s, w, f, c];
+    }
 
 
 
-
-
-
-
-
-/*
-                                  _   _                                  _              _   _
- _ __ ___   __ _ _ __    ___  ___| |_| |_ ___ _ __ ___    __ _ _ __   __| |   __ _  ___| |_| |_ ___ _ __ ___
-| '_ ` _ \ / _` | '_ \  / __|/ _ \ __| __/ _ \ '__/ __|  / _` | '_ \ / _` |  / _` |/ _ \ __| __/ _ \ '__/ __|
-| | | | | | (_| | |_) | \__ \  __/ |_| ||  __/ |  \__ \ | (_| | | | | (_| | | (_| |  __/ |_| ||  __/ |  \__ \
-|_| |_| |_|\__,_| .__/  |___/\___|\__|\__\___|_|  |___/  \__,_|_| |_|\__,_|  \__, |\___|\__|\__\___|_|  |___/
-                |_|                                                          |___/
-*/
+    /*
+                                      _   _                                  _              _   _
+     _ __ ___   __ _ _ __    ___  ___| |_| |_ ___ _ __ ___    __ _ _ __   __| |   __ _  ___| |_| |_ ___ _ __ ___
+    | '_ ` _ \ / _` | '_ \  / __|/ _ \ __| __/ _ \ '__/ __|  / _` | '_ \ / _` |  / _` |/ _ \ __| __/ _ \ '__/ __|
+    | | | | | | (_| | |_) | \__ \  __/ |_| ||  __/ |  \__ \ | (_| | | | | (_| | | (_| |  __/ |_| ||  __/ |  \__ \
+    |_| |_| |_|\__,_| .__/  |___/\___|\__|\__\___|_|  |___/  \__,_|_| |_|\__,_|  \__, |\___|\__|\__\___|_|  |___/
+                    |_|                                                          |___/
+    */
     /**
      * changes the texture code of a cell
      * @param x {number}
      * @param y {number}
      * @param code {number}
      */
-    setCellTexture(x, y, code) {
+    setCellCode(x, y, code) {
         let my = this._map[y];
         my[x] = my[x] & 0xFFFFF000 | (code & 0xFFF);
     }
@@ -150,7 +160,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y
      * @returns {number}
      */
-	getCellTexture(x, y) {
+	getCellCode(x, y) {
         return this._map[y][x] & 0xFFF;
 	}
 
@@ -182,23 +192,21 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 	 * this is phase 1 of rendering.
 	 * Builds an array of drawing operations
      */
-    computeDrawingOps({
-		xCamera,
-		yCamera,
-		fAngle,
-		fViewAngle,
-		hSize,
-		vSize,
-		nSpacing
-    }) {
-        let fAngleLeft = fAngle - fViewAngle;       // angle value at the leftmost screen column
-        let fAngleRight = fAngle + fViewAngle;      // angle value at the rightmost screen column
+    computeDrawingOps(xCamera, yCamera, fDirection) {
+        const METRICS = this._world.metrics;
+        const CAMERA = this._world.camera;
+        let hScreenSize = CAMERA.width;
+        let vScreenSize = CAMERA.height;
+        let fViewAngle = CAMERA.angle;
+        let nSpacing = METRICS.spacing;
+        let fAngleLeft = fDirection - fViewAngle;       // angle value at the leftmost screen column
+        let fAngleRight = fDirection + fViewAngle;      // angle value at the rightmost screen column
         let wx1 = Math.cos(fAngleLeft);             // w1 = (wx1, wy1) is a normalized position around camera for the leftmost point
         let wy1 = Math.sin(fAngleLeft);
         let wx2 = Math.cos(fAngleRight);            // w2 = (wx2, wy2) is a normalized position around camera for the rightmost point
         let wy2 = Math.sin(fAngleRight);
-        let dx = (wx2 - wx1) / hSize;               // dx, dy help to determine all points between w1 and w2
-        let dy = (wy2 - wy1) / hSize;
+        let dx = (wx2 - wx1) / hScreenSize;               // dx, dy help to determine all points between w1 and w2
+        let dy = (wy2 - wy1) / hScreenSize;
         let fBx = wx1;                              // starting point for the raycasting process
         let fBy = wy1;                              // (fBx, fBy) is meant to be modified by (dx, dy)
         let xCam8 = xCamera / nSpacing | 0;         // cell where the camera is.
@@ -214,13 +222,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 		// VR
 		let b3d = false;
 		let xLimitL = 0;
-		let xLimitR = vSize;
+		let xLimitR = vScreenSize;
 
 		// defines left and right limits ; no ray will be cast outside these limits
         let xl = b3d ? xLimitL : 0;
-        let xr = b3d ? xLimitR : xScrSize;
+        let xr = b3d ? xLimitR : vScreenSize;
 
         let ctx = {         // raycasting context
+            camera: {
+                x: xCamera,
+                y: yCamera,
+                a: fDirection
+            },
         	resume: {           // resume context
         		b: false,       // next castRay must resume !
 				xi: 0,          // cell position of resuming
@@ -238,7 +251,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             wallColumn: 0,      // index of the column of the last hit wall
 		};
 
-        for (i = 0; i < vSize; ++i) {
+        for (i = 0; i < vScreenSize; ++i) {
             if (i >= xl && i <= xr) { // checks limits
                 ctx.resume.b = false;
                 this.castRay(ctx, xCamera, yCamera, fBx, fBy, i, scanSectors);
@@ -246,10 +259,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             fBx += dx;
             fBy += dy;
         }
-
-
-
-
 	}
 
     /**
@@ -258,10 +267,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     castRay(ctx, x, y, dx, dy, xScreen, visibleRegistry) {
         let exclusionRegistry = new MarkerRegistry();
         let oXBlock = null; // meta data
-        let oTexture; // texture data
-        let iTexture; // offset inside the texture
-        let rTexture;
-		let wWall = ctx.spacing;
+        let oTileSet; // tileset
+        let xTile; // offset of the tile (x)
         let nMaxIterations = 6; // watchdog for performance
 
         if (!visibleRegistry) {
@@ -279,23 +286,19 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 if (xScreen !== undefined) {
                     oXBlock = this._csm.getSurface(ctx.xCell, ctx.yCell, ctx.cellSide);
                     if (oXBlock.tileset) {
-                        oTexture = oXBlock.tileset;
-                        iTexture = 0;
+                        oTileSet = oXBlock.tileset;
+                        xTile = 0;
                     } else {
-                        oTexture = this._walls;
-                        iTexture = ctx.oWall.codes[ctx.cellCode & 0xFFF][ctx.cellSide] * wWall; // **code12** code
+                        oTileSet = this._walls;
+                        xTile = oTileSet.getTileRect(this._cellCodes[ctx.cellCode & 0xFFF][ctx.cellSide]).x;
                     }
-                    /*
-                    this.drawLine(
+                    this.registerLine(
+                        ctx,
                     	xScreen,
-						ctx.distance,
-						iTexture,
-                        ctx.wallColumn | 0,
-						ctx.wallXed,
-						oTexture,
-                        ctx.cellCode,
+                        oTileSet,
+                        xTile,
 						oXBlock.diffuse
-					);*/
+					);
                 }
                 if (ctx.resume.b) {
                     exclusionRegistry.mark(ctx.xCell, ctx.yCell);
@@ -514,8 +517,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             ctx.cellCode = map[yi][xi];
             ctx.wallXed = side === 1;
             ctx.cellSide = side - 1;
-            ctx.wallColumn = ctx.wallXed ? yint % ctx.spacing
-                : xint % ctx.spacing;
+            ctx.wallColumn = ctx.wallXed
+                ? yint % ctx.spacing | 0
+                : xint % ctx.spacing | 0;
             if (ctx.wallXed && dxi < 0) {
                 ctx.wallColumn = ctx.spacing - ctx.wallColumn;
                 ctx.cellSide = 2;
@@ -580,6 +584,139 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             nPhys <= CONSTS.PHYS_LAST_DOOR && nOffset !== 0) ||
             nPhys === CONSTS.PHYS_TRANSPARENT_BLOCK ||
             nPhys === CONSTS.PHYS_INVISIBLE_BLOCK;
+    }
+
+
+    /**
+     * @param ctx {*} raycasting context
+     * @param x {number} final screen column position
+     * @param oTileSet {ShadedTileSet} tileset used for rendering
+     * @param xTile {number} index of tile
+     * @param nLight {number}
+     */
+    registerLine(ctx, x, oTileSet, xTile, nLight) {
+        let z = Math.max(0.1, ctx.distance);
+        let nPos = ctx.wallColumn;
+        let bDim = ctx.wallXed;
+        let nPanel = ctx.cellCode;
+
+        const CAMERA = this._world.camera;
+        const SHADING = this._world.shading;
+        let ytex = this._wallTextureHeight;
+        let xtex = this._wallTextureWidth;
+        let yscr = CAMERA.height;
+        let shf = SHADING.factor;
+        let sht = SHADING.threshold;
+        let dmw = SHADING.dim;
+        let fvh = 0; //this.fViewHeight;
+        let dz = (ytex * yscr / z) + 0.5 | 0;
+        let dzy = yscr - (dz * fvh);
+        let nPhys = (nPanel >> 12) & 0xF;  // **code12** phys
+        let nOffset = (nPanel >> 16) & 0xFF; // **code12** offs
+        let nOpacity = z / shf | 0;
+        if (bDim) {
+            nOpacity = (sht - dmw) * nOpacity / sht + dmw - nLight | 0;
+        } else {
+            nOpacity -= nLight;
+        }
+        nOpacity = Math.max(0, Math.min(sht, nOpacity));
+        let aData = [
+            oTileSet, // image 0
+            iTile + nPos, // sx  1
+            ytex * nOpacity, // sy  2
+            1, // sw  3
+            ytex, // sh  4
+            x, // dx  5
+            dzy - 1, // dy  6
+            1, // dw  7
+            (2 + dz * 2), // dh  8
+            z, // z 9
+            bDim ? 1 /*RC.FX_DIM0*/ : 0
+        ];
+
+        // Traitement des portes
+        switch (nPhys) {
+            case CONSTS.PHYS_DOOR_SLIDING_UP: // porte coulissant vers le haut
+                aData[2] += nOffset;
+                if (nOffset > 0) {
+                    aData[4] = ytex - nOffset;
+                    aData[8] = ((aData[4] / (z / yscr) + 0.5)) << 1;
+                }
+                break;
+
+            case CONSTS.PHYS_CURT_SLIDING_UP: // rideau coulissant vers le haut
+                if (nOffset > 0) {
+                    aData[8] = (((ytex - nOffset) / (z / yscr) + 0.5)) << 1;
+                }
+                break;
+
+            case CONSTS.PHYS_CURT_SLIDING_DOWN: // rideau coulissant vers le bas
+                aData[2] += nOffset; // no break here
+            // suite au case 4...
+            /** @fallthrough */
+
+            case CONSTS.PHYS_DOOR_SLIDING_DOWN: // Porte coulissant vers le bas
+                if (nOffset > 0) {
+                    // 4: sh
+                    // 6: dy
+                    // 8: dh
+                    // on observe que dh est un peut trop petit, ou que dy es trop haut
+                    aData[4] = ytex - nOffset;
+                    aData[8] = ((aData[4] / (z / yscr) + 0.5));
+                    aData[6] += (dz - aData[8]) << 1;
+                    aData[8] <<= 1;
+                }
+                break;
+
+            case CONSTS.PHYS_DOOR_SLIDING_LEFT: // porte latérale vers la gauche
+                if (nOffset > 0) {
+                    if (nPos > (xtex - nOffset)) {
+                        aData[0] = null;
+                    } else {
+                        aData[1] = (nPos + nOffset) % xtex + iTile;
+                    }
+                }
+                break;
+
+            case CONSTS.PHYS_DOOR_SLIDING_RIGHT: // porte latérale vers la droite
+                if (nOffset > 0) {
+                    if (nPos < nOffset) {
+                        aData[0] = null;
+                    } else {
+                        aData[1] = (nPos + xtex - nOffset) % xtex + iTile;
+                    }
+                }
+                break;
+
+            case CONSTS.PHYS_DOOR_SLIDING_DOUBLE: // double porte latérale
+                if (nOffset > 0) {
+                    if (nPos < (xtex >> 1)) { // panneau de gauche
+                        if ((nPos) > ((xtex >> 1) - nOffset)) {
+                            aData[0] = null;
+                        } else {
+                            aData[1] = (nPos + nOffset) % xtex + iTile;
+                        }
+                    } else {
+                        if ((nPos) < ((xtex >> 1) + nOffset)) {
+                            aData[0] = null;
+                        } else {
+                            aData[1] = (nPos + xtex - nOffset) % xtex + iTile;
+                        }
+                    }
+                }
+                break;
+
+            case CONSTS.PHYS_INVISIBLE_BLOCK:
+                aData[0] = null;
+                break;
+        }
+        if (this.bDoubleHeight) {
+            aData[6] -= aData[8];
+            aData[8] <<= 1;
+        }
+        if (aData[0]) {
+            this.aZBuffer.push(aData);
+        }
     }
 
 }
