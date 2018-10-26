@@ -5,22 +5,68 @@ import CellSurfaceManager from './CellSurfaceManager';
 import * as CONSTS from './consts';
 
 
+
+/**
+ * comparison between two items of buffer.
+ * compares the [9] (distance between camera and column)
+ * before the [5] (destination position x on screen)
+ * @param a {array}
+ * @param b {array}
+ * @returns {number}
+ */
+function zBufferCompare(a, b) {
+    if (a[9] !== b[9]) {
+        return b[9] - a[9];
+    }
+    return a[5] - b[5];
+}
+
+
+
+
 class Raycaster {
 	
 	constructor() {
-		this._world = {};
+		this._world = {
+            metrics: {
+                height: 96,	        // wallXed height of walls
+                spacing: 64,         // size of a cell, on the floor
+            },
+            screen: {
+                height: 250,	        // matches the number of pixels on the vertical axis
+                width: 800,           // matches the number of pixels on the horizontal axis
+                fov: Math.PI / 4
+            },
+            visual: {		        // all things visual
+                fog: {			    // fog setting (at long distance)
+                color: 'black',	        // fog color
+                    distance: 100,    // distance where the fog at full intensity
+                },
+                filter: false,		    // color filter for sprites (ambient color)
+                brightness: 0,	    // base brightness
+                shading: {
+                    factor: 50,			// distance where the texture shading increase by one unit
+                    threshold: 16,    	// number of shading layers
+                    dim: 7,				// shading factor added to the y axis wall only, to simulate realistic lighting
+                }
+            },
+            doubleHeight: false         // second storey is double height (for city buildings)
+        };
+
 		this._map = [];
         this._walls = null; // wall shaded tileset
         this._flats = null; // flat shaded tileset
 		this._csm = new CellSurfaceManager();
         this._cellCodes = []; // this is an array of array of sides
-        this._wallTextureWidth = 0; // wall texture width = floor texture width and height
-        this._wallTextureHeight = 0; // wall texture height
+
+        this._zbuffer = null; // array of drawing operation
 	}
 
 
 
+    defineWorld(w) {
 
+    }
 
 /*
                     _     _       _       __ _       _ _   _
@@ -35,28 +81,38 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 	/**
 	 * Defines the wall textures.
 	 * @param oImage {HTMLCanvasElement|HTMLImageElement} this image contains all wall textures and must be fully charged
-	 * @param width {number} tile width
-	 * @param height {number} tile height
 	 */
-    setWallTextures(oImage, width, height) {
-        this._wallTextureHeight = height;
-        this._wallTextureWidth = width;
-        this._walls = this.buildTileSet(oImage, width, height);
+    setWallTextures(oImage) {
+        let width = this._world.metrics.spacing;
+        let height = this._world.metrics.height;
+        this._walls = Raycaster.buildTileSet(
+            oImage,
+            width,
+            height,
+            this._world.visual.shading.threshold
+        );
     }
 
-    setFlatTextures(oImage, width) {
-        this._wallTextureWidth = width;
-        this._flats = this.buildTileSet(oImage, width, width);
+    setFlatTextures(oImage) {
+        let width = this._world.metrics.spacing;
+        this._flats = Raycaster.buildTileSet(
+            oImage,
+            width,
+            width,
+            this._world.visual.shading.threshold
+        );
     }
 
     /**
 	 * builds a tileset of texture, out of an image, and shades it
-     * @param oImage
-     * @param width
-     * @param height
+     * @param oImage {Image|HTMLCanvasElement}
+     * @param width {number}
+     * @param height {number}
+     * @param nShadingThreshold {number}
      */
-    static buildTileSet(oImage, width, height) {
+    static buildTileSet(oImage, width, height, nShadingThreshold) {
         const sw = new ShadedTileSet();
+        sw.setShadingLayerCount(nShadingThreshold);
         sw.setImage(oImage, width, height);
         return sw;
     }
@@ -185,19 +241,112 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
+    /**
+     * Creates a raycasting context
+     * @return {*}
+     */
+    createContext(xCamera, yCamera, fDirection) {
+        return {         // raycasting context
+            camera: {
+                x: xCamera,             // camera position
+                y: yCamera,             // ...
+                angle: this._world.screen.fov,    // camera view angle
+                direction: fDirection,              // camera direction angle
+                height: 1               // camera view height
+            },
+            resume: {           // resume context
+                b: false,       // next castRay must resume !
+                xi: 0,          // cell position of resuming
+                yi: 0           // ...
+            },
+            exterior: false,    // the last ray hit an exterior line
+            distance: 0,        // the last computed distance (length of the last computed ray)
+            maxDistance: 100,   // maximum length of a ray. if a distance is greater than this value, the ray is not rendered
+            spacing: this._world.metrics.spacing,   // cell size
+            cellCode: 0,        // code of the last hit cell
+            xCell: 0,           // position of the last hit cell
+            yCell: 0,           // ...
+            wallSide: 0,        // side number of the wall of the last hitCell
+            wallXed: false,     // if true then the hit cell wall is X-axed
+            wallColumn: 0,      // index of the column of the last hit wall
+        };
+    }
 
 
+    static _optimizeBuffer(zb) {
+        // Optimisation ZBuffer -> suppression des drawScreenSlice inutile, élargissement des drawScreenSlice utiles.
+        // si le last est null on le rempli
+        // sinon on compare last et current
+        // si l'un des indices 0, 1 diffèrent alors on flush, sinon on augmente le last
+        let aZ = [];
+        let nLast = 1;
+        let nLLast = 1;
+        let nLLLast = 1;
+        let z = 1;
+
+        // image 0
+        // sx  1
+        // sy  2
+        // sw  3
+        // sh  4
+        // dx  5
+        // dy  6
+        // dw  7
+        // dh  8
+        // z   9
+        // fx  10
+        // id  11 identifiant image
+
+        let zbl = zb.length;
+        if (zbl === 0) {
+            return [];
+        }
+        let b; // Element courrant du ZBuffer;
+        let lb = zb[0];
+        let llb = lb;
+        let lllb = lb;
+        let abs = Math.abs;
+
+        for (let i = 0; i < zbl; i++) {
+            b = zb[i];
+            // tant que c'est la même source de texture=
+            if (b[10] === lb[10] && b[0] === lb[0] && b[1] === lb[1] && abs(b[9] - lb[9]) < 8) {
+                nLast += z;
+            } else if (b[10] === llb[10] && b[0] === llb[0] && b[1] === llb[1] && abs(b[9] - llb[9]) < 8) {
+                nLLast += z;
+            } else if (b[10] === lllb[10] && b[0] === lllb[0] && b[1] === lllb[1] && abs(b[9] - lllb[9]) < 8) {
+                nLLLast += z;
+            } else {
+                lllb[7] = nLLLast;
+                aZ.push(lllb);
+                lllb = llb;
+                nLLLast = nLLast;
+                llb = lb;
+                nLLast = nLast;
+                lb = b;
+                nLast = z;
+            }
+        }
+        lllb[7] = nLLLast;
+        aZ.push(lllb);
+        llb[7] = nLLast;
+        aZ.push(llb);
+        lb[7] = nLast;
+        aZ.push(lb);
+
+        return aZ;
+    }
 
     /**
 	 * this is phase 1 of rendering.
-	 * Builds an array of drawing operations
+	 * Builds an array of screen slices
      */
-    computeDrawingOps(xCamera, yCamera, fDirection) {
+    computeScreenSliceBuffer(xCamera, yCamera, fDirection) {
         const METRICS = this._world.metrics;
-        const CAMERA = this._world.camera;
-        let hScreenSize = CAMERA.width;
-        let vScreenSize = CAMERA.height;
-        let fViewAngle = CAMERA.angle;
+        const SCREEN = this._world.screen;
+        let hScreenSize = SCREEN.width;
+        let vScreenSize = SCREEN.height;
+        let fViewAngle = SCREEN.fov;
         let nSpacing = METRICS.spacing;
         let fAngleLeft = fDirection - fViewAngle;       // angle value at the leftmost screen column
         let fAngleRight = fDirection + fViewAngle;      // angle value at the rightmost screen column
@@ -212,7 +361,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xCam8 = xCamera / nSpacing | 0;         // cell where the camera is.
         let yCam8 = yCamera / nSpacing | 0;
         let i;
-        let aZBuffer = [];
+        let zbuffer = [];
         let scanSectors = new MarkerRegistry();     // registry of cells traversed by rays
         scanSectors.mark(xCam8, yCam8);
         // background
@@ -228,47 +377,42 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xl = b3d ? xLimitL : 0;
         let xr = b3d ? xLimitR : vScreenSize;
 
-        let ctx = {         // raycasting context
-            camera: {
-                x: xCamera,
-                y: yCamera,
-                a: fDirection
-            },
-        	resume: {           // resume context
-        		b: false,       // next castRay must resume !
-				xi: 0,          // cell position of resuming
-				yi: 0           // ...
-			},
-			exterior: false,    // the last ray hit an exterior line
-			distance: 0,        // the last computed distance (length of the last computed ray)
-            maxDistance: 100,   // maximum length of a ray. if a distance is greater than this value, the ray is not rendered
-			spacing: this._world.metrics.spacing,   // cell size
-            cellCode: 0,        // code of the last hit cell
-            xCell: 0,           // position of the last hit cell
-            yCell: 0,           // ...
-            wallSide: 0,        // side number of the wall of the last hitCell
-            wallXed: false,     // if true then the hit cell wall is X-axed
-            wallColumn: 0,      // index of the column of the last hit wall
-		};
+        let ctx = this.createContext(xCamera, yCamera, fDirection);
 
         for (i = 0; i < vScreenSize; ++i) {
             if (i >= xl && i <= xr) { // checks limits
                 ctx.resume.b = false;
-                this.castRay(ctx, xCamera, yCamera, fBx, fBy, i, scanSectors);
+                this.castRay(ctx, xCamera, yCamera, fBx, fBy, i, scanSectors, zbuffer);
             }
             fBx += dx;
             fBy += dy;
         }
+
+        zbuffer = Raycaster._optimizeBuffer(zbuffer);
+        //this.drawHorde(aZBuffer);
+        // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
+        zbuffer.sort(zBufferCompare);
+        //this._zbuffer = zbuffer;
+        return zbuffer;
 	}
 
     /**
-     * Calcule le caste d'un rayon
+     * casts a ray, this may lead to the production of several drawOps, which are immediatly stored into the buffer
+     * @param ctx {*} raycasting context (see createContext)
+     * @param x {number} ray starting position (x)
+     * @param y {number} ray starting position (y)
+     * @param dx {number} ray position increment along x axis
+     * @param dy {number} ray position increment along y axis
+     * @param xScreen {number} screen column index
+     * @param visibleRegistry {MarkerRegistry} a registry for storing visible sectors
+     * @param zbuffer {[]} a zbuffer for storing all created drawOps
+     * @returns {*}
      */
-    castRay(ctx, x, y, dx, dy, xScreen, visibleRegistry) {
+    castRay(ctx, x, y, dx, dy, xScreen, visibleRegistry, zbuffer) {
         let exclusionRegistry = new MarkerRegistry();
         let oXBlock = null; // meta data
         let oTileSet; // tileset
-        let xTile; // offset of the tile (x)
+        let iTile; // offset of the tile (x)
         let nMaxIterations = 6; // watchdog for performance
 
         if (!visibleRegistry) {
@@ -280,6 +424,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             if (ctx.exterior) {
                 // hors du laby
                 // if (oBG) {
+                // zbuffer.push(this.computeExteriorDrawOp(xScreen, ctx.distance));
                 //     this.drawExteriorLine(xScreen, ctx.distance);
                 // }
             } else if (ctx.distance >= 0) {
@@ -287,18 +432,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     oXBlock = this._csm.getSurface(ctx.xCell, ctx.yCell, ctx.cellSide);
                     if (oXBlock.tileset) {
                         oTileSet = oXBlock.tileset;
-                        xTile = 0;
+                        iTile = 0;
                     } else {
                         oTileSet = this._walls;
-                        xTile = oTileSet.getTileRect(this._cellCodes[ctx.cellCode & 0xFFF][ctx.cellSide]).x;
+                        iTile = this._cellCodes[ctx.cellCode & 0xFFF][ctx.cellSide];
                     }
-                    this.registerLine(
+                    zbuffer.push(this.createScreenSlice(
                         ctx,
                     	xScreen,
                         oTileSet,
-                        xTile,
+                        iTile,
 						oXBlock.diffuse
-					);
+					));
                 }
                 if (ctx.resume.b) {
                     exclusionRegistry.mark(ctx.xCell, ctx.yCell);
@@ -306,7 +451,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
             --nMaxIterations;
         } while (ctx.resume.b && nMaxIterations > 0);
-        return visibleRegistry;
     }
 
 
@@ -591,24 +735,25 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param ctx {*} raycasting context
      * @param x {number} final screen column position
      * @param oTileSet {ShadedTileSet} tileset used for rendering
-     * @param xTile {number} index of tile
+     * @param iTile {number} index of tile
      * @param nLight {number}
      */
-    registerLine(ctx, x, oTileSet, xTile, nLight) {
+    createScreenSlice(ctx, x, oTileSet, iTile, nLight) {
         let z = Math.max(0.1, ctx.distance);
         let nPos = ctx.wallColumn;
         let bDim = ctx.wallXed;
         let nPanel = ctx.cellCode;
 
-        const CAMERA = this._world.camera;
-        const SHADING = this._world.shading;
-        let ytex = this._wallTextureHeight;
-        let xtex = this._wallTextureWidth;
-        let yscr = CAMERA.height;
+        const WORLD = this._world;
+        const SCREEN = WORLD.screen;
+        const SHADING = WORLD.visual.shading;
+        let ytex = this._world.metrics.height;
+        let xtex = this._world.metrics.spacing;
+        let yscr = SCREEN.height;
         let shf = SHADING.factor;
         let sht = SHADING.threshold;
         let dmw = SHADING.dim;
-        let fvh = 0; //this.fViewHeight;
+        let fvh = ctx.camera.height;
         let dz = (ytex * yscr / z) + 0.5 | 0;
         let dzy = yscr - (dz * fvh);
         let nPhys = (nPanel >> 12) & 0xF;  // **code12** phys
@@ -621,9 +766,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         nOpacity = Math.max(0, Math.min(sht, nOpacity));
         let aData = [
-            oTileSet, // image 0
-            iTile + nPos, // sx  1
-            ytex * nOpacity, // sy  2
+            oTileSet.getTileSet(nOpacity).getImage(), // image 0
+            iTile * xtex + nPos, // sx  1
+            0, // sy  2
             1, // sw  3
             ytex, // sh  4
             x, // dx  5
@@ -631,7 +776,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             1, // dw  7
             (2 + dz * 2), // dh  8
             z, // z 9
-            bDim ? 1 /*RC.FX_DIM0*/ : 0
+            bDim ? CONSTS.FX_DIM0 : 0
         ];
 
         // Traitement des portes
@@ -710,15 +855,89 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (this.bDoubleHeight) {
+        if (WORLD.doubleHeight) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
-        if (aData[0]) {
-            this.aZBuffer.push(aData);
+        return aData;
+    }
+
+    computeExteriorScreenSlice(x, z) {
+        let dz, sx, sy, sw, sh, dx, dy, dw, dh;
+        if (z < 0.1) {
+            z = 0.1;
+        }
+        dz = (this.yTexture / (z / this.yScrSize));
+        let dzfv = (dz * this.fViewHeight);
+        let dzy = this.yScrSize - dzfv;
+        // dz = demi hauteur de la texture projetée
+        let oBG = this.oBackground;
+        let wBG = oBG.width, hBG = oBG.height;
+        sx = (x + this.fCameraBGOfs) % wBG | 0;
+        sy = Math.max(0, (hBG >> 1) - dzfv);
+        sw = 1;
+        sh = Math.min(hBG, dz << 1);
+        dx = x;
+        dy = Math.max(dzy, this.yScrSize - (hBG >> 1));
+        dw = sw;
+        dh = Math.min(sh, dz << 1);
+        return [ oBG, sx, sy, sw, sh, dx, dy, dw, dh, z, 0 ];
+    }
+
+
+    /**
+     * Renders all DrawOps stored in the buffer into the screen
+     * @param zbuffer {array}
+     * @param context {CanvasRenderingContext2D}
+     */
+    static renderScreenSliceBuffer(zbuffer, context) {
+        for (let i = 0, l = zbuffer.length; i < l; ++i) {
+            Raycaster.drawScreenSlice(zbuffer[i], context);
         }
     }
 
+    /**
+     * Renders the portion of texture described in the zbi parameter
+     * @param zbi {array} array of parameters mapped into the contex2d.drawScreenSlice function
+     * @param rc {CanvasRenderingContext2D} context where the line is rendered
+     */
+    static drawScreenSlice(zbi, rc) {
+        let aLine = zbi;
+        let sGCO = '';
+        let fGobalAlphaSave = 0;
+        let nFx = aLine[10];
+        if (nFx & 1) {
+            sGCO = rc.globalCompositeOperation;
+            rc.globalCompositeOperation = 'lighter';
+        }
+        if (nFx & 12) {
+            fGobalAlphaSave = rc.globalAlpha;
+            rc.globalAlpha = CONSTS.FX_ALPHA[nFx >> 2];
+        }
+        let xStart = aLine[1];
+        // Si xStart est négatif c'est qu'on est sur un coté de block dont la texture est indéfinie (-1)
+        // Firefox refuse de dessiner des textures "négative" dont on skipe le dessin
+        if (xStart >= 0) {
+            try {
+                rc.drawImage(
+                    aLine[0],
+                    aLine[1] | 0,
+                    aLine[2] | 0,
+                    aLine[3] | 0,
+                    aLine[4] | 0,
+                    aLine[5] | 0,
+                    aLine[6] | 0,
+                    aLine[7] | 0,
+                    aLine[8] | 0);
+            } catch (e) {}
+        }
+        if (sGCO !== '') {
+            rc.globalCompositeOperation = sGCO;
+        }
+        if (nFx & 12) {
+            rc.globalAlpha = fGobalAlphaSave;
+        }
+    }
 }
 
 export default Raycaster;

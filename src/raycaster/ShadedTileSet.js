@@ -137,6 +137,10 @@ class ShadedTileSet {
 			color.b *= b;
 		});
 	}
+
+	getTileSet(nShadeIndex) {
+		return this._tileSets[nShadeIndex];
+	}
 	
 	getTileRect(nTileIndex, nShadeIndex) {
 		return this
