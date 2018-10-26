@@ -1,3 +1,5 @@
+let bDefaultImageSmmoothing = true;
+
 class CanvasHelper {
 	/**
 	 * Create a new canvas, width the given size
@@ -9,7 +11,16 @@ class CanvasHelper {
 		let c = document.createElement('canvas');
 		c.width = width;
 		c.height = height;
+		CanvasHelper.setImageSmoothing(c, bDefaultImageSmmoothing);
 		return c;
+	}
+
+	static setDefaultImageSmoothing(b) {
+        bDefaultImageSmmoothing = b;
+	}
+
+	static getDefaultImageSmoothing() {
+		return bDefaultImageSmmoothing;
 	}
 	
 	/**

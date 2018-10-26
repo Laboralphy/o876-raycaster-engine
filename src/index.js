@@ -1,3 +1,4 @@
+import * as CONSTS from './raycaster/consts';
 import Raycaster from './raycaster/Raycaster';
 import TileSet from './raycaster/TileSet';
 import ShadedTileSet from './raycaster/ShadedTileSet';
@@ -7,5 +8,6 @@ export default {
 	Raycaster,
 	TileSet,
 	ShadedTileSet,
-	CanvasHelper
+	CanvasHelper,
+	CONSTS
 };
