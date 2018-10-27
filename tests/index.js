@@ -1,3 +1,0 @@
-require('./TileSetTest');
-require('./RaycasterTest');
-

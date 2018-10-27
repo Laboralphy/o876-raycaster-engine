@@ -1,20 +1,20 @@
 import CanvasHelper from './CanvasHelper';
 import Rainbow from './Rainbow';
-import TileSet from './TileSet';
 
 
 const SHADING_LAYERS = 16;
 
 /**
- * This class manages several layers of tilesets,
- * layers have differents shade factors.
- * This class will compute a shading effect on a tileset
- * in order to optimize rendering time
+ * This class manages several a tileset and is able to pre-compute a shading effect, in order to optimize rendering time.
  */
 class ShadedTileSet {
 
 	constructor() {
 		this._shadingLayers = SHADING_LAYERS;
+		this._image = null;
+		this._originalImage = null;
+        this._tileWidth = 0;
+        this._tileHeight = 0;
 	}
 
     /**
@@ -35,61 +35,63 @@ class ShadedTileSet {
     }
 
     /**
-	 * This function will instanciate a TileSet before shading it
-	 * so the application using ShadedTileSet doesn't require to import TileSet any longer.
+	 * This function will keep track of the original unmodified tileset
+	 * the shading computations will not alter this original image, so the computation may be rerun with
+	 * other visual setting, fog pigment etc...
      * @param oImage {Image|HTMLCanvasElement}
      * @param w {number} size of a tile
      * @param h {number}
      */
 	setImage(oImage, w, h) {
-		let ts = new TileSet();
-		ts.setTileWidth(w);
-		ts.setTileHeight(h);
-		ts.setImage(oImage);
-		this.setTileSet(ts);
-	}
-	
-	setTileSet(ts) {
-		ts.rebuildOneRow();
-		this._originalTileSet = ts;
-	}
-	
-	/**
-	 * Defines the original tileset and run computation
-	 */
-	compute(sColorFog, sColorFilter, fAmbLightness) {
-		this._tileSets = [];
-		let ots = this._originalTileSet;
-		for (let i = 0; i < this._shadingLayers; ++i) {
-			let fFactor = Math.min(i / (this._shadingLayers - 1), 1) * (1 - fAmbLightness);
-			let ts = new TileSet();
-			ts.setTileWidth(ots.getTileWidth());
-			ts.setTileHeight(ots.getTileHeight());
-			ts.setImage(this.shadeImage(ots.getImage(), fFactor, sColorFog, sColorFilter));
-			this._tileSets.push(ts);
+        if (CanvasHelper.isImage(oImage)) {
+        	oImage = CanvasHelper.cloneCanvas(oImage);
 		}
+        this._originalImage = oImage;
+        this._tileWidth = w;
+        this._tileHeight = h;
+	}
+
+    /**
+	 * Returns the shaded tileset image
+     * @returns {HTMLCanvasElement}
+     */
+	getImage() {
+		return this._image;
+	}
+
+    /**
+	 * run shading computation. Original tileset must have been set
+     * @param sColorFog {string} color of fog
+     * @param sColorFilter {boolean|string} color filter
+     * @param fAmbLightness {number}
+     */
+	compute(sColorFog, sColorFilter, fAmbLightness) {
+		const oOrigImg = this._originalImage;
+		const oImg = CanvasHelper.createCanvas(oOrigImg.width, oOrigImg.height * this._shadingLayers);
+		const ctx = oImg.getContext('2d');
+		const h = oOrigImg.height;
+		for (let i = 0, l = this._shadingLayers; i < l; ++i) {
+			let fFactor = Math.min(i / (this._shadingLayers - 1), 1) * (1 - fAmbLightness);
+			ctx.drawImage(this.shadeImage(oOrigImg, fFactor, sColorFog, sColorFilter), 0, i * h);
+		}
+		this._image = oImg;
 	}
 
 
     /**
 	 * extract a fragment (containing only one tile) of the shaded tileset into a new one
+	 * @param iTile {number}
+	 * @return {HTMLCanvasElement}
      */
 	createFragment(iTile) {
-		const ots = this._originalTileSet;
-        const w = ots.getTileWidth();
-        const h = ots.getTileHeight();
-        const nsts = new ShadedTileSet();
-        nsts.setShadingLayerCount(this.getShadingLayerCount());
-        nsts._tileSets = [];
-		for (let i = 0, l = this.getShadingLayerCount(); i < l; ++i) {
-			let ts = this._tileSets[i];
-			let nts = new TileSet();
-			nts.setTileWidth(w);
-			nts.setTileHeight(h);
-			nts.setImage(ts.getImageFragment(iTile));
-            nsts._tileSets.push(nts);
-		}
-		return nsts;
+		const w = this._tileWidth;
+		const h = this._tileHeight;
+		const sl = this._shadingLayers;
+		const fh = h * sl;
+		const oFragment = CanvasHelper.createCanvas(w, fh);
+		const ctx = oFragment.getContext('2d');
+		ctx.drawImage(this._image, iTile * w, 0, w, fh, 0, 0, w, fh);
+		return oFragment;
 	}
 	
 	
@@ -130,22 +132,11 @@ class ShadedTileSet {
 	 */
 	applyColorFilter(oImage, oColorFilter) {
 		let {r, g, b} = oColorFilter;
-		console.log(r, g, b);
 		CanvasHelper.applyFilter(oImage, (x, y, color) => {
 			color.r *= r;
 			color.g *= g;
 			color.b *= b;
 		});
-	}
-
-	getTileSet(nShadeIndex) {
-		return this._tileSets[nShadeIndex];
-	}
-	
-	getTileRect(nTileIndex, nShadeIndex) {
-		return this
-			._tileSets[nShadeIndex]
-			.getTileRect(nTileIndex);
 	}
 }
 

@@ -40,8 +40,8 @@ class Raycaster {
                 spacing: 64,         // size of a cell, on the floor
             },
             screen: {               // the virtual screen where the world is rendered
-                height: 500,	    // vertical screen size (in pixels)
-                width: 800,         // horizontal screen size (in pixels)
+                height: 250,	    // vertical screen size (in pixels)
+                width: 400,         // horizontal screen size (in pixels)
                 aspect: 4/3,
                 fov: Math.PI / 4    // You should not change this setting but only slightly
             },
@@ -73,9 +73,21 @@ class Raycaster {
         this._bgOffset = 0; // oofset between camera and background position
         this._bgCameraOffset = 0; // oofset between camera and background position
 
+        this._flatContext = {
+            image: null,
+            imageData: null,
+            imageData32: null,
+            renderSurface: null,
+            renderSurface32: null
+        };
+
+        this._vrContext = {
+            b: false,
+            leftColumn: 0,
+            rightColumn: 0
+        };
+
 	}
-
-
 
     defineWorld(w) {
 
@@ -153,6 +165,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
 	setVisualSettings(sFogColor, sFilter, nBrightness) {
         this._walls.compute(sFogColor, sFilter, nBrightness);
+        this._flats.compute(sFogColor, sFilter, nBrightness);
+        this._flatContext.image = this._flats.getImage();
 	}
 
     /**
@@ -285,8 +299,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * Creates a raycasting context
      * @return {*}
      */
-    createContext(xCamera, yCamera, fDirection) {
+    createContext(xCamera, yCamera, fDirection, renderContext) {
         return {         // raycasting context
+            renderContext,
             camera: {
                 x: xCamera,             // camera position
                 y: yCamera,             // ...
@@ -389,11 +404,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 	 * this is phase 1 of rendering.
 	 * Builds an array of screen slices
      */
-    computeScreenSliceBuffer(xCamera, yCamera, fDirection) {
+    computeScreenSliceBuffer(ctx) {
+        let xCamera = ctx.camera.x;
+        let yCamera = ctx.camera.y;
+        let fDirection = ctx.camera.direction;
         const METRICS = this._world.metrics;
         const SCREEN = this._world.screen;
         let xScreenSize = SCREEN.width;
-        let fViewAngle = SCREEN.fov;
+        let fViewAngle = ctx.camera.fov;
         let nSpacing = METRICS.spacing;
         let fAngleLeft = fDirection - fViewAngle;       // angle value at the leftmost screen column
         let fAngleRight = fDirection + fViewAngle;      // angle value at the rightmost screen column
@@ -418,15 +436,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
 
 		// VR
-		let b3d = false;
-		let xLimitL = 0;
-		let xLimitR = xScreenSize;
-
-		// defines left and right limits ; no ray will be cast outside these limits
-        let xl = b3d ? xLimitL : 0;
-        let xr = b3d ? xLimitR : xScreenSize;
-
-        let ctx = this.createContext(xCamera, yCamera, fDirection);
+        const vr = this._vrContext;
+        let xl = vr.b ? vr.leftColumn : 0;
+        let xr = vr.b ? vr.rightColumn : xScreenSize;
 
         for (i = 0; i < xScreenSize; ++i) {
             if (i >= xl && i <= xr) { // checks limits
@@ -468,7 +480,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (!visibleRegistry) {
             visibleRegistry = new MarkerRegistry();
         }
-        const bg = this._background;
         do {
             this.projectRay(ctx, x, y, dx, dy, exclusionRegistry, visibleRegistry);
             if (!ctx.exterior && ctx.distance >= 0) {
@@ -824,9 +835,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         nOpacity = Math.max(0, Math.min(sht, nOpacity));
         let aData = [
-            oTileSet.getTileSet(nOpacity).getImage(), // image 0
+            oTileSet.getImage(), // image 0
             iTile + nPos, // sx  1
-            0, // sy  2
+            ytex * nOpacity, // sy  2
             1, // sw  3
             ytex, // sh  4
             x, // dx  5
@@ -949,8 +960,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
     }
 
-    render(context) {
+    render(ctx) {
+        const context = ctx.renderContext;
         this.renderBackground(context);
+        this.drawFloorAndCeil_zoom1(ctx);
         Raycaster.renderScreenSliceBuffer(this._zbuffer, context);
     }
 
@@ -993,6 +1006,317 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (nFx & 12) {
             rc.globalAlpha = fGobalAlphaSave;
         }
+    }
+
+
+
+    /**
+     * Rendu du floor et du ceil quand fViewHeight est à 1
+     */
+
+    /**
+     * Rendu du floor et du ceil quand fViewHeight est à 1
+     */
+    drawFloor_zoom1() {
+        var bCeil = true;
+        var oFloor = this.oFloor;
+        var x,
+            y,
+            xStart = this.b3d ? this.xLimitL : 0,
+            xEnd = this.b3d ? this.xLimitR : this.xScrSize,
+            w = this.xScrSize,
+            h = this.yScrSize;
+        if (oFloor.imageData === null) {
+            var oFlat = O876.CanvasFactory.getCanvas();
+            oFlat.width = oFloor.image.width;
+            oFlat.height = oFloor.image.height;
+            var oCtx = oFlat.getContext('2d');
+            oCtx.drawImage(oFloor.image, 0, 0);
+            oFloor.image = oFlat;
+            oFloor.imageData = oCtx.getImageData(0, 0, oFlat.width, oFlat.height);
+            oFloor.imageData32 = new Uint32Array(oFloor.imageData.data.buffer);
+            oFloor.renderSurface = this._oRenderContext.getImageData(0, 0, w, h << 1);
+            oFloor.renderSurface32 = new Uint32Array(oFloor.renderSurface.data.buffer);
+        }
+        if (this.bFlatSky) {
+            // recommencer à lire le background pour prendre le ciel en compte
+            oFloor.renderSurface = this._oRenderContext.getImageData(0, 0, w, h << 1);
+            oFloor.renderSurface32 = new Uint32Array(oFloor.renderSurface.data.buffer);
+        }
+        var aFloorSurf = oFloor.imageData32;
+        var aRenderSurf = oFloor.renderSurface32;
+        // 1 : créer la surface
+        var wx1 = Math.cos(this.oCamera.fTheta - this.fViewAngle);
+        var wy1 = Math.sin(this.oCamera.fTheta - this.fViewAngle);
+        var wx2 = Math.cos(this.oCamera.fTheta + this.fViewAngle);
+        var wy2 = Math.sin(this.oCamera.fTheta + this.fViewAngle);
+
+        var fh = (this.yTexture >> 1) - ((this.fViewHeight - 1) * this.yTexture >> 1);
+        var xDelta = (wx2 - wx1) / this.xScrSize; // incrément d'optimisateur trigonométrique
+        var yDelta = (wy2 - wy1) / this.xScrSize; // incrément d'optimisateur trigonométrique
+        var xDeltaFront;
+        var yDeltaFront;
+        var ff = this.yScrSize << 1; // focale
+        var fx, fy; // coordonnée du texel finale
+        var dFront; // distance "devant caméra" du pixel actuellement pointé
+        var ofsDst; // offset de l'array pixel de destination (plancher)
+        var wy;
+
+        var ofsDstCeil; // offset de l'array pixel de destination (plancher)
+        var wyCeil;
+
+        var oCam = this.oCamera;
+        var xCam = oCam.x + oCam.xOfs; // coord caméra x
+        var yCam = oCam.y + oCam.yOfs; // coord caméra y
+        var nFloorWidth = oFloor.image.width; // taille pixel des tiles de flats
+        var ofsSrc; // offset de l'array pixel source
+        var xOfs = 0; // code du block flat à afficher
+        var yOfs = 0; // luminosité du block flat à afficher
+        var ps = this.nPlaneSpacing;
+        var nBlock;
+        var xyMax = this.nMapSize * ps;
+        var st = this.nShadingThreshold;
+        var sf = this.nShadingFactor;
+        var aMap = this.aMap;
+        var F = this.oFloor.codes;
+        var aFBlock;
+
+        var fy64, fx64;
+        var oXMap = this.oXMap;
+        var oXBlock, oXBlockImage;
+        var oXBlockCeil;
+        var nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
+        var fBx, fBy;
+
+        for (y = 1; y < h; ++y) {
+            fBx = wx1;
+            fBy = wy1;
+
+            // floor
+            dFront = fh * ff / y;
+            fy = wy1 * dFront + yCam;
+            fx = wx1 * dFront + xCam;
+            xDeltaFront = xDelta * dFront;
+            yDeltaFront = yDelta * dFront;
+            wy = w * (h + y);
+            wyCeil = w * (h - y - 1);
+            yOfs = Math.min(st, dFront / sf | 0);
+
+            for (x = 0; x < w; ++x) {
+                ofsDst = wy + x;
+                ofsDstCeil = wyCeil + x;
+                fy64 = fy / ps | 0; // sector
+                fx64 = fx / ps | 0;
+                if (x >= xStart && x <= xEnd && fx >= 0 && fy >= 0 && fx < xyMax && fy < xyMax) {
+                    nXDrawn = 0;
+                    oXBlock = oXMap.get(fx64, fy64, 4);
+                    oXBlockCeil = oXMap.get(fx64, fy64, 5);
+                    if (oXBlock.imageData32) {
+                        oXBlockImage = oXBlock.imageData32;
+                        ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                        aRenderSurf[ofsDst] = oXBlockImage[ofsSrc];
+                        nXDrawn += 1;
+                    }
+                    if (oXBlockCeil.imageData32) {
+                        oXBlockImage = oXBlockCeil.imageData32;
+                        if (nXDrawn === 0) {
+                            ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                        }
+                        aRenderSurf[ofsDstCeil] = oXBlockImage[ofsSrc];
+                        nXDrawn += 2;
+                    }
+                    if (nXDrawn != 3) {
+                        nBlock = aMap[fy / ps | 0][fx / ps | 0] & 0xFFF; // **code12** code
+                        aFBlock = F[nBlock];
+                        if (aFBlock !== null) {
+                            if (nXDrawn != 1) {
+                                xOfs = aFBlock[0];
+                                ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
+                            }
+                            if (bCeil && nXDrawn != 2) {
+                                xOfs = aFBlock[1];
+                                if (xOfs >= 0) {
+                                    ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                    aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
+                                }
+                            }
+                        }
+                    }
+                }
+                fy += yDeltaFront;
+                fx += xDeltaFront;
+            }
+        }
+        this._oRenderContext.putImageData(oFloor.renderSurface, 0, 0);
+    }
+
+
+
+
+    /**
+     * Rendu du floor et du ceil si le fViewHeight est différent de 1
+     * (presque double ration de calcul....)
+     */
+    drawFloorAndCeil_zoom1(ctx) {
+        const WORLD = this._world;
+        const SCREEN = WORLD.screen;
+        const METRICS = WORLD.metrics;
+        const VISUAL = WORLD.visual;
+        const oFlatContext = this._flatContext;
+        let x,
+            y,
+            xStart = 0,
+            xEnd = SCREEN.width - 1,
+            w = SCREEN.width,
+            h = SCREEN.height >> 1;
+        const renderContext = ctx.renderContext;
+        if (oFlatContext.imageData === null) {
+            oFlatContext.imageData = oFlatContext
+                .image
+                .getContext('2d')
+                .getImageData(0, 0, oFlatContext.image.width, oFlatContext.image.height);
+            oFlatContext.imageData32 = new Uint32Array(oFlatContext.imageData.data.buffer);
+            oFlatContext.renderSurface = renderContext.getImageData(0, 0, w, h << 1);
+            oFlatContext.renderSurface32 = new Uint32Array(oFlatContext.renderSurface.data.buffer);
+        }
+        oFlatContext.renderSurface = renderContext.getImageData(0, 0, w, h << 1);
+        oFlatContext.renderSurface32 = new Uint32Array(oFlatContext.renderSurface.data.buffer);
+        const aFloorSurf = oFlatContext.imageData32;
+        const aRenderSurf = oFlatContext.renderSurface32;
+        // 1 : créer la surface
+        const {direction, fov} = ctx.camera;
+        const wx1 = Math.cos(direction - fov);
+        const wy1 = Math.sin(direction - fov);
+        const wx2 = Math.cos(direction + fov);
+        const wy2 = Math.sin(direction + fov);
+
+        const ps = METRICS.spacing;
+        const yTexture = METRICS.height;
+        const yTexture2 = yTexture >> 1;
+        const fvh = ctx.camera.height;
+
+        let fh = (yTexture2) - ((fvh - 1) * yTexture2);
+        let xDelta = (wx2 - wx1) / w; // incrément d'optimisateur trigonométrique
+        let yDelta = (wy2 - wy1) / w; // incrément d'optimisateur trigonométrique
+        let xDeltaFront;
+        let yDeltaFront;
+        let ff = h << 1; // focale
+        let fx, fy; // coordonnée du texel finale
+        let dFront; // distance "devant caméra" du pixel actuellement pointé
+        let ofsDst; // offset de l'array pixel de destination (plancher)
+        let wy;
+
+        let fhCeil = yTexture2 + ((fvh - 1) * yTexture2);
+        let xDeltaFrontCeil = 0;
+        let yDeltaFrontCeil = 0;
+        let fxCeil = 0, fyCeil = 0; // coordonnée du texel finale
+        let dFrontCeil; // distance "devant caméra" du pixel actuellement pointé
+        let ofsDstCeil; // offset de l'array pixel de destination (plafon)
+        let wyCeil = 0;
+
+        let xCam = ctx.camera.x; // coord caméra x
+        let yCam = ctx.camera.y; // coord caméra y
+        let nFloorWidth = oFlatContext.image.width; // taille pixel des tiles de flats
+        let ofsSrc; // offset de l'array pixel source
+        let xOfs = 0; // code du block flat à afficher
+        let yOfs = 0; // luminosité du block flat à afficher
+        let nBlock;
+        let xyMax = this.getMapSize() * ps;
+        let sh = VISUAL.shading;
+        let st = sh.threshold;
+        let sf = sh.factor;
+        let aMap = this._map;
+        let F = this._cellCodes;
+        let aFBlock;
+
+
+        let bCeil = true;
+
+        // aFloorSurf -> doit pointer vers XMap.get(x, y)[4].imageData32
+        // test : if XMap.get(x, y)[4]
+
+        let fy64, fx64;
+        let oXMap = this._csm;
+        let oXBlock, oXBlockCeil, oXBlockImage;
+        let fBx, fBy, yOfsCeil;
+
+
+        for (y = 1; y < h; ++y) {
+            fBx = wx1;
+            fBy = wy1;
+
+            // floor
+            dFront = fh * ff / y;
+            fy = wy1 * dFront + yCam;
+            fx = wx1 * dFront + xCam;
+            xDeltaFront = xDelta * dFront;
+            yDeltaFront = yDelta * dFront;
+            wy = w * (h + y);
+            yOfs = Math.min(st, dFront / sf | 0);
+
+            // ceill
+            if (bCeil) {
+                dFrontCeil = fhCeil * ff / y;
+                fyCeil = wy1 * dFrontCeil + yCam;
+                fxCeil = wx1 * dFrontCeil + xCam;
+                xDeltaFrontCeil = xDelta * dFrontCeil;
+                yDeltaFrontCeil = yDelta * dFrontCeil;
+                wyCeil = w * (h - y);
+                yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
+            }
+            for (x = 0; x < w; ++x) {
+                ofsDst = wy + x;
+                ofsDstCeil = wyCeil + x;
+                fy64 = fy / ps | 0;
+                fx64 = fx / ps | 0;
+                if (x >= xStart && x <= xEnd && fx >= 0 && fy >= 0 && fx < xyMax && fy < xyMax) {
+                    oXBlock = oXMap.getSurface(fx64, fy64, 4);
+                    if (oXBlock.imageData32) {
+                        oXBlockImage = oXBlock.imageData32;
+                        ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                        aRenderSurf[ofsDst] = oXBlockImage[ofsSrc];
+                    } else {
+                        nBlock = aMap[fy64][fx64] & 0xFFF; // **code12** code
+                        aFBlock = F[nBlock];
+                        if (aFBlock !== null) {
+                            xOfs = aFBlock[4];
+                            if (xOfs !== null) {
+                                ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
+                            }
+                        }
+                    }
+                }
+                if (bCeil && fxCeil >= 0 && fyCeil >= 0 && fxCeil < xyMax && fyCeil < xyMax) {
+                    fy64 = fyCeil / ps | 0;
+                    fx64 = fxCeil / ps | 0;
+                    oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
+                    if (oXBlockCeil.imageData32) {
+                        oXBlockImage = oXBlockCeil.imageData32;
+                        ofsSrc = (((fyCeil  % ps) + yOfs * ps | 0) * ps + (((fxCeil % ps) | 0)));
+                        aRenderSurf[ofsDstCeil] = oXBlockImage[ofsSrc];
+                    } else {
+                        nBlock = aMap[fy64][fx64] & 0xFFF; // **code12** code
+                        aFBlock = F[nBlock];
+                        if (aFBlock !== null) {
+                            xOfs = aFBlock[5];
+                            if (xOfs !== null) {
+                                ofsSrc = (((fyCeil % ps) + yOfs * ps | 0) * nFloorWidth + (((fxCeil % ps) + xOfs * ps | 0)));
+                                aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
+                            }
+                        }
+                    }
+                }
+                if (bCeil) {
+                    fyCeil += yDeltaFrontCeil;
+                    fxCeil += xDeltaFrontCeil;
+                }
+                fy += yDeltaFront;
+                fx += xDeltaFront;
+            }
+        }
+        ctx.renderContext.putImageData(oFlatContext.renderSurface, 0, 0);
     }
 
 
