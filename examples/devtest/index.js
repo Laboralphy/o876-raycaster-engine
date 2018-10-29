@@ -77,7 +77,7 @@ async function main() {
     const RENDER_CVS = CanvasHelper.cloneCanvas(cvs);
     const RENDER_CTX = RENDER_CVS.getContext('2d');
     function doomloop() {
-        //f -= 0.01;
+        f -= 0.01;
         let rctx = rc.createContext(256, 256, f, RENDER_CTX);
         rc.computeScreenSliceBuffer(rctx);
         rc.render(rctx);
