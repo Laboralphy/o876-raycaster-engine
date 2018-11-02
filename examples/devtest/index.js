@@ -16,7 +16,7 @@ async function main2() {
 	let sts = new ShadedTileSet();
 	sts.setTileSet(ts);
 	sts.compute('#000000', '#808080', 0);
-	let sts2 = sts.createFragment(3);
+	let sts2 = sts.extractTile(3);
     ctx.drawImage(sts2._tileSets[0].getImage(), 0, 0);
     ctx.drawImage(sts2._tileSets[4].getImage(), 64, 96);
 }
@@ -39,7 +39,6 @@ async function main() {
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
-    rc.setVisualSettings('black', false, 0.2);
     rc.setMapSize(30);
     rc.registerCellCode(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
     rc.registerCellCode(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
@@ -85,6 +84,7 @@ async function main() {
     }
 
     setInterval(doomloop, 40);
+    window.RC = rc;
 }
 
 window.addEventListener('load', main);

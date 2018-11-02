@@ -5,7 +5,7 @@ class CanvasHelper {
 	 * Create a new canvas, width the given size
 	 * @param width {number}
 	 * @param height {number}
-	 * @return {HTMLElement}
+	 * @return {HTMLCanvasElement}
 	 */
 	static createCanvas(width, height) {
 		let c = document.createElement('canvas');

@@ -51,6 +51,10 @@ class ShadedTileSet {
         this._tileHeight = h;
 	}
 
+	getOriginalImage() {
+		return this._originalImage;
+	}
+
     /**
 	 * Returns the shaded tileset image
      * @returns {HTMLCanvasElement}
@@ -81,16 +85,19 @@ class ShadedTileSet {
     /**
 	 * extract a fragment (containing only one tile) of the shaded tileset into a new one
 	 * @param iTile {number}
+	 * @param [nLevel] {number} level of lightness (if ommittted all levels are cloned)
 	 * @return {HTMLCanvasElement}
      */
-	createFragment(iTile) {
+	extractTile(iTile, nLevel) {
 		const w = this._tileWidth;
 		const h = this._tileHeight;
 		const sl = this._shadingLayers;
-		const fh = h * sl;
+		const fh = nLevel !== undefined ? h : h * sl;
+		const x = iTile * w;
+		const y = nLevel !== undefined ? h * nLevel : 0;
 		const oFragment = CanvasHelper.createCanvas(w, fh);
 		const ctx = oFragment.getContext('2d');
-		ctx.drawImage(this._image, iTile * w, 0, w, fh, 0, 0, w, fh);
+		ctx.drawImage(this._image, x, y, w, fh, 0, 0, w, fh);
 		return oFragment;
 	}
 	

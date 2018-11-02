@@ -12,7 +12,6 @@ class CellSurfaceManager {
         this._height = 0;
         this._wBlock = 0;
         this._hBlock = 0;
-        this._shadeFactor = 0;
     }
 
     /**
@@ -108,20 +107,22 @@ class CellSurfaceManager {
     }
 
     /**
-     * create a copy of the surface of the specified wall.
-     * returns the newly made canvas (so we can draw things on it).
-     * @param oTileSet {ShadedTileSet} tileset of wall
-     * @param iTexture {number} wall texture index
+     * defines a new tile for the surface
+     * the tile, is just a canvas with appropriate dimension
+     * the cell surface manager will do the shading automatically
      * @param x {number} cell coordinate
      * @param y {number} cell coordinate
      * @param nSide {number} wall side index
+     * @param oTile {HTMLCanvasElement} the new surface
      */
-    cloneSurface(oTileSet, iTexture, x, y, nSide) {
+    setSurfaceTile(x, y, nSide, oTile) {
         let oSurface = this.getSurface(x, y, nSide);
         // in case of flat texture
         oSurface.imageData = null;
         oSurface.imageData32 = null;
-        oSurface.tileset = oTileSet.createFragment(iTexture);
+        const ts = new ShadedTileSet();
+        oSurface.tileset = ts;
+        ts.setImage(oTile);
     }
 
     removeClone(x, y, nSide) {
