@@ -17,7 +17,7 @@ function emptyTarget(val) {
 
 function cloneIfNecessary(value, optionsArgument) {
     let clone = optionsArgument && optionsArgument.clone === true;
-    return (clone && isMergeableObject(value)) ? deepmerge(emptyTarget(value), value, optionsArgument) : value;
+    return (clone && isMergeableObject(value)) ? deepMerge(emptyTarget(value), value, optionsArgument) : value;
 }
 
 function defaultArrayMerge(target, source, optionsArgument) {
@@ -26,7 +26,7 @@ function defaultArrayMerge(target, source, optionsArgument) {
         if (typeof destination[i] === 'undefined') {
             destination[i] = cloneIfNecessary(e, optionsArgument);
         } else if (isMergeableObject(e)) {
-            destination[i] = deepmerge(target[i], e, optionsArgument);
+            destination[i] = deepMerge(target[i], e, optionsArgument);
         } else if (target.indexOf(e) === -1) {
             destination.push(cloneIfNecessary(e, optionsArgument));
         }
@@ -45,13 +45,13 @@ function mergeObject(target, source, optionsArgument) {
         if (!isMergeableObject(source[key]) || !target[key]) {
             destination[key] = cloneIfNecessary(source[key], optionsArgument);
         } else {
-            destination[key] = deepmerge(target[key], source[key], optionsArgument);
+            destination[key] = deepMerge(target[key], source[key], optionsArgument);
         }
     });
     return destination;
 }
 
-function deepmerge(target, source, optionsArgument) {
+function deepMerge(target, source, optionsArgument) {
     let array = Array.isArray(source);
     let options = optionsArgument || { arrayMerge: defaultArrayMerge };
     let arrayMerge = options.arrayMerge || defaultArrayMerge;
@@ -63,12 +63,12 @@ function deepmerge(target, source, optionsArgument) {
     }
 }
 
-deepmerge.all = function deepmergeAll(array, optionsArgument) {
+deepMerge.all = function deepmergeAll(array, optionsArgument) {
     if (!Array.isArray(array) || array.length < 2) {
         throw new Error('first argument should be an array with at least two elements');
     }
     // we are sure there are at least 2 values, so it is safe to have no initial value
-    return array.reduce((prev, next) => deepmerge(prev, next, optionsArgument));
+    return array.reduce((prev, next) => deepMerge(prev, next, optionsArgument));
 };
 
-export default deepmerge;
+export default deepMerge;

@@ -165,8 +165,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
   \_/\_/ \___/|_|  |_|\__,_|  \__,_|\___|_| |_|_| |_|_|\__|_|\___/|_| |_|
 
 */
-    defineOptions(opt) {
-        this._options = deepMerge(this._options, opt);
+
+    defineOptions(opt, root) {
+        if (root === undefined) {
+            root = this._options;
+        }
+        for (let key in opt) {
+            if ()
+        }
     }
 
 
