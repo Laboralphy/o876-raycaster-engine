@@ -4,21 +4,19 @@ describe('#reactor', function() {
     it('should work on one level', function() {
         const obj = {
             alpha: 1,
-            beta: 2
+            gamma: 2
         };
         const r = new Reactor();
         r.makeReactiveObject(obj);
+        r.clear();
         expect(obj.alpha).toBe(1);
-        expect(obj.beta).toBe(2);
-        expect(r._log.length).toBe(0);
+        expect(obj.gamma).toBe(2);
         obj.alpha = 2;
-        expect(r._log.length).toBe(1);
-        expect(r._log).toEqual(['alpha']);
-        obj.beta = 6;
-        expect(r._log.length).toBe(2);
-        expect(r._log).toEqual(['alpha', 'beta']);
+        expect(r._log).toEqual({'alpha': true});
+        obj.gamma = 6;
+        expect(r._log).toEqual({'alpha': true, 'gamma':true});
         expect(obj.alpha).toBe(2);
-        expect(obj.beta).toBe(6);
+        expect(obj.gamma).toBe(6);
     });
 
     it('should work on array', function() {
@@ -27,9 +25,10 @@ describe('#reactor', function() {
         };
         expect(obj.alpha).toEqual([1, 2, 3]);
         const r = new Reactor(obj);
-        expect(r._log).toEqual([]);
+        r.clear();
+        expect(r._log).toEqual({});
         obj.alpha.push(10);
-        expect(r._log).toEqual(['alpha']);
+        expect(r._log).toEqual({'alpha': true});
     });
 
     it('should work on more level', function() {
@@ -42,7 +41,8 @@ describe('#reactor', function() {
             }
         };
         const r = new Reactor(obj);
+        r.clear();
         obj.alpha.beta.x = 1111;
-        expect(r._log).toEqual(['alpha.beta.x']);
+        expect(r._log).toEqual({'alpha.beta.x': true});
     });
 });

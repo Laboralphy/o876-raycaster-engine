@@ -10,14 +10,16 @@ class Reactor {
     }
 
     getLog() {
-        return this._log;
+        return Object.keys(this._log);
     }
+
+
 
     /**
      * clears the mutation log
      */
     clear() {
-        this._log = [];
+        this._log = {};
     }
 
     /**
@@ -25,7 +27,8 @@ class Reactor {
      * @param path {string} hierarchic key
      */
     notify(path) {
-        this._log.push(path.substr(1));
+        path = path.substr(1);
+        this._log[path] = true;
     }
 
     /**

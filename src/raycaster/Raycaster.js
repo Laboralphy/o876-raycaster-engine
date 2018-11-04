@@ -5,6 +5,8 @@ import CanvasHelper from './CanvasHelper';
 import deepMerge from './deepMerge';
 import * as CONSTS from './consts';
 import Reactor from "./Reactor";
+import ArrayHelper from './ArrayHelper';
+import Translator from "./Translator";
 
 /**
  * @todo easy world definition
@@ -37,7 +39,46 @@ function zBufferCompare(a, b) {
 class Raycaster {
 	
 	constructor() {
-		this._options = {
+	    this.configProperties();
+        this.configOptions();
+        this.configTranslator();
+        this.configVRContext();
+        this.resetFlatContext();
+	}
+
+	resetFlatContext() {
+        this._flatContext = {
+            image: undefined,
+            imageData: undefined,
+            imageData32: undefined,
+            renderSurface: undefined,
+            renderSurface32: undefined
+        };
+    }
+
+    configProperties() {
+        this._map = [];
+        this._walls = null; // wall shaded tileset
+        this._flats = null; // flat shaded tileset
+        this._background = null; // background image
+        this._csm = new CellSurfaceManager();
+        this._cellCodes = []; // this is an array of array of sides
+
+        this._zbuffer = null; // array of drawing operation
+        this._bgOffset = 0; // oofset between camera and background position
+        this._bgCameraOffset = 0; // oofset between camera and background position
+    }
+
+    configVRContext() {
+        this._vrContext = {
+            b: false,
+            leftColumn: 0,
+            rightColumn: 0
+        };
+    }
+
+    configOptions() {
+        this._options = {
             metrics: {
                 height: 96,	         // wallXed height of walls
                 spacing: 64,         // size of a cell, on the floor
@@ -63,36 +104,31 @@ class Raycaster {
                 }
             },
         };
-
         this._optionsReactor = new Reactor(this._options);
-		this._map = [];
-        this._walls = null; // wall shaded tileset
-        this._flats = null; // flat shaded tileset
-        this._background = null; // background image
-		this._csm = new CellSurfaceManager();
-        this._cellCodes = []; // this is an array of array of sides
+    }
 
-        this._zbuffer = null; // array of drawing operation
-        this._bgOffset = 0; // oofset between camera and background position
-        this._bgCameraOffset = 0; // oofset between camera and background position
+    configTranslator() {
+	    const t = new Translator();
+	    t.addRule('visual.fog.color', 'shading-settings');
+        t.addRule('visual.brightness', 'shading-settings');
+        t.addRule('visual.shading.filter', 'shading-settings');
+        t.addRule('visual.shading.threshold', 'shading-settings');
+        this._translator = t;
+    }
 
-        this.resetFlatContext();
 
-        this._vrContext = {
-            b: false,
-            leftColumn: 0,
-            rightColumn: 0
-        };
-	}
 
-	resetFlatContext() {
-        this._flatContext = {
-            image: undefined,
-            imageData: undefined,
-            imageData32: undefined,
-            renderSurface: undefined,
-            renderSurface32: undefined
-        };
+    /**
+     * builds a list of mutated options
+     * @return {array}
+     */
+    buildMutatedOptionList() {
+        const t = this._translator;
+        const l = this._optionsReactor
+            .getLog()
+            .map(x => t.translate(x));
+        this._optionsReactor.clear();
+        return ArrayHelper.uniq(l);
     }
 
     /**
@@ -100,32 +136,23 @@ class Raycaster {
      * and recomputes that need to be recomputed
      */
     optionsReaction() {
-	    const or = this._optionsReactor;
-	    const orl = or.getLog();
-	    const l = orl.length;
+        const aList = this.buildMutatedOptionList();
+	    const l = aList.length;
 	    if (l === 0) {
 	        return;
         }
-	    let oChanges = {};
+        const o = this._options;
 	    for (let i = 0; i < l; ++i) {
-	        switch (orl[i]) {
-                case 'visual.shading.threshold':
-                case 'visual.fog.color':
-                case 'visual.brightness':
-                case 'visual.shading.filter':
-                    oChanges.v = true;
+	        switch (aList[i]) {
+                case 'shading-settings':
+                    this.setShadingSettings(
+                        o.visual.shading.threshold,
+                        o.visual.fog.color,
+                        o.visual.shading.filter,
+                        o.visual.brightness
+                    );
                     break;
             }
-        }
-        or.clear();
-        const o = this._options;
-        if (oChanges.v) {
-            this.setShadingSettings(
-                o.visual.shading.threshold,
-                o.visual.fog.color,
-                o.visual.shading.filter,
-                o.visual.brightness
-            );
         }
     }
 
