@@ -2,11 +2,11 @@ import ShadedTileSet from './ShadedTileSet';
 import MarkerRegistry from './MarkerRegistry';
 import CellSurfaceManager from './CellSurfaceManager';
 import CanvasHelper from './CanvasHelper';
-import deepMerge from './deepMerge';
 import * as CONSTS from './consts';
 import Reactor from "./Reactor";
 import ArrayHelper from './ArrayHelper';
 import Translator from "./Translator";
+import {objectExtends} from "./objectExtender";
 
 /**
  * @todo easy world definition
@@ -80,29 +80,32 @@ class Raycaster {
     configOptions() {
         this._options = {
             metrics: {
-                height: 96,	         // wallXed height of walls
-                spacing: 64,         // size of a cell, on the floor
-                doubleHeight: false         // second storey is double height (for city buildings)
+                height: 96,         // wallXed height of walls
+                spacing: 64,        // size of a cell, on the floor
+                doubleHeight: false // second storey is double height (for city buildings)
             },
             screen: {               // the virtual screen where the world is rendered
-                height: 250,	    // vertical screen size (in pixels)
                 width: 400,         // horizontal screen size (in pixels)
-                aspect: 4/3,
-                fov: Math.PI / 4    // You should not change this setting but only slightly
+                height: 250,	    // vertical screen size (in pixels)
+                fov: Math.PI / 4    // (*) You should not change this setting but only slightly
             },
-            visual: {		        // all things visual
+            visual: {
                 smooth: false,      // set texture smoothing on or off
-                brightness: 0,	    // base brightness
+                brightness: 0,	    // (*) base brightness
                 fog: {
-                    color: 'black',       // fog color
-                    factor: 50,			// distance where the texture shading increase by one unit
+                    color: 'black', // (*) fog color
+                    factor: 50,     // (*) distance where the texture shading increase by one unit
                 },
                 shading: {
-                    filter: false,		// color filter for sprites (ambient color)
-                    threshold: 16,    	// number of shading layers
-                    dim: 7,				// shading factor added to the y axis wall only, to simulate realistic lighting
+                    filter: false,  // (*) color filter for sprites (ambient color)
+                    threshold: 16,  // (*) number of shading layers
                 }
             },
+            images: {
+                walls: '',          // (*) wall textures
+                flats: '',          // (*) flat textures
+                background: ''      // (*) background images
+            }
         };
         this._optionsReactor = new Reactor(this._options);
     }
@@ -117,6 +120,12 @@ class Raycaster {
     }
 
 
+//      _            _ _                        _ _   _                   _   _
+//   __| | ___  __ _| (_)_ __   __ _  __      _(_) |_| |__     ___  _ __ | |_(_) ___  _ __  ___
+//  / _` |/ _ \/ _` | | | '_ \ / _` | \ \ /\ / / | __| '_ \   / _ \| '_ \| __| |/ _ \| '_ \/ __|
+// | (_| |  __/ (_| | | | | | | (_| |  \ V  V /| | |_| | | | | (_) | |_) | |_| | (_) | | | \__ \
+//  \__,_|\___|\__,_|_|_|_| |_|\__, |   \_/\_/ |_|\__|_| |_|  \___/| .__/ \__|_|\___/|_| |_|___/
+//                             |___/                               |_|
 
     /**
      * builds a list of mutated options
@@ -127,20 +136,24 @@ class Raycaster {
         const l = this._optionsReactor
             .getLog()
             .map(x => t.translate(x));
-        this._optionsReactor.clear();
         return ArrayHelper.uniq(l);
+    }
+
+    optionsHaveMutated() {
+        return this
+            ._optionsReactor
+            .getLog()
+            .length > 0;
     }
 
     /**
      * reads the mutations that occurs on the option object
      * and recomputes that need to be recomputed
      */
-    optionsReaction() {
+    async optionsReaction() {
         const aList = this.buildMutatedOptionList();
+        this._optionsReactor.clear();
 	    const l = aList.length;
-	    if (l === 0) {
-	        return;
-        }
         const o = this._options;
 	    for (let i = 0; i < l; ++i) {
 	        switch (aList[i]) {
@@ -151,6 +164,40 @@ class Raycaster {
                         o.visual.shading.filter,
                         o.visual.brightness
                     );
+                    break;
+
+                case 'images.walls':
+                    if (o.images.walls !== '') {
+                        const wallImage = await CanvasHelper.loadCanvas(o.images.walls);
+                        this.setWallTextures(wallImage);
+                        this.setWallShadingSettings(
+                            o.visual.shading.threshold,
+                            o.visual.fog.color,
+                            o.visual.shading.filter,
+                            o.visual.brightness
+                        );
+                    }
+                    break;
+
+                case 'images.flats':
+                    if (o.images.flats !== '') {
+                        const flatImage = await CanvasHelper.loadCanvas(o.images.flats);
+                        this.setFlatTextures(flatImage);
+                        this.setFlatShadingSettings(
+                            o.visual.shading.threshold,
+                            o.visual.fog.color,
+                            o.visual.shading.filter,
+                            o.visual.brightness
+                        );
+                    }
+                    break;
+
+                case 'images.background':
+                    if (o.images.background !== '') {
+                        const bgImage = await CanvasHelper.loadCanvas(o.images.background);
+                        CanvasHelper.setImageSmoothing(bgImage, false);
+                        this.setBackground(bgImage);
+                    }
                     break;
             }
         }
@@ -166,13 +213,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 */
 
-    defineOptions(opt, root) {
-        if (root === undefined) {
-            root = this._options;
-        }
-        for (let key in opt) {
-            if ()
-        }
+    defineOptions(opt) {
+        objectExtends(this._options, opt);
     }
 
 
@@ -230,6 +272,19 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
+    setWallShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
+        this._walls.setShadingLayerCount(nShadingThreshold);
+        this._walls.compute(sFogColor, sFilter, nBrightness);
+    }
+
+    setFlatShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
+        this._flats.setShadingLayerCount(nShadingThreshold);
+        this._flats.compute(sFogColor, sFilter, nBrightness);
+        this.resetFlatContext();
+        this._flatContext.image = this._flats.getImage();
+    }
+
+
     /**
 	 * Defines the shading settings
      * @param nShadingThreshold {number} number of layer in the shading precomputatiuon
@@ -238,12 +293,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param nBrightness {number} base texture light diffusion, if 0, then wall are not emitting light
      */
 	setShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
-	    this._walls.setShadingLayerCount(nShadingThreshold);
-        this._walls.compute(sFogColor, sFilter, nBrightness);
-        this._flats.setShadingLayerCount(nShadingThreshold);
-        this._flats.compute(sFogColor, sFilter, nBrightness);
-        this.resetFlatContext();
-        this._flatContext.image = this._flats.getImage();
+        this.setWallShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness);
+        this.setFlatShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness);
 	}
 
     /**
@@ -890,17 +941,16 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const SHADING = OPTIONS.visual.shading;
         const FOG = OPTIONS.visual.fog;
         const METRICS = OPTIONS.metrics;
-        let aspect = SCREEN.aspect;
         let ytex = METRICS.height;
         let xtex = METRICS.spacing;
         let xscr = SCREEN.width;
         let yscr = SCREEN.height >> 1;
-        let vyscr = 0.5 * xscr / aspect;
         let ff = FOG.factor;
-        let sht = SHADING.threshold - 1;
-        let dmw = SHADING.dim;
+        let sht = SHADING.threshold;
+        let dmw = sht >> 1;
         let fvh = ctx.camera.height;
-        let dz = (ytex * vyscr / z) + 0.5 | 0;
+        let dz = yscr * ytex / z/*+ 0.5*/ ;
+
         let dzy = yscr - (dz * fvh);
         let nPhys = (nPanel >> 12) & 0xF;  // **code12** phys
         let nOffset = (nPanel >> 16) & 0xFF; // **code12** offs
@@ -911,7 +961,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         } else {
             nOpacity -= nLight;
         }
-        nOpacity = Math.max(0, Math.min(sht, nOpacity));
+        nOpacity = Math.max(0, Math.min(sht - 1, nOpacity));
         let aData = [
             oTileSet.getImage(), // image 0
             iTile + nPos, // sx  1
@@ -919,9 +969,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             1, // sw  3
             ytex, // sh  4
             x, // dx  5
-            dzy - 1, // dy  6
+            dzy - 1 | 0, // dy  6
             1, // dw  7
-            (2 + dz * 2), // dh  8
+            2 * dz + 2 | 0, // dh  8
             z, // z 9
             bDim ? CONSTS.FX_DIM0 : 0
         ];
@@ -932,13 +982,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[2] += nOffset;
                 if (nOffset > 0) {
                     aData[4] = ytex - nOffset;
-                    aData[8] = ((aData[4] / (z / vyscr) + 0.5)) << 1;
+                    aData[8] = ((aData[4] / (z / xscr) + 0.5)) << 1;
                 }
                 break;
 
             case CONSTS.PHYS_CURT_SLIDING_UP: // rideau coulissant vers le haut
                 if (nOffset > 0) {
-                    aData[8] = (((ytex - nOffset) / (z / vyscr) + 0.5)) << 1;
+                    aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5)) << 1;
                 }
                 break;
 
@@ -954,7 +1004,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     // 8: dh
                     // on observe que dh est un peut trop petit, ou que dy es trop haut
                     aData[4] = ytex - nOffset;
-                    aData[8] = ((aData[4] / (z / vyscr) + 0.5));
+                    aData[8] = ((aData[4] / (z / xscr) + 0.5));
                     aData[6] += (dz - aData[8]) << 1;
                     aData[8] <<= 1;
                 }
@@ -1308,7 +1358,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 
     render(ctx) {
-        this.optionsReaction();
+        if (this.optionsHaveMutated()) { // sync
+            this.optionsReaction();     // async
+        }
         const context = ctx.renderContext;
         this.renderBackground(context);
         this.renderFlats(ctx);

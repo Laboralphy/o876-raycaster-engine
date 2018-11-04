@@ -130,7 +130,7 @@ class CanvasHelper {
 				resolve(CanvasHelper.cloneCanvas(image));
 			});
 			image.addEventListener('error', () => {
-				reject(new Error('CanvasHelper.loadImage : Error while loading this image : ' + sUrl));
+				reject(new Error('CanvasHelper.loadImage : Error while loading this image : "' + sUrl + '"'));
 			});
 			image.src = sUrl;
 		});

@@ -1,3 +1,3 @@
-require('./deepMergeTest');
+require('./objectExtenderTest');
 require('./ReactorTest');
 require('./TranslatorTest');

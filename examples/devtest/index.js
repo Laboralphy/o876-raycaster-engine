@@ -35,15 +35,18 @@ async function main() {
     CanvasHelper.setImageSmoothing(cWall, false);
     CanvasHelper.setImageSmoothing(cFlat, false);
 
+    // il nous faut un objet de configuration
+
+
     let rc = new Raycaster();
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
     rc.setMapSize(30);
-    rc.registerCellCode(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
+    rc.registerCellCode(0, {n: null, e: null, s: null, w: null, f: 0, c: 0});
     rc.registerCellCode(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
-    rc.registerCellCode(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
-    rc.registerCellCode(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
+    rc.registerCellCode(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 0});
+    rc.registerCellCode(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 0});
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
             rc.setCellCode(x, y, 1);
@@ -68,16 +71,21 @@ async function main() {
     rc.setCellPhys(9, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(9, 5, 32);
 
-    rc.setCellCode(4, 0, 3);
-    rc.setCellPhys(4, 0, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    rc.setCellOffset(4, 0, 32);
+    rc.setCellCode(4, 0, 0);
+    rc.setCellPhys(4, 0, CONSTS.PHYS_NONE);
+    rc.setCellOffset(4, 0, 0);
 
-    let f = Math.PI / 4;
+    cvs.width = rc._options.screen.width;
+    cvs.height = rc._options.screen.height;
     const RENDER_CVS = CanvasHelper.cloneCanvas(cvs);
     const RENDER_CTX = RENDER_CVS.getContext('2d');
+
+
+    let xCam = 256;
+    let yCam = 256;
+    let fAngle = 0;
     function doomloop() {
-        f -= 0.01;
-        let rctx = rc.createContext(256, 256, f, RENDER_CTX);
+        let rctx = rc.createContext(xCam, yCam, fAngle, RENDER_CTX);
         rc.computeScreenSliceBuffer(rctx);
         rc.render(rctx);
         ctx.drawImage(RENDER_CVS, 0, 0);
@@ -85,6 +93,24 @@ async function main() {
 
     setInterval(doomloop, 40);
     window.RC = rc;
+    window.addEventListener('keydown', event => {
+        switch (event.key) {
+            case 'ArrowUp':
+                xCam += 16 * Math.cos(fAngle);
+                yCam += 16 * Math.sin(fAngle);
+                break;
+            case 'ArrowDown':
+                xCam -= 16 * Math.cos(fAngle);
+                yCam -= 16 * Math.sin(fAngle);
+                break;
+            case 'ArrowLeft':
+                fAngle -= 0.25;
+                break;
+            case 'ArrowRight':
+                fAngle += 0.25;
+                break;
+        }
+    });
 }
 
 window.addEventListener('load', main);

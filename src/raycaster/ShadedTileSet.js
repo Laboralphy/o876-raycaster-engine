@@ -70,12 +70,13 @@ class ShadedTileSet {
      * @param fAmbLightness {number}
      */
 	compute(sColorFog, sColorFilter, fAmbLightness) {
+		const sl = this._shadingLayers;
 		const oOrigImg = this._originalImage;
-		const oImg = CanvasHelper.createCanvas(oOrigImg.width, oOrigImg.height * this._shadingLayers);
+		const oImg = CanvasHelper.createCanvas(oOrigImg.width, oOrigImg.height * sl);
 		const ctx = oImg.getContext('2d');
 		const h = oOrigImg.height;
-		for (let i = 0, l = this._shadingLayers; i < l; ++i) {
-			let fFactor = Math.min(i / (this._shadingLayers - 1), 1) * (1 - fAmbLightness);
+		for (let i = 0; i < sl; ++i) {
+			let fFactor = Math.min(i / (sl - 1), 1) * (1 - fAmbLightness);
 			ctx.drawImage(this.shadeImage(oOrigImg, fFactor, sColorFog, sColorFilter), 0, i * h);
 		}
 		this._image = oImg;
