@@ -1,4 +1,4 @@
-let bDefaultImageSmmoothing = true;
+let bDefaultImageSmoothing = true;
 
 class CanvasHelper {
 	/**
@@ -11,16 +11,16 @@ class CanvasHelper {
 		let c = document.createElement('canvas');
 		c.width = width;
 		c.height = height;
-		CanvasHelper.setImageSmoothing(c, bDefaultImageSmmoothing);
+		CanvasHelper.setImageSmoothing(c, bDefaultImageSmoothing);
 		return c;
 	}
 
 	static setDefaultImageSmoothing(b) {
-        bDefaultImageSmmoothing = b;
+        bDefaultImageSmoothing = b;
 	}
 
 	static getDefaultImageSmoothing() {
-		return bDefaultImageSmmoothing;
+		return bDefaultImageSmoothing;
 	}
 	
 	/**
@@ -29,6 +29,10 @@ class CanvasHelper {
 	 * @param b {boolean} true = smoothing on // false = smoothing off
 	 */
 	static setImageSmoothing(oCanvas, b) {
+		if (b) {
+			console.log('smooth', oCanvas, b);
+			console.trace();
+		}
 		let oContext = oCanvas.getContext('2d');
 		oContext.imageSmoothingEnabled = b;
 	}
@@ -40,7 +44,7 @@ class CanvasHelper {
 	 */
 	static getImageSmoothing(oCanvas) {
 		let oContext = oCanvas.getContext('2d');
-		return oContext.imageSmoothingEnabled;
+		return !!oContext.imageSmoothingEnabled;
 	}
 	
 	/**
@@ -72,14 +76,13 @@ class CanvasHelper {
 			let oImage = oCanvas;
 			w = oImage.naturalWidth;
 			h = oImage.naturalHeight;
-			b = true;
+			b = bDefaultImageSmoothing;
 		} else {
 			w = oCanvas.width;
 			h = oCanvas.height;
 			b = CanvasHelper.getImageSmoothing(oCanvas);
 		}
 		let c = CanvasHelper.createCanvas(w, h);
-		CanvasHelper.setImageSmoothing(c, b);
 		c.getContext('2d').drawImage(oCanvas, 0, 0);
 		return c;
 	}

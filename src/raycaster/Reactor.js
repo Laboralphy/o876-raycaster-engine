@@ -29,6 +29,13 @@ class Reactor {
     notify(path) {
         path = path.substr(1);
         this._log[path] = true;
+        if (this._onChange) {
+            this._onChange(path);
+        }
+    }
+
+    onChange(pCallback) {
+        this._onChange = pCallback;
     }
 
     /**
@@ -83,11 +90,13 @@ class Reactor {
 
         Object.defineProperty(obj, key, {
             get() {
-                return val // Simply return the cached value
+                return val; // Simply return the cached value
             },
             set(newVal) {
-                val = newVal; // Save the newVal
-                oSelf.notify(path);
+                if (val !== newVal) {
+                    val = newVal; // Save the newVal
+                    oSelf.notify(path);
+                }
             }
         });
     }

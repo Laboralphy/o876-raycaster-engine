@@ -949,7 +949,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let sht = SHADING.threshold;
         let dmw = sht >> 1;
         let fvh = ctx.camera.height;
-        let dz = yscr * ytex / z/*+ 0.5*/ ;
+        let dz = yscr * ytex / z | 0;
 
         let dzy = yscr - (dz * fvh);
         let nPhys = (nPanel >> 12) & 0xF;  // **code12** phys
@@ -971,7 +971,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             x, // dx  5
             dzy - 1 | 0, // dy  6
             1, // dw  7
-            2 * dz + 2 | 0, // dh  8
+            (dz << 1) + 2 | 0, // dh  8
             z, // z 9
             bDim ? CONSTS.FX_DIM0 : 0
         ];
