@@ -338,7 +338,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * {n: north-surface-wall, e: east-surface-wall, s: south-surface-wall, w: west-surface-wall, f: floor-surface, c: ceil-surface}
      */
     registerCellCode(nCode, {n, e, s, w, f, c}) {
-        this._cellCodes[nCode] = [n, e, s, w, f, c];
+        this._cellCodes[nCode] = [w, s, e, n, f, c];
     }
 
 
@@ -1388,7 +1388,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     paintSurface(x, y, nSide, pDrawingFunction) {
         const cellCode = this.getCellCode(x, y);
         const iTile = this._cellCodes[cellCode][nSide];
-        const c = this._walls.extractTile(iTile, 0);
+        const c = nSide < 4
+            ? this._walls.extractTile(iTile, 0)
+            : this._flats.extractTile(iTile, 0);
         const csm = this._csm;
         CanvasHelper.setImageSmoothing(c, true);
         pDrawingFunction(x, y, nSide, c);

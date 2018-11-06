@@ -33,7 +33,7 @@ async function main() {
     if (CanvasHelper.getImageSmoothing(cvs)) {
         console.error(cvs, 'is bugged');
     }
-    let cWall = await CanvasHelper.loadCanvas('textures/walls.png');
+    let cWall = await CanvasHelper.loadCanvas('textures/walls-0123.png');
     let cFlat = await CanvasHelper.loadCanvas('textures/flats.png');
     let cBG = await CanvasHelper.loadCanvas('textures/sky.png');
 
@@ -49,6 +49,7 @@ async function main() {
     rc.registerCellCode(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
     rc.registerCellCode(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
     rc.registerCellCode(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
+    rc.registerCellCode(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
             rc.setCellCode(x, y, 1);
@@ -76,6 +77,9 @@ async function main() {
     rc.setCellCode(4, 0, 3);
     rc.setCellPhys(4, 0, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(4, 0, 32);
+
+    rc.setCellCode(2, 2, 4);
+    rc.setCellPhys(2, 2, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
     cvs.width = rc._options.screen.width;
     cvs.height = rc._options.screen.height;

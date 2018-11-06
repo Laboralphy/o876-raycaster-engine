@@ -1,10 +1,6 @@
 
 // Laby Phys Properties
 
-/**
- *
- * @type {number}
- */
 export const PHYS_NONE = 0x00;
 export const PHYS_WALL = 0x01;
 export const PHYS_FIRST_DOOR = 0x02;
@@ -23,6 +19,20 @@ export const PHYS_OFFSET_BLOCK = 0x0C;
 export const PHYS_DOOR_D = 0x0D;
 export const PHYS_DOOR_E = 0x0E;
 export const PHYS_DOOR_F = 0x0F;
+
+
+
+export const FACE_WEST = 0;
+export const FACE_SOUTH = 1;
+export const FACE_EAST = 2;
+export const FACE_NORTH = 3;
+export const FACE_FLOOR = 4;
+export const FACE_CEILING = 5;
+
+
+
+
+
 
 
 /**

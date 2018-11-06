@@ -1,4 +1,3 @@
-import CanvasHelper from './CanvasHelper';
 import ShadedTileSet from './ShadedTileSet';
 
 
