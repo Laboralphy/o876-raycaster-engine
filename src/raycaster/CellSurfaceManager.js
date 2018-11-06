@@ -122,11 +122,42 @@ class CellSurfaceManager {
         oSurface.imageData32 = null;
         const ts = new ShadedTileSet();
         oSurface.tileset = ts;
-        ts.setImage(oTile);
+        ts.setImage(oTile, oTile.width, oTile.height);
     }
 
     removeClone(x, y, nSide) {
         this.getSurface(x, y, nSide).tileset = null;
+    }
+
+    shadeSurface(x, y, nSide, nShades, sFogColor, sFilter, fBrightness) {
+        const oSurface = this.getSurface(x, y, nSide);
+        const ts = oSurface.tileset;
+        if (ts) {
+            ts.setShadingLayerCount(nShades);
+            ts.compute(sFogColor, sFilter, fBrightness);
+            if (nSide >= 4) {
+                const oCvs = ts.getImage();
+                const oCtx = oCvs.getContext('2d');
+                const oImgData = oCtx.getImageData(0, 0, oCvs.width, oCvs.height);
+                oSurface.imageData = oImgData;
+                oSurface.imageData32 = new Uint32Array(oImgData.data.buffer);
+            }
+        }
+    }
+
+    /**
+     * recompute all surfaces if the shading parameters have changed
+     */
+    shadeAllSurfaces(nShades, sFogColor, sFilter, fBrightness) {
+        const ymax = this._height;
+        const xmax = this._width;
+        for (let y = 0; y < ymax; ++y) {
+            for (let x = 0; x < xmax; ++x) {
+                for (let nSide = 0; nSide < 6; ++nSide) {
+                    this.shadeSurface(x, y, nSide, nShades, sFogColor, sFilter, fBrightness);
+                }
+            }
+        }
     }
 }
 

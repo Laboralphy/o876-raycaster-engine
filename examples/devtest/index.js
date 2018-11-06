@@ -2,7 +2,7 @@
 
 import rclib from '../../src';
 
-const {ShadedTileSet, CanvasHelper, Raycaster, CONSTS} = rclib;
+const {ShadedTileSet, CanvasHelper, Renderer, CONSTS} = rclib;
 
 
 async function main2() {
@@ -40,7 +40,7 @@ async function main() {
     // il nous faut un objet de configuration
 
 
-    let rc = new Raycaster();
+    let rc = new Renderer();
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
@@ -90,7 +90,7 @@ async function main() {
         let rctx = rc.createContext(xCam, yCam, fAngle, RENDER_CTX);
         rc.computeScreenSliceBuffer(rctx);
         rc.render(rctx);
-        ctx.drawImage(RENDER_CVS, 0, 0);
+        requestAnimationFrame(() => ctx.drawImage(RENDER_CVS, 0, 0));
     }
 
     setInterval(doomloop, 40);

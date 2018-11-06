@@ -36,7 +36,7 @@ function zBufferCompare(a, b) {
 
 
 
-class Raycaster {
+class Renderer {
 	
 	constructor() {
 	    this.configProperties();
@@ -91,14 +91,14 @@ class Raycaster {
             },
             visual: {
                 smooth: false,      // set texture smoothing on or off
-                brightness: 0,	    // (*) base brightness
                 fog: {
                     color: 'black', // (*) fog color
                     factor: 50,     // (*) distance where the texture shading increase by one unit
                 },
                 shading: {
+                    brightness: 0,	// (*) base brightness
                     filter: false,  // (*) color filter for sprites (ambient color)
-                    threshold: 16,  // (*) number of shading layers
+                    shades: 16,  // (*) number of shading nuance
                 }
             },
             images: {
@@ -113,9 +113,9 @@ class Raycaster {
     configTranslator() {
 	    const t = new Translator();
 	    t.addRule('visual.fog.color', 'shading-settings');
-        t.addRule('visual.brightness', 'shading-settings');
+        t.addRule('visual.shading.brightness', 'shading-settings');
         t.addRule('visual.shading.filter', 'shading-settings');
-        t.addRule('visual.shading.threshold', 'shading-settings');
+        t.addRule('visual.shading.shades', 'shading-settings');
         this._translator = t;
     }
 
@@ -159,10 +159,10 @@ class Raycaster {
 	        switch (aList[i]) {
                 case 'shading-settings':
                     this.setShadingSettings(
-                        o.visual.shading.threshold,
+                        o.visual.shading.shades,
                         o.visual.fog.color,
                         o.visual.shading.filter,
-                        o.visual.brightness
+                        o.visual.shading.brightness
                     );
                     break;
 
@@ -171,10 +171,10 @@ class Raycaster {
                         const wallImage = await CanvasHelper.loadCanvas(o.images.walls);
                         this.setWallTextures(wallImage);
                         this.setWallShadingSettings(
-                            o.visual.shading.threshold,
+                            o.visual.shading.shades,
                             o.visual.fog.color,
                             o.visual.shading.filter,
-                            o.visual.brightness
+                            o.visual.shading.brightness
                         );
                     }
                     break;
@@ -184,10 +184,10 @@ class Raycaster {
                         const flatImage = await CanvasHelper.loadCanvas(o.images.flats);
                         this.setFlatTextures(flatImage);
                         this.setFlatShadingSettings(
-                            o.visual.shading.threshold,
+                            o.visual.shading.shades,
                             o.visual.fog.color,
                             o.visual.shading.filter,
-                            o.visual.brightness
+                            o.visual.shading.brightness
                         );
                     }
                     break;
@@ -226,11 +226,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let width = this._options.metrics.spacing;
         let height = this._options.metrics.height;
         CanvasHelper.setDefaultImageSmoothing(this._options.visual.smooth);
-        this._walls = Raycaster.buildTileSet(
+        this._walls = Renderer.buildTileSet(
             oImage,
             width,
             height,
-            this._options.visual.shading.threshold
+            this._options.visual.shading.shades
         );
     }
 
@@ -241,11 +241,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     setFlatTextures(oImage) {
         let width = this._options.metrics.spacing;
         CanvasHelper.setDefaultImageSmoothing(this._options.visual.smooth);
-        this._flats = Raycaster.buildTileSet(
+        this._flats = Renderer.buildTileSet(
             oImage,
             width,
             width,
-            this._options.visual.shading.threshold
+            this._options.visual.shading.shades
         );
     }
 
@@ -262,24 +262,24 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param oImage {Image|HTMLCanvasElement}
      * @param width {number}
      * @param height {number}
-     * @param nShadingThreshold {number}
+     * @param nShades {number}
      */
-    static buildTileSet(oImage, width, height, nShadingThreshold) {
+    static buildTileSet(oImage, width, height, nShades) {
         const sw = new ShadedTileSet();
-        sw.setShadingLayerCount(nShadingThreshold);
+        sw.setShadingLayerCount(nShades);
         sw.setImage(oImage, width, height);
         return sw;
     }
 
 
-    setWallShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
-        this._walls.setShadingLayerCount(nShadingThreshold);
-        this._walls.compute(sFogColor, sFilter, nBrightness);
+    setWallShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
+        this._walls.setShadingLayerCount(nShades);
+        this._walls.compute(sFogColor, sFilter, fBrightness);
     }
 
-    setFlatShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
-        this._flats.setShadingLayerCount(nShadingThreshold);
-        this._flats.compute(sFogColor, sFilter, nBrightness);
+    setFlatShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
+        this._flats.setShadingLayerCount(nShades);
+        this._flats.compute(sFogColor, sFilter, fBrightness);
         this.resetFlatContext();
         this._flatContext.image = this._flats.getImage();
     }
@@ -287,14 +287,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     /**
 	 * Defines the shading settings
-     * @param nShadingThreshold {number} number of layer in the shading precomputatiuon
+     * @param nShades {number} number of layer in the shading precomputatiuon
      * @param sFogColor {string} color of the fog
      * @param sFilter {string|boolean} color of the ambient lighting
-     * @param nBrightness {number} base texture light diffusion, if 0, then wall are not emitting light
+     * @param fBrightness {number} base texture light diffusion, if 0, then wall are not emitting light
      */
-	setShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness) {
-        this.setWallShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness);
-        this.setFlatShadingSettings(nShadingThreshold, sFogColor, sFilter, nBrightness);
+	setShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
+        this.setWallShadingSettings(nShades, sFogColor, sFilter, fBrightness);
+        this.setFlatShadingSettings(nShades, sFogColor, sFilter, fBrightness);
+        this._csm.shadeAllSurfaces(nShades, sFogColor, sFilter, fBrightness);
 	}
 
     /**
@@ -577,7 +578,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             fBy += dy;
         }
 
-        zbuffer = Raycaster._optimizeBuffer(zbuffer);
+        zbuffer = Renderer._optimizeBuffer(zbuffer);
         //this.drawHorde(aZBuffer);
         // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
         zbuffer.sort(zBufferCompare);
@@ -736,7 +737,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     if (nOfs) {
                         xint = x + xScale * xt;
                         yint = y + yScale * xt;
-                        if (Raycaster._sameOffsetWall(nOfs, xint, yint, xi, yi, dx, dy, nScale)) { // Même mur -> porte
+                        if (Renderer._sameOffsetWall(nOfs, xint, yint, xi, yi, dx, dy, nScale)) { // Même mur -> porte
                             nTOfs = (dxt / nScale) * nOfs;
                             yint = y + yScale * (xt + nTOfs);
                             if (((yint / nScale | 0)) !== yi) {
@@ -792,7 +793,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     if (nOfs) {
                         xint = x + xScale * yt;
                         yint = y + yScale * yt;
-                        if (Raycaster._sameOffsetWall(nOfs, xint, yint, xi, yi, dx, dy, nScale)) { // Même mur -> porte
+                        if (Renderer._sameOffsetWall(nOfs, xint, yint, xi, yi, dx, dy, nScale)) { // Même mur -> porte
                             nTOfs = (dyt / nScale) * nOfs;
                             xint = x + xScale * (yt + nTOfs);
                             if (((xint / nScale | 0)) !== xi) {
@@ -946,7 +947,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xscr = SCREEN.width;
         let yscr = SCREEN.height >> 1;
         let ff = FOG.factor;
-        let sht = SHADING.threshold;
+        let sht = SHADING.shades;
         let dmw = sht >> 1;
         let fvh = ctx.camera.height;
         let dz = yscr * ytex / z | 0;
@@ -1084,7 +1085,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     static renderScreenSliceBuffer(zbuffer, context) {
         for (let i = 0, l = zbuffer.length; i < l; ++i) {
-            Raycaster.renderScreenSlice(zbuffer[i], context);
+            Renderer.renderScreenSlice(zbuffer[i], context);
         }
     }
 
@@ -1153,7 +1154,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let nBlock;
         let xyMax = this.getMapSize() * ps;
         let sh = VISUAL.shading;
-        let st = sh.threshold - 1;
+        let st = sh.shades - 1;
         let sf = FOG.factor;
         let aMap = this._map;
         let F = this._cellCodes;
@@ -1364,7 +1365,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const context = ctx.renderContext;
         this.renderBackground(context);
         this.renderFlats(ctx);
-        Raycaster.renderScreenSliceBuffer(this._zbuffer, context);
+        Renderer.renderScreenSliceBuffer(this._zbuffer, context);
     }
 
     /**
@@ -1388,39 +1389,21 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const cellCode = this.getCellCode(x, y);
         const iTile = this._cellCodes[cellCode][nSide];
         const c = this._walls.extractTile(iTile, 0);
+        const csm = this._csm;
+        CanvasHelper.setImageSmoothing(c, true);
         pDrawingFunction(x, y, nSide, c);
+        CanvasHelper.setImageSmoothing(c, this._options.visual.smooth);
+        csm.setSurfaceTile(x, y, nSide, c);
+        this.shadeSurface(x, y, nSide);
     }
 
-    shadeCloneWall(oCanvas, x, y, nSide) {
-        var a = this.shadeImage(oCanvas, false);
-        this.oXMap.get(x, y, nSide).surface = a;
-        return a;
-    }
-
-    cloneFlat(x, y, nSide, pDrawingFunction) {
-        if (nSide === false) {
-            this.cloneFlat(x, y, 0, pDrawingFunction);
-            this.cloneFlat(x, y, 1, pDrawingFunction);
-            return;
-        }
-        if (pDrawingFunction === false) {
-            this.oXMap.removeClone(x, y, nSide + 4);
-            return;
-        }
-        var iTexture = this.aWorld.flats.codes[this.getMapCode(x, y)][nSide];
-        if (iTexture < 0) {
-            return;
-        }
-        var c = this.oXMap.cloneTexture(this.oFloor.image, iTexture, x, y, nSide + 4);
-        nSide += 4;
-        pDrawingFunction(this, c, x, y, nSide);
-        c = this.shadeCloneWall(c, x, y, nSide);
-        // faire l'image map du canvas
-        var b = this.oXMap.get(x, y, nSide);
-        var oCtx = c.getContext('2d');
-        b.imageData = oCtx.getImageData(0, 0, c.width, c.height);
-        b.imageData32 = new Uint32Array(b.imageData.data.buffer);
+    shadeSurface(x, y, nSide) {
+        const opt = this._options;
+        const VISUAL = opt.visual;
+        const SHADING = VISUAL.shading;
+        const FOG = VISUAL.fog;
+        this._csm.shadeSurface(x, y, nSide, SHADING.shades, FOG.color, SHADING.filter, SHADING.brightness);
     }
 }
 
-export default Raycaster;
+export default Renderer;

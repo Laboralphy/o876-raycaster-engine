@@ -1,10 +1,10 @@
 import * as CONSTS from './raycaster/consts';
-import Raycaster from './raycaster/Raycaster';
+import Renderer from './raycaster/Renderer';
 import ShadedTileSet from './raycaster/ShadedTileSet';
 import CanvasHelper from './raycaster/CanvasHelper';
 
 export default {
-	Raycaster,
+	Renderer,
 	ShadedTileSet,
 	CanvasHelper,
 	CONSTS
