@@ -6,16 +6,14 @@ import * as CONSTS from './consts';
 import Reactor from "./Reactor";
 import ArrayHelper from './ArrayHelper';
 import Translator from "./Translator";
+import TileAnimation from "./TileAnimation";
 import {objectExtends} from "./objectExtender";
 
 /**
- * @todo easy world definition
- * @todo texture cloning and customization
- * @todo texture animation
  * @todo upper level
  * @todo double height
- * @todo VR rendering
  * @todo sprite rendering
+ * @todo VR rendering
  */
 
 /**
@@ -67,6 +65,8 @@ class Renderer {
         this._zbuffer = null; // array of drawing operation
         this._bgOffset = 0; // oofset between camera and background position
         this._bgCameraOffset = 0; // oofset between camera and background position
+
+        this._animations = [];
     }
 
     configVRContext() {
@@ -415,7 +415,17 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
-
+    /**
+     * Returns the index of the tile that is shown on the given cell surface.
+     * This index is used to retrieve the portion of texture to be drawn
+     * @param code {number} code of the cell
+     * @param nSide {number} side of the surface
+     * @returns {*}
+     */
+    getSurfaceTileIndex(code, nSide) {
+        const xTile = this._cellCodes[code][nSide];
+        return typeof xTile === 'object' ? xTile.frame() : xTile;
+    }
 
 
 
@@ -425,12 +435,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 
     /**
-     * Creates a raycasting context
+     * Creates a raycasting scene
      * @return {*}
      */
-    createContext(xCamera, yCamera, fDirection, renderContext) {
-        return {         // raycasting context
-            renderContext,
+    createScene(xCamera, yCamera, fDirection) {
+        return {         // raycasting scene
             camera: {
                 x: xCamera,             // camera position
                 y: yCamera,             // ...
@@ -533,14 +542,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 	 * this is phase 1 of rendering.
 	 * Builds an array of screen slices
      */
-    computeScreenSliceBuffer(ctx) {
-        let xCamera = ctx.camera.x;
-        let yCamera = ctx.camera.y;
-        let fDirection = ctx.camera.direction;
+    computeScreenSliceBuffer(scene) {
+        let xCamera = scene.camera.x;
+        let yCamera = scene.camera.y;
+        let fDirection = scene.camera.direction;
         const METRICS = this._options.metrics;
         const SCREEN = this._options.screen;
         let xScreenSize = SCREEN.width;
-        let fViewAngle = ctx.camera.fov;
+        let fViewAngle = scene.camera.fov;
         let nSpacing = METRICS.spacing;
         let fAngleLeft = fDirection - fViewAngle;       // angle value at the leftmost screen column
         let fAngleRight = fDirection + fViewAngle;      // angle value at the rightmost screen column
@@ -571,8 +580,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
         for (i = 0; i < xScreenSize; ++i) {
             if (i >= xl && i <= xr) { // checks limits
-                ctx.resume.b = false;
-                this.castRay(ctx, xCamera, yCamera, fBx, fBy, i, scanSectors, zbuffer);
+                scene.resume.b = false;
+                this.castRay(scene, xCamera, yCamera, fBx, fBy, i, scanSectors, zbuffer);
             }
             fBx += dx;
             fBy += dy;
@@ -589,7 +598,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * casts a ray, this may lead to the production of several screen slices (intersecting the ray),
      * which are immediatly stored into the screen slices buffer
-     * @param ctx {*} raycasting context (see createContext)
+     * @param scene {*} raycasting scene (see createScene)
      * @param x {number} ray starting position (x)
      * @param y {number} ray starting position (y)
      * @param dx {number} ray position increment along x axis
@@ -599,7 +608,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param zbuffer {[]} a zbuffer for storing all created drawOps
      * @returns {*}
      */
-    castRay(ctx, x, y, dx, dy, xScreen, visibleRegistry, zbuffer) {
+    castRay(scene, x, y, dx, dy, xScreen, visibleRegistry, zbuffer) {
         let exclusionRegistry = new MarkerRegistry();
         let oXBlock = null; // meta data
         let oTileSet; // tileset
@@ -610,31 +619,31 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             visibleRegistry = new MarkerRegistry();
         }
         do {
-            this.projectRay(ctx, x, y, dx, dy, exclusionRegistry, visibleRegistry);
-            if (!ctx.exterior && ctx.distance >= 0) {
+            this.projectRay(scene, x, y, dx, dy, exclusionRegistry, visibleRegistry);
+            if (!scene.exterior && scene.distance >= 0) {
                 if (xScreen !== undefined) {
-                    oXBlock = this._csm.getSurface(ctx.xCell, ctx.yCell, ctx.cellSide);
+                    oXBlock = this._csm.getSurface(scene.xCell, scene.yCell, scene.cellSide);
                     if (oXBlock.tileset) {
                         oTileSet = oXBlock.tileset;
                         iTile = 0;
                     } else {
                         oTileSet = this._walls;
-                        iTile = this._cellCodes[ctx.cellCode & 0xFFF][ctx.cellSide];
+                        iTile = this.getSurfaceTileIndex(scene.cellCode & 0xFFF, scene.cellSide);
                     }
                     zbuffer.push(this.createScreenSlice(
-                        ctx,
+                        scene,
                     	xScreen,
                         oTileSet,
                         iTile,
 						oXBlock.diffuse
 					));
                 }
-                if (ctx.resume.b) {
-                    exclusionRegistry.mark(ctx.xCell, ctx.yCell);
+                if (scene.resume.b) {
+                    exclusionRegistry.mark(scene.xCell, scene.yCell);
                 }
             }
             --nMaxIterations;
-        } while (ctx.resume.b && nMaxIterations > 0);
+        } while (scene.resume.b && nMaxIterations > 0);
     }
 
 
@@ -642,7 +651,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     /**
      * compute ray projection
-     * @param ctx {*} raycasting context
+     * @param scene {*} raycasting scene
      * @param x {number} ray starting position
      * @param y {number} ray starting position
      * @param dx {number} ray direction (x)
@@ -650,11 +659,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param exclusionRegistry {MarkerRegistry} registers cells that are ignored by ray casting
      * @param visibleRegistry {MarkerRegistry} registers cells that are traversed by rays.
      */
-    projectRay(ctx, x, y, dx, dy, exclusionRegistry, visibleRegistry) {
+    projectRay(scene, x, y, dx, dy, exclusionRegistry, visibleRegistry) {
         let side = 0;
         let map = this._map;
         let nMapSize = this.getMapSize();
-        let nScale = ctx.spacing;
+        let nScale = scene.spacing;
 
         let
 			xi,  // the cell currently traversed
@@ -668,8 +677,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 			dyi,
 			xoff,
 			yoff,
-			cmax = ctx.maxDistance,
-			resume = ctx.resume;
+			cmax = scene.maxDistance,
+			resume = scene.resume;
 
         if (resume.b) {
         	// the projet ray will continue from these coordinates
@@ -833,25 +842,25 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
         }
         if (c < cmax) {
-            ctx.cellCode = map[yi][xi];
-            ctx.wallXed = side === 1;
-            ctx.cellSide = side - 1;
-            ctx.wallColumn = ctx.wallXed
-                ? yint % ctx.spacing | 0
-                : xint % ctx.spacing | 0;
-            if (ctx.wallXed && dxi < 0) {
-                ctx.wallColumn = ctx.spacing - ctx.wallColumn - 1;
-                ctx.cellSide = 2;
+            scene.cellCode = map[yi][xi];
+            scene.wallXed = side === 1;
+            scene.cellSide = side - 1;
+            scene.wallColumn = scene.wallXed
+                ? yint % scene.spacing | 0
+                : xint % scene.spacing | 0;
+            if (scene.wallXed && dxi < 0) {
+                scene.wallColumn = scene.spacing - scene.wallColumn - 1;
+                scene.cellSide = 2;
             }
-            if (!ctx.wallXed && dyi > 0) {
-                ctx.wallColumn = ctx.spacing - ctx.wallColumn - 1;
-                ctx.cellSide = 3;
+            if (!scene.wallXed && dyi > 0) {
+                scene.wallColumn = scene.spacing - scene.wallColumn - 1;
+                scene.cellSide = 3;
             }
-            ctx.xCell = xi;
-            ctx.yCell = yi;
-            ctx.distance = t * nScale;
-            ctx.exterior = false;
-            if (this.isWallTransparent(ctx.xCell, ctx.yCell)) {
+            scene.xCell = xi;
+            scene.yCell = yi;
+            scene.distance = t * nScale;
+            scene.exterior = false;
+            if (this.isWallTransparent(scene.xCell, scene.yCell)) {
                 resume.b = true;
                 resume.xi = xi;
                 resume.yi = yi;
@@ -859,8 +868,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 resume.b = false;
             }
         } else {
-            ctx.distance = t * nScale;
-            ctx.exterior = true;
+            scene.distance = t * nScale;
+            scene.exterior = true;
             resume.b = false;
         }
     }
@@ -924,18 +933,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 */
     /**
      * create a screen slice, which is an array of parameter aimed at be rendered by a drawing method
-     * @param ctx {*} raycasting context
+     * @param scene {*} raycasting context
      * @param x {number} final screen column position
      * @param oTileSet {ShadedTileSet} tileset used for rendering
      * @param iTile {number} index of tile
      * @param nLight {number}
      * @return {*}
      */
-    createScreenSlice(ctx, x, oTileSet, iTile, nLight) {
-        let z = Math.max(0.1, ctx.distance);
-        let nPos = ctx.wallColumn;
-        let bDim = ctx.wallXed;
-        let nPanel = ctx.cellCode;
+    createScreenSlice(scene, x, oTileSet, iTile, nLight) {
+        let z = Math.max(0.1, scene.distance);
+        let nPos = scene.wallColumn;
+        let bDim = scene.wallXed;
+        let nPanel = scene.cellCode;
 
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
@@ -949,7 +958,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let ff = FOG.factor;
         let sht = SHADING.shades;
         let dmw = sht >> 1;
-        let fvh = ctx.camera.height;
+        let fvh = scene.camera.height;
         let dz = yscr * ytex / z | 0;
 
         let dzy = yscr - (dz * fvh);
@@ -1060,6 +1069,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         return aData;
     }
 
+    /**
+     * @param context {CanvasRenderingContext2D} a rendering context
+     */
     renderBackground(context) {
         // sky
         let oBG = this._background;
@@ -1091,9 +1103,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     /**
      * Render flats
-     * @param ctx
+     * @param scene
      */
-    renderFlats(ctx) {
+    renderFlats(scene, renderContext) {
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
         const METRICS = OPTIONS.metrics;
@@ -1106,7 +1118,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             xEnd = SCREEN.width - 1,
             w = SCREEN.width,
             h = SCREEN.height >> 1;
-        const renderContext = ctx.renderContext;
         if (!oFlatContext.imageData) {
             oFlatContext.imageData = oFlatContext
                 .image
@@ -1119,7 +1130,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const aFloorSurf = oFlatContext.imageData32;
         const aRenderSurf = oFlatContext.renderSurface32;
         // 1 : créer la surface
-        const {direction, fov} = ctx.camera;
+        const {direction, fov} = scene.camera;
         const wx1 = Math.cos(direction - fov);
         const wy1 = Math.sin(direction - fov);
         const wx2 = Math.cos(direction + fov);
@@ -1128,7 +1139,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const ps = METRICS.spacing;
         const yTexture = METRICS.height;
         const yTexture2 = yTexture >> 1;
-        const oCam = ctx.camera;
+        const oCam = scene.camera;
         const fvh = oCam.height;
 
         let fh = (yTexture2) - ((fvh - 1) * yTexture2);
@@ -1313,7 +1324,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
             }
         }
-        ctx.renderContext.putImageData(oFlatContext.renderSurface, 0, 0);
+        renderContext.putImageData(oFlatContext.renderSurface, 0, 0);
     }
 
     /**
@@ -1358,15 +1369,45 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
-    render(ctx) {
+    /**
+     * Will precompute anything necessary for the rendering phase
+     */
+    computeScene(nTime, x, y, angle) {
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
-        const context = ctx.renderContext;
-        this.renderBackground(context);
-        this.renderFlats(ctx);
-        Renderer.renderScreenSliceBuffer(this._zbuffer, context);
+        this.playAnimations(nTime);
+        const scene = this.createScene(x, y, angle);
+        this.computeScreenSliceBuffer(scene);
+        return scene;
     }
+
+    /**
+     * This will render the raycasting scene in the specified 2d context
+     * @param scene
+     * @param renderContext
+     */
+    render(scene, renderContext) {
+        this.renderBackground(renderContext);
+        this.renderFlats(scene, renderContext);
+        Renderer.renderScreenSliceBuffer(this._zbuffer, renderContext);
+    }
+
+
+
+
+
+
+
+
+
+
+//                  __                              _       _   _
+//  ___ _   _ _ __ / _| __ _  ___ ___   _ __   __ _(_)_ __ | |_(_)_ __   __ _
+// / __| | | | '__| |_ / _` |/ __/ _ \ | '_ \ / _` | | '_ \| __| | '_ \ / _` |
+// \__ \ |_| | |  |  _| (_| | (_|  __/ | |_) | (_| | | | | | |_| | | | | (_| |
+// |___/\__,_|_|  |_|  \__,_|\___\___| | .__/ \__,_|_|_| |_|\__|_|_| |_|\__, |
+//                                     |_|                              |___/
 
     /**
      * Clonage de mur.
@@ -1405,6 +1446,42 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const SHADING = VISUAL.shading;
         const FOG = VISUAL.fog;
         this._csm.shadeSurface(x, y, nSide, SHADING.shades, FOG.color, SHADING.filter, SHADING.brightness);
+    }
+
+
+
+
+
+
+
+
+
+//  _            _                                _                 _   _
+// | |_ _____  _| |_ _   _ _ __ ___    __ _ _ __ (_)_ __ ___   __ _| |_(_) ___  _ __
+// | __/ _ \ \/ / __| | | | '__/ _ \  / _` | '_ \| | '_ ` _ \ / _` | __| |/ _ \| '_ \
+// | ||  __/>  <| |_| |_| | | |  __/ | (_| | | | | | | | | | | (_| | |_| | (_) | | | |
+//  \__\___/_/\_\\__|\__,_|_|  \___|  \__,_|_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_|
+
+
+    linkAnimation(oAnimation) {
+        this._animations.push(oAnimation);
+        return oAnimation;
+    }
+
+    createAnimation(base, count, duration, loop = 1) {
+        const oAnimation = new TileAnimation();
+        oAnimation.base = base;
+        oAnimation.count = count;
+        oAnimation.duration = duration;
+        oAnimation.loop = loop;
+        return this.linkAnimation(oAnimation);
+    }
+
+    playAnimations(nTimeInc) {
+        const anims = this._animations;
+        for (let i = 0, l = anims.length; i < l; ++i) {
+            anims[i].animate(nTimeInc);
+        }
     }
 }
 

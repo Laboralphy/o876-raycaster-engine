@@ -29,7 +29,23 @@ export const FACE_NORTH = 3;
 export const FACE_FLOOR = 4;
 export const FACE_CEILING = 5;
 
+/**
+ * loop code for "no loop", this is an unanimated animation
+ * @type {number}
+ */
+export const ANIM_LOOP_NONE = 0;
 
+/**
+ * loop code for "forward" : this animation is going forward only
+ * @type {number}
+ */
+export const ANIM_LOOP_FORWARD = 1;
+
+/**
+ * loop code for "back and forth" animation : this animation continually goes from forth to back
+ * @type {number}
+ */
+export const ANIM_LOOP_YOYO = 2;
 
 
 
