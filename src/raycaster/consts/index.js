@@ -1,8 +1,8 @@
 
 // Laby Phys Properties
 
-export const PHYS_NONE = 0x00;
-export const PHYS_WALL = 0x01;
+export const PHYS_NONE = 0x00;                  // no physical property, regular walkable cell
+export const PHYS_WALL = 0x01;                  // solid wall, non-walakble cell.
 export const PHYS_FIRST_DOOR = 0x02;
 export const PHYS_DOOR_SLIDING_UP = 0x02;
 export const PHYS_CURT_SLIDING_UP = 0x03;

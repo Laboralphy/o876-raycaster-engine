@@ -10,8 +10,6 @@ import TileAnimation from "./TileAnimation";
 import {objectExtends} from "./objectExtender";
 
 /**
- * @todo upper level
- * @todo double height
  * @todo sprite rendering
  * @todo VR rendering
  */
@@ -62,11 +60,11 @@ class Renderer {
         this._csm = new CellSurfaceManager();
         this._cellCodes = []; // this is an array of array of sides
 
-        this._zbuffer = null; // array of drawing operation
         this._bgOffset = 0; // oofset between camera and background position
         this._bgCameraOffset = 0; // oofset between camera and background position
 
         this._animations = [];
+        this._upper = null;     // instance of another renderer for the first floor
     }
 
     configVRContext() {
@@ -105,7 +103,7 @@ class Renderer {
                 walls: '',          // (*) wall textures
                 flats: '',          // (*) flat textures
                 background: ''      // (*) background images
-            }
+            },
         };
         this._optionsReactor = new Reactor(this._options);
     }
@@ -215,6 +213,37 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     defineOptions(opt) {
         objectExtends(this._options, opt);
+        if (this._upper) {
+            this._upper.defineOptions(opt);
+        }
+    }
+
+    /**
+     * creates an intance of a new renderer, to render the second storey
+     */
+    createUpperLevel() {
+        const upper = new Renderer();
+        this._upper = upper;
+        upper.setMapSize(this.getMapSize());
+        this.connectUpperProperties();
+        return upper;
+    }
+
+    get storey() {
+        return this._upper;
+    }
+
+    /**
+     * copies properties from lower storey to upper
+     */
+    connectUpperProperties() {
+        const upper = this._upper;
+        if (!!upper) {
+            upper._walls = this._walls;
+            upper._flats = this._flats;
+            upper._animations = this._animations;
+            upper._cellCodes = this._cellCodes;
+        }
     }
 
 
@@ -232,6 +261,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             height,
             this._options.visual.shading.shades
         );
+        this.connectUpperProperties();
     }
 
     /**
@@ -247,6 +277,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             width,
             this._options.visual.shading.shades
         );
+        this.connectUpperProperties();
     }
 
     /**
@@ -320,6 +351,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
 		});
         this._csm.setMapSize(nSize, nSize);
+        if (this._upper) {
+            this._upper.setMapSize(nSize);
+        }
 	}
 
     /**
@@ -337,7 +371,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * the structure of the aTiles parameter :
      * {n: north-surface-wall, e: east-surface-wall, s: south-surface-wall, w: west-surface-wall, f: floor-surface, c: ceil-surface}
      */
-    registerCellCode(nCode, {n, e, s, w, f, c}) {
+    registerCellTexture(nCode, {n, e, s, w, f, c}) {
         this._cellCodes[nCode] = [w, s, e, n, f, c];
     }
 
@@ -357,7 +391,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y {number}
      * @param code {number}
      */
-    setCellCode(x, y, code) {
+    setCellTexture(x, y, code) {
         let my = this._map[y];
         my[x] = my[x] & 0xFFFFF000 | (code & 0xFFF);
     }
@@ -390,7 +424,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y
      * @returns {number}
      */
-	getCellCode(x, y) {
+	getCellTexture(x, y) {
         return this._map[y][x] & 0xFFF;
 	}
 
@@ -438,14 +472,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * Creates a raycasting scene
      * @return {*}
      */
-    createScene(xCamera, yCamera, fDirection) {
+    createScene(xCamera, yCamera, fDirection, fHeight = 1) {
+        let oUpper = null;
+        if (!!this._upper) {
+            oUpper = this._upper.createScene(xCamera, yCamera, fDirection, fHeight + 2);
+        }
         return {         // raycasting scene
             camera: {
                 x: xCamera,             // camera position
                 y: yCamera,             // ...
                 fov: this._options.screen.fov,    // camera view fov
                 direction: fDirection,              // camera direction angle
-                height: 1              // camera view height
+                height: fHeight              // camera view height
             },
             resume: {           // resume context
                 b: false,       // next castRay must resume !
@@ -462,6 +500,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             wallSide: 0,        // side number of the wall of the last hitCell
             wallXed: false,     // if true then the hit cell wall is X-axed
             wallColumn: 0,      // index of the column of the last hit wall
+            zbuffer: null,      // zbuffer to be drawn
+            upperScene: oUpper  // first story scene
         };
     }
 
@@ -591,8 +631,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         //this.drawHorde(aZBuffer);
         // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
         zbuffer.sort(zBufferCompare);
-        this._zbuffer = zbuffer;
-        return zbuffer;
+        scene.zbuffer = zbuffer;
+        if (this._upper) {
+            this._upper.computeScreenSliceBuffer(scene.upperScene);
+        }
 	}
 
     /**
@@ -1062,7 +1104,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (OPTIONS.doubleHeight) {
+        if (METRICS.doubleHeight) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
@@ -1092,10 +1134,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     /**
      * Renders all screen slices stored in the buffer into the screen
-     * @param zbuffer {array}
+     * @param scene {*}
      * @param context {CanvasRenderingContext2D}
      */
-    static renderScreenSliceBuffer(zbuffer, context) {
+    static renderScreenSliceBuffer(scene, context) {
+        const zbuffer = scene.zbuffer;
         for (let i = 0, l = zbuffer.length; i < l; ++i) {
             Renderer.renderScreenSlice(zbuffer[i], context);
         }
@@ -1175,7 +1218,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXMap = this._csm;
         let oXBlock, oXBlockImage, oXBlockCeil;
         let fBx, fBy;
-        let bCeil = true;
 
         if (fvh === 1) {
             let nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
@@ -1223,12 +1265,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             if (aFBlock !== null) {
                                 if (nXDrawn !== 1) {
                                     xOfs = aFBlock[4];
-                                    ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
-                                    aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
+                                    if (xOfs !== null) {
+                                        ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                        aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
+                                    }
                                 }
-                                if (bCeil && nXDrawn !== 2) {
+                                if (nXDrawn !== 2) {
                                     xOfs = aFBlock[5];
-                                    if (xOfs >= 0) {
+                                    if (xOfs !== null) {
                                         ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
                                         aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
                                     }
@@ -1263,15 +1307,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 // ceill
-                if (bCeil) {
-                    dFrontCeil = fhCeil * ff / y;
-                    fyCeil = wy1 * dFrontCeil + yCam;
-                    fxCeil = wx1 * dFrontCeil + xCam;
-                    xDeltaFrontCeil = xDelta * dFrontCeil;
-                    yDeltaFrontCeil = yDelta * dFrontCeil;
-                    wyCeil = w * (h - y);
-                    yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
-                }
+                dFrontCeil = fhCeil * ff / y;
+                fyCeil = wy1 * dFrontCeil + yCam;
+                fxCeil = wx1 * dFrontCeil + xCam;
+                xDeltaFrontCeil = xDelta * dFrontCeil;
+                yDeltaFrontCeil = yDelta * dFrontCeil;
+                wyCeil = w * (h - y);
+                yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
                 for (x = 0; x < w; ++x) {
                     ofsDst = wy + x;
                     ofsDstCeil = wyCeil + x;
@@ -1295,7 +1337,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             }
                         }
                     }
-                    if (bCeil && fxCeil >= 0 && fyCeil >= 0 && fxCeil < xyMax && fyCeil < xyMax) {
+                    if (fxCeil >= 0 && fyCeil >= 0 && fxCeil < xyMax && fyCeil < xyMax) {
                         fy64 = fyCeil / ps | 0;
                         fx64 = fxCeil / ps | 0;
                         oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
@@ -1315,10 +1357,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             }
                         }
                     }
-                    if (bCeil) {
-                        fyCeil += yDeltaFrontCeil;
-                        fxCeil += xDeltaFrontCeil;
-                    }
+                    fyCeil += yDeltaFrontCeil;
+                    fxCeil += xDeltaFrontCeil;
                     fy += yDeltaFront;
                     fx += xDeltaFront;
                 }
@@ -1376,7 +1416,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
-        this.playAnimations(nTime);
+        this.computeAnimations(nTime);
         const scene = this.createScene(x, y, angle);
         this.computeScreenSliceBuffer(scene);
         return scene;
@@ -1389,8 +1429,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     render(scene, renderContext) {
         this.renderBackground(renderContext);
+        if (scene.upperScene) {
+            Renderer.renderScreenSliceBuffer(scene.upperScene, renderContext);
+        }
         this.renderFlats(scene, renderContext);
-        Renderer.renderScreenSliceBuffer(this._zbuffer, renderContext);
+        Renderer.renderScreenSliceBuffer(scene, renderContext);
     }
 
 
@@ -1427,7 +1470,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * - param5 : coté du mur concerné
      */
     paintSurface(x, y, nSide, pDrawingFunction) {
-        const cellCode = this.getCellCode(x, y);
+        const cellCode = this.getCellTexture(x, y);
         const iTile = this._cellCodes[cellCode][nSide];
         const c = nSide < 4
             ? this._walls.extractTile(iTile, 0)
@@ -1463,11 +1506,24 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 //  \__\___/_/\_\\__|\__,_|_|  \___|  \__,_|_| |_|_|_| |_| |_|\__,_|\__|_|\___/|_| |_|
 
 
+    /**
+     * Adds a tile animation
+     * @param oAnimation {TileAnimation}
+     * @returns {*}
+     */
     linkAnimation(oAnimation) {
         this._animations.push(oAnimation);
         return oAnimation;
     }
 
+    /**
+     * creates a new tile animation with the given base parameters
+     * @param base
+     * @param count
+     * @param duration
+     * @param loop
+     * @returns {*}
+     */
     createAnimation(base, count, duration, loop = 1) {
         const oAnimation = new TileAnimation();
         oAnimation.base = base;
@@ -1477,7 +1533,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         return this.linkAnimation(oAnimation);
     }
 
-    playAnimations(nTimeInc) {
+    /**
+     * computes all tile animations
+     * @param nTimeInc
+     */
+    computeAnimations(nTimeInc) {
         const anims = this._animations;
         for (let i = 0, l = anims.length; i < l; ++i) {
             anims[i].animate(nTimeInc);

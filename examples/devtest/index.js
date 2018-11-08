@@ -41,48 +41,100 @@ async function main() {
 
 
     let rc = new Renderer();
+    const upper = rc.createUpperLevel();
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
     rc.setMapSize(30);
-    rc.registerCellCode(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
-    rc.registerCellCode(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
-    rc.registerCellCode(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
-    rc.registerCellCode(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
-    rc.registerCellCode(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
+    rc.registerCellTexture(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
+    rc.registerCellTexture(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
+    rc.registerCellTexture(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
+    rc.registerCellTexture(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
+    rc.registerCellTexture(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
     let oAnim = rc.createAnimation(5, 5, 160, CONSTS.ANIM_LOOP_FORWARD);
-    rc.registerCellCode(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
+    rc.registerCellTexture(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
+    rc.registerCellTexture(6, {n: null, e: null, s: null, w: null, f: 0, c: null});
 
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
-            rc.setCellCode(x, y, 1);
+            rc.setCellTexture(x, y, 1);
             rc.setCellPhys(x, y, 1);
-            rc.setCellCode(x + 9, y, 1);
+            rc.setCellTexture(x + 9, y, 1);
             rc.setCellPhys(x + 9, y, 1);
+
+            upper.setCellTexture(x, y, 1);
+            upper.setCellPhys(x, y, 1);
+            upper.setCellTexture(x + 9, y, 1);
+            upper.setCellPhys(x + 9, y, 1);
         }
     }
     for (let y = 1; y < 19; ++y) {
         for (let x = 1; x < 9; ++x) {
-            rc.setCellCode(x, y, 0);
+            rc.setCellTexture(x, y, 0);
             rc.setCellPhys(x, y, 0);
-            rc.setCellCode(x + 9, y, 0);
+            rc.setCellTexture(x + 9, y, 0);
             rc.setCellPhys(x + 9, y, 0);
+
+            upper.setCellTexture(x, y, 0);
+            upper.setCellPhys(x, y, 0);
+            upper.setCellTexture(x + 9, y, 0);
+            upper.setCellPhys(x + 9, y, 0);
         }
     }
-    rc.setCellCode(9, 3, 2);
+    rc.setCellTexture(9, 3, 2);
     rc.setCellPhys(9, 3, CONSTS.PHYS_DOOR_SLIDING_DOUBLE);
     rc.setCellOffset(9, 3, 10);
 
-    rc.setCellCode(9, 5, 3);
+    rc.setCellTexture(9, 5, 3);
     rc.setCellPhys(9, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(9, 5, 32);
 
-    rc.setCellCode(4, 0, 3);
+    rc.setCellTexture(4, 0, 3);
     rc.setCellPhys(4, 0, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(4, 0, 32);
 
-    rc.setCellCode(2, 2, 5);
+    rc.setCellTexture(2, 2, 5);
     rc.setCellPhys(2, 2, CONSTS.PHYS_TRANSPARENT_BLOCK);
+
+    rc.setCellTexture(5, 5, 6);
+    rc.setCellTexture(6, 5, 6);
+
+    rc.setCellTexture(5, 6, 6);
+    rc.setCellTexture(6, 6, 6);
+
+
+    upper.setCellTexture(4, 4, 1);
+    upper.setCellTexture(5, 4, 1);
+    upper.setCellTexture(6, 4, 1);
+    upper.setCellTexture(7, 4, 1);
+
+    upper.setCellTexture(4, 5, 1);
+    upper.setCellTexture(7, 5, 1);
+
+    upper.setCellTexture(4, 6, 1);
+    upper.setCellTexture(7, 6, 1);
+
+    upper.setCellTexture(4, 7, 1);
+    upper.setCellTexture(5, 7, 1);
+    upper.setCellTexture(6, 7, 1);
+    upper.setCellTexture(7, 7, 1);
+
+
+    upper.setCellPhys(4, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(5, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(6, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(7, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(4, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(7, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(4, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(7, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(4, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(5, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(6, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+
+
+
 
     cvs.width = rc._options.screen.width;
     cvs.height = rc._options.screen.height;
