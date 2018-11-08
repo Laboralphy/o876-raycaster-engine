@@ -7,7 +7,7 @@ import Reactor from "./Reactor";
 import ArrayHelper from './ArrayHelper';
 import Translator from "./Translator";
 import TileAnimation from "./TileAnimation";
-import {objectExtends} from "./objectExtender";
+import {objectExtends, objectGet, objectSet} from "./objectExtender";
 
 /**
  * @todo sprite rendering
@@ -54,6 +54,7 @@ class Renderer {
 
     configProperties() {
         this._map = [];
+        this._horde
         this._walls = null; // wall shaded tileset
         this._flats = null; // flat shaded tileset
         this._background = null; // background image
@@ -144,6 +145,18 @@ class Renderer {
             .length > 0;
     }
 
+
+    /**
+     * Transmit an option value from _options to storey._options
+     * @param sOption {string}
+     */
+    transmitOptionToStorey(sOption) {
+        if (this.storey) {
+            objectSet(this.storey._options, sOption, objectGet(this._options, sOption));
+        }
+    }
+
+
     /**
      * reads the mutations that occurs on the option object
      * and recomputes that need to be recomputed
@@ -154,7 +167,12 @@ class Renderer {
 	    const l = aList.length;
         const o = this._options;
 	    for (let i = 0; i < l; ++i) {
-	        switch (aList[i]) {
+	        let opt = aList[i];
+	        switch (opt) {
+                case 'screen.fov':
+                    this.transmitOptionToStorey(opt);
+                    break;
+
                 case 'shading-settings':
                     this.setShadingSettings(
                         o.visual.shading.shades,
@@ -213,9 +231,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     defineOptions(opt) {
         objectExtends(this._options, opt);
-        if (this._upper) {
-            this._upper.defineOptions(opt);
-        }
     }
 
     /**
@@ -1440,7 +1455,133 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 
 
+//                 _ _                            _           _
+//  ___ _ __  _ __(_) |_ ___   _ __ ___ _ __   __| | ___ _ __(_)_ __   __ _
+// / __| '_ \| '__| | __/ _ \ | '__/ _ \ '_ \ / _` |/ _ \ '__| | '_ \ / _` |
+// \__ \ |_) | |  | | ||  __/ | | |  __/ | | | (_| |  __/ |  | | | | | (_| |
+// |___/ .__/|_|  |_|\__\___| |_|  \___|_| |_|\__,_|\___|_|  |_|_| |_|\__, |
+//     |_|                                                            |___/
 
+
+    drawSprite(oMobile) {
+        /*
+
+sprite
+
+x,
+y,
+visible,
+direction,
+scale
+
+
+
+
+
+
+         */
+        const oSprite = oMobile.oSprite;
+        // Si le sprite n'est pas visible, ce n'est pas la peine de gaspiller du temps CPU
+        // on se barre immédiatement
+        if (!(oSprite.bVisible && oMobile.bVisible)) {
+            return;
+        }
+        var oTile = oSprite.oBlueprint.oTile;
+        var oCam = this.oCamera;
+        var dx = oMobile.x + oMobile.xOfs - oCam.x - oCam.xOfs;
+        var dy = oMobile.y + oMobile.yOfs - oCam.y - oCam.yOfs;
+
+        // Gaffe fAlpha est un angle ici, et pour un sprite c'est une transparence
+        var fTarget = Math.atan2(dy, dx);
+        var fAlpha = fTarget - this.oCamera.fTheta; // Angle
+        if (fAlpha >= PI) { // Angle plus grand que l'angle plat
+            fAlpha = -(PI * 2 - fAlpha);
+        }
+        if (fAlpha < -PI) { // Angle plus grand que l'angle plat
+            fAlpha = PI * 2 + fAlpha;
+        }
+        var w2 = this._oCanvas.width >> 1;
+
+        // Animation
+        if (!this.b3d || (this.b3d && this.i3dFrame === 0)) {
+            var fAngle1 = oMobile.fTheta + (PI / 8) - fTarget;
+            if (fAngle1 < 0) {
+                fAngle1 = 2 * PI + fAngle1;
+            }
+            oSprite.setDirection(((8 * fAngle1 / (2 * PI)) | 0) & 7);
+            oSprite.animate(this.TIME_FACTOR);
+        }
+
+        if (Math.abs(fAlpha) <= (this.fViewAngle * 1.5)) {
+            var x = (Math.tan(fAlpha) * w2 + w2) | 0;
+            // Faire tourner les coordonnées du sprite : projection sur l'axe de la caméra
+            var z = MathTools.distance(dx, dy) * Math.cos(fAlpha) * 1.333;  // le 1.333 empirique pour corriger une erreur de tri bizarroïde
+            // Les sprites bénéficient d'un zoom 2x afin d'améliorer les détails.
+
+            var dz = (oTile.nScale * oTile.nHeight / (z / this.yScrSize) + 0.5);
+            var dzy = this.yScrSize - (dz * this.fViewHeight);
+            var iZoom = (oTile.nScale * oTile.nWidth / (z / this.yScrSize) + 0.5);
+            var nOpacity; // j'ai nommé opacity mais ca n'a rien a voir : normalement ca aurait été sombritude
+            // Self luminous
+            var nSFx = oSprite.oBlueprint.nFx | (oSprite.bTranslucent ? (oSprite.nAlpha << 2) : 0);
+            if (nSFx & 2) {
+                nOpacity = 0;
+            } else {
+                nOpacity = z / this.nShadingFactor | 0;
+                if (nOpacity > this.nShadingThreshold) {
+                    nOpacity = this.nShadingThreshold;
+                }
+            }
+            var aData = [ oTile.oImage, // image 0
+                oSprite.nFrame * oTile.nWidth, // sx  1
+                oTile.nHeight * nOpacity, // sy  2
+                oTile.nWidth, // sw  3
+                oTile.nHeight, // sh  4
+                x - iZoom | 0, // dx  5
+                dzy | 0, // dy  6   :: this.yScrSize - dz + (dz >> 1)
+                iZoom << 1, // dw  7
+                dz << 1, // dh  8
+                z,
+                nSFx];
+            oSprite.aLastRender = aData;
+            this.aZBuffer.push(aData);
+            // Traitement overlay
+            var oOL = oSprite.oOverlay;
+            if (oOL) {
+                if (Array.isArray(oSprite.nOverlayFrame)) {
+                    oSprite.nOverlayFrame.forEach(function(of, iOF) {
+                        this.aZBuffer.push(
+                            [	oOL.oImage, // image 0
+                                of * oOL.nWidth, // sx  1
+                                0, // sy  2
+                                oOL.nWidth, // sw  3
+                                oOL.nHeight, // sh  4
+                                aData[5], // dx  5
+                                aData[6], // dy  6   :: this.yScrSize - dz + (dz >> 1)
+                                aData[7], // dw  7
+                                aData[8], // dh  8
+                                aData[9] - 1 - (iOF / 100),
+                                2
+                            ]);
+                    }, this);
+                } else if (oSprite.nOverlayFrame !== null) {
+                    this.aZBuffer.push(
+                        [	oOL.oImage, // image 0
+                            oSprite.nOverlayFrame * oOL.nWidth, // sx  1
+                            0, // sy  2
+                            oOL.nWidth, // sw  3
+                            oOL.nHeight, // sh  4
+                            aData[5], // dx  5
+                            aData[6], // dy  6   :: this.yScrSize - dz + (dz >> 1)
+                            aData[7], // dw  7
+                            aData[8], // dh  8
+                            aData[9] - 1,
+                            2
+                        ]);
+                }
+            }
+        }
+    },
 
 
 
