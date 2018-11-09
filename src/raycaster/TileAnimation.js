@@ -10,9 +10,9 @@ class TileAnimation {
         this._time = 0;         // current frame time
         this._loop = 0;         // loop type 0: none; 1: forward; 2: yoyo; 3: random
         this._loopDir = 1;      // 0: index is increasing; 1: index is decreasing
-        this._iterations = Infinity;
-        this._frozen = false;
-        this._base = 0;
+        this._iterations = Infinity;    // number of iterations "Infinity" means : animate forever
+        this._frozen = false;   // if true the animation is suspended
+        this._base = 0;         // a base index in the tileset
     }
 
     get base() {

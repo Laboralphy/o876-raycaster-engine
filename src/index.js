@@ -8,5 +8,6 @@ export default {
 	Renderer,
 	ShadedTileSet,
 	CanvasHelper,
+	TileAnimation,
 	CONSTS
 };

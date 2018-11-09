@@ -7,6 +7,7 @@ import Reactor from "./Reactor";
 import ArrayHelper from './ArrayHelper';
 import Translator from "./Translator";
 import TileAnimation from "./TileAnimation";
+import Sprite from './Sprite';
 import {objectExtends, objectGet, objectSet} from "./objectExtender";
 
 /**
@@ -54,7 +55,6 @@ class Renderer {
 
     configProperties() {
         this._map = [];
-        this._horde
         this._walls = null; // wall shaded tileset
         this._flats = null; // flat shaded tileset
         this._background = null; // background image
@@ -66,6 +66,7 @@ class Renderer {
 
         this._animations = [];
         this._upper = null;     // instance of another renderer for the first floor
+        this._sprites = [];     // list of sprites
     }
 
     configVRContext() {
@@ -342,6 +343,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         this.setWallShadingSettings(nShades, sFogColor, sFilter, fBrightness);
         this.setFlatShadingSettings(nShades, sFogColor, sFilter, fBrightness);
         this._csm.shadeAllSurfaces(nShades, sFogColor, sFilter, fBrightness);
+        this.setSpriteShadingSettings(nShades, sFogColor, sFilter, fBrightness);
 	}
 
     /**
@@ -1463,6 +1465,70 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 //     |_|                                                            |___/
 
 
+    /**
+     * Creates a new sprite
+     * @param oImage {HTMLCanvasElement} canvas containing tileset
+     * @param tileWidth {number} size of a tile
+     * @param tileHeight {number} ...
+     * @return {Sprite}
+     */
+    buildSprite(oImage, tileWidth, tileHeight) {
+        const OPTIONS = this._options;
+        const VISUAL = OPTIONS.visual;
+        const SHADING = VISUAL.shading;
+        const FOG = VISUAL.fog;
+        const oSprite = new Sprite();
+        const oTileSet = Renderer.buildTileSet(oImage, tileWidth, tileHeight, SHADING.shades);
+        this.shadeSprite(
+            oSprite,
+            SHADING.shades,
+            FOG.color,
+            SHADING.filter,
+            SHADING.brightness
+        );
+        oSprite.setTileSet(oTileSet);
+    }
+
+    /**
+     * update sprite shading with new parameters, to match those used in the raycasting rendering
+     * @param nShades {number} number of shading layers
+     * @param sFogColor {string} new fog color
+     * @param sFilter {string} new color filter
+     * @param fBrightness {number} new ambiant brightness
+     */
+    shadeSprite(sprite, nShades, sFogColor, sFilter, fBrightness) {
+        const tileset = sprite.getTileSet();
+        tileset.setShadingLayerCount(nShades);
+        tileset.compute(sFogColor, sFilter, fBrightness);
+    }
+
+    /**
+     * update sprite shading with new parameters, to match those used in the raycasting rendering
+     * @param nShades {number} number of shading layers
+     * @param sFogColor {string} new fog color
+     * @param sFilter {string} new color filter
+     * @param fBrightness {number} new ambiant brightness
+     */
+    setSpriteShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
+        const sprites = this._sprites;
+        for (let i = 0, l = sprites.length; i < l; ++i) {
+            this.shadeSprite(sprites[i], nShades, sFogColor, sFilter, fBrightness);
+        }
+    }
+
+
+    /**
+     * Remove a sprite from the sprite collection
+     * @param oSprite {Sprite}
+     */
+    disposeSprite(oSprite) {
+        const sprites = this._sprites;
+        const i = sprites.indexOf(oSprite);
+        sprites.splice(i, 1);
+    }
+
+
+
     drawSprite(oMobile) {
         /*
 
@@ -1581,7 +1647,7 @@ scale
                 }
             }
         }
-    },
+    }
 
 
 
