@@ -2,6 +2,8 @@
  * A Sprite is an object that is visible inside the Raycaster Environment
  */
 
+import TileAnimation from './TileAnimation';
+
 class Sprite {
     constructor() {
         this.x = 0;
@@ -18,6 +20,14 @@ class Sprite {
         this._tileset = null;
     }
 
+    get animation() {
+        return this._animation;
+    }
+
+    set animation(value) {
+        this._animation = value;
+    }
+
     get visible() {
         return this._visible;
     }
@@ -32,6 +42,18 @@ class Sprite {
 
     set scale(value) {
         this._scale = value;
+    }
+
+    buildAnimation(start, count, delay, loop) {
+        const a = new TileAnimation();
+        a.base = start;
+        a.count = count;
+        a.duration = delay;
+        a.loop = loop;
+        this._animations.push(a);
+        if (this._animation === null) {
+            this._animation = a;
+        }
     }
 
     /**
@@ -68,7 +90,7 @@ class Sprite {
     }
 
     getCurrentFrame() {
-        return this._animation.getCurrentFrame();
+        return this._animation.frame();
     }
 
 

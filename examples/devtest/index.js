@@ -54,6 +54,7 @@ async function main() {
     let oAnim = rc.createAnimation(5, 5, 160, CONSTS.ANIM_LOOP_FORWARD);
     rc.registerCellTexture(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
     rc.registerCellTexture(6, {n: null, e: null, s: null, w: null, f: 0, c: null});
+    rc.registerCellTexture(7, {n: null, e: null, s: null, w: null, f: 3, c: 2});
 
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
@@ -102,6 +103,8 @@ async function main() {
     rc.setCellTexture(5, 6, 6);
     rc.setCellTexture(6, 6, 6);
 
+    rc.setCellTexture(4, 2, 7);
+
 
     upper.setCellTexture(4, 4, 1);
     upper.setCellTexture(5, 4, 1);
@@ -134,6 +137,13 @@ async function main() {
     upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
 
+    const cExplo = await CanvasHelper.loadCanvas('textures/o_mire.png');
+    const spr1 = rc.buildSprite(cExplo, 64, 96);
+    spr1.buildAnimation(0, 1, 100, 0);
+    spr1.x = 64 * 4 + 32;
+    spr1.y = 64 * 2 + 32;
+
+
 
     cvs.width = rc._options.screen.width;
     cvs.height = rc._options.screen.height;
@@ -141,9 +151,9 @@ async function main() {
     const RENDER_CTX = RENDER_CVS.getContext('2d');
 
 
-    let xCam = 256;
-    let yCam = 256;
-    let fAngle = 0;
+    let xCam = 64 * 4 + 32;
+    let yCam = 64 * 7 + 32;
+    let fAngle = -Math.PI / 2;
     function doomloop() {
         const scene = rc.computeScene(40, xCam, yCam, fAngle);
         rc.render(scene, RENDER_CTX);
@@ -155,20 +165,21 @@ async function main() {
     window.addEventListener('keydown', event => {
         switch (event.key) {
             case 'ArrowUp':
-                xCam += 16 * Math.cos(fAngle);
-                yCam += 16 * Math.sin(fAngle);
+                xCam += (event.shiftKey ? 2 : 16) * Math.cos(fAngle);
+                yCam += (event.shiftKey ? 2 : 16) * Math.sin(fAngle);
                 break;
             case 'ArrowDown':
-                xCam -= 16 * Math.cos(fAngle);
-                yCam -= 16 * Math.sin(fAngle);
+                xCam -= (event.shiftKey ? 2 : 16) * Math.cos(fAngle);
+                yCam -= (event.shiftKey ? 2 : 16) * Math.sin(fAngle);
                 break;
             case 'ArrowLeft':
-                fAngle -= 0.25;
+                fAngle -= (event.shiftKey ? 0.025 : 0.25);
                 break;
             case 'ArrowRight':
-                fAngle += 0.25;
+                fAngle += (event.shiftKey ? 0.025 : 0.25);
                 break;
         }
+        console.log({xCam, yCam, fAngle});
     });
 }
 

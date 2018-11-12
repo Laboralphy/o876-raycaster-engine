@@ -645,10 +645,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
 
         zbuffer = Renderer._optimizeBuffer(zbuffer);
-        //this.drawHorde(aZBuffer);
+        scene.zbuffer = zbuffer;
+        this.drawSprites(scene);
         // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
         zbuffer.sort(zBufferCompare);
-        scene.zbuffer = zbuffer;
         if (this._upper) {
             this._upper.computeScreenSliceBuffer(scene.upperScene);
         }
@@ -1476,6 +1476,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const SHADING = VISUAL.shading;
         const oSprite = new Sprite();
         const oTileSet = Renderer.buildTileSet(oImage, tileWidth, tileHeight, SHADING.shades);
+        oSprite.setTileSet(oTileSet);
+        if (!oTileSet) throw new Error('WTF no tileset');
         this.shadeSprite(
             oSprite,
             SHADING.shades,
@@ -1483,8 +1485,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             SHADING.filter,
             SHADING.brightness
         );
-        oSprite.setTileSet(oTileSet);
+        this._sprites.push(oSprite);
+        return oSprite;
     }
+
 
     /**
      * update sprite shading with new parameters, to match those used in the raycasting rendering
@@ -1525,21 +1529,34 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
+    drawSprites(scene) {
+        const sprites = this._sprites;
+        for (let i = 0, l = sprites.length; i < l; ++i) {
+            this.drawSprite(scene, sprites[i]);
+        }
+    }
 
     drawSprite(scene, oSprite) {
         if (!oSprite.visible) {
             return;
         }
         const PI = Math.PI;
+        const OPTIONS = this._options;
         const CAMERA = scene.camera;
-        const SCREEN = scene.screen;
+        const SCREEN = OPTIONS.screen;
         const xspr = oSprite.x;
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
         const ycam = CAMERA.y;
+        const xscr = SCREEN.width;
+        const yscr = SCREEN.height;
+        const w2 = xscr >> 1;
         const dx = xspr - xcam;
         const dy = yspr - ycam;
         const oTileSet = oSprite.getTileSet();
+        const wspr = oTileSet.tileWidth;
+        const hspr = oTileSet.tileHeight;
+        const fov = scene.camera.fov;
 
         const fTarget = Math.atan2(dy, dx);
         let fAlpha = fTarget - CAMERA.direction; // Angle
@@ -1549,8 +1566,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (fAlpha < -PI) { // Angle lesser than plane angle
             fAlpha = PI * 2 + fAlpha;
         }
-        const w2 = SCREEN.width >> 1;
-        const yscr = SCREEN.height;
 
         // Animation
 //        if (!this.b3d || (this.b3d && this.i3dFrame === 0)) {
@@ -1563,28 +1578,27 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 //        }
 
         if (Math.abs(fAlpha) <= (SCREEN.fov * 1.5)) {
-            const fp = Math.tan(Math.PI / 2 - fAlpha) * w2;
             const z = Compass.distance(xspr, yspr, xcam, ycam);
-            const f = z * Math.cos(fAlpha);
-            const x = z * Math.sin(fAlpha);
-            // xp / fp =  x / f
-            // xp = fp * x / f
-            // const xp = fp * x / f;
+            const x = Math.sin(fAlpha) * z;
+            const f = Math.cos(fAlpha) * z;
+            const fovp = Math.PI / 2 - fov;
+            const fp = w2 * Math.sin(fovp);
+            const xp = x * fp / f;
             const ts = oSprite.getTileSet();
-            const dz = yscr * oTileSet.tileHeight / z | 0;
-            const dzy = yscr - (dz * CAMERA.height);
-            const iZoom = (1 * oTileSet.tileWidth / (z / yscr) + 0.5);
+            const dz = yscr * hspr / z | 0;
+            const dzy = yscr / 2 - (dz * CAMERA.height);
+            const iZoom = (oSprite.scale * wspr / (z / yscr) + 0.5);
 
             const data = [
                 ts.getImage(),
-                ts.tileWidth * oSprite.getCurrentFrame(),
-                0,
-                ts.tileWidth,
-                ts.tileHeight,
-                x | 0,
-                dzy | 0,
-                iZoom << 1,
-                dz << 1,
+                ts.tileWidth * oSprite.getCurrentFrame(),       // 1: sx
+                0,                                              // 2: sy
+                ts.tileWidth,                                   // 3: sw
+                ts.tileHeight,                                  // 4: sh
+                w2 + xp - iZoom | 0,                                  // 5: dx
+                dzy | 0,                                        // 6: dy
+                iZoom << 1 | 0,                                     // 7: dw
+                dz << 1 | 0,                                        // 8: dh
                 z,
                 0
             ];
@@ -1761,6 +1775,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const anims = this._animations;
         for (let i = 0, l = anims.length; i < l; ++i) {
             anims[i].animate(nTimeInc);
+        }
+        const sprites = this._sprites;
+        for (let i = 0, l = sprites.length; i < l; ++i) {
+            sprites[i].animation.animate(nTimeInc);
         }
     }
 }
