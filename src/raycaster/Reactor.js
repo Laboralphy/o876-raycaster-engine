@@ -1,12 +1,17 @@
+import Events from 'events';
 /**
  * This class is use to observe all mutations against an object, like Poppy.
  *
  */
 class Reactor {
-
     constructor(obj) {
+        this._events = new Events();
         this.clear();
         this.makeReactiveObject(obj);
+    }
+
+    get events() {
+        return this._events;
     }
 
     getLog() {
@@ -29,13 +34,7 @@ class Reactor {
     notify(path) {
         path = path.substr(1);
         this._log[path] = true;
-        if (this._onChange) {
-            this._onChange(path);
-        }
-    }
-
-    onChange(pCallback) {
-        this._onChange = pCallback;
+        this._events.emit('changed', {key: path});
     }
 
     /**

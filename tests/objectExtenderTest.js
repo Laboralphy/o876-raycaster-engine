@@ -1,4 +1,4 @@
-const {objectKeyMap, objectSet, objectGet, objectDiffKeys, objectExtends} = require('../src/raycaster/objectExtender');
+const {objectKeyMap, objectSet, objectGet, objectDiffKeys, objectExtends} = require('../src/tools/objectExtender');
 
 describe('#objectExtender', function() {
     it ('should build a map', function() {

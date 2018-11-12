@@ -23,7 +23,7 @@ export function objectKeyMap(oObj, path = '') {
  * list all keys that are present in a2 and absent in a1
  * @param a1 {*}
  * @param a2 {*}
- * @return {array}
+ * @return {{common: *[], missing: *[]}}
  */
 export function objectDiffKeys(a1, a2) {
     const m1 = objectKeyMap(a1);

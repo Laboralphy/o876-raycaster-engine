@@ -1,14 +1,15 @@
 import ShadedTileSet from './ShadedTileSet';
-import MarkerRegistry from './MarkerRegistry';
+import MarkerRegistry from '../tools/MarkerRegistry';
 import CellSurfaceManager from './CellSurfaceManager';
-import CanvasHelper from './CanvasHelper';
+import CanvasHelper from '../tools/CanvasHelper';
 import * as CONSTS from './consts';
 import Reactor from "./Reactor";
-import ArrayHelper from './ArrayHelper';
-import Translator from "./Translator";
+import ArrayHelper from '../tools/ArrayHelper';
+import Translator from "../tools/Translator";
 import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
-import {objectExtends, objectGet, objectSet} from "./objectExtender";
+import {objectExtends, objectGet, objectSet} from "../tools/objectExtender";
+import * as Compass from '../tools/compass';
 
 /**
  * @todo sprite rendering
@@ -91,11 +92,9 @@ class Renderer {
             },
             visual: {
                 smooth: false,      // set texture smoothing on or off
-                fog: {
+                shading: {
                     color: 'black', // (*) fog color
                     factor: 50,     // (*) distance where the texture shading increase by one unit
-                },
-                shading: {
                     brightness: 0,	// (*) base brightness
                     filter: false,  // (*) color filter for sprites (ambient color)
                     shades: 16,  // (*) number of shading nuance
@@ -112,7 +111,7 @@ class Renderer {
 
     configTranslator() {
 	    const t = new Translator();
-	    t.addRule('visual.fog.color', 'shading-settings');
+	    t.addRule('visual.shading.color', 'shading-settings');
         t.addRule('visual.shading.brightness', 'shading-settings');
         t.addRule('visual.shading.filter', 'shading-settings');
         t.addRule('visual.shading.shades', 'shading-settings');
@@ -167,6 +166,7 @@ class Renderer {
         this._optionsReactor.clear();
 	    const l = aList.length;
         const o = this._options;
+        const shading = o.visual.shading;
 	    for (let i = 0; i < l; ++i) {
 	        let opt = aList[i];
 	        switch (opt) {
@@ -176,10 +176,10 @@ class Renderer {
 
                 case 'shading-settings':
                     this.setShadingSettings(
-                        o.visual.shading.shades,
-                        o.visual.fog.color,
-                        o.visual.shading.filter,
-                        o.visual.shading.brightness
+                        shading.shades,
+                        shading.color,
+                        shading.filter,
+                        shading.brightness
                     );
                     break;
 
@@ -188,10 +188,10 @@ class Renderer {
                         const wallImage = await CanvasHelper.loadCanvas(o.images.walls);
                         this.setWallTextures(wallImage);
                         this.setWallShadingSettings(
-                            o.visual.shading.shades,
-                            o.visual.fog.color,
-                            o.visual.shading.filter,
-                            o.visual.shading.brightness
+                            shading.shades,
+                            shading.color,
+                            shading.filter,
+                            shading.brightness
                         );
                     }
                     break;
@@ -201,10 +201,10 @@ class Renderer {
                         const flatImage = await CanvasHelper.loadCanvas(o.images.flats);
                         this.setFlatTextures(flatImage);
                         this.setFlatShadingSettings(
-                            o.visual.shading.shades,
-                            o.visual.fog.color,
-                            o.visual.shading.filter,
-                            o.visual.shading.brightness
+                            shading.shades,
+                            shading.color,
+                            shading.filter,
+                            shading.brightness
                         );
                     }
                     break;
@@ -1008,13 +1008,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
         const SHADING = OPTIONS.visual.shading;
-        const FOG = OPTIONS.visual.fog;
         const METRICS = OPTIONS.metrics;
         let ytex = METRICS.height;
         let xtex = METRICS.spacing;
         let xscr = SCREEN.width;
         let yscr = SCREEN.height >> 1;
-        let ff = FOG.factor;
+        let ff = SHADING.factor;
         let sht = SHADING.shades;
         let dmw = sht >> 1;
         let fvh = scene.camera.height;
@@ -1170,7 +1169,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const SCREEN = OPTIONS.screen;
         const METRICS = OPTIONS.metrics;
         const VISUAL = OPTIONS.visual;
-        const FOG = VISUAL.fog;
         const oFlatContext = this._flatContext;
         let x,
             y,
@@ -1226,7 +1224,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xyMax = this.getMapSize() * ps;
         let sh = VISUAL.shading;
         let st = sh.shades - 1;
-        let sf = FOG.factor;
+        let sf = sh.factor;
         let aMap = this._map;
         let F = this._cellCodes;
         let aFBlock;
@@ -1476,13 +1474,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const VISUAL = OPTIONS.visual;
         const SHADING = VISUAL.shading;
-        const FOG = VISUAL.fog;
         const oSprite = new Sprite();
         const oTileSet = Renderer.buildTileSet(oImage, tileWidth, tileHeight, SHADING.shades);
         this.shadeSprite(
             oSprite,
             SHADING.shades,
-            FOG.color,
+            SHADING.color,
             SHADING.filter,
             SHADING.brightness
         );
@@ -1529,64 +1526,80 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 
 
-    drawSprite(oMobile) {
-        /*
-
-sprite
-
-x,
-y,
-visible,
-direction,
-scale
-
-
-
-
-
-
-         */
-        const oSprite = oMobile.oSprite;
-        // Si le sprite n'est pas visible, ce n'est pas la peine de gaspiller du temps CPU
-        // on se barre immédiatement
-        if (!(oSprite.bVisible && oMobile.bVisible)) {
+    drawSprite(scene, oSprite) {
+        if (!oSprite.visible) {
             return;
         }
-        var oTile = oSprite.oBlueprint.oTile;
-        var oCam = this.oCamera;
-        var dx = oMobile.x + oMobile.xOfs - oCam.x - oCam.xOfs;
-        var dy = oMobile.y + oMobile.yOfs - oCam.y - oCam.yOfs;
+        const PI = Math.PI;
+        const CAMERA = scene.camera;
+        const SCREEN = scene.screen;
+        const xspr = oSprite.x;
+        const yspr = oSprite.y;
+        const xcam = CAMERA.x;
+        const ycam = CAMERA.y;
+        const dx = xspr - xcam;
+        const dy = yspr - ycam;
+        const oTileSet = oSprite.getTileSet();
 
-        // Gaffe fAlpha est un angle ici, et pour un sprite c'est une transparence
-        var fTarget = Math.atan2(dy, dx);
-        var fAlpha = fTarget - this.oCamera.fTheta; // Angle
-        if (fAlpha >= PI) { // Angle plus grand que l'angle plat
+        const fTarget = Math.atan2(dy, dx);
+        let fAlpha = fTarget - CAMERA.direction; // Angle
+        if (fAlpha >= PI) { // Angle greater than plane angle
             fAlpha = -(PI * 2 - fAlpha);
         }
-        if (fAlpha < -PI) { // Angle plus grand que l'angle plat
+        if (fAlpha < -PI) { // Angle lesser than plane angle
             fAlpha = PI * 2 + fAlpha;
         }
-        var w2 = this._oCanvas.width >> 1;
+        const w2 = SCREEN.width >> 1;
+        const yscr = SCREEN.height;
 
         // Animation
-        if (!this.b3d || (this.b3d && this.i3dFrame === 0)) {
-            var fAngle1 = oMobile.fTheta + (PI / 8) - fTarget;
-            if (fAngle1 < 0) {
-                fAngle1 = 2 * PI + fAngle1;
-            }
-            oSprite.setDirection(((8 * fAngle1 / (2 * PI)) | 0) & 7);
-            oSprite.animate(this.TIME_FACTOR);
-        }
+//        if (!this.b3d || (this.b3d && this.i3dFrame === 0)) {
+//        let fAngle1 = oMobile.fTheta + (PI / 8) - fTarget;
+//             if (fAngle1 < 0) {
+//                 fAngle1 = 2 * PI + fAngle1;
+//             }
+//             oSprite.setDirection(((8 * fAngle1 / (2 * PI)) | 0) & 7);
+//            oSprite.animate(this.TIME_FACTOR);
+//        }
 
-        if (Math.abs(fAlpha) <= (this.fViewAngle * 1.5)) {
-            var x = (Math.tan(fAlpha) * w2 + w2) | 0;
+        if (Math.abs(fAlpha) <= (SCREEN.fov * 1.5)) {
+            const fp = Math.tan(Math.PI / 2 - fAlpha) * w2;
+            const z = Compass.distance(xspr, yspr, xcam, ycam);
+            const f = z * Math.cos(fAlpha);
+            const x = z * Math.sin(fAlpha);
+            // xp / fp =  x / f
+            // xp = fp * x / f
+            // const xp = fp * x / f;
+            const ts = oSprite.getTileSet();
+            const dz = yscr * oTileSet.tileHeight / z | 0;
+            const dzy = yscr - (dz * CAMERA.height);
+            const iZoom = (1 * oTileSet.tileWidth / (z / yscr) + 0.5);
+
+            const data = [
+                ts.getImage(),
+                ts.tileWidth * oSprite.getCurrentFrame(),
+                0,
+                ts.tileWidth,
+                ts.tileHeight,
+                x | 0,
+                dzy | 0,
+                iZoom << 1,
+                dz << 1,
+                z,
+                0
+            ];
+            scene.zbuffer.push(data);
+
+
+            //let x = (Math.tan(fAlpha) * w2 + w2) | 0;
             // Faire tourner les coordonnées du sprite : projection sur l'axe de la caméra
-            var z = MathTools.distance(dx, dy) * Math.cos(fAlpha) * 1.333;  // le 1.333 empirique pour corriger une erreur de tri bizarroïde
+            //let z = Compass.distance(dx, dy) * Math.cos(fAlpha) * 1.333;  // le 1.333 empirique pour corriger une erreur de tri bizarroïde
             // Les sprites bénéficient d'un zoom 2x afin d'améliorer les détails.
 
-            var dz = (oTile.nScale * oTile.nHeight / (z / this.yScrSize) + 0.5);
-            var dzy = this.yScrSize - (dz * this.fViewHeight);
-            var iZoom = (oTile.nScale * oTile.nWidth / (z / this.yScrSize) + 0.5);
+            //var dz = (oTile.nScale * oTile.nHeight / (z / this.yScrSize) + 0.5);
+            //var dzy = this.yScrSize - (dz * this.fViewHeight);
+            //var iZoom = (oTile.nScale * oTile.nWidth / (z / this.yScrSize) + 0.5);
+            /*
             var nOpacity; // j'ai nommé opacity mais ca n'a rien a voir : normalement ca aurait été sombritude
             // Self luminous
             var nSFx = oSprite.oBlueprint.nFx | (oSprite.bTranslucent ? (oSprite.nAlpha << 2) : 0);
@@ -1609,6 +1622,7 @@ scale
                 dz << 1, // dh  8
                 z,
                 nSFx];
+
             oSprite.aLastRender = aData;
             this.aZBuffer.push(aData);
             // Traitement overlay
@@ -1645,7 +1659,7 @@ scale
                             2
                         ]);
                 }
-            }
+            }*/
         }
     }
 
@@ -1694,8 +1708,7 @@ scale
         const opt = this._options;
         const VISUAL = opt.visual;
         const SHADING = VISUAL.shading;
-        const FOG = VISUAL.fog;
-        this._csm.shadeSurface(x, y, nSide, SHADING.shades, FOG.color, SHADING.filter, SHADING.brightness);
+        this._csm.shadeSurface(x, y, nSide, SHADING.shades, SHADING.color, SHADING.filter, SHADING.brightness);
     }
 
 

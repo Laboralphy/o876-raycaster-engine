@@ -133,9 +133,6 @@ async function main() {
     upper.setCellPhys(6, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
     upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
-    let cExplo = await CanvasHelper.loadCanvas('textures/o_expfire.png');
-    let oExploSprite = new Sprite();
-    oExploSprite.
 
 
     cvs.width = rc._options.screen.width;

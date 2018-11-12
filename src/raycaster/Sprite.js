@@ -7,12 +7,31 @@ class Sprite {
         this.x = 0;
         this.y = 0;
 
+        this._visible = true;
+        this._scale = 1;
+
         this._tileWidth = 0;
         this._tileHeight = 0;
 
         this._animations = [];
         this._animation = null;
         this._tileset = null;
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
+    set visible(value) {
+        this._visible = value;
+    }
+
+    get scale() {
+        return this._scale;
+    }
+
+    set scale(value) {
+        this._scale = value;
     }
 
     /**
@@ -46,6 +65,10 @@ class Sprite {
 
     getTileSet() {
         return this._tileset;
+    }
+
+    getCurrentFrame() {
+        return this._animation.getCurrentFrame();
     }
 
 

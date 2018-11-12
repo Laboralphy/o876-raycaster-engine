@@ -1,5 +1,5 @@
-import CanvasHelper from './CanvasHelper';
-import Rainbow from './Rainbow';
+import CanvasHelper from '../tools/CanvasHelper';
+import Rainbow from '../tools/Rainbow';
 
 
 const SHADING_LAYERS = 16;
@@ -8,7 +8,6 @@ const SHADING_LAYERS = 16;
  * This class manages several a tileset and is able to pre-compute a shading effect, in order to optimize rendering time.
  */
 class ShadedTileSet {
-
 	constructor() {
 		this._shadingLayers = SHADING_LAYERS;
 		this._image = null;
@@ -16,6 +15,14 @@ class ShadedTileSet {
         this._tileWidth = 0;
         this._tileHeight = 0;
 	}
+
+    get tileWidth() {
+        return this._tileWidth;
+    }
+
+    get tileHeight() {
+        return this._tileHeight;
+    }
 
     /**
 	 * defines the number of shading layer (default 16)

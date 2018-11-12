@@ -1,5 +1,5 @@
 /**
- * this class translates a string into another string
+ * this class translates a string or a regular expression into another string
  */
 class Translator {
     constructor() {
@@ -7,6 +7,11 @@ class Translator {
         this._aliases = {};
     }
 
+    /**
+     * adds a rule
+     * @param r {string|RegExp}
+     * @param alias {string}
+     */
     addRule(r, alias) {
         if (r instanceof RegExp) {
             this._rules.push({
@@ -17,6 +22,11 @@ class Translator {
         }
     }
 
+    /**
+     * Translates a string
+     * @param s {string}
+     * @returns {string}
+     */
     translate(s) {
         if (s in this._aliases) {
             return this._aliases[s];

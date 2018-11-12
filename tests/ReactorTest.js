@@ -45,4 +45,24 @@ describe('#reactor', function() {
         obj.alpha.beta.x = 1111;
         expect(r._log).toEqual({'alpha.beta.x': true});
     });
+
+    it('should fire events', function() {
+        const obj = {
+            alpha: {
+                beta: {
+                    x: 1,
+                    y: 2
+                }
+            }
+        };
+        const r = new Reactor(obj);
+        r.clear();
+        let xxx = '';
+        r.events.on('changed', ({key}) => {
+            xxx = key;
+        });
+        obj.alpha.beta.y = 22;
+
+        expect(xxx).toBe('alpha.beta.y');
+    });
 });
