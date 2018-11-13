@@ -29,10 +29,6 @@ class CanvasHelper {
 	 * @param b {boolean} true = smoothing on // false = smoothing off
 	 */
 	static setImageSmoothing(oCanvas, b) {
-		if (b) {
-			console.log('smooth', oCanvas, b);
-			console.trace();
-		}
 		let oContext = oCanvas.getContext('2d');
 		oContext.imageSmoothingEnabled = b;
 	}

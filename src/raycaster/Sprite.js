@@ -8,6 +8,7 @@ class Sprite {
     constructor() {
         this.x = 0;
         this.y = 0;
+        this.h = 0;
 
         this._visible = true;
         this._scale = 1;

@@ -1,4 +1,6 @@
 import Events from 'events';
+import {getType} from "../tools/toolkit";
+
 /**
  * This class is use to observe all mutations against an object, like Poppy.
  *
@@ -92,6 +94,9 @@ class Reactor {
                 return val; // Simply return the cached value
             },
             set(newVal) {
+                if (key.endsWith('canvas')) {
+                    console.log('hey Reactor', obj[key])
+                }
                 if (val !== newVal) {
                     val = newVal; // Save the newVal
                     oSelf.notify(path);
@@ -107,7 +112,7 @@ class Reactor {
      * @param path
      */
     makeReactiveItem(obj, key, path) {
-        switch (Array.isArray(obj[key]) ? 'array' : typeof obj[key]) {
+        switch (getType(obj[key])) {
             case 'object':
                 this.makeReactiveObject(obj[key], path + '.' + key);
                 break;

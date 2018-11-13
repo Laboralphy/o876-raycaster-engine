@@ -30,22 +30,18 @@ async function main() {
     let cvs = document.querySelector('canvas');
     let ctx = cvs.getContext('2d');
     CanvasHelper.setImageSmoothing(cvs, false);
-    if (CanvasHelper.getImageSmoothing(cvs)) {
-        console.error(cvs, 'is bugged');
-    }
     let cWall = await CanvasHelper.loadCanvas('textures/walls-bw.png');
     let cFlat = await CanvasHelper.loadCanvas('textures/flats-bw.png');
     let cBG = await CanvasHelper.loadCanvas('textures/sky.png');
 
     // il nous faut un objet de configuration
 
-
     let rc = new Renderer();
     rc.defineOptions({
         screen: {
-            width: 300,
-            height: 300,
-            fov: 1
+            width: cvs.width,
+            height: cvs.height,
+            focal:  cvs.width >> 1
         }
     });
     const upper = rc.createUpperLevel();
@@ -152,10 +148,6 @@ async function main() {
 
 
 
-    cvs.width = rc._options.screen.width;
-    cvs.height = rc._options.screen.height;
-    const RENDER_CVS = CanvasHelper.cloneCanvas(cvs);
-    const RENDER_CTX = RENDER_CVS.getContext('2d');
 
     let xCam = 64 * 4 + 32;
     let yCam = 64 * 7 + 32;
@@ -171,14 +163,13 @@ async function main() {
 
     cvs.addEventListener('click', function(event) {
         console.log('target x', xMouse, 'y', yMouse, 'camera x', xCam, 'y', yCam);
-
     });
 
 
     function doomloop() {
         const scene = rc.computeScene(40, xCam, yCam, fAngle);
-        rc.render(scene, RENDER_CTX);
-        requestAnimationFrame(() => ctx.drawImage(RENDER_CVS, 0, 0));
+        rc.render(scene);
+        requestAnimationFrame(() => rc.flip(ctx));
     }
 
     setInterval(doomloop, 40);

@@ -4,14 +4,19 @@
  * @param path {string}
  * @returns {Array}
  */
+import {getType} from "./toolkit";
+
 export function objectKeyMap(oObj, path = '') {
     let a = [];
     for (let key in oObj) {
         if (oObj.hasOwnProperty(key)) {
             let newPath = path + '.' + key;
-            if (typeof oObj[key] === 'object' && !Array.isArray(oObj[key])) {
+            if (getType(oObj[key]) === 'object') {
                 a = a.concat(objectKeyMap(oObj[key], newPath));
             } else {
+                if (newPath === '.screen.canvas') {
+                    console.log('hey', oObj[key], getType(oObj[key]));
+                }
                 a.push(newPath.substr(1));
             }
         }

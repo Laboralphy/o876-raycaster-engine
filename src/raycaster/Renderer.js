@@ -10,6 +10,7 @@ import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
 import {objectExtends, objectGet, objectSet} from "../tools/objectExtender";
 import * as Compass from '../tools/compass';
+import DebugDisplay from "./DebugDisplay";
 
 /**
  * @todo sprite rendering
@@ -68,6 +69,10 @@ class Renderer {
         this._animations = [];
         this._upper = null;     // instance of another renderer for the first floor
         this._sprites = [];     // list of sprites
+        this._debugDisplay = new DebugDisplay();
+        this._renderContext = null;
+        this._renderCanvas = null;
+        this._renderCrop = 50; // Y offset of rendering
     }
 
     configVRContext() {
@@ -86,9 +91,10 @@ class Renderer {
                 doubleHeight: false // second storey is double height (for city buildings)
             },
             screen: {               // the virtual screen where the world is rendered
-                width: 400,         // horizontal screen size (in pixels)
-                height: 250,	    // vertical screen size (in pixels)
-                fov: Math.PI / 4    // (*) You should not change this setting but only slightly
+                width: 256,         // horizontal screen size (in pixels)
+                height: 256,	    // vertical screen size (in pixels)
+                focal: 128,
+                canvas: null
             },
             visual: {
                 smooth: false,      // set texture smoothing on or off
@@ -117,6 +123,11 @@ class Renderer {
         t.addRule('visual.shading.shades', 'shading-settings');
         this._translator = t;
     }
+
+    get debug() {
+	    return this._debugDisplay;
+    }
+
 
 
 //      _            _ _                        _ _   _                   _   _
@@ -172,7 +183,18 @@ class Renderer {
 	        switch (opt) {
                 case 'screen.height':
                 case 'screen.width':
-                case 'screen.fov':
+                    if (!this._renderCanvas) {
+                        this._renderCanvas = CanvasHelper.createCanvas(o.screen.width, o.screen.width);
+                    }
+                    this._renderCanvas.width = o.screen.width;
+                    this._renderCanvas.height = o.screen.width;
+                    this._renderCrop = (o.screen.width - o.screen.height) >>> 1;
+                    this._renderContext = this._renderCanvas.getContext('2d');
+                    CanvasHelper.setImageSmoothing(this._renderCanvas, o.visual.smooth);
+                    this.transmitOptionToStorey(opt);
+                    break;
+
+                case 'screen.focal':
                     this.transmitOptionToStorey(opt);
                     break;
 
@@ -261,6 +283,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             upper._flats = this._flats;
             upper._animations = this._animations;
             upper._cellCodes = this._cellCodes;
+            upper._renderContext = this._renderContext;
+            upper._renderCanvas = this._renderCanvas;
         }
     }
 
@@ -496,11 +520,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (!!this._upper) {
             oUpper = this._upper.createScene(xCamera, yCamera, fDirection, fHeight + 2);
         }
+        const focal = this._options.screen.focal;
+        const fov = Math.atan2(this._options.screen.width >> 1, focal);
         return {         // raycasting scene
             camera: {
                 x: xCamera,             // camera position
                 y: yCamera,             // ...
-                fov: this._options.screen.fov,    // camera view fov
+                focal,
+                fov,
                 direction: fDirection,              // camera direction angle
                 height: fHeight              // camera view height
             },
@@ -648,7 +675,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
         zbuffer = Renderer._optimizeBuffer(zbuffer);
         scene.zbuffer = zbuffer;
-        this.drawSprites(scene);
+        this.renderSprites(scene);
         // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
         zbuffer.sort(zBufferCompare);
         if (this._upper) {
@@ -1014,7 +1041,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let ytex = METRICS.height;
         let xtex = METRICS.spacing;
         let xscr = SCREEN.width;
-        let yscr = SCREEN.height >> 1;
+        let yscr = SCREEN.width >> 1; // SCREEN.height >> 1;
         let ff = SHADING.factor;
         let sht = SHADING.shades;
         let dmw = sht >> 1;
@@ -1130,9 +1157,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
     /**
-     * @param context {CanvasRenderingContext2D} a rendering context
      */
-    renderBackground(context) {
+    renderBackground() {
         // sky
         let oBG = this._background;
         if (oBG) {
@@ -1144,6 +1170,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
             let yBG = (this._options.screen.height >> 1) - (hBG >> 1);
             hBG = hBG + yBG;
+            const context = this._renderContext;
             context.drawImage(oBG, 0, 0, wBG, hBG, wBG - xBG, yBG, wBG, hBG);
             context.drawImage(oBG, 0, 0, wBG, hBG, -xBG, yBG, wBG, hBG);
         }
@@ -1166,18 +1193,17 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * Render flats
      * @param scene
      */
-    renderFlats(scene, renderContext) {
+    renderFlats(scene) {
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
         const METRICS = OPTIONS.metrics;
         const VISUAL = OPTIONS.visual;
+        const renderContext = this._renderContext;
         const oFlatContext = this._flatContext;
-        let x,
-            y,
-            xStart = 0,
+        let xStart = 0,
             xEnd = SCREEN.width - 1,
             w = SCREEN.width,
-            h = SCREEN.height >> 1;
+            h = SCREEN.width >> 1; //SCREEN.height >> 1;
         if (!oFlatContext.imageData) {
             oFlatContext.imageData = oFlatContext
                 .image
@@ -1235,11 +1261,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXMap = this._csm;
         let oXBlock, oXBlockImage, oXBlockCeil;
         let fBx, fBy;
+        let crop = this._renderCrop;
 
         if (fvh === 1) {
             let nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
 
-            for (y = 1; y < h; ++y) {
+            for (let y = 1, hMax = h - crop; y < hMax; ++y) {
+
                 fBx = wx1;
                 fBy = wy1;
 
@@ -1253,7 +1281,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 wyCeil = w * (h - y - 1);
                 yOfs = Math.min(st, dFront / sf | 0);
 
-                for (x = 0; x < w; ++x) {
+                for (let x = 0; x < w; ++x) {
                     ofsDst = wy + x;
                     ofsDstCeil = wyCeil + x;
                     fy64 = fy / ps | 0; // sector
@@ -1407,14 +1435,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             try {
                 rc.drawImage(
                     aLine[0],
-                    aLine[1] | 0,
-                    aLine[2] | 0,
-                    aLine[3] | 0,
-                    aLine[4] | 0,
-                    aLine[5] | 0,
-                    aLine[6] | 0,
-                    aLine[7] | 0,
-                    aLine[8] | 0);
+                    aLine[1] | 0,       // sx
+                    aLine[2] | 0,       // sy
+                    aLine[3] | 0,       // sw
+                    aLine[4] | 0,       // sh
+                    aLine[5] | 0,       // dx
+                    aLine[6] | 0,       // dy
+                    aLine[7] | 0,       // dw
+                    aLine[8] | 0);      // dh
             } catch (e) {}
         }
         if (sGCO !== '') {
@@ -1442,16 +1470,23 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * This will render the raycasting scene in the specified 2d context
      * @param scene
-     * @param renderContext
      */
-    render(scene, renderContext) {
+    render(scene) {
+        const renderContext = this._renderContext;
         this.renderBackground(renderContext);
         if (scene.upperScene) {
             Renderer.renderScreenSliceBuffer(scene.upperScene, renderContext);
         }
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
+        this.drawDebug(renderContext);
     }
+
+    flip(finalContext) {
+        finalContext.drawImage(this._renderCanvas, 0, -this._renderCrop);
+    }
+
+
 
 
 
@@ -1531,7 +1566,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
-    drawSprites(scene) {
+    renderSprites(scene) {
         const sprites = this._sprites;
         for (let i = 0, l = sprites.length; i < l; ++i) {
             this.drawSprite(scene, sprites[i]);
@@ -1564,35 +1599,35 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             fAlpha = PI * 2 + fAlpha;
         }
 
-        // Animation
-//        if (!this.b3d || (this.b3d && this.i3dFrame === 0)) {
-//        let fAngle1 = oMobile.fTheta + (PI / 8) - fTarget;
-//             if (fAngle1 < 0) {
-//                 fAngle1 = 2 * PI + fAngle1;
-//             }
-//             oSprite.setDirection(((8 * fAngle1 / (2 * PI)) | 0) & 7);
-//            oSprite.animate(this.TIME_FACTOR);
-//        }
-
         if (Math.abs(fAlpha) <= (fov * 1.5)) {
-            const wspr = oTileSet.tileWidth;
-            const hspr = oTileSet.tileHeight;
-            const xscr = SCREEN.width;
-            const yscr = SCREEN.height;
-            const xscr2 = xscr >> 1;
-            const yscr2 = yscr >> 1;
-            const z = Compass.distance(xspr, yspr, xcam, ycam);
-            const x = Math.sin(fAlpha) * z;
-            const f = Math.cos(fAlpha) * z;
-            const fovp = PI / 2 - fov;
-            const fp = xscr2 * Math.sin(fovp);
-            const factor = fp / f;
-            const xp = x * factor;
+            const d = this.debug;
+            d.clear();
+
+            const wspr = oTileSet.tileWidth;        // sprite width
+            const hspr = oTileSet.tileHeight;       // sprite height
+            const xscr = SCREEN.width;              // screen width
+            const yscr = SCREEN.width; //SCREEN.height;             // screen height
+            const xscr2 = xscr >> 1;                // screen half width
+            const yscr2 = yscr >> 1;                // screen half height
+            const z = Compass.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const x = Math.sin(fAlpha) * z;         // sprite x position
+            const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
+            const focal = SCREEN.focal;
+            const factor = focal / f;               // projection factor : must be multiplied
+            const xp = x * factor;                  // projection of x
+            const dw = wspr * factor;               // projection of width
+            const dx = xscr2 + xp - (dw >> 1);      // projection of destination x
+
+            const dh = hspr * factor;
+            const dy = yscr2 - (dh >> 1);
+
             const ts = oSprite.getTileSet();
-            const dw = wspr * factor << 1;
-            const dh = hspr * factor << 1;
-            const dy = yscr2 - (dh * CAMERA.height >> 1);
-            const dx = xscr2 + xp - (dw >> 1);
+
+//            const k_y = (hspr >> 1);
+//            const k_yp = k_y * factor;
+
+            d.print('z', z, 'focal', focal, 'dy', dy);
+
             const data = [
                 ts.getImage(),
                 ts.tileWidth * oSprite.getCurrentFrame(),       // 1: sx
@@ -1679,6 +1714,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
             }*/
         }
+    }
+
+    drawDebug(context) {
+        this._debugDisplay.display(context);
     }
 
 
