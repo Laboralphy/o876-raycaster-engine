@@ -33,14 +33,21 @@ async function main() {
     if (CanvasHelper.getImageSmoothing(cvs)) {
         console.error(cvs, 'is bugged');
     }
-    let cWall = await CanvasHelper.loadCanvas('textures/walls.png');
-    let cFlat = await CanvasHelper.loadCanvas('textures/flats.png');
+    let cWall = await CanvasHelper.loadCanvas('textures/walls-bw.png');
+    let cFlat = await CanvasHelper.loadCanvas('textures/flats-bw.png');
     let cBG = await CanvasHelper.loadCanvas('textures/sky.png');
 
     // il nous faut un objet de configuration
 
 
     let rc = new Renderer();
+    rc.defineOptions({
+        screen: {
+            width: 300,
+            height: 300,
+            fov: 1
+        }
+    });
     const upper = rc.createUpperLevel();
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
@@ -137,7 +144,7 @@ async function main() {
     upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
 
-    const cExplo = await CanvasHelper.loadCanvas('textures/o_mire.png');
+    const cExplo = await CanvasHelper.loadCanvas('textures/o_mire2-bw.png');
     const spr1 = rc.buildSprite(cExplo, 64, 96);
     spr1.buildAnimation(0, 1, 100, 0);
     spr1.x = 64 * 4 + 32;
@@ -150,10 +157,24 @@ async function main() {
     const RENDER_CVS = CanvasHelper.cloneCanvas(cvs);
     const RENDER_CTX = RENDER_CVS.getContext('2d');
 
-
     let xCam = 64 * 4 + 32;
     let yCam = 64 * 7 + 32;
     let fAngle = -Math.PI / 2;
+
+    let xMouse = 0;
+    let yMouse = 0;
+
+    cvs.addEventListener('mousemove', function(event) {
+        xMouse = event.pageX - cvs.offsetLeft;
+        yMouse = event.pageY - cvs.offsetTop;
+    });
+
+    cvs.addEventListener('click', function(event) {
+        console.log('target x', xMouse, 'y', yMouse, 'camera x', xCam, 'y', yCam);
+
+    });
+
+
     function doomloop() {
         const scene = rc.computeScene(40, xCam, yCam, fAngle);
         rc.render(scene, RENDER_CTX);
@@ -179,7 +200,7 @@ async function main() {
                 fAngle += (event.shiftKey ? 0.025 : 0.25);
                 break;
         }
-        console.log({xCam, yCam, fAngle});
+        //console.log({xCam, yCam, fAngle});
     });
 }
 

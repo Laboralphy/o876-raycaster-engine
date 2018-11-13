@@ -170,6 +170,8 @@ class Renderer {
 	    for (let i = 0; i < l; ++i) {
 	        let opt = aList[i];
 	        switch (opt) {
+                case 'screen.height':
+                case 'screen.width':
                 case 'screen.fov':
                     this.transmitOptionToStorey(opt);
                     break;
@@ -1548,14 +1550,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
         const ycam = CAMERA.y;
-        const xscr = SCREEN.width;
-        const yscr = SCREEN.height;
-        const w2 = xscr >> 1;
         const dx = xspr - xcam;
         const dy = yspr - ycam;
         const oTileSet = oSprite.getTileSet();
-        const wspr = oTileSet.tileWidth;
-        const hspr = oTileSet.tileHeight;
         const fov = scene.camera.fov;
 
         const fTarget = Math.atan2(dy, dx);
@@ -1577,28 +1574,35 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 //            oSprite.animate(this.TIME_FACTOR);
 //        }
 
-        if (Math.abs(fAlpha) <= (SCREEN.fov * 1.5)) {
+        if (Math.abs(fAlpha) <= (fov * 1.5)) {
+            const wspr = oTileSet.tileWidth;
+            const hspr = oTileSet.tileHeight;
+            const xscr = SCREEN.width;
+            const yscr = SCREEN.height;
+            const xscr2 = xscr >> 1;
+            const yscr2 = yscr >> 1;
             const z = Compass.distance(xspr, yspr, xcam, ycam);
             const x = Math.sin(fAlpha) * z;
             const f = Math.cos(fAlpha) * z;
-            const fovp = Math.PI / 2 - fov;
-            const fp = w2 * Math.sin(fovp);
-            const xp = x * fp / f;
+            const fovp = PI / 2 - fov;
+            const fp = xscr2 * Math.sin(fovp);
+            const factor = fp / f;
+            const xp = x * factor;
             const ts = oSprite.getTileSet();
-            const dz = yscr * hspr / z | 0;
-            const dzy = yscr / 2 - (dz * CAMERA.height);
-            const iZoom = (oSprite.scale * wspr / (z / yscr) + 0.5);
-
+            const dw = wspr * factor << 1;
+            const dh = hspr * factor << 1;
+            const dy = yscr2 - (dh * CAMERA.height >> 1);
+            const dx = xscr2 + xp - (dw >> 1);
             const data = [
                 ts.getImage(),
                 ts.tileWidth * oSprite.getCurrentFrame(),       // 1: sx
                 0,                                              // 2: sy
                 ts.tileWidth,                                   // 3: sw
                 ts.tileHeight,                                  // 4: sh
-                w2 + xp - iZoom | 0,                                  // 5: dx
-                dzy | 0,                                        // 6: dy
-                iZoom << 1 | 0,                                     // 7: dw
-                dz << 1 | 0,                                        // 8: dh
+                dx | 0,                                         // 5: dx
+                dy | 0,                                         // 6: dy
+                dw | 0,                                         // 7: dw
+                dh | 0,                                         // 8: dh
                 z,
                 0
             ];
