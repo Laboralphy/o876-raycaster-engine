@@ -12,18 +12,17 @@ class DebugDisplay {
         this._lines.push(args.join(' '));
     }
 
-    display(context) {
+    display(context, x, y) {
         const lines = this._lines;
         context.fillStyle = 'white';
         context.strokeStyle = 'black';
+        context.textBaseline = 'top';
+        context.font = '10px monospace';
         for (let i = 0, l = lines.length; i < l; ++i) {
-            context.strokeText(lines[i], 8, 10 + i * 16);
-            context.fillText(lines[i], 8, 10 + i * 16);
+            context.strokeText(lines[i], x, y + i * 12);
+            context.fillText(lines[i], x, y + i * 12);
         }
     }
-
-
-
 }
 
 

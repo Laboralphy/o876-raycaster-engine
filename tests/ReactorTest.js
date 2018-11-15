@@ -1,4 +1,4 @@
-const Reactor = require('../src/raycaster/Reactor').default;
+const Reactor = require('../src/tools/Reactor').default;
 
 describe('#reactor', function() {
     it('should work on one level', function() {

@@ -14,9 +14,6 @@ export function objectKeyMap(oObj, path = '') {
             if (getType(oObj[key]) === 'object') {
                 a = a.concat(objectKeyMap(oObj[key], newPath));
             } else {
-                if (newPath === '.screen.canvas') {
-                    console.log('hey', oObj[key], getType(oObj[key]));
-                }
                 a.push(newPath.substr(1));
             }
         }

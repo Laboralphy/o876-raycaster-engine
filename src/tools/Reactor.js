@@ -1,5 +1,5 @@
 import Events from 'events';
-import {getType} from "../tools/toolkit";
+import {getType} from "./toolkit";
 
 /**
  * This class is use to observe all mutations against an object, like Poppy.
@@ -94,9 +94,6 @@ class Reactor {
                 return val; // Simply return the cached value
             },
             set(newVal) {
-                if (key.endsWith('canvas')) {
-                    console.log('hey Reactor', obj[key])
-                }
                 if (val !== newVal) {
                     val = newVal; // Save the newVal
                     oSelf.notify(path);

@@ -30,18 +30,21 @@ async function main() {
     let cvs = document.querySelector('canvas');
     let ctx = cvs.getContext('2d');
     CanvasHelper.setImageSmoothing(cvs, false);
-    let cWall = await CanvasHelper.loadCanvas('textures/walls-bw.png');
-    let cFlat = await CanvasHelper.loadCanvas('textures/flats-bw.png');
+    let cWall = await CanvasHelper.loadCanvas('textures/walls-x2.png');
+    let cFlat = await CanvasHelper.loadCanvas('textures/flats-x2.png');
     let cBG = await CanvasHelper.loadCanvas('textures/sky.png');
 
     // il nous faut un objet de configuration
 
     let rc = new Renderer();
     rc.defineOptions({
+        metrics: {
+            spacing: 128,
+            height: 192
+        },
         screen: {
             width: cvs.width,
-            height: cvs.height,
-            focal:  cvs.width >> 1
+            height: cvs.height
         }
     });
     const upper = rc.createUpperLevel();
@@ -140,8 +143,8 @@ async function main() {
     upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
 
-    const cExplo = await CanvasHelper.loadCanvas('textures/o_mire2-bw.png');
-    const spr1 = rc.buildSprite(cExplo, 64, 96);
+    const cExplo = await CanvasHelper.loadCanvas('textures/o_mire2-bw128.png');
+    const spr1 = rc.buildSprite(cExplo, 64, 128);
     spr1.buildAnimation(0, 1, 100, 0);
     spr1.x = 64 * 4 + 32;
     spr1.y = 64 * 2 + 32;
@@ -149,9 +152,10 @@ async function main() {
 
 
 
-    let xCam = 64 * 4 + 32;
-    let yCam = 64 * 7 + 32;
+    let xCam = 128 * 4 + 32;
+    let yCam = 128 * 7 + 32;
     let fAngle = -Math.PI / 2;
+    let fHeight = 1;
 
     let xMouse = 0;
     let yMouse = 0;
@@ -161,13 +165,10 @@ async function main() {
         yMouse = event.pageY - cvs.offsetTop;
     });
 
-    cvs.addEventListener('click', function(event) {
-        console.log('target x', xMouse, 'y', yMouse, 'camera x', xCam, 'y', yCam);
-    });
 
 
     function doomloop() {
-        const scene = rc.computeScene(40, xCam, yCam, fAngle);
+        const scene = rc.computeScene(40, xCam, yCam, fAngle, fHeight);
         rc.render(scene);
         requestAnimationFrame(() => rc.flip(ctx));
     }
@@ -190,8 +191,20 @@ async function main() {
             case 'ArrowRight':
                 fAngle += (event.shiftKey ? 0.025 : 0.25);
                 break;
+            case '+':
+                rc._options.screen.focal *= 1.1;
+                break;
+            case '-':
+                rc._options.screen.focal /= 1.1;
+                break;
+            case 'PageUp':
+                fHeight += 0.1;
+                break;
+            case 'PageDown':
+                fHeight -= 0.1;
+                break;
+
         }
-        //console.log({xCam, yCam, fAngle});
     });
 }
 

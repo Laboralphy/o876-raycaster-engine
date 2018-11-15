@@ -3,7 +3,7 @@ import MarkerRegistry from '../tools/MarkerRegistry';
 import CellSurfaceManager from './CellSurfaceManager';
 import CanvasHelper from '../tools/CanvasHelper';
 import * as CONSTS from './consts';
-import Reactor from "./Reactor";
+import Reactor from "../tools/Reactor";
 import ArrayHelper from '../tools/ArrayHelper';
 import Translator from "../tools/Translator";
 import TileAnimation from "./TileAnimation";
@@ -13,7 +13,6 @@ import * as Compass from '../tools/compass';
 import DebugDisplay from "./DebugDisplay";
 
 /**
- * @todo sprite rendering
  * @todo VR rendering
  */
 
@@ -87,8 +86,7 @@ class Renderer {
         this._options = {
             metrics: {
                 height: 96,         // wallXed height of walls
-                spacing: 64,        // size of a cell, on the floor
-                doubleHeight: false // second storey is double height (for city buildings)
+                spacing: 64         // size of a cell, on the floor
             },
             screen: {               // the virtual screen where the world is rendered
                 width: 256,         // horizontal screen size (in pixels)
@@ -98,6 +96,7 @@ class Renderer {
             },
             visual: {
                 smooth: false,      // set texture smoothing on or off
+                stretch: false,
                 shading: {
                     color: 'black', // (*) fog color
                     factor: 50,     // (*) distance where the texture shading increase by one unit
@@ -127,6 +126,16 @@ class Renderer {
     get debug() {
 	    return this._debugDisplay;
     }
+
+    get options() {
+	    return this._options;
+    }
+
+    isometric() {
+	    const SCREEN = this._options.screen;
+	    SCREEN.focal = (SCREEN.width >> 1) * (16 / 9);
+    }
+
 
 
 
@@ -181,6 +190,7 @@ class Renderer {
 	    for (let i = 0; i < l; ++i) {
 	        let opt = aList[i];
 	        switch (opt) {
+
                 case 'screen.height':
                 case 'screen.width':
                     if (!this._renderCanvas) {
@@ -190,11 +200,17 @@ class Renderer {
                     this._renderCanvas.height = o.screen.width;
                     this._renderCrop = (o.screen.width - o.screen.height) >>> 1;
                     this._renderContext = this._renderCanvas.getContext('2d');
+                    this.isometric();
                     CanvasHelper.setImageSmoothing(this._renderCanvas, o.visual.smooth);
                     this.transmitOptionToStorey(opt);
                     break;
 
                 case 'screen.focal':
+                    this.transmitOptionToStorey(opt);
+                    break;
+
+                case 'metrics.spacing':
+                case 'metrics.height':
                     this.transmitOptionToStorey(opt);
                     break;
 
@@ -1149,7 +1165,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (METRICS.doubleHeight) {
+        if (OPTIONS.visual.stretch) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
@@ -1338,7 +1354,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             let fxCeil = 0, fyCeil = 0; // coordonnée du texel finale
             let dFrontCeil; // distance "devant caméra" du pixel actuellement pointé
 
-            for (y = 1; y < h; ++y) {
+            for (let y = 1, hMax = h - crop; y < hMax; ++y) {
                 fBx = wx1;
                 fBy = wy1;
 
@@ -1348,7 +1364,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fx = wx1 * dFront + xCam;
                 xDeltaFront = xDelta * dFront;
                 yDeltaFront = yDelta * dFront;
-                wy = w * (h + y);
+                wy = w * (h + y - 1);
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 // ceill
@@ -1359,7 +1375,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 yDeltaFrontCeil = yDelta * dFrontCeil;
                 wyCeil = w * (h - y);
                 yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
-                for (x = 0; x < w; ++x) {
+                for (let x = 0; x < w; ++x) {
                     ofsDst = wy + x;
                     ofsDstCeil = wyCeil + x;
                     fy64 = fy / ps | 0;
@@ -1382,13 +1398,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             }
                         }
                     }
-                    if (fxCeil >= 0 && fyCeil >= 0 && fxCeil < xyMax && fyCeil < xyMax) {
+                    if (x >= xStart && x <= xEnd && fxCeil >= 0 && fyCeil >= 0 && fxCeil < xyMax && fyCeil < xyMax) {
                         fy64 = fyCeil / ps | 0;
                         fx64 = fxCeil / ps | 0;
                         oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
                         if (oXBlockCeil.imageData32) {
                             oXBlockImage = oXBlockCeil.imageData32;
-                            ofsSrc = (((fyCeil  % ps) + yOfs * ps | 0) * ps + (((fxCeil % ps) | 0)));
+                            ofsSrc = (((fyCeil  % ps) + yOfsCeil * ps | 0) * ps + (((fxCeil % ps) | 0)));
                             aRenderSurf[ofsDstCeil] = oXBlockImage[ofsSrc];
                         } else {
                             nBlock = aMap[fy64][fx64] & 0xFFF; // **code12** code
@@ -1396,7 +1412,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             if (aFBlock !== null) {
                                 xOfs = aFBlock[5];
                                 if (xOfs !== null) {
-                                    ofsSrc = (((fyCeil % ps) + yOfs * ps | 0) * nFloorWidth + (((fxCeil % ps) + xOfs * ps | 0)));
+                                    ofsSrc = (((fyCeil % ps) + yOfsCeil * ps | 0) * nFloorWidth + (((fxCeil % ps) + xOfs * ps | 0)));
                                     aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
                                 }
                             }
@@ -1457,12 +1473,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * Will precompute anything necessary for the rendering phase
      */
-    computeScene(nTime, x, y, angle) {
+    computeScene(nTime, x, y, angle, height) {
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
         this.computeAnimations(nTime);
-        const scene = this.createScene(x, y, angle);
+        const scene = this.createScene(x, y, angle, height);
         this.computeScreenSliceBuffer(scene);
         return scene;
     }
@@ -1479,7 +1495,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
-        this.drawDebug(renderContext);
+        this.renderDebug(renderContext);
     }
 
     flip(finalContext) {
@@ -1569,11 +1585,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     renderSprites(scene) {
         const sprites = this._sprites;
         for (let i = 0, l = sprites.length; i < l; ++i) {
-            this.drawSprite(scene, sprites[i]);
+            this.renderSprite(scene, sprites[i]);
         }
     }
 
-    drawSprite(scene, oSprite) {
+    renderSprite(scene, oSprite) {
         if (!oSprite.visible) {
             return;
         }
@@ -1581,14 +1597,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const CAMERA = scene.camera;
         const SCREEN = OPTIONS.screen;
+        const VISUAL = OPTIONS.visual;
         const xspr = oSprite.x;
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
         const ycam = CAMERA.y;
         const dx = xspr - xcam;
         const dy = yspr - ycam;
-        const oTileSet = oSprite.getTileSet();
-        const fov = scene.camera.fov;
+        const ts = oSprite.getTileSet();
+        const fov = CAMERA.fov;
 
         const fTarget = Math.atan2(dy, dx);
         let fAlpha = fTarget - CAMERA.direction; // Angle
@@ -1600,11 +1617,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
 
         if (Math.abs(fAlpha) <= (fov * 1.5)) {
-            const d = this.debug;
-            d.clear();
-
-            const wspr = oTileSet.tileWidth;        // sprite width
-            const hspr = oTileSet.tileHeight;       // sprite height
+            const wspr = ts.tileWidth;        // sprite width
+            const hspr = ts.tileHeight;       // sprite height
             const xscr = SCREEN.width;              // screen width
             const yscr = SCREEN.width; //SCREEN.height;             // screen height
             const xscr2 = xscr >> 1;                // screen half width
@@ -1613,27 +1627,28 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const x = Math.sin(fAlpha) * z;         // sprite x position
             const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
             const focal = SCREEN.focal;
-            const factor = focal / f;               // projection factor : must be multiplied
+            const factor = focal / f;               // projection factor
             const xp = x * factor;                  // projection of x
             const dw = wspr * factor;               // projection of width
             const dx = xscr2 + xp - (dw >> 1);      // projection of destination x
 
             const dh = hspr * factor;
-            const dy = yscr2 - (dh >> 1);
+            const dh_h = (OPTIONS.metrics.height >> 1) * (1 - CAMERA.height) * factor;
+            const dy = yscr2 + dh_h - (dh >> 1);
 
-            const ts = oSprite.getTileSet();
+            const sh = VISUAL.shading.shades;
+            const nShade = Math.max(0, Math.min(sh - 1, z / VISUAL.shading.factor | 0));
+
 
 //            const k_y = (hspr >> 1);
 //            const k_yp = k_y * factor;
 
-            d.print('z', z, 'focal', focal, 'dy', dy);
-
             const data = [
                 ts.getImage(),
-                ts.tileWidth * oSprite.getCurrentFrame(),       // 1: sx
-                0,                                              // 2: sy
-                ts.tileWidth,                                   // 3: sw
-                ts.tileHeight,                                  // 4: sh
+                wspr * oSprite.getCurrentFrame(),               // 1: sx
+                nShade * hspr,                                  // 2: sy
+                wspr,                                           // 3: sw
+                hspr,                                           // 4: sh
                 dx | 0,                                         // 5: dx
                 dy | 0,                                         // 6: dy
                 dw | 0,                                         // 7: dw
@@ -1716,8 +1731,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
     }
 
-    drawDebug(context) {
-        this._debugDisplay.display(context);
+    renderDebug(context) {
+        this._debugDisplay.display(context, 0, this._renderCrop);
     }
 
 
