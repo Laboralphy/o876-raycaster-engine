@@ -8,8 +8,8 @@ import ArrayHelper from '../tools/ArrayHelper';
 import Translator from "../tools/Translator";
 import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
-import {objectExtends, objectGet, objectSet} from "../tools/objectExtender";
-import * as Compass from '../tools/compass';
+import ObjectExtender from "../tools/ObjectExtender";
+import GeometryHelper from '../tools/GeometryHelper';
 import DebugDisplay from "./DebugDisplay";
 
 /**
@@ -94,21 +94,21 @@ class Renderer {
                 focal: 128,
                 canvas: null
             },
-            visual: {
-                smooth: false,      // set texture smoothing on or off
-                stretch: false,
-                shading: {
-                    color: 'black', // (*) fog color
-                    factor: 50,     // (*) distance where the texture shading increase by one unit
-                    brightness: 0,	// (*) base brightness
-                    filter: false,  // (*) color filter for sprites (ambient color)
-                    shades: 16,  // (*) number of shading nuance
-                }
+            shading: {
+                color: 'black', // (*) fog color
+                factor: 50,     // (*) distance where the texture shading increase by one unit
+                brightness: 0,	// (*) base brightness
+                filter: false,  // (*) color filter for sprites (ambient color)
+                shades: 16,  // (*) number of shading nuance
             },
-            images: {
-                walls: '',          // (*) wall textures
-                flats: '',          // (*) flat textures
-                background: ''      // (*) background images
+            textures: {
+                smooth: false,      // set texture smoothing on or off
+                stretch: false,     // (*) second storey is x2 height
+                files: {
+                    walls: '',          // (*) wall textures
+                    flats: '',          // (*) flat textures
+                    background: ''      // (*) background images
+                }
             },
         };
         this._optionsReactor = new Reactor(this._options);
@@ -116,10 +116,10 @@ class Renderer {
 
     configTranslator() {
 	    const t = new Translator();
-	    t.addRule('visual.shading.color', 'shading-settings');
-        t.addRule('visual.shading.brightness', 'shading-settings');
-        t.addRule('visual.shading.filter', 'shading-settings');
-        t.addRule('visual.shading.shades', 'shading-settings');
+	    t.addRule('shading.color', 'shading-settings');
+        t.addRule('shading.brightness', 'shading-settings');
+        t.addRule('shading.filter', 'shading-settings');
+        t.addRule('shading.shades', 'shading-settings');
         this._translator = t;
     }
 
@@ -131,7 +131,7 @@ class Renderer {
 	    return this._options;
     }
 
-    isometric() {
+    adaptFocal() {
 	    const SCREEN = this._options.screen;
 	    SCREEN.focal = (SCREEN.width >> 1) * (16 / 9);
     }
@@ -172,7 +172,7 @@ class Renderer {
      */
     transmitOptionToStorey(sOption) {
         if (this.storey) {
-            objectSet(this.storey._options, sOption, objectGet(this._options, sOption));
+            ObjectExtender.objectSet(this.storey._options, sOption, ObjectExtender.objectGet(this._options, sOption));
         }
     }
 
@@ -186,7 +186,7 @@ class Renderer {
         this._optionsReactor.clear();
 	    const l = aList.length;
         const o = this._options;
-        const shading = o.visual.shading;
+        const SHADING = o.shading;
 	    for (let i = 0; i < l; ++i) {
 	        let opt = aList[i];
 	        switch (opt) {
@@ -200,8 +200,8 @@ class Renderer {
                     this._renderCanvas.height = o.screen.width;
                     this._renderCrop = (o.screen.width - o.screen.height) >>> 1;
                     this._renderContext = this._renderCanvas.getContext('2d');
-                    this.isometric();
-                    CanvasHelper.setImageSmoothing(this._renderCanvas, o.visual.smooth);
+                    this.adaptFocal();
+                    CanvasHelper.setImageSmoothing(this._renderCanvas, o.textures.smooth);
                     this.transmitOptionToStorey(opt);
                     break;
 
@@ -216,42 +216,42 @@ class Renderer {
 
                 case 'shading-settings':
                     this.setShadingSettings(
-                        shading.shades,
-                        shading.color,
-                        shading.filter,
-                        shading.brightness
+                        SHADING.shades,
+                        SHADING.color,
+                        SHADING.filter,
+                        SHADING.brightness
                     );
                     break;
 
-                case 'images.walls':
-                    if (o.images.walls !== '') {
-                        const wallImage = await CanvasHelper.loadCanvas(o.images.walls);
+                case 'textures.files.walls':
+                    if (o.textures.files.walls !== '') {
+                        const wallImage = await CanvasHelper.loadCanvas(o.textures.files.walls);
                         this.setWallTextures(wallImage);
                         this.setWallShadingSettings(
-                            shading.shades,
-                            shading.color,
-                            shading.filter,
-                            shading.brightness
+                            SHADING.shades,
+                            SHADING.color,
+                            SHADING.filter,
+                            SHADING.brightness
                         );
                     }
                     break;
 
-                case 'images.flats':
-                    if (o.images.flats !== '') {
-                        const flatImage = await CanvasHelper.loadCanvas(o.images.flats);
+                case 'textures.files.flats':
+                    if (o.textures.files.flats !== '') {
+                        const flatImage = await CanvasHelper.loadCanvas(o.textures.files.flats);
                         this.setFlatTextures(flatImage);
                         this.setFlatShadingSettings(
-                            shading.shades,
-                            shading.color,
-                            shading.filter,
-                            shading.brightness
+                            SHADING.shades,
+                            SHADING.color,
+                            SHADING.filter,
+                            SHADING.brightness
                         );
                     }
                     break;
 
-                case 'images.background':
-                    if (o.images.background !== '') {
-                        const bgImage = await CanvasHelper.loadCanvas(o.images.background);
+                case 'textures.files.background':
+                    if (o.textures.files.background !== '') {
+                        const bgImage = await CanvasHelper.loadCanvas(o.textures.files.background);
                         CanvasHelper.setImageSmoothing(bgImage, false);
                         this.setBackground(bgImage);
                     }
@@ -271,7 +271,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 */
 
     defineOptions(opt) {
-        objectExtends(this._options, opt);
+        ObjectExtender.objectExtends(this._options, opt);
     }
 
     /**
@@ -312,12 +312,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     setWallTextures(oImage) {
         let width = this._options.metrics.spacing;
         let height = this._options.metrics.height;
-        CanvasHelper.setDefaultImageSmoothing(this._options.visual.smooth);
+        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         this._walls = Renderer.buildTileSet(
             oImage,
             width,
             height,
-            this._options.visual.shading.shades
+            this._options.shading.shades
         );
         this.connectUpperProperties();
     }
@@ -328,12 +328,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     setFlatTextures(oImage) {
         let width = this._options.metrics.spacing;
-        CanvasHelper.setDefaultImageSmoothing(this._options.visual.smooth);
+        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         this._flats = Renderer.buildTileSet(
             oImage,
             width,
             width,
-            this._options.visual.shading.shades
+            this._options.shading.shades
         );
         this.connectUpperProperties();
     }
@@ -1052,7 +1052,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
-        const SHADING = OPTIONS.visual.shading;
+        const SHADING = OPTIONS.shading;
         const METRICS = OPTIONS.metrics;
         let ytex = METRICS.height;
         let xtex = METRICS.spacing;
@@ -1165,7 +1165,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (OPTIONS.visual.stretch) {
+        if (OPTIONS.textures.stretch) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
@@ -1213,7 +1213,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const SCREEN = OPTIONS.screen;
         const METRICS = OPTIONS.metrics;
-        const VISUAL = OPTIONS.visual;
         const renderContext = this._renderContext;
         const oFlatContext = this._flatContext;
         let xStart = 0,
@@ -1266,7 +1265,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let yOfs = 0; // luminosité du block flat à afficher
         let nBlock;
         let xyMax = this.getMapSize() * ps;
-        let sh = VISUAL.shading;
+        let sh = OPTIONS.shading;
         let st = sh.shades - 1;
         let sf = sh.factor;
         let aMap = this._map;
@@ -1525,8 +1524,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     buildSprite(oImage, tileWidth, tileHeight) {
         const OPTIONS = this._options;
-        const VISUAL = OPTIONS.visual;
-        const SHADING = VISUAL.shading;
+        const SHADING = OPTIONS.shading;
         const oSprite = new Sprite();
         const oTileSet = Renderer.buildTileSet(oImage, tileWidth, tileHeight, SHADING.shades);
         oSprite.setTileSet(oTileSet);
@@ -1597,7 +1595,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const CAMERA = scene.camera;
         const SCREEN = OPTIONS.screen;
-        const VISUAL = OPTIONS.visual;
         const xspr = oSprite.x;
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
@@ -1623,7 +1620,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const yscr = SCREEN.width; //SCREEN.height;             // screen height
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
-            const z = Compass.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const z = GeometryHelper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
             const x = Math.sin(fAlpha) * z;         // sprite x position
             const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
             const focal = SCREEN.focal;
@@ -1636,12 +1633,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const dh_h = (OPTIONS.metrics.height >> 1) * (1 - CAMERA.height) * factor;
             const dy = yscr2 + dh_h - (dh >> 1);
 
-            const sh = VISUAL.shading.shades;
-            const nShade = Math.max(0, Math.min(sh - 1, z / VISUAL.shading.factor | 0));
-
-
-//            const k_y = (hspr >> 1);
-//            const k_yp = k_y * factor;
+            const sh = OPTIONS.shading.shades;
+            const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor | 0));
 
             const data = [
                 ts.getImage(),
@@ -1657,77 +1650,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 0
             ];
             scene.zbuffer.push(data);
-
-
-            //let x = (Math.tan(fAlpha) * w2 + w2) | 0;
-            // Faire tourner les coordonnées du sprite : projection sur l'axe de la caméra
-            //let z = Compass.distance(dx, dy) * Math.cos(fAlpha) * 1.333;  // le 1.333 empirique pour corriger une erreur de tri bizarroïde
-            // Les sprites bénéficient d'un zoom 2x afin d'améliorer les détails.
-
-            //var dz = (oTile.nScale * oTile.nHeight / (z / this.yScrSize) + 0.5);
-            //var dzy = this.yScrSize - (dz * this.fViewHeight);
-            //var iZoom = (oTile.nScale * oTile.nWidth / (z / this.yScrSize) + 0.5);
-            /*
-            var nOpacity; // j'ai nommé opacity mais ca n'a rien a voir : normalement ca aurait été sombritude
-            // Self luminous
-            var nSFx = oSprite.oBlueprint.nFx | (oSprite.bTranslucent ? (oSprite.nAlpha << 2) : 0);
-            if (nSFx & 2) {
-                nOpacity = 0;
-            } else {
-                nOpacity = z / this.nShadingFactor | 0;
-                if (nOpacity > this.nShadingThreshold) {
-                    nOpacity = this.nShadingThreshold;
-                }
-            }
-            var aData = [ oTile.oImage, // image 0
-                oSprite.nFrame * oTile.nWidth, // sx  1
-                oTile.nHeight * nOpacity, // sy  2
-                oTile.nWidth, // sw  3
-                oTile.nHeight, // sh  4
-                x - iZoom | 0, // dx  5
-                dzy | 0, // dy  6   :: this.yScrSize - dz + (dz >> 1)
-                iZoom << 1, // dw  7
-                dz << 1, // dh  8
-                z,
-                nSFx];
-
-            oSprite.aLastRender = aData;
-            this.aZBuffer.push(aData);
-            // Traitement overlay
-            var oOL = oSprite.oOverlay;
-            if (oOL) {
-                if (Array.isArray(oSprite.nOverlayFrame)) {
-                    oSprite.nOverlayFrame.forEach(function(of, iOF) {
-                        this.aZBuffer.push(
-                            [	oOL.oImage, // image 0
-                                of * oOL.nWidth, // sx  1
-                                0, // sy  2
-                                oOL.nWidth, // sw  3
-                                oOL.nHeight, // sh  4
-                                aData[5], // dx  5
-                                aData[6], // dy  6   :: this.yScrSize - dz + (dz >> 1)
-                                aData[7], // dw  7
-                                aData[8], // dh  8
-                                aData[9] - 1 - (iOF / 100),
-                                2
-                            ]);
-                    }, this);
-                } else if (oSprite.nOverlayFrame !== null) {
-                    this.aZBuffer.push(
-                        [	oOL.oImage, // image 0
-                            oSprite.nOverlayFrame * oOL.nWidth, // sx  1
-                            0, // sy  2
-                            oOL.nWidth, // sw  3
-                            oOL.nHeight, // sh  4
-                            aData[5], // dx  5
-                            aData[6], // dy  6   :: this.yScrSize - dz + (dz >> 1)
-                            aData[7], // dw  7
-                            aData[8], // dh  8
-                            aData[9] - 1,
-                            2
-                        ]);
-                }
-            }*/
         }
     }
 
@@ -1771,15 +1693,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const csm = this._csm;
         CanvasHelper.setImageSmoothing(c, true);
         pDrawingFunction(x, y, nSide, c);
-        CanvasHelper.setImageSmoothing(c, this._options.visual.smooth);
+        CanvasHelper.setImageSmoothing(c, this._options.textures.smooth);
         csm.setSurfaceTile(x, y, nSide, c);
         this.shadeSurface(x, y, nSide);
     }
 
     shadeSurface(x, y, nSide) {
         const opt = this._options;
-        const VISUAL = opt.visual;
-        const SHADING = VISUAL.shading;
+        const SHADING = opt.shading;
         this._csm.shadeSurface(x, y, nSide, SHADING.shades, SHADING.color, SHADING.filter, SHADING.brightness);
     }
 

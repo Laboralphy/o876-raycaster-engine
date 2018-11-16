@@ -1,5 +1,5 @@
 import Events from 'events';
-import {getType} from "./toolkit";
+import ObjectExtender from "./ObjectExtender";
 
 /**
  * This class is use to observe all mutations against an object, like Poppy.
@@ -109,7 +109,7 @@ class Reactor {
      * @param path
      */
     makeReactiveItem(obj, key, path) {
-        switch (getType(obj[key])) {
+        switch (ObjectExtender.getType(obj[key])) {
             case 'object':
                 this.makeReactiveObject(obj[key], path + '.' + key);
                 break;
