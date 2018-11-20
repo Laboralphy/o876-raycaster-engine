@@ -1,8 +1,8 @@
 
 // Laby Phys Properties
 
-export const PHYS_NONE = 0x00;                  // no physical property, regular walkable cell
-export const PHYS_WALL = 0x01;                  // solid wall, non-walakble cell.
+export const PHYS_NONE = 0x00;
+export const PHYS_WALL = 0x01;
 export const PHYS_FIRST_DOOR = 0x02;
 export const PHYS_DOOR_SLIDING_UP = 0x02;
 export const PHYS_CURT_SLIDING_UP = 0x03;
@@ -21,7 +21,10 @@ export const PHYS_DOOR_E = 0x0E;
 export const PHYS_DOOR_F = 0x0F;
 
 
-
+/**
+ * Face codes
+ * @type {number}
+ */
 export const FACE_WEST = 0;
 export const FACE_SOUTH = 1;
 export const FACE_EAST = 2;
@@ -67,7 +70,7 @@ export const FX_LIGHT_ADD = 1;
  * The sprite is a light source; and will not be drawn darker when far from player's point of view
  * @type {number}
  */
-export const FX_LIGHT_SOURCE = 2;			// Le sprite ne devien pas plus sombre lorsqu'il s'éloigne de la camera
+export const FX_LIGHT_SOURCE = 2;
 
 /**
  * The sprite opacity is 75%

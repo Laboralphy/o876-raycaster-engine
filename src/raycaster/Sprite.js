@@ -19,6 +19,30 @@ class Sprite {
         this._animations = [];
         this._animation = null;
         this._tileset = null;
+
+        this._children = []; // these sprites will be rendered above the current sprite
+
+        this._flags = 0;
+    }
+
+    get flags() {
+        return this._flags;
+    }
+
+    set flags(v) {
+        this._flags = v;
+    }
+
+    addFlag(v) {
+        this._flags |= v;
+    }
+
+    removeFlag(v) {
+        this._flags = this._flags & ~v;
+    }
+
+    hasFlag(v) {
+        return (this._flags & v) !== 0
     }
 
     get animation() {
@@ -91,7 +115,7 @@ class Sprite {
     }
 
     getCurrentFrame() {
-        return this._animation.frame();
+        return !!this._animation ? this._animation.frame() : 0;
     }
 
 
@@ -100,11 +124,14 @@ class Sprite {
      * @param time {number}
      */
     animate(time) {
-        this._animation.animate(time);
+        if (this._animation) {
+            this._animation.animate(time);
+        }
+        const c = this._children;
+        for (let i = 0, l = c.length; i < l; ++i) {
+            c[i].animate(time);
+        }
     }
-
-
-
 }
 
 

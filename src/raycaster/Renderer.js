@@ -1441,6 +1441,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             sGCO = rc.globalCompositeOperation;
             rc.globalCompositeOperation = 'lighter';
         }
+        const flagSourceFactor = 1 - ((nFx & 2) >> 1);
         if (nFx & 12) {
             fGobalAlphaSave = rc.globalAlpha;
             rc.globalAlpha = CONSTS.FX_ALPHA[nFx >> 2];
@@ -1451,7 +1452,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 rc.drawImage(
                     aLine[0],
                     aLine[1] | 0,       // sx
-                    aLine[2] | 0,       // sy
+                    aLine[2] * flagSourceFactor | 0,       // sy
                     aLine[3] | 0,       // sw
                     aLine[4] | 0,       // sh
                     aLine[5] | 0,       // dx
@@ -1646,8 +1647,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 dy | 0,                                         // 6: dy
                 dw | 0,                                         // 7: dw
                 dh | 0,                                         // 8: dh
-                z,
-                0
+                z,                                              // 9: z indication
+                oSprite.flags                                   // flags
             ];
             scene.zbuffer.push(data);
         }
