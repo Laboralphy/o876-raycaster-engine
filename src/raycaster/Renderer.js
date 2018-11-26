@@ -1280,7 +1280,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
         if (fvh === 1) {
             let nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
-
             for (let y = 1, hMax = h - crop; y < hMax; ++y) {
 
                 fBx = wx1;
@@ -1632,7 +1631,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
             const dh = hspr * factor;
             const dh_h = (OPTIONS.metrics.height >> 1) * (1 - CAMERA.height) * factor;
-            const dy = yscr2 + dh_h - (dh >> 1);
+            const hAltitud = oSprite.h * factor;
+            const dy = yscr2 + dh_h - hAltitud - (dh >> 1);
 
             const sh = OPTIONS.shading.shades;
             const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor | 0));

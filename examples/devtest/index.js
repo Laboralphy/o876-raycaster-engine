@@ -144,7 +144,7 @@ async function main() {
 
 
     const cExplo = await CanvasHelper.loadCanvas('textures/o_expfire.png');
-    const spr1 = rc.buildSprite(cExplo, 64, 128);
+    const spr1 = rc.buildSprite(cExplo, 64, 96);
     spr1.buildAnimation(0, 9, 100, CONSTS.ANIM_LOOP_FORWARD);
     spr1.x = 64 * 4 + 32;
     spr1.y = 64 * 2 + 32;
@@ -165,8 +165,11 @@ async function main() {
     });
 
 
+    let TIME = 0;
 
     function doomloop() {
+        TIME += 40;
+        spr1.h = Math.abs(25 * Math.sin(TIME / 400));
         const scene = rc.computeScene(40, xCam, yCam, fAngle, fHeight);
         rc.render(scene);
         requestAnimationFrame(() => rc.flip(ctx));
