@@ -66,7 +66,7 @@ class Renderer {
         this._bgCameraOffset = 0; // oofset between camera and background position
 
         this._animations = [];
-        this._upper = null;     // instance of another renderer for the first floor
+        this._storey = null;     // instance of another renderer for the first floor
         this._sprites = [];     // list of sprites
         this._debugDisplay = new DebugDisplay();
         this._renderContext = null;
@@ -203,6 +203,7 @@ class Renderer {
                     this.adaptFocal();
                     CanvasHelper.setImageSmoothing(this._renderCanvas, o.textures.smooth);
                     this.transmitOptionToStorey(opt);
+                    this.connectStoreyProperties();
                     break;
 
                 case 'screen.focal':
@@ -277,30 +278,31 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * creates an intance of a new renderer, to render the second storey
      */
-    createUpperLevel() {
-        const upper = new Renderer();
-        this._upper = upper;
-        upper.setMapSize(this.getMapSize());
-        this.connectUpperProperties();
-        return upper;
+    createStorey() {
+        const storey = new Renderer();
+        this._storey = storey;
+        storey.setMapSize(this.getMapSize());
+        this.connectStoreyProperties();
+        return storey;
     }
 
     get storey() {
-        return this._upper;
+        return this._storey;
     }
 
     /**
      * copies properties from lower storey to upper
      */
-    connectUpperProperties() {
-        const upper = this._upper;
-        if (!!upper) {
-            upper._walls = this._walls;
-            upper._flats = this._flats;
-            upper._animations = this._animations;
-            upper._cellCodes = this._cellCodes;
-            upper._renderContext = this._renderContext;
-            upper._renderCanvas = this._renderCanvas;
+    connectStoreyProperties() {
+        const storey = this._storey;
+        if (!!storey) {
+            storey._walls = this._walls;
+            storey._flats = this._flats;
+            storey._animations = this._animations;
+            storey._cellCodes = this._cellCodes;
+            storey._renderContext = this._renderContext;
+            storey._renderCanvas = this._renderCanvas;
+            storey._renderCrop = this._renderCrop;
         }
     }
 
@@ -319,7 +321,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             height,
             this._options.shading.shades
         );
-        this.connectUpperProperties();
+        this.connectStoreyProperties();
     }
 
     /**
@@ -335,7 +337,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             width,
             this._options.shading.shades
         );
-        this.connectUpperProperties();
+        this.connectStoreyProperties();
     }
 
     /**
@@ -410,8 +412,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
 		});
         this._csm.setMapSize(nSize, nSize);
-        if (this._upper) {
-            this._upper.setMapSize(nSize);
+        if (this._storey) {
+            this._storey.setMapSize(nSize);
         }
 	}
 
@@ -532,9 +534,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @return {*}
      */
     createScene(xCamera, yCamera, fDirection, fHeight = 1) {
-        let oUpper = null;
-        if (!!this._upper) {
-            oUpper = this._upper.createScene(xCamera, yCamera, fDirection, fHeight + 2);
+        let oStorey = null;
+        if (!!this._storey) {
+            oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2);
         }
         const focal = this._options.screen.focal;
         const fov = Math.atan2(this._options.screen.width >> 1, focal);
@@ -563,7 +565,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             wallXed: false,     // if true then the hit cell wall is X-axed
             wallColumn: 0,      // index of the column of the last hit wall
             zbuffer: null,      // zbuffer to be drawn
-            upperScene: oUpper  // first story scene
+            storeyScene: oStorey  // first story scene
         };
     }
 
@@ -694,8 +696,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         this.renderSprites(scene);
         // Le tri permet d'afficher les textures semi transparente après celles qui sont derrières
         zbuffer.sort(zBufferCompare);
-        if (this._upper) {
-            this._upper.computeScreenSliceBuffer(scene.upperScene);
+        if (this._storey) {
+            this._storey.computeScreenSliceBuffer(scene.storeyScene);
         }
 	}
 
@@ -1492,8 +1494,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     render(scene) {
         const renderContext = this._renderContext;
         this.renderBackground(renderContext);
-        if (scene.upperScene) {
-            Renderer.renderScreenSliceBuffer(scene.upperScene, renderContext);
+        if (scene.storeyScene) {
+            Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
         }
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
@@ -1501,7 +1503,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
     flip(finalContext) {
-        finalContext.drawImage(this._renderCanvas, 0, 0);//-this._renderCrop);
+        finalContext.drawImage(this._renderCanvas, 0, 0);
     }
 
 

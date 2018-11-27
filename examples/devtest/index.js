@@ -47,7 +47,7 @@ async function main() {
             height: cvs.height
         }
     });
-    const upper = rc.createUpperLevel();
+    const storey = rc.createStorey();
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
@@ -69,10 +69,10 @@ async function main() {
             rc.setCellTexture(x + 9, y, 1);
             rc.setCellPhys(x + 9, y, 1);
 
-            upper.setCellTexture(x, y, 1);
-            upper.setCellPhys(x, y, 1);
-            upper.setCellTexture(x + 9, y, 1);
-            upper.setCellPhys(x + 9, y, 1);
+            storey.setCellTexture(x, y, 1);
+            storey.setCellPhys(x, y, 1);
+            storey.setCellTexture(x + 9, y, 1);
+            storey.setCellPhys(x + 9, y, 1);
         }
     }
     for (let y = 1; y < 19; ++y) {
@@ -82,10 +82,10 @@ async function main() {
             rc.setCellTexture(x + 9, y, 0);
             rc.setCellPhys(x + 9, y, 0);
 
-            upper.setCellTexture(x, y, 0);
-            upper.setCellPhys(x, y, 0);
-            upper.setCellTexture(x + 9, y, 0);
-            upper.setCellPhys(x + 9, y, 0);
+            storey.setCellTexture(x, y, 0);
+            storey.setCellPhys(x, y, 0);
+            storey.setCellTexture(x + 9, y, 0);
+            storey.setCellPhys(x + 9, y, 0);
         }
     }
     rc.setCellTexture(9, 3, 2);
@@ -112,35 +112,35 @@ async function main() {
     rc.setCellTexture(4, 2, 7);
 
 
-    upper.setCellTexture(4, 4, 1);
-    upper.setCellTexture(5, 4, 1);
-    upper.setCellTexture(6, 4, 1);
-    upper.setCellTexture(7, 4, 1);
+    storey.setCellTexture(4, 4, 1);
+    storey.setCellTexture(5, 4, 1);
+    storey.setCellTexture(6, 4, 1);
+    storey.setCellTexture(7, 4, 1);
 
-    upper.setCellTexture(4, 5, 1);
-    upper.setCellTexture(7, 5, 1);
+    storey.setCellTexture(4, 5, 1);
+    storey.setCellTexture(7, 5, 1);
 
-    upper.setCellTexture(4, 6, 1);
-    upper.setCellTexture(7, 6, 1);
+    storey.setCellTexture(4, 6, 1);
+    storey.setCellTexture(7, 6, 1);
 
-    upper.setCellTexture(4, 7, 1);
-    upper.setCellTexture(5, 7, 1);
-    upper.setCellTexture(6, 7, 1);
-    upper.setCellTexture(7, 7, 1);
+    storey.setCellTexture(4, 7, 1);
+    storey.setCellTexture(5, 7, 1);
+    storey.setCellTexture(6, 7, 1);
+    storey.setCellTexture(7, 7, 1);
 
 
-    upper.setCellPhys(4, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(5, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(6, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(7, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(4, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(7, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(4, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(7, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(4, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(5, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(6, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
-    upper.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(4, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(5, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(6, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(7, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(4, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(7, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(4, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(7, 6, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(4, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(5, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(6, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
+    storey.setCellPhys(7, 7, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
 
     const cExplo = await CanvasHelper.loadCanvas('textures/o_expfire.png');
