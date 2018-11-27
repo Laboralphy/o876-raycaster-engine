@@ -194,10 +194,10 @@ class Renderer {
                 case 'screen.height':
                 case 'screen.width':
                     if (!this._renderCanvas) {
-                        this._renderCanvas = CanvasHelper.createCanvas(o.screen.width, o.screen.width);
+                        this._renderCanvas = CanvasHelper.createCanvas(o.screen.width, o.screen.height);
                     }
                     this._renderCanvas.width = o.screen.width;
-                    this._renderCanvas.height = o.screen.width;
+                    this._renderCanvas.height = o.screen.height;
                     this._renderCrop = (o.screen.width - o.screen.height) >>> 1;
                     this._renderContext = this._renderCanvas.getContext('2d');
                     this.adaptFocal();
@@ -1057,7 +1057,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let ytex = METRICS.height;
         let xtex = METRICS.spacing;
         let xscr = SCREEN.width;
-        let yscr = SCREEN.width >> 1; // SCREEN.height >> 1;
+        let yscr = SCREEN.width >> 1;
+        let yscrPhys = SCREEN.height >> 1;
         let ff = SHADING.factor;
         let sht = SHADING.shades;
         let dmw = sht >> 1;
@@ -1082,7 +1083,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             1, // sw  3
             ytex, // sh  4
             x, // dx  5
-            dzy - 1 | 0, // dy  6
+            dzy - this._renderCrop - 1 | 0, // dy  6
             1, // dw  7
             (dz << 1) + 2 | 0, // dh  8
             z, // z 9
@@ -1218,7 +1219,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xStart = 0,
             xEnd = SCREEN.width - 1,
             w = SCREEN.width,
-            h = SCREEN.width >> 1; //SCREEN.height >> 1;
+            h = SCREEN.width >> 1,
+            hPhys = SCREEN.height >> 1;
         if (!oFlatContext.imageData) {
             oFlatContext.imageData = oFlatContext
                 .image
@@ -1226,7 +1228,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 .getImageData(0, 0, oFlatContext.image.width, oFlatContext.image.height);
             oFlatContext.imageData32 = new Uint32Array(oFlatContext.imageData.data.buffer);
         }
-        oFlatContext.renderSurface = renderContext.getImageData(0, 0, w, h << 1);
+        oFlatContext.renderSurface = renderContext.getImageData(0, 0, w, hPhys << 1);
         oFlatContext.renderSurface32 = new Uint32Array(oFlatContext.renderSurface.data.buffer);
         const aFloorSurf = oFlatContext.imageData32;
         const aRenderSurf = oFlatContext.renderSurface32;
@@ -1276,11 +1278,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXMap = this._csm;
         let oXBlock, oXBlockImage, oXBlockCeil;
         let fBx, fBy;
-        let crop = this._renderCrop;
+        const crop = this._renderCrop;
+        const cropPix = crop * w;
 
         if (fvh === 1) {
             let nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
-
             for (let y = 1, hMax = h - crop; y < hMax; ++y) {
 
                 fBx = wx1;
@@ -1292,8 +1294,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fx = wx1 * dFront + xCam;
                 xDeltaFront = xDelta * dFront;
                 yDeltaFront = yDelta * dFront;
-                wy = w * (h + y);
-                wyCeil = w * (h - y - 1);
+                wy = w * (h + y) - cropPix;
+                wyCeil = w * (h - y - 1) - cropPix;
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 for (let x = 0; x < w; ++x) {
@@ -1499,7 +1501,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
     flip(finalContext) {
-        finalContext.drawImage(this._renderCanvas, 0, -this._renderCrop);
+        finalContext.drawImage(this._renderCanvas, 0, 0);//-this._renderCrop);
     }
 
 
@@ -1618,7 +1620,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const wspr = ts.tileWidth;        // sprite width
             const hspr = ts.tileHeight;       // sprite height
             const xscr = SCREEN.width;              // screen width
-            const yscr = SCREEN.width; //SCREEN.height;             // screen height
+            const yscr = SCREEN.width;
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
             const z = GeometryHelper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
@@ -1632,7 +1634,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
             const dh = hspr * factor;
             const dh_h = (OPTIONS.metrics.height >> 1) * (1 - CAMERA.height) * factor;
-            const dy = yscr2 + dh_h - (dh >> 1);
+            const hAltitud = oSprite.h * factor;
+            const dy = yscr2 + dh_h - hAltitud - (dh >> 1) - this._renderCrop;
 
             const sh = OPTIONS.shading.shades;
             const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor | 0));
