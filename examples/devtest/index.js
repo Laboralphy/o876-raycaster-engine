@@ -148,11 +148,13 @@ async function main() {
     spr1.buildAnimation(0, 9, 100, CONSTS.ANIM_LOOP_FORWARD);
     spr1.x = 64 * 4 + 32;
     spr1.y = 64 * 2 + 32;
+    spr1.addFlag(CONSTS.FX_LIGHT_SOURCE);
+    spr1.addFlag(CONSTS.FX_LIGHT_ADD);
 
 
 
-    let xCam = 128 * 4 + 32;
-    let yCam = 128 * 7 + 32;
+    let xCam = 64 * 4 + 32;
+    let yCam = 64 * 7 + 32;
     let fAngle = -Math.PI / 2;
     let fHeight = 1;
 

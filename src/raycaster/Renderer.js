@@ -1367,7 +1367,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fx = wx1 * dFront + xCam;
                 xDeltaFront = xDelta * dFront;
                 yDeltaFront = yDelta * dFront;
-                wy = w * (h + y - 1);
+                wy = w * (h + y - 1) - cropPix;
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 // ceill
@@ -1376,7 +1376,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fxCeil = wx1 * dFrontCeil + xCam;
                 xDeltaFrontCeil = xDelta * dFrontCeil;
                 yDeltaFrontCeil = yDelta * dFrontCeil;
-                wyCeil = w * (h - y);
+                wyCeil = w * (h - y) - cropPix;
                 yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
                 for (let x = 0; x < w; ++x) {
                     ofsDst = wy + x;
