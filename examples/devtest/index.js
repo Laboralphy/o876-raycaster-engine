@@ -153,6 +153,7 @@ async function main() {
 
 
 
+
     let xCam = 64 * 4 + 32;
     let yCam = 64 * 7 + 32;
     let fAngle = -Math.PI / 2;
@@ -172,10 +173,12 @@ async function main() {
     function doomloop() {
         TIME += 40;
         spr1.h = Math.abs(25 * Math.sin(TIME / 400));
-        const scene = rc.computeScene(40, xCam, yCam, fAngle, fHeight);
+        rc.computeAnimations(40);
+        const scene = rc.computeScene(xCam, yCam, fAngle, fHeight);
         rc.render(scene);
         requestAnimationFrame(() => rc.flip(ctx));
     }
+
 
     setInterval(doomloop, 40);
     window.RC = rc;

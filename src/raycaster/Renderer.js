@@ -40,7 +40,6 @@ class Renderer {
 	    this.configProperties();
         this.configOptions();
         this.configTranslator();
-        this.configVRContext();
         this.resetFlatContext();
 	}
 
@@ -71,15 +70,7 @@ class Renderer {
         this._debugDisplay = new DebugDisplay();
         this._renderContext = null;
         this._renderCanvas = null;
-        this._renderCrop = 50; // Y offset of rendering
-    }
-
-    configVRContext() {
-        this._vrContext = {
-            b: false,
-            leftColumn: 0,
-            rightColumn: 0
-        };
+        this._offsetTop = 50; // Y offset of rendering
     }
 
     configOptions() {
@@ -198,7 +189,7 @@ class Renderer {
                     }
                     this._renderCanvas.width = o.screen.width;
                     this._renderCanvas.height = o.screen.height;
-                    this._renderCrop = (o.screen.width - o.screen.height) >>> 1;
+                    this._offsetTop = (o.screen.width - o.screen.height) >>> 1;
                     this._renderContext = this._renderCanvas.getContext('2d');
                     this.adaptFocal();
                     CanvasHelper.setImageSmoothing(this._renderCanvas, o.textures.smooth);
@@ -261,7 +252,6 @@ class Renderer {
         }
     }
 
-
 /*
                     _     _       _       __ _       _ _   _
 __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
@@ -302,7 +292,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             storey._cellCodes = this._cellCodes;
             storey._renderContext = this._renderContext;
             storey._renderCanvas = this._renderCanvas;
-            storey._renderCrop = this._renderCrop;
+            storey._offsetTop = this._offsetTop;
         }
     }
 
@@ -539,7 +529,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2);
         }
         const focal = this._options.screen.focal;
-        const fov = Math.atan2(this._options.screen.width >> 1, focal);
+        const w = this._options.screen.width;
+        const fov = Math.atan2(w >> 1, focal);
         return {         // raycasting scene
             camera: {
                 x: xCamera,             // camera position
@@ -565,7 +556,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             wallXed: false,     // if true then the hit cell wall is X-axed
             wallColumn: 0,      // index of the column of the last hit wall
             zbuffer: null,      // zbuffer to be drawn
-            storeyScene: oStorey  // first story scene
+            storeyScene: oStorey, // first story scene
+            vr: false,
+            xFrom: 0,
+            xTo: w
         };
     }
 
@@ -678,9 +672,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
 
 		// VR
-        const vr = this._vrContext;
-        let xl = vr.b ? vr.leftColumn : 0;
-        let xr = vr.b ? vr.rightColumn : xScreenSize;
+        let xl = scene.xFrom;
+        let xr = scene.xTo;
 
         for (i = 0; i < xScreenSize; ++i) {
             if (i >= xl && i <= xr) { // checks limits
@@ -1085,7 +1078,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             1, // sw  3
             ytex, // sh  4
             x, // dx  5
-            dzy - this._renderCrop - 1 | 0, // dy  6
+            dzy - this._offsetTop - 1 | 0, // dy  6
             1, // dw  7
             (dz << 1) + 2 | 0, // dh  8
             z, // z 9
@@ -1218,8 +1211,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const METRICS = OPTIONS.metrics;
         const renderContext = this._renderContext;
         const oFlatContext = this._flatContext;
-        let xStart = 0,
-            xEnd = SCREEN.width - 1,
+        let xStart = scene.xFrom,
+            xEnd = scene.xTo,
             w = SCREEN.width,
             h = SCREEN.width >> 1,
             hPhys = SCREEN.height >> 1;
@@ -1280,12 +1273,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXMap = this._csm;
         let oXBlock, oXBlockImage, oXBlockCeil;
         let fBx, fBy;
-        const crop = this._renderCrop;
-        const cropPix = crop * w;
+        const offsetTop = this._offsetTop;
+        const offsetTopPix = offsetTop * w;
 
         if (fvh === 1) {
             let nXDrawn = 0; // 0: pas de texture perso ; 1 = texture perso sol; 2=texture perso plafond
-            for (let y = 1, hMax = h - crop; y < hMax; ++y) {
+            for (let y = 1, hMax = h - offsetTop; y < hMax; ++y) {
 
                 fBx = wx1;
                 fBy = wy1;
@@ -1296,8 +1289,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fx = wx1 * dFront + xCam;
                 xDeltaFront = xDelta * dFront;
                 yDeltaFront = yDelta * dFront;
-                wy = w * (h + y) - cropPix;
-                wyCeil = w * (h - y - 1) - cropPix;
+                wy = w * (h + y) - offsetTopPix;
+                wyCeil = w * (h - y - 1) - offsetTopPix;
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 for (let x = 0; x < w; ++x) {
@@ -1357,7 +1350,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             let fxCeil = 0, fyCeil = 0; // coordonnée du texel finale
             let dFrontCeil; // distance "devant caméra" du pixel actuellement pointé
 
-            for (let y = 1, hMax = h - crop; y < hMax; ++y) {
+            for (let y = 1, hMax = h - offsetTop; y < hMax; ++y) {
                 fBx = wx1;
                 fBy = wy1;
 
@@ -1367,7 +1360,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fx = wx1 * dFront + xCam;
                 xDeltaFront = xDelta * dFront;
                 yDeltaFront = yDelta * dFront;
-                wy = w * (h + y - 1) - cropPix;
+                wy = w * (h + y - 1) - offsetTopPix;
                 yOfs = Math.min(st, dFront / sf | 0);
 
                 // ceill
@@ -1376,7 +1369,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 fxCeil = wx1 * dFrontCeil + xCam;
                 xDeltaFrontCeil = xDelta * dFrontCeil;
                 yDeltaFrontCeil = yDelta * dFrontCeil;
-                wyCeil = w * (h - y) - cropPix;
+                wyCeil = w * (h - y) - offsetTopPix;
                 yOfsCeil = Math.min(st, dFrontCeil / sf | 0);
                 for (let x = 0; x < w; ++x) {
                     ofsDst = wy + x;
@@ -1477,11 +1470,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * Will precompute anything necessary for the rendering phase
      */
-    computeScene(nTime, x, y, angle, height) {
+    computeScene(x, y, angle, height) {
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
-        this.computeAnimations(nTime);
         const scene = this.createScene(x, y, angle, height);
         this.computeScreenSliceBuffer(scene);
         return scene;
@@ -1493,6 +1485,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     render(scene) {
         const renderContext = this._renderContext;
+        const VR = scene.vr;
+        if (VR) {
+            renderContext.save();
+            renderContext.beginPath();
+            renderContext.rect(scene.xFrom, 0, scene.xTo - scene.xFrom + 1, this._options.screen.height);
+            renderContext.clip();
+        }
         this.renderBackground(renderContext);
         if (scene.storeyScene) {
             Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
@@ -1500,6 +1499,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
         this.renderDebug(renderContext);
+        if (VR) {
+            renderContext.restore();
+        }
     }
 
     flip(finalContext) {
@@ -1637,7 +1639,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const dh = hspr * factor;
             const dh_h = (OPTIONS.metrics.height >> 1) * (1 - CAMERA.height) * factor;
             const hAltitud = oSprite.h * factor;
-            const dy = yscr2 + dh_h - hAltitud - (dh >> 1) - this._renderCrop;
+            const dy = yscr2 + dh_h - hAltitud - (dh >> 1) - this._offsetTop;
 
             const sh = OPTIONS.shading.shades;
             const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor | 0));
@@ -1660,7 +1662,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
     renderDebug(context) {
-        this._debugDisplay.display(context, 0, this._renderCrop);
+        this._debugDisplay.display(context, 0, this._offsetTop);
     }
 
 
