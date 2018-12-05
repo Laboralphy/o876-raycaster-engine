@@ -2,26 +2,7 @@
 
 import rclib from '../../src';
 
-const {ShadedTileSet, CanvasHelper, Renderer, CONSTS} = rclib;
-
-
-async function main2() {
-	let cvs = document.querySelector('canvas');
-	let ctx = cvs.getContext('2d');
-	let cWall = await CanvasHelper.loadCanvas('textures/walls.png');
-	let ts = new TileSet();
-	ts.setTileWidth(64);
-	ts.setTileHeight(96);
-	ts.setImage(cWall); 
-	let sts = new ShadedTileSet();
-	sts.setTileSet(ts);
-	sts.compute('#000000', '#808080', 0);
-	let sts2 = sts.extractTile(3);
-    ctx.drawImage(sts2._tileSets[0].getImage(), 0, 0);
-    ctx.drawImage(sts2._tileSets[4].getImage(), 64, 96);
-}
-
-
+const {CanvasHelper, Renderer, CONSTS} = rclib;
 
 
 
@@ -52,81 +33,81 @@ async function main() {
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
     rc.setMapSize(30);
-    rc.registerCellTexture(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
-    rc.registerCellTexture(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
-    rc.registerCellTexture(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
-    rc.registerCellTexture(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
-    rc.registerCellTexture(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
+    rc.registerCellMaterial(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
+    rc.registerCellMaterial(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
+    rc.registerCellMaterial(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
+    rc.registerCellMaterial(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
+    rc.registerCellMaterial(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
     let oAnim = rc.createAnimation(5, 5, 160, CONSTS.ANIM_LOOP_FORWARD);
-    rc.registerCellTexture(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
-    rc.registerCellTexture(6, {n: null, e: null, s: null, w: null, f: 0, c: null});
-    rc.registerCellTexture(7, {n: null, e: null, s: null, w: null, f: 3, c: 2});
+    rc.registerCellMaterial(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
+    rc.registerCellMaterial(6, {n: null, e: null, s: null, w: null, f: 0, c: null});
+    rc.registerCellMaterial(7, {n: null, e: null, s: null, w: null, f: 3, c: 2});
 
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
-            rc.setCellTexture(x, y, 1);
+            rc.setCellMaterial(x, y, 1);
             rc.setCellPhys(x, y, 1);
-            rc.setCellTexture(x + 9, y, 1);
+            rc.setCellMaterial(x + 9, y, 1);
             rc.setCellPhys(x + 9, y, 1);
 
-            storey.setCellTexture(x, y, 1);
+            storey.setCellMaterial(x, y, 1);
             storey.setCellPhys(x, y, 1);
-            storey.setCellTexture(x + 9, y, 1);
+            storey.setCellMaterial(x + 9, y, 1);
             storey.setCellPhys(x + 9, y, 1);
         }
     }
     for (let y = 1; y < 19; ++y) {
         for (let x = 1; x < 9; ++x) {
-            rc.setCellTexture(x, y, 0);
+            rc.setCellMaterial(x, y, 0);
             rc.setCellPhys(x, y, 0);
-            rc.setCellTexture(x + 9, y, 0);
+            rc.setCellMaterial(x + 9, y, 0);
             rc.setCellPhys(x + 9, y, 0);
 
-            storey.setCellTexture(x, y, 0);
+            storey.setCellMaterial(x, y, 0);
             storey.setCellPhys(x, y, 0);
-            storey.setCellTexture(x + 9, y, 0);
+            storey.setCellMaterial(x + 9, y, 0);
             storey.setCellPhys(x + 9, y, 0);
         }
     }
-    rc.setCellTexture(9, 3, 2);
+    rc.setCellMaterial(9, 3, 2);
     rc.setCellPhys(9, 3, CONSTS.PHYS_DOOR_SLIDING_DOUBLE);
     rc.setCellOffset(9, 3, 10);
 
-    rc.setCellTexture(9, 5, 3);
+    rc.setCellMaterial(9, 5, 3);
     rc.setCellPhys(9, 5, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(9, 5, 32);
 
-    rc.setCellTexture(4, 0, 3);
+    rc.setCellMaterial(4, 0, 3);
     rc.setCellPhys(4, 0, CONSTS.PHYS_TRANSPARENT_BLOCK);
     rc.setCellOffset(4, 0, 32);
 
-    rc.setCellTexture(2, 2, 5);
+    rc.setCellMaterial(2, 2, 5);
     rc.setCellPhys(2, 2, CONSTS.PHYS_TRANSPARENT_BLOCK);
 
-    rc.setCellTexture(5, 5, 6);
-    rc.setCellTexture(6, 5, 6);
+    rc.setCellMaterial(5, 5, 6);
+    rc.setCellMaterial(6, 5, 6);
 
-    rc.setCellTexture(5, 6, 6);
-    rc.setCellTexture(6, 6, 6);
+    rc.setCellMaterial(5, 6, 6);
+    rc.setCellMaterial(6, 6, 6);
 
-    rc.setCellTexture(4, 2, 7);
+    rc.setCellMaterial(4, 2, 7);
 
 
-    storey.setCellTexture(4, 4, 1);
-    storey.setCellTexture(5, 4, 1);
-    storey.setCellTexture(6, 4, 1);
-    storey.setCellTexture(7, 4, 1);
+    storey.setCellMaterial(4, 4, 1);
+    storey.setCellMaterial(5, 4, 1);
+    storey.setCellMaterial(6, 4, 1);
+    storey.setCellMaterial(7, 4, 1);
 
-    storey.setCellTexture(4, 5, 1);
-    storey.setCellTexture(7, 5, 1);
+    storey.setCellMaterial(4, 5, 1);
+    storey.setCellMaterial(7, 5, 1);
 
-    storey.setCellTexture(4, 6, 1);
-    storey.setCellTexture(7, 6, 1);
+    storey.setCellMaterial(4, 6, 1);
+    storey.setCellMaterial(7, 6, 1);
 
-    storey.setCellTexture(4, 7, 1);
-    storey.setCellTexture(5, 7, 1);
-    storey.setCellTexture(6, 7, 1);
-    storey.setCellTexture(7, 7, 1);
+    storey.setCellMaterial(4, 7, 1);
+    storey.setCellMaterial(5, 7, 1);
+    storey.setCellMaterial(6, 7, 1);
+    storey.setCellMaterial(7, 7, 1);
 
 
     storey.setCellPhys(4, 4, CONSTS.PHYS_TRANSPARENT_BLOCK);

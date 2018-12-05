@@ -39,6 +39,7 @@ class Translator {
         }
         return s;
     }
+
 }
 
 export default Translator;

@@ -1,13 +1,13 @@
 import * as CONSTS from './raycaster/consts';
 import Renderer from './raycaster/Renderer';
-import ShadedTileSet from './raycaster/ShadedTileSet';
 import CanvasHelper from './tools/CanvasHelper';
-import TileAnimation from './raycaster/TileAnimation';
+import MapHelper from './raycaster/MapHelper';
 
-export default {
+export const Raycaster = {
 	Renderer,
-	ShadedTileSet,
 	CanvasHelper,
-	TileAnimation,
-	CONSTS
+	CONSTS,
+	MapHelper
 };
+
+export default Raycaster;

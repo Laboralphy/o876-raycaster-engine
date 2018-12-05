@@ -83,7 +83,8 @@ class Renderer {
                 width: 256,         // horizontal screen size (in pixels)
                 height: 256,	    // vertical screen size (in pixels)
                 focal: 128,
-                canvas: null
+                canvas: null,
+                vr: false
             },
             shading: {
                 color: 'black', // (*) fog color
@@ -422,7 +423,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * the structure of the aTiles parameter :
      * {n: north-surface-wall, e: east-surface-wall, s: south-surface-wall, w: west-surface-wall, f: floor-surface, c: ceil-surface}
      */
-    registerCellTexture(nCode, {n, e, s, w, f, c}) {
+    registerCellMaterial(nCode, {n, e, s, w, f, c}) {
         this._cellCodes[nCode] = [w, s, e, n, f, c];
     }
 
@@ -442,7 +443,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y {number}
      * @param code {number}
      */
-    setCellTexture(x, y, code) {
+    setCellMaterial(x, y, code) {
         let my = this._map[y];
         my[x] = my[x] & 0xFFFFF000 | (code & 0xFFF);
     }
@@ -475,7 +476,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y
      * @returns {number}
      */
-	getCellTexture(x, y) {
+	getCellMaterial(x, y) {
         return this._map[y][x] & 0xFFF;
 	}
 
@@ -524,12 +525,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @return {*}
      */
     createScene(xCamera, yCamera, fDirection, fHeight = 1) {
+        const SCREEN = this._options.screen;
         let oStorey = null;
         if (!!this._storey) {
             oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2);
         }
-        const focal = this._options.screen.focal;
-        const w = this._options.screen.width;
+        const focal = SCREEN.focal;
+        const w = SCREEN.width;
         const fov = Math.atan2(w >> 1, focal);
         return {         // raycasting scene
             camera: {
@@ -557,9 +559,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             wallColumn: 0,      // index of the column of the last hit wall
             zbuffer: null,      // zbuffer to be drawn
             storeyScene: oStorey, // first story scene
-            vr: false,
-            xFrom: 0,
-            xTo: w
+            vr: SCREEN.vr,
+            xFrom: SCREEN.vr ? (w >> 1) - (w >> 2) : 0,
+            xTo: SCREEN.vr ? (w >> 1) + (w >> 2) : w
         };
     }
 
@@ -1693,7 +1695,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * - param5 : coté du mur concerné
      */
     paintSurface(x, y, nSide, pDrawingFunction) {
-        const cellCode = this.getCellTexture(x, y);
+        const cellCode = this.getCellMaterial(x, y);
         const iTile = this._cellCodes[cellCode][nSide];
         const c = nSide < 4
             ? this._walls.extractTile(iTile, 0)
