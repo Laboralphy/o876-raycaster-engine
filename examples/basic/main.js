@@ -1,14 +1,10 @@
-// everybody should use ecmascript 6 syntax in 2018
-
-
-
 /**
- * This is the doomloop, every game has a doomloop.
+ * This is the doomloop.
  * This is a function that is continuously called at a very short interval.
  * this function is repeated every 40 milliseconds, that is 25 frames per secondes.
  */
 function doomloop(rend, camera, context) {
-    // recompture all texture/sprite animation with a time-delta of 40ms
+    // recompute all texture/sprite animation with a time-delta of 40ms
     rend.computeAnimations(40);
     // create a new scene for these parameters
     const scene = rend.computeScene(camera.x, camera.y, camera.angle, camera.height);
@@ -88,7 +84,7 @@ async function main() {
     });
 
     // 3) load all textures
-    // beware : ecmasprit 6 syntax (await) !!!
+    // attention : ecmasprit 6 syntax (await) is used
 
     // load wall textures 128x64 pixel per tile
     const walls = await RC.CanvasHelper.loadCanvas('textures/walls.png');
@@ -118,20 +114,22 @@ async function main() {
             '#######'
         ],
         legend: [{
+            // code for empty space
             code: ' ',
             phys: CONSTS.PHYS_NONE,
             faces: {
-                f: 0,
-                c: 1
+                f: 0,   // floor tile
+                c: 1    // ceiling tile
             }
         }, {
+            // code for a wall
             code: '#',
             phys: CONSTS.PHYS_WALL,
             faces: {
-                n: 0,
-                s: 0,
-                w: 0,
-                e: 0
+                n: 0,   // north wall tile
+                s: 0,   // south wall tile
+                w: 0,   // west wall tile
+                e: 0    // east wall tile
             }
         }]
     };
@@ -147,7 +145,6 @@ async function main() {
 
     // declare event to move camera with keyboard
     window.addEventListener('keydown', event => dealWithKey(event.key, event.shiftKey, camera));
-
 }
 
 window.addEventListener('load', main);

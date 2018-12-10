@@ -11,38 +11,56 @@ async function main() {
     let cvs = document.querySelector('canvas');
     let ctx = cvs.getContext('2d');
     CanvasHelper.setImageSmoothing(cvs, false);
+
+    // loading all textures from png files
     let cWall = await CanvasHelper.loadCanvas('textures/walls.png');
     let cFlat = await CanvasHelper.loadCanvas('textures/flats.png');
     let cBG = await CanvasHelper.loadCanvas('textures/sky.png');
 
-    // il nous faut un objet de configuration
-
+    // creating the renderer
     let rc = new Renderer();
+
+    // defining options
     rc.defineOptions({
         metrics: {
-            spacing: 64,
+            spacing: 64,    // aligned with texture width and height
             height: 96
         },
         screen: {
-            width: cvs.width,
+            width: cvs.width,       // aligned with the physical DOM canvas
             height: cvs.height
         }
     });
-    const storey = rc.createStorey();
+
+    // creating second storey
+    const storey = rc.createStorey();   // there is a second floor
+
+    // declaring textures
     rc.setWallTextures(cWall);
     rc.setFlatTextures(cFlat);
     rc.setBackground(cBG);
+
+    // map is 30 cells wide
     rc.setMapSize(30);
-    rc.registerCellMaterial(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});
-    rc.registerCellMaterial(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});
-    rc.registerCellMaterial(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});
-    rc.registerCellMaterial(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});
-    rc.registerCellMaterial(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});
+
+    // registering materials
+    rc.registerCellMaterial(0, {n: null, e: null, s: null, w: null, f: 0, c: 2});       // walkable cell
+    rc.registerCellMaterial(1, {n: 0, e: 0, s: 0, w: 0, f: null, c: null});             // wall
+    rc.registerCellMaterial(2, {n: 1, e: 1, s: 1, w: 1, f: 0, c: 2});                   // door
+    rc.registerCellMaterial(3, {n: 4, e: 4, s: 4, w: 4, f: 0, c: 2});                   // widow
+    rc.registerCellMaterial(4, {n: 0, e: 1, s: 2, w: 3, f: 0, c: 2});                   // never used
+
+    // creating an animated wall
     let oAnim = rc.createAnimation(5, 5, 160, CONSTS.ANIM_LOOP_FORWARD);
+    // applying animated to a cell material
     rc.registerCellMaterial(5, {n: oAnim, e: oAnim, s: oAnim, w: oAnim, f: null, c: null});
+    // .. instead of fixed indices, we provide the animation object
+
+    // two more materials for the second storey
     rc.registerCellMaterial(6, {n: null, e: null, s: null, w: null, f: 0, c: null});
     rc.registerCellMaterial(7, {n: null, e: null, s: null, w: null, f: 3, c: 2});
 
+    //
     for (let y = 0; y < 20; ++y) {
         for (let x = 0; x < 10; ++x) {
             rc.setCellMaterial(x, y, 1);

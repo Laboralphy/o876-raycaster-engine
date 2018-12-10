@@ -1,8 +1,8 @@
-const {objectKeyMap, objectSet, objectGet, objectDiffKeys, objectExtends} = require('../src/tools/ObjectExtender');
+const OE = require('../src/tools/ObjectExtender').default;
 
 describe('#objectExtender', function() {
     it ('should build a map', function() {
-        let a = objectKeyMap({
+        let a = OE.objectKeyMap({
             a: 1,
             b: 2,
             c: {
@@ -21,10 +21,10 @@ describe('#objectExtender', function() {
                 cc: 10
             }
         };
-        expect(objectGet(a, 'c.cc')).toBe(10);
-        expect(objectGet(a, 'c.bb')).toBe(9);
-        expect(objectGet(a, 'b')).toBe(2);
-        expect(objectGet(a, 'a')).toBe(1);
+        expect(OE.objectGet(a, 'c.cc')).toBe(10);
+        expect(OE.objectGet(a, 'c.bb')).toBe(9);
+        expect(OE.objectGet(a, 'b')).toBe(2);
+        expect(OE.objectGet(a, 'a')).toBe(1);
     });
     it ('should set an object item value', function() {
         let a = {
@@ -35,10 +35,10 @@ describe('#objectExtender', function() {
                 cc: 10
             }
         };
-        objectSet(a, 'c.cc', 'gloup');
-        objectSet(a, 'c.bb', 'glap');
-        objectSet(a, 'b', 'glip');
-        objectSet(a, 'a', 'glup');
+        OE.objectSet(a, 'c.cc', 'gloup');
+        OE.objectSet(a, 'c.bb', 'glap');
+        OE.objectSet(a, 'b', 'glip');
+        OE.objectSet(a, 'a', 'glup');
         expect(a).toEqual({
             a: 'glup',
             b: 'glip',
@@ -57,7 +57,7 @@ describe('#objectExtender', function() {
                 cc: 10
             }
         };
-        objectSet(a, 'c.x', 'gloup');
+        OE.objectSet(a, 'c.x', 'gloup');
 
     });
     it ('should deal with missing branches', function() {
@@ -78,11 +78,11 @@ describe('#objectExtender', function() {
                 x: 100
             }
         };
-        expect(objectDiffKeys(a, b).missing).toEqual([
+        expect(OE.objectDiffKeys(a, b).missing).toEqual([
             'd',
             'c.x'
         ]);
-        expect(objectDiffKeys(a, b).common).toEqual([
+        expect(OE.objectDiffKeys(a, b).common).toEqual([
             'a',
             'c.bb',
             'c.cc',
@@ -107,7 +107,7 @@ describe('#objectExtender', function() {
                 x: 100
             }
         };
-        objectExtends(a, b);
+        OE.objectExtends(a, b);
         expect(a).toEqual({
             a: 9,
             b: 2,
