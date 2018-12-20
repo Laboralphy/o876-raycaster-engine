@@ -31,7 +31,7 @@ class Scheduler {
             this.bInvalid = false;
         }
         const aCommands = this.aCommands;
-        while (aCommands.length > 0 && aCommands[0].delay < nTime) {
+        while (aCommands.length > 0 && aCommands[0].delay <= nTime) {
             aCommands.shift().command();
         }
     }
