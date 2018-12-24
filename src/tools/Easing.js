@@ -63,9 +63,14 @@ class Easing {
         } else {
             this._x = x;
         }
-        const v = this._f(x / this._xMax);
-        this._y = this._yTo * v + (this._yFrom * (1 - v));
-        return this;
+        const f = this._f;
+        if (f) {
+            const v = this._f(x / this._xMax);
+            this._y = this._yTo * v + (this._yFrom * (1 - v));
+            return this;
+        } else {
+            throw new Error('easing function is not defined');
+        }
     }
 
     over() {

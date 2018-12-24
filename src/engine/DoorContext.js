@@ -1,10 +1,10 @@
 import Easing from "../tools/Easing";
 
-export const PHASE_DOOR_CLOSE = 0;          // initial state : door is closed and not openned yet
-export const PHASE_DOOR_OPENING = 1;        // door is opening
-export const PHASE_DOOR_OPEN = 2;           // door is totaly open, the cell become walkable
-export const PHASE_DOOR_CLOSING = 3;        // door is closing, the cell is unwalkable
-export const PHASE_DOOR_DONE = 4;           // door has finished closing and the context must be reinitialized
+const PHASE_DOOR_CLOSE = 0;          // initial state : door is closed and not openned yet
+const PHASE_DOOR_OPENING = 1;        // door is opening
+const PHASE_DOOR_OPEN = 2;           // door is totaly open, the cell become walkable
+const PHASE_DOOR_CLOSING = 3;        // door is closing, the cell is unwalkable
+const PHASE_DOOR_DONE = 4;           // door has finished closing and the context must be reinitialized
 
 /**
  * This class computes door offset.
@@ -12,13 +12,13 @@ export const PHASE_DOOR_DONE = 4;           // door has finished closing and the
 class DoorContext {
 
 
-    constructor() {
+    constructor({sdur = 0, mdur = 0, ofsmax = 0}) {
         this._phase = 0;        // current phase
         this._time = 0;         // elapsed time
-        this._slidingDuration = 0;     // sliding duration
-        this._maintainDuration = 0;     // duration while door is openend
+        this._slidingDuration = sdur;     // sliding duration
+        this._maintainDuration = mdur;     // duration while door is openend
         this._offset = 0;       // offset transmitted to door
-        this._offsetMax = 0;
+        this._offsetMax = ofsmax;
         this._easing = new Easing();
     }
 
@@ -33,13 +33,23 @@ class DoorContext {
         this._time = time;
     }
 
-    getState({phase, time}) {
-        this.initPhase(phase);
-        this._time = time;
+    getState() {
+        return {
+            phase: this._phase,
+            time: this._time
+        };
     }
 
     getPhase() {
         return this._phase;
+    }
+
+    get offset() {
+        return this._offset;
+    }
+
+    isShutDown() {
+        return this._phase === PHASE_DOOR_DONE;
     }
 
     /**
