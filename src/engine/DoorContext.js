@@ -1,25 +1,28 @@
 import Easing from "../tools/Easing";
-
-const PHASE_DOOR_CLOSE = 0;          // initial state : door is closed and not openned yet
-const PHASE_DOOR_OPENING = 1;        // door is opening
-const PHASE_DOOR_OPEN = 2;           // door is totaly open, the cell become walkable
-const PHASE_DOOR_CLOSING = 3;        // door is closing, the cell is unwalkable
-const PHASE_DOOR_DONE = 4;           // door has finished closing and the context must be reinitialized
+import EventEmitter from "events";
+import * as CONSTS from "./consts";
 
 /**
- * This class computes door offset.
+ * A door context is created whenever a door is opened, and is about to automaticaly close
  */
 class DoorContext {
 
 
-    constructor({sdur = 0, mdur = 0, ofsmax = 0}) {
+    constructor({sdur = 0, mdur = 0, ddur = 0, ofsmax = 0, sfunc = Easing.SMOOTHSTEP}) {
         this._phase = 0;        // current phase
         this._time = 0;         // elapsed time
         this._slidingDuration = sdur;     // sliding duration
         this._maintainDuration = mdur;     // duration while door is openend
+        this._delayDuration = ddur;    // duration before door actually opens
         this._offset = 0;       // offset transmitted to door
         this._offsetMax = ofsmax;
         this._easing = new Easing();
+        this._easing.setFunction(sfunc);
+        this.event = new EventEmitter();
+
+        // public properties
+        // for information only (not used in this class)
+        this.data = {};
     }
 
     reset() {
@@ -48,8 +51,30 @@ class DoorContext {
         return this._offset;
     }
 
-    isShutDown() {
-        return this._phase === PHASE_DOOR_DONE;
+    isOpen() {
+        return this._phase === CONSTS.DOOR_PHASE_OPEN;
+    }
+
+    isDone() {
+        return this._phase === CONSTS.DOOR_PHASE_DONE;
+    }
+
+    /**
+     * will close the door, if not already in phase CLOSING.
+     * This is a good way to manually close doors that never autoclose.
+     */
+    close() {
+        if (this._phase < CONSTS.DOOR_PHASE_CLOSING) {
+            const checkEvent = {context: this, cancel: false};
+            this.event.emit('check', checkEvent);
+            if (!checkEvent.cancel) {
+                this.initPhase(CONSTS.DOOR_PHASE_CLOSING);
+            }
+        }
+    }
+
+    dispose() {
+        this.initPhase(CONSTS.DOOR_PHASE_DONE);
     }
 
     /**
@@ -60,33 +85,49 @@ class DoorContext {
         const easing = this._easing;
         this._phase = phase;
         switch (phase) {
-            case PHASE_DOOR_CLOSE:
+
+            // the door is in its initial state
+            case CONSTS.DOOR_PHASE_CLOSE:
+                this._time = 0;
                 break;
 
-            case PHASE_DOOR_OPENING:
-                // the door will open. Easing must be initialized
+            // the door will open. Easing must be initialized
+            case CONSTS.DOOR_PHASE_OPENING:
                 easing.setOutputRange(0, this._offsetMax);
                 easing.setStepCount(this._slidingDuration);
-                easing.setFunction(Easing.SMOOTHSTEP);
                 this._time = 0;
+                this.event.emit('opening');
                 break;
 
-            case PHASE_DOOR_OPEN:
-                // the door is currently opening
+            // the door is currently opening
+            case CONSTS.DOOR_PHASE_OPEN:
                 this._time = this._maintainDuration;
+                this.event.emit('open');
                 break;
 
-            case PHASE_DOOR_CLOSING:
-                // the door is fully open, waiting for autoclose
-                easing.setOutputRange(this._offsetMax, 0);
-                easing.setStepCount(this._slidingDuration);
-                easing.setFunction(Easing.SMOOTHSTEP);
+            // the door is fully open, waiting for autoclose
+            case CONSTS.DOOR_PHASE_CLOSING:
+                const checkEvent = {context: this, cancel: false};
+                this.event.emit('check', checkEvent);
+                if (checkEvent.cancel) {
+                    // the door closing has been cancel : something in the way ?
+                    // back to phase OPEN with reduced maintain duration
+                    this._time = CONSTS.DOOR_SECURITY_INTERVAL;
+                    this._phase = CONSTS.DOOR_PHASE_OPEN;
+                } else {
+                    easing.setOutputRange(this._offsetMax, 0);
+                    easing.setStepCount(this._slidingDuration);
+                    this._time = 0;
+                    this.event.emit('closing');
+                }
+                break;
+
+
+            // the door is now closed
+            case CONSTS.DOOR_PHASE_DONE:
                 this._time = 0;
-                break;
-
-
-            case PHASE_DOOR_DONE:
-                // the door is now closed
+                this._offset = 0;
+                this.event.emit('close');
                 break;
         }
     }
@@ -94,36 +135,39 @@ class DoorContext {
     process() {
         const easing = this._easing;
         switch (this._phase) {
-            case PHASE_DOOR_CLOSE:
-                // the door is about to open
-                this.initPhase(PHASE_DOOR_OPENING);
-                break;
 
-            case PHASE_DOOR_OPENING:
-                // the door is currently sliding and opening
-                this._offset = easing.compute(++this._time).y;
-                if (easing.over()) {
-                    this.initPhase(PHASE_DOOR_OPEN);
+            // the door is about to open
+            case CONSTS.DOOR_PHASE_CLOSE:
+                if (++this._time >= this._delayDuration) {
+                    this.initPhase(CONSTS.DOOR_PHASE_OPENING);
                 }
                 break;
 
-            case PHASE_DOOR_OPEN:
-                // the door is fully open, waiting for autoclose
+            // the door is currently sliding and opening
+            case CONSTS.DOOR_PHASE_OPENING:
+                this._offset = easing.compute(++this._time).y;
+                if (easing.over()) {
+                    this.initPhase(CONSTS.DOOR_PHASE_OPEN);
+                }
+                break;
+
+            // the door is fully open, waiting for autoclose
+            case CONSTS.DOOR_PHASE_OPEN:
                 if (--this._time <= 0) {
-                    this.initPhase(PHASE_DOOR_CLOSING);
+                    this.initPhase(CONSTS.DOOR_PHASE_CLOSING);
                 }
                 break;
 
-            case PHASE_DOOR_CLOSING:
-                // the door is closing
+            // the door is closing
+            case CONSTS.DOOR_PHASE_CLOSING:
                 this._offset = easing.compute(++this._time).y;
                 if (easing.over()) {
-                    this.initPhase(PHASE_DOOR_DONE);
+                    this.initPhase(CONSTS.DOOR_PHASE_DONE);
                 }
                 break;
 
-            case PHASE_DOOR_DONE:
-                // the door is now closed
+            // the door is now closed
+            case CONSTS.DOOR_PHASE_DONE:
                 break;
         }
     }
