@@ -1,10 +1,15 @@
-import * as CONSTS from "./consts";
+import * as CONSTS from "./consts/index";
 
 import DoorManager from "./DoorManager";
 import DoorContext from "./DoorContext";
 import Scheduler from "./Scheduler";
+import Horde from "./Horde";
 import Easing from "../tools/Easing";
+import Entity from "./Entity";
+import Blueprint from "./Blueprint";
 import util from "util";
+import CanvasHelper from "../tools/CanvasHelper";
+import * as levenstein from "../tools/levenstein";
 
 class Engine {
 
@@ -15,6 +20,10 @@ class Engine {
         this._timeMod = 0;
         this._time = 0;
         this._scheduler = new Scheduler();
+        this._horde = new Horde();
+        this._camera = null;
+        this._blueprints = {};
+        this._thinkers = {};
     }
 
     /**
@@ -200,25 +209,56 @@ class Engine {
 
 
 
-
-
-    // PUBLIC API
-
-    process(nTime) {
+    /**
+     * Computes all things
+     * @param nTime {number} number of milliseconds you want to advance simulation
+     */
+    _update(nTime) {
         const tp = this._TIME_INTERVAL;
         this._time += nTime;
         const tm = this._timeMod + nTime;
         const nTimes = Math.min(10, tm / tp | 0);
         this._timeMod = tm % tp;
+        let bRender = false;
         for (let i = 0; i < nTimes; ++i) {
             // logic doom loop here
             this._scheduler.schedule(this._time);
             this._dm.process();
             // entity management
+            this._horde.process();
             // special effect management
+            bRender = true;
+        }
+        if (bRender) {
+            this.render();
         }
     }
 
+    _render() {
+        const rend = this._rc;
+        // recompute all texture/sprite animation with a time-delta of 40ms
+        rend.computeAnimations(this._TIME_INTERVAL);
+        // create a new scene for these parameters
+        const camera = this._camera;
+        if (camera) {
+            const scene = rend.computeScene(camera.x, camera.y, camera.angle, camera.height);
+            // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
+            rend.render(scene);
+            // display the raycaster internal canvas on the physical DOM canvas
+            // requestAnimationFrame is called here to v-synchronize and have a neat animation
+            requestAnimationFrame(() => rend.flip(context));
+        }
+    }
+
+
+
+    // PUBLIC API
+//              _     _ _           _      ____  ___
+//  _ __  _   _| |__ | (_) ___     / \    |  _ \|_ _|
+// | '_ \| | | | '_ \| | |/ __|   / _ \   | |_) || |
+// | |_) | |_| | |_) | | | (__   / ___ \ _|  __/ | | _
+// | .__/ \__,_|_.__/|_|_|\___| /_/   \_(_)_| (_)___(_)
+// |_|
 
     /**
      * Opens a door at a specified position. The cell at x, y must have a PHYS_DOOR_*, PHYS_CURT_* or PHYS_SECRET_BLOCK physical code
@@ -248,6 +288,88 @@ class Engine {
             }
         }
     }
+
+
+//  _____ _     _       _                                                                           _
+// |_   _| |__ (_)_ __ | | _____ _ __   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//   | | | '_ \| | '_ \| |/ / _ \ '__| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+//   | | | | | | | | | |   <  __/ |    | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//   |_| |_| |_|_|_| |_|_|\_\___|_|    |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                                                                  |___/
+
+
+    /**
+     * declares a new thinker class
+     * @param sThinker {string} reference of thinker
+     * @param pThinker {prototype}
+     */
+    declareThinker(sThinker, pThinker) {
+        this._thinkers[sThinker] = pThinker;
+    }
+
+    declareThinkers(oThinkers) {
+        for (let sThinker in oThinker) {
+            this.declareThinker(sThinker, oThinker[sThinker]);
+        }
+    }
+
+    createThinkerInstance(sThinker) {
+        const thinkers = this._thinkers;
+        if (sThinker in thinkers) {
+            const pThinker = thinkers[sThinker];
+            return new pThinker();
+        } else {
+            const aThinkerNames = Object.keys(thinkers);
+            if (aThinkerNames.length > 0) {
+                throw new Error(util.format('There is no such thinker : "%s". Did you mean "%s" ?', sThinker, suggest(sThinker, aThinkerNames)));
+            } else {
+                throw new Error('No thinkers have been declared so far');
+            }
+        }
+    }
+
+    /**
+     * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
+     * @param resref {string} new blueprint reference
+     * @param src {string} url of the image (tileset)
+     * @param tileWidth {number} width of a tile
+     * @param tileHeight {number} height of a tile
+     * @param thinker {string} reference of a thinker
+     * @returns {Promise<void>}
+     */
+    async createBlueprint(resref, {
+        src,
+        tileWidth,
+        tileHeight,
+        thinker,
+    }) {
+        const rc = this._rc;
+        const oImage = await CanvasHelper.loadCanvas(src);
+        const tileset = rc.buildTileSet(oImage, tileWidth, tileHeight);
+        const bp = new Blueprint();
+        bp.tileset = tileset;
+        this._blueprints[resref] = bp;
+        return bp;
+    }
+
+
+//             _   _ _                                                                       _
+//   ___ _ __ | |_(_) |_ _   _   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//  / _ \ '_ \| __| | __| | | | | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// |  __/ | | | |_| | |_| |_| | | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \___|_| |_|\__|_|\__|\__, | |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                       |___/                               |___/
+
+    createEntity(resref) {
+        const rc = this._rc;
+        const bp = this._blueprints[resref];
+        const entity = new Entity();
+        entity._sprite = rc.buildSprite(bp.tileset);
+        entity._thinker = this.createThinkerInstance(bp.thinker);
+        return entity;
+    }
+
+
 }
 
 export default Engine;

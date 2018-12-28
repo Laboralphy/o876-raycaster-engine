@@ -1,6 +1,6 @@
 import DoorContext from "./DoorContext";
 import Easing from "../tools/Easing";
-import * as CONSTS from "./consts";
+import * as CONSTS from "./consts/index";
 
 
 

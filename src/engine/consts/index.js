@@ -1,4 +1,4 @@
-import * as RC_CONSTS from "../raycaster/consts";
+import * as RC_CONSTS from "../../raycaster/consts/index";
 
 // used with forEachNeighbor function
 export const CELL_NEIGHBOR_SIDE = 1;        // selects cells that share a common side with a given cell

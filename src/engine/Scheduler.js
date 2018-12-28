@@ -7,17 +7,33 @@ class Scheduler {
         this.aCommands = [];
         this.bInvalid = true;
         this.nTime = 0;
+        this._lastId = 0;
     }
 
     /**
      * Push a command on the list
-     * @param command
-     * @param delay
+     * @param command {function}
+     * @param delay {number}
+     * @return {number} an identifier that work pretty much like setTimeout
+     * and can be used with cancelCommand, in case you want to cancel the command
      */
     delayCommand(command, delay) {
         delay += this.nTime;
-        this.aCommands.push({command, delay});
+        const id = ++this._lastId;
+        this.aCommands.push({id, command, delay});
         this.bInvalid = true;
+        return id;
+    }
+
+    /**
+     * cancel a command that was previously declared with "delayCommand"
+     * @param id {number} command identifier , given by delayCommand
+     */
+    cancelCommand(id) {
+        const iIndex = this.aCommands.findIndex(c => c.id === id);
+        if (iIndex >= 0) {
+            this.aCommands.splice(iIndex, 1);
+        }
     }
 
     /**

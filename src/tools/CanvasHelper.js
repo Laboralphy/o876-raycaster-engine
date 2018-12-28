@@ -1,3 +1,5 @@
+import * as crypto from 'crypto';
+
 let bDefaultImageSmoothing = true;
 
 class CanvasHelper {
@@ -21,6 +23,20 @@ class CanvasHelper {
 
 	static getDefaultImageSmoothing() {
 		return bDefaultImageSmoothing;
+	}
+
+	static getData(oCanvas) {
+		return oCanvas.toDataURL('image/png');
+	}
+
+    /**
+	 * Return a checksum of the image, in order to compare content
+	 * @param oCanvas {HTMLCanvasElement}
+	 * @param sType {string}
+	 * @return {string}
+     */
+	static getHash(oCanvas, sType = 'md5') {
+		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).digest('hex');
 	}
 	
 	/**

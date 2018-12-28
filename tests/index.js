@@ -4,3 +4,4 @@ require('./TranslatorTest');
 require('./AnimationTest');
 require('./SchedulerTest');
 require('./DoorContextTest');
+require('./LocationTest');

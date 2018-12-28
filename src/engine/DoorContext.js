@@ -1,6 +1,6 @@
 import Easing from "../tools/Easing";
 import EventEmitter from "events";
-import * as CONSTS from "./consts";
+import * as CONSTS from "./consts/index";
 
 /**
  * A door context is created whenever a door is opened, and is about to automaticaly close

@@ -67,6 +67,7 @@ class Renderer {
         this._animations = [];
         this._storey = null;     // instance of another renderer for the first floor
         this._sprites = [];     // list of sprites
+        this._tilesets = [];    // list of tilesets
         this._debugDisplay = new DebugDisplay();
         this._renderContext = null;
         this._renderCanvas = null;
@@ -306,11 +307,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let width = this._options.metrics.spacing;
         let height = this._options.metrics.height;
         CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
-        this._walls = Renderer.buildTileSet(
+        this._walls = this.buildTileSet(
             oImage,
             width,
-            height,
-            this._options.shading.shades
+            height
         );
         this.connectStoreyProperties();
     }
@@ -322,11 +322,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     setFlatTextures(oImage) {
         let width = this._options.metrics.spacing;
         CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
-        this._flats = Renderer.buildTileSet(
+        this._flats = this.buildTileSet(
             oImage,
             width,
-            width,
-            this._options.shading.shades
+            width
         );
         this.connectStoreyProperties();
     }
@@ -340,19 +339,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
     /**
-	 * builds a tileset of texture, out of an image, and shades it
+	 * builds a tileset of texture, out of an image
      * @param oImage {Image|HTMLCanvasElement}
      * @param width {number}
      * @param height {number}
-     * @param nShades {number}
      */
-    static buildTileSet(oImage, width, height, nShades) {
+    buildTileSet(oImage, width, height) {
         const sw = new ShadedTileSet();
-        sw.setShadingLayerCount(nShades);
+        sw.setShadingLayerCount(this._options.shading.shades);
         sw.setImage(oImage, width, height);
+        this._tilesets.push(sw);
         return sw;
     }
-
 
     setWallShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
         this._walls.setShadingLayerCount(nShades);
@@ -378,7 +376,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         this.setWallShadingSettings(nShades, sFogColor, sFilter, fBrightness);
         this.setFlatShadingSettings(nShades, sFogColor, sFilter, fBrightness);
         this._csm.shadeAllSurfaces(nShades, sFogColor, sFilter, fBrightness);
-        this.setSpriteShadingSettings(nShades, sFogColor, sFilter, fBrightness);
+        this.shadeTileSets(nShades, sFogColor, sFilter, fBrightness);
 	}
 
     /**
@@ -1525,40 +1523,26 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 
     /**
-     * Creates a new sprite
-     * @param oImage {HTMLCanvasElement} canvas containing tileset
-     * @param tileWidth {number} size of a tile
-     * @param tileHeight {number} ...
+     * Creates a new sprite and associated it with a tileset
+     * @param oTileSet {ShadedTileSet} tileset
      * @return {Sprite}
      */
-    buildSprite(oImage, tileWidth, tileHeight) {
-        const OPTIONS = this._options;
-        const SHADING = OPTIONS.shading;
+    buildSprite(oTileSet) {
         const oSprite = new Sprite();
-        const oTileSet = Renderer.buildTileSet(oImage, tileWidth, tileHeight, SHADING.shades);
         oSprite.setTileSet(oTileSet);
-        if (!oTileSet) throw new Error('WTF no tileset');
-        this.shadeSprite(
-            oSprite,
-            SHADING.shades,
-            SHADING.color,
-            SHADING.filter,
-            SHADING.brightness
-        );
         this._sprites.push(oSprite);
         return oSprite;
     }
 
-
     /**
-     * update sprite shading with new parameters, to match those used in the raycasting rendering
+     * shades a tileset with new parameters, to match those used in the raycasting rendering
+     * @param tileset {ShadedTileSet}
      * @param nShades {number} number of shading layers
      * @param sFogColor {string} new fog color
      * @param sFilter {string} new color filter
      * @param fBrightness {number} new ambiant brightness
      */
-    shadeSprite(sprite, nShades, sFogColor, sFilter, fBrightness) {
-        const tileset = sprite.getTileSet();
+    shadeTileSet(tileset, nShades, sFogColor, sFilter, fBrightness) {
         tileset.setShadingLayerCount(nShades);
         tileset.compute(sFogColor, sFilter, fBrightness);
     }
@@ -1570,13 +1554,25 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param sFilter {string} new color filter
      * @param fBrightness {number} new ambiant brightness
      */
-    setSpriteShadingSettings(nShades, sFogColor, sFilter, fBrightness) {
-        const sprites = this._sprites;
-        for (let i = 0, l = sprites.length; i < l; ++i) {
-            this.shadeSprite(sprites[i], nShades, sFogColor, sFilter, fBrightness);
+    shadeTileSets(nShades, sFogColor, sFilter, fBrightness) {
+        const sts = this._tilesets;
+        for (let i = 0, l = sts.length; i < l; ++i) {
+            this.shadeTileSet(sts[i], nShades, sFogColor, sFilter, fBrightness);
         }
     }
 
+
+    /**
+     * Remove all tilesets that are not currently used by sprites.
+     * this operation is not really optimized, and should not be called frequently
+     */
+    removeUnusedTileSets() {
+        const ts = this._tilesets;
+        this._tilesets = this
+            ._sprites
+            .filter(s => ts.indexOf(s.getTileSet()) >= 0)
+            .map(s => s.getTileSet());
+    }
 
     /**
      * Remove a sprite from the sprite collection

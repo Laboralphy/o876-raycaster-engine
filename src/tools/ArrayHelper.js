@@ -32,7 +32,13 @@ class ArrayHelper {
 		return false;
 	}
 
-	static catsort(aInput, {cat, sort = null}) {
+    /**
+	 * process an input array. Dispatch all items into category-arrays, each category-array is then sorted according to another function
+     * @param aInput {array}
+     * @param cat {function} will be call for each aInput item, this function is expected to return a category identifier
+     * @param sort {function} will be used to sort all categories
+     */
+	static categorize(aInput, {cat, sort = null}) {
 		let oOutput = {};
 		aInput.forEach(e => {
 			let sCat = cat(e);
