@@ -11,7 +11,7 @@ import util from "util";
 import CanvasHelper from "../tools/CanvasHelper";
 import * as levenstein from "../tools/levenstein";
 
-class Engine {
+class Index {
 
     constructor() {
         this._rc = null;
@@ -314,6 +314,9 @@ class Engine {
     }
 
     createThinkerInstance(sThinker) {
+        if (!sThinker) {
+            return null;
+        }
         const thinkers = this._thinkers;
         if (sThinker in thinkers) {
             const pThinker = thinkers[sThinker];
@@ -335,6 +338,7 @@ class Engine {
      * @param tileWidth {number} width of a tile
      * @param tileHeight {number} height of a tile
      * @param thinker {string} reference of a thinker
+     * @param animations {*} list of animations
      * @returns {Promise<void>}
      */
     async createBlueprint(resref, {
@@ -342,12 +346,15 @@ class Engine {
         tileWidth,
         tileHeight,
         thinker,
+        animations
     }) {
         const rc = this._rc;
         const oImage = await CanvasHelper.loadCanvas(src);
         const tileset = rc.buildTileSet(oImage, tileWidth, tileHeight);
         const bp = new Blueprint();
         bp.tileset = tileset;
+        bp.thinker = thinker;
+        bp.animations = animations;
         this._blueprints[resref] = bp;
         return bp;
     }
@@ -366,10 +373,42 @@ class Engine {
         const entity = new Entity();
         entity._sprite = rc.buildSprite(bp.tileset);
         entity._thinker = this.createThinkerInstance(bp.thinker);
+        //const animations =
         return entity;
     }
 
 
+
+
+
+//    _
+//   (_)___  ___  _ __    _ __   __ _ _ __ ___  ___
+//   | / __|/ _ \| '_ \  | '_ \ / _` | '__/ __|/ _ \
+//   | \__ \ (_) | | | | | |_) | (_| | |  \__ \  __/
+//  _/ |___/\___/|_| |_| | .__/ \__,_|_|  |___/\___|
+// |__/                  |_|
+
+
+
+    configureBlueprint(data, ref) {
+        const {src, width, height, thinker, animations} = data.blueprints[ref];
+        this.createBlueprint(ref, {
+            src,
+            tileWidth: width,
+            tileHeight: height,
+            thinker,
+            animations
+        });
+    }
+
+    configure(data) {
+        // tiles
+        const tiles = data.tiles;
+        for (let sTile in tiles) {
+            const {src, width, height} = tiles[sTile];
+
+        }
+    }
 }
 
-export default Engine;
+export default Index;
