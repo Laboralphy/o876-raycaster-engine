@@ -4,15 +4,18 @@ const LOOP_YOYO = 2;
 
 class TileAnimation {
     constructor() {
-        this._index = 0;        // index of the frame
+        // props
         this._count = 1;        // number of frames
         this._duration = 100;   // duration of a frame
-        this._time = 0;         // current frame time
         this._loop = 0;         // loop type 0: none; 1: forward; 2: yoyo; 3: random
-        this._loopDir = 1;      // 0: index is increasing; 1: index is decreasing
         this._iterations = Infinity;    // number of iterations "Infinity" means : animate forever
-        this._frozen = false;   // if true the animation is suspended
         this._base = 0;         // a base index in the tileset
+
+        // inner props
+        this._index = 0;        // index of the frame
+        this._time = 0;         // current frame time
+        this._loopDir = 1;      // 0: index is increasing; 1: index is decreasing
+        this._frozen = false;   // if true the animation is suspended
     }
 
     get base() {

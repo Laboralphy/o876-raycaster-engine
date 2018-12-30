@@ -1087,7 +1087,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
         // Traitement des portes
         switch (nPhys) {
-            case CONSTS.PHYS_DOOR_SLIDING_UP: // porte coulissant vers le haut
+            case CONSTS.PHYS_DOOR_UP: // porte coulissant vers le haut
                 aData[2] += nOffset;
                 if (nOffset > 0) {
                     aData[4] = ytex - nOffset;
@@ -1095,18 +1095,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
                 break;
 
-            case CONSTS.PHYS_CURT_SLIDING_UP: // rideau coulissant vers le haut
+            case CONSTS.PHYS_CURT_UP: // rideau coulissant vers le haut
                 if (nOffset > 0) {
                     aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5)) << 1;
                 }
                 break;
 
-            case CONSTS.PHYS_CURT_SLIDING_DOWN: // rideau coulissant vers le bas
+            case CONSTS.PHYS_CURT_DOWN: // rideau coulissant vers le bas
                 aData[2] += nOffset; // no break here
             // suite au case 4...
             /** @fallthrough */
 
-            case CONSTS.PHYS_DOOR_SLIDING_DOWN: // Porte coulissant vers le bas
+            case CONSTS.PHYS_DOOR_DOWN: // Porte coulissant vers le bas
                 if (nOffset > 0) {
                     // 4: sh
                     // 6: dy
@@ -1119,7 +1119,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
                 break;
 
-            case CONSTS.PHYS_DOOR_SLIDING_LEFT: // porte latérale vers la gauche
+            case CONSTS.PHYS_DOOR_LEFT: // porte latérale vers la gauche
                 if (nOffset > 0) {
                     if (nPos > (xtex - nOffset)) {
                         aData[0] = null;
@@ -1129,7 +1129,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
                 break;
 
-            case CONSTS.PHYS_DOOR_SLIDING_RIGHT: // porte latérale vers la droite
+            case CONSTS.PHYS_DOOR_RIGHT: // porte latérale vers la droite
                 if (nOffset > 0) {
                     if (nPos < nOffset) {
                         aData[0] = null;
@@ -1139,7 +1139,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
                 break;
 
-            case CONSTS.PHYS_DOOR_SLIDING_DOUBLE: // double porte latérale
+            case CONSTS.PHYS_DOOR_DOUBLE: // double porte latérale
                 if (nOffset > 0) {
                     if (nPos < (xtex >> 1)) { // panneau de gauche
                         if (nPos > ((xtex >> 1) - nOffset)) {

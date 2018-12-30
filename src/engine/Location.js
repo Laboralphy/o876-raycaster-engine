@@ -24,6 +24,11 @@ class Location {
             this.area = area;
         }
     }
+
+    forward(d) {
+        this.x += d * Math.cos(this.angle);
+        this.y += d * Math.sin(this.angle);
+    }
 }
 
 

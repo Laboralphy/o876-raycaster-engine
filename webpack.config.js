@@ -3,7 +3,7 @@ const path = require('path');
 const devConfig = {
     mode: "development",
     entry: {
-        libraycaster: path.resolve(__dirname, 'src/index.js'),
+        libraycaster: path.resolve(__dirname, 'src/Engine.js'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -23,7 +23,7 @@ const devConfig = {
 const testConfig = {
     mode: "development",
     entry: {
-        tests: path.resolve(__dirname, 'tests/index.js')
+        tests: path.resolve(__dirname, 'tests/Engine.js')
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -44,7 +44,8 @@ const testConfig = {
 const exampleConfig = {
     mode: "development",
     entry: {
-        devtest: path.resolve(__dirname, 'examples/devtest/index.js')
+        devtest: path.resolve(__dirname, 'examples/devtest/Engine.js'),
+        engtest: path.resolve(__dirname, 'examples/engtest/Engine.js')
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

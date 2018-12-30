@@ -1,212 +1,176 @@
-import Engine from "../../src/engine";
+import Engine from "../../src/engine/Engine";
 
-// json de configuration
-const WAD = {
 
-    "tiles": {
-        "flats1": {
-            "src": "gfx/textures/flats-1.png",
-            "width": 64,
-            "height": 64
+
+
+function getLevel() {
+    const cvs = document.getElementById('screen');
+    const LEVEL_TEST = {
+
+        "tilesets": {
+            "m-warlock-b": {
+                "src": "gfx/sprites/m_warlock_b.png",
+                "width": 64,
+                "height": 96,
+                "animations": {
+                    "stand": {
+                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "length": 1,
+                        "loop": "@LOOP_NONE"
+                    },
+                    "walk": {
+                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "length": 2,
+                        "loop": "@LOOP_FORWARD",
+                        "duration": 400
+                    },
+                    "attack": {
+                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "length": 2,
+                        "loop": "@LOOP_FORWARD",
+                        "duration": 40
+                    },
+                    "death": {
+                        "start": 16,
+                        "length": 11,
+                        "loop": "@LOOP_FORWARD",
+                        "duration": 80,
+                        "iterations": 1
+                    }
+                }
+            },
+            "p-magbolt-0": {
+                "src": "gfx/sprites/p_magbolt.png",
+                "width": 64,
+                "height": 64,
+                "fx": "@FX_LIGHT_SOURCE",
+                "animations": {
+                    "fly": {
+                        "start": [0, 1, 2, 3, 4, 5, 6, 7],
+                        "length": 1,
+                        "loop": "@LOOP_NONE"
+                    },
+                    "explode": {
+                        "start": 8,
+                        "length": 6,
+                        "loop": "@LOOP_FORWARD",
+                        "duration": 80,
+                        "iterations": 1
+                    }
+                }
+            }
         },
-        "walls2": {
-            "src": "gfx/textures/walls-2.png",
-            "width": 64,
-            "height": 96
-        }
-    },
 
+        "blueprints": {
+            "m-warlock-b": {
+                "tileset": "m-warlock-b",
+                "thinker": null
+            },
 
-    "levels": {
-        "test": {
-            "blueprints": [
-                "m-warlock-b",
-                "p-magbolt-0"
+            "p-magbolt-0": {
+                "tileset": "p-magbolt-0",
+                "thinker": null
+            }
+        },
+
+        "level": {
+            "metrics": {
+                "spacing": 64,
+                "height": 96
+            },
+            "flats": "gfx/textures/flats-1.png",
+            "walls": "gfx/textures/walls-2.png",
+            "sky": "gfx/textures/sky.png",
+            "map": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 1],
+                [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            ],
+            "map2": [
+                "############",
+                "#          #",
+                "#          #",
+                "#          #",
+                "#          #",
+                "#  ##+###  #",
+                "#  #    #  #",
+                "#  #    #  #",
+                "#  ###  #  #",
+                "#    ##-#  #",
+                "#          #",
+                "############",
+            ],
+            "legend": [{
+                "code": 0,
+                "phys": "@PHYS_NONE",
+                "faces": {
+                    "f": 0,
+                    "c": 1
+                }
+            }, {
+                "code": 1,
+                "phys": "@PHYS_WALL",
+                "faces": {
+                    "n": 0,
+                    "e": 0,
+                    "w": 0,
+                    "s": 0,
+                }
+            }, {
+                "code": 2,
+                "phys": "@PHYS_DOOR_DOUBLE",
+                "faces": {
+                    "n": 32,
+                    "e": 32,
+                    "w": 32,
+                    "s": 32,
+                    "f": 0,
+                    "c": 1
+                }
+            }, {
+                "code": 3,
+                "phys": "@PHYS_TRANSPARENT_BLOCK",
+                "faces": {
+                    "n": 5,
+                    "e": 5,
+                    "w": 5,
+                    "s": 5,
+                    "f": 0,
+                    "c": 1
+                }
+            }
             ]
         }
-    },
-
-    "blueprints": {
-        "m-warlock-b": {
-            "src": "gfx/sprites/m_warlock_b.png",
-            "width": 64,
-            "height": 96,
-            "thinker": null,
-            "animations": {
-
-                // STAND
-                "stand-f": {
-                    "start": 0,
-                    "loop": 0,
-                },
-                "stand-fl": {
-                    "start": 2,
-                    "loop": 0,
-                },
-                "stand-l": {
-                    "start": 4,
-                    "loop": 0,
-                },
-                "stand-bl": {
-                    "start": 6,
-                    "loop": 0,
-                },
-                "stand-b": {
-                    "start": 8,
-                    "loop": 0,
-                },
-                "stand-br": {
-                    "start": 10,
-                    "loop": 0,
-                },
-                "stand-r": {
-                    "start": 12,
-                    "loop": 0,
-                },
-                "stand-fr": {
-                    "start": 14,
-                    "loop": 0,
-                },
-
-                // WALK
-                "walk-f": {
-                    "start": 0,
-                    "length": 2,
-                    "loop": 1,
-                },
-                "walk-fl": {
-                    "start": 2,
-                    "length": 2,
-                    "loop": 2,
-                },
-                "walk-l": {
-                    "start": 4,
-                    "length": 2,
-                    "loop": 1,
-                },
-                "walk-bl": {
-                    "start": 6,
-                    "length": 2,
-                    "loop": 2,
-                },
-                "walk-b": {
-                    "start": 8,
-                    "length": 2,
-                    "loop": 1,
-                },
-                "walk-br": {
-                    "start": 10,
-                    "length": 2,
-                    "loop": 1,
-                },
-                "walk-r": {
-                    "start": 12,
-                    "length": 2,
-                    "loop": 1,
-                },
-                "walk-fr": {
-                    "start": 14,
-                    "length": 2,
-                    "loop": 1,
-                },
-
-                // ATTACK
-                "attack-f": {
-                    "start": 0,
-                    "loop": 0,
-                },
-                "attack-fl": {
-                    "start": 2,
-                    "loop": 0,
-                },
-                "attack-l": {
-                    "start": 4,
-                    "loop": 0,
-                },
-                "attack-bl": {
-                    "start": 6,
-                    "loop": 0,
-                },
-                "attack-b": {
-                    "start": 8,
-                    "loop": 0,
-                },
-                "attack-br": {
-                    "start": 10,
-                    "loop": 0,
-                },
-                "attack-r": {
-                    "start": 12,
-                    "loop": 0,
-                },
-                "attack-fr": {
-                    "start": 14,
-                    "loop": 0,
-                },
-
-                // DEATH
-                "death": {
-                    "start": 16,
-                    "length": 11,
-                    "loop": 1,
-                    "iterations": 1
-                }
-            }
-        },
-
-        "p-magbolt-0": {
-            "src": "gfx/sprites/p_magbolt.png",
-            "width": 64,
-            "height": 64,
-            "animations": {
-                "fly-f": {
-                    "start": 0,
-                    "loop": 0
-                },
-                "fly-fl": {
-                    "start": 1,
-                    "loop": 0
-                },
-                "fly-l": {
-                    "start": 2,
-                    "loop": 0
-                },
-                "fly-bl": {
-                    "start": 3,
-                    "loop": 0
-                },
-                "fly-b": {
-                    "start": 4,
-                    "loop": 0
-                },
-                "fly-br": {
-                    "start": 5,
-                    "loop": 0
-                },
-                "fly-r": {
-                    "start": 6,
-                    "loop": 0
-                },
-                "fly-fr": {
-                    "start": 7,
-                    "loop": 0
-                },
-
-                "explode": {
-                    "start": 8,
-                    "loop": 0,
-                    "length": 6,
-                    "iterations": 1
-                }
-            }
-        }
-    }
-};
-
-
-
-function main() {
+    };
+    return LEVEL_TEST;
+}
+// json de configuration
+async function main() {
     // creates engine
     const engine = new Engine();
-
+    engine.setRenderingCanvas(document.getElementById('screen'));
+    await engine.buildLevel(getLevel(), (phase, progress) => {
+        console.log(phase, progress);
+    });
+    //const w = engine.createEntity('m-warlock-b');
+    engine.camera.set({
+        x: 384,
+        y: 128,
+        angle: Math.PI / 2,
+        z: 1
+    });
+    engine.startDoomLoop();
+    engine.delayCommand(1500, () => engine.openDoor(5, 5, true));
+    window.engine = engine;
 }
+
+window.addEventListener('load', main);

@@ -14,17 +14,18 @@ class MapHelper {
         if (ks in this._animFactory) {
             return this._animFactory[ks];
         } else {
-            return this._animFactory[ks] = renderer.buildAnimation(...a);
+            return this._animFactory[ks] = renderer.buildAnimation({start: a[0], length: a[1], duration: a[2], loop: a[3]});
         }
     }
 
     buildMaterialFace(renderer, f) {
         if (Array.isArray(f)) {
-            return this.getAnimation(f)
+            return this.getAnimation(f);
         } else {
             return f;
         }
     }
+
 
     buildMaterialItem(renderer, m) {
         return {
@@ -55,7 +56,7 @@ class MapHelper {
 
         });
         const size = map.length;
-        const mapData = map.map(row => row.split('').map(cell => translator.translate(cell)));
+        const mapData = map.map(row => (Array.isArray(row) ? row : row.split('')).map(cell => translator.translate(cell)));
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
             const m = this._materials[cell];

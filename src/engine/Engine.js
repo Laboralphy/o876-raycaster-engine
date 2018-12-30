@@ -1,30 +1,67 @@
 import * as CONSTS from "./consts/index";
+import * as RC_CONSTS from "../raycaster/consts/index";
 
 import DoorManager from "./DoorManager";
 import DoorContext from "./DoorContext";
 import Scheduler from "./Scheduler";
 import Horde from "./Horde";
+import Location from "./Location";
 import Easing from "../tools/Easing";
 import Entity from "./Entity";
 import Blueprint from "./Blueprint";
 import util from "util";
 import CanvasHelper from "../tools/CanvasHelper";
-import * as levenstein from "../tools/levenstein";
+import Translator from "../tools/Translator";
+import Renderer from "../raycaster/Renderer";
+import MapHelper from "../raycaster/MapHelper";
 
-class Index {
-
+class Engine {
     constructor() {
+        // to be instanciate for each level
         this._rc = null;
-        this._dm = new DoorManager();
+        this._dm = null;
+        this._scheduler = null;
+        this._horde = null;
+        this._camera = null;
+        this._entities = null;
+        this._blueprints = null;
+        this._time = 0;
+        this._interval = null;
+
+        // instanciate at construct
+        this._thinkers = {};
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
-        this._time = 0;
+        this._renderContext = null;
+    }
+
+    /**
+     * This will setup the renderer and all associated structures
+     */
+    initializeRenderer() {
+        this._rc = new Renderer();
+        this._dm = new DoorManager();
         this._scheduler = new Scheduler();
         this._horde = new Horde();
-        this._camera = null;
+        this._camera = new Location();
+        this._entities = [];
         this._blueprints = {};
-        this._thinkers = {};
+        this._timeMod = 0;
+        this._time = 0;
     }
+
+    get camera() {
+        return this._camera;
+    }
+
+    set camera(value) {
+        this._camera = value;
+    }
+
+    getTime() {
+        return this._time;
+    }
+
 
     /**
      * this function iterates throught all adjacent cells and run a given function for each cell
@@ -100,7 +137,7 @@ class Index {
         dc1.event.on('check', event => this._checkDoorClosability(event));
         let nSecurityCheck = 0;
         this._forEachNeighbor(x, y, (xc, yc, phys) => {
-            if (phys === CONSTS.RC.PHYS_SECRET_BLOCK) {
+            if (phys === RC_CONSTS.PHYS_SECRET_BLOCK) {
                 // secondary secret door
                 if (++nSecurityCheck > 1) {
                     throw new Error(util.format('this secret block has more than one secret neighbor : (%d, %d)', x, y));
@@ -150,30 +187,30 @@ class Index {
         let nOffsetMax, fSlidingDuration;
 
         switch (nPhysCode) {
-            case CONSTS.RC.PHYS_DOOR_SLIDING_DOUBLE:
+            case RC_CONSTS.PHYS_DOOR_DOUBLE:
                 nOffsetMax = metrics.spacing >> 1;
                 fSlidingDuration = 0.5;
                 break;
 
-            case CONSTS.RC.PHYS_DOOR_SLIDING_RIGHT:
-            case CONSTS.RC.PHYS_DOOR_SLIDING_LEFT:
+            case RC_CONSTS.PHYS_DOOR_RIGHT:
+            case RC_CONSTS.PHYS_DOOR_LEFT:
                 nOffsetMax = metrics.height;
                 fSlidingDuration = 1;
                 break;
 
-            case CONSTS.RC.PHYS_DOOR_SLIDING_UP:
-            case CONSTS.RC.PHYS_DOOR_SLIDING_DOWN:
+            case RC_CONSTS.PHYS_DOOR_UP:
+            case RC_CONSTS.PHYS_DOOR_DOWN:
                 nOffsetMax = metrics.height;
                 fSlidingDuration = 1.5;
                 break;
 
-            case CONSTS.RC.PHYS_CURT_SLIDING_UP:
-            case CONSTS.RC.PHYS_CURT_SLIDING_DOWN:
+            case RC_CONSTS.PHYS_CURT_UP:
+            case RC_CONSTS.PHYS_CURT_DOWN:
                 nOffsetMax = metrics.height;
                 fSlidingDuration = 1.8;
                 break;
 
-            case CONSTS.RC.PHYS_SECRET_BLOCK:
+            case RC_CONSTS.PHYS_SECRET_BLOCK:
                 this._buildSecretDoorContext(x, y);
                 return;
 
@@ -223,14 +260,14 @@ class Index {
         for (let i = 0; i < nTimes; ++i) {
             // logic doom loop here
             this._scheduler.schedule(this._time);
-            this._dm.process();
+            this._doorProcess();
             // entity management
             this._horde.process();
             // special effect management
             bRender = true;
         }
         if (bRender) {
-            this.render();
+            this._render();
         }
     }
 
@@ -241,12 +278,54 @@ class Index {
         // create a new scene for these parameters
         const camera = this._camera;
         if (camera) {
-            const scene = rend.computeScene(camera.x, camera.y, camera.angle, camera.height);
+            const scene = rend.computeScene(camera.x, camera.y, camera.angle, camera.z);
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(scene);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
-            requestAnimationFrame(() => rend.flip(context));
+            requestAnimationFrame(() => rend.flip(this._renderContext));
+        }
+    }
+
+    /**
+     * defines a rendering canvas
+     * @param oCanvas {HTMLCanvasElement} the output canvas
+     */
+    setRenderingCanvas(oCanvas) {
+        this._renderCanvas = oCanvas;
+        this._renderContext = oCanvas.getContext('2d');
+    }
+
+    /**
+     * get the rendering canvas, after being set by setRenderingCanvas
+     * @returns {HTMLCanvasElement}
+     */
+    getRenderingCanvas() {
+        return this._renderCanvas;
+    }
+
+    /**
+     * get the rendering 2d Context
+     * @returns {CanvasRenderingContext2D}
+     */
+    getRenderingContext() {
+        return this._renderContext;
+    }
+
+    /**
+     * starts the doom loop
+     */
+    startDoomLoop() {
+        this.stopDoomLoop();
+        this._interval = setInterval(() => this._update(this._TIME_INTERVAL), this._TIME_INTERVAL);
+    }
+
+    /**
+     * stops the doom loop, freezing the game animation
+     */
+    stopDoomLoop() {
+        if (this._interval) {
+            clearInterval(this._interval);
         }
     }
 
@@ -287,6 +366,14 @@ class Index {
                 dc.close();
             }
         }
+    }
+
+    delayCommand(nTime, pCommand) {
+        return this._scheduler.delayCommand(pCommand, nTime);
+    }
+
+    cancelCommand(id) {
+        this._scheduler.cancelCommand(id);
     }
 
 
@@ -334,27 +421,26 @@ class Index {
     /**
      * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
      * @param resref {string} new blueprint reference
-     * @param src {string} url of the image (tileset)
-     * @param tileWidth {number} width of a tile
-     * @param tileHeight {number} height of a tile
-     * @param thinker {string} reference of a thinker
-     * @param animations {*} list of animations
+     * @param data {*} the blueprint structure
      * @returns {Promise<void>}
      */
-    async createBlueprint(resref, {
-        src,
-        tileWidth,
-        tileHeight,
-        thinker,
-        animations
-    }) {
+    async createBlueprint(resref, data) {
+        const bpDef = data.blueprints[resref];
         const rc = this._rc;
+        const tsDef = data.tilesets[bpDef.tileset];
+        const src = tsDef.src;
+        const tileWidth = tsDef.width;
+        const tileHeight = tsDef.height;
         const oImage = await CanvasHelper.loadCanvas(src);
         const tileset = rc.buildTileSet(oImage, tileWidth, tileHeight);
         const bp = new Blueprint();
         bp.tileset = tileset;
-        bp.thinker = thinker;
-        bp.animations = animations;
+        if ('thinker' in bpDef) {
+            bp.thinker = bpDef.thinker; // state object : should not be instanciate yet
+        }
+        if ('animations' in tsDef) {
+            bp.animations = tsDef.animations
+        }
         this._blueprints[resref] = bp;
         return bp;
     }
@@ -367,16 +453,62 @@ class Index {
 //  \___|_| |_|\__|_|\__|\__, | |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
 //                       |___/                               |___/
 
+    /**
+     * Will create a new Entity, but will not link it into the engine entity collection
+     * You must do this with linkEntity()
+     * @param resref {string} resource reference of the blueprint, to create the entity
+     * @returns {Entity}
+     */
     createEntity(resref) {
         const rc = this._rc;
         const bp = this._blueprints[resref];
         const entity = new Entity();
-        entity._sprite = rc.buildSprite(bp.tileset);
+        const sprite = rc.buildSprite(bp.tileset);
+        const animations = bp.animations;
+        if (animations) {
+            // instantiates animations
+            for (let iAnim in animations) {
+                sprite.buildAnimation(animations[iAnim]);
+            }
+        }
         entity._thinker = this.createThinkerInstance(bp.thinker);
-        //const animations =
+        entity._sprite = sprite;
         return entity;
     }
 
+    /**
+     * checks if an entity is linked into the engine.
+     * only linked entities are thinked and rendered
+     * @param entity {Entity}
+     * @returns {boolean}
+     */
+    isEntityLinked(entity) {
+        return this._entities.indexOf(entity) >= 0;
+    }
+
+    /**
+     * Add an entity into the engine
+     * only linked entities are thinked and rendered
+     * @param entity {Entity}
+     */
+    linkEntity(entity) {
+        if (!this.isEntityLinked(entity)) {
+            this._entities.push(entity);
+        }
+    }
+
+    /**
+     * Remove an entity from the engine
+     * only linked entities are thinked and rendered
+     * @param entity {Entity}
+     */
+    unlinkEntity(entity) {
+        const aEntities = this._entities;
+        const iEntity = aEntities.indexOf(entity)
+        if (iEntity >= 0) {
+            aEntities.splice(iEntity, 1);
+        }
+    }
 
 
 
@@ -389,26 +521,81 @@ class Index {
 // |__/                  |_|
 
 
+    async buildLevel(data, monitor) {
+        const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
+        const TEXTURE_COUNT = 3;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT;
 
-    configureBlueprint(data, ref) {
-        const {src, width, height, thinker, animations} = data.blueprints[ref];
-        this.createBlueprint(ref, {
-            src,
-            tileWidth: width,
-            tileHeight: height,
-            thinker,
-            animations
+        const feedback = !!monitor ? monitor : (phase, progress) => {};
+        feedback('init', 0);
+        const oTranslator = new Translator();
+        oTranslator
+
+            // LOOP constants
+            .addRule('@LOOP_NONE', RC_CONSTS.ANIM_LOOP_NONE)
+            .addRule('@LOOP_FORWARD', RC_CONSTS.ANIM_LOOP_FORWARD)
+            .addRule('@LOOP_YOYO', RC_CONSTS.ANIM_LOOP_YOYO)
+
+            // FX constants
+            .addRule('@FX_NONE', RC_CONSTS.FX_NONE)
+            .addRule('@FX_LIGHT_SOURCE', RC_CONSTS.FX_LIGHT_SOURCE)
+            .addRule('@FX_LIGHT_ADD', RC_CONSTS.FX_LIGHT_ADD)
+            .addRule('@FX_ALPHA_75', RC_CONSTS.FX_ALPHA_75)
+            .addRule('@FX_ALPHA_50', RC_CONSTS.FX_ALPHA_50)
+            .addRule('@FX_ALPHA_25', RC_CONSTS.FX_ALPHA_25)
+
+            // PHYS constants
+            .addRule('@PHYS_NONE', RC_CONSTS.PHYS_NONE)
+            .addRule('@PHYS_WALL', RC_CONSTS.PHYS_WALL)
+            .addRule('@PHYS_DOOR_UP', RC_CONSTS.PHYS_DOOR_UP)
+            .addRule('@PHYS_CURT_UP', RC_CONSTS.PHYS_CURT_UP)
+            .addRule('@PHYS_DOOR_DOWN', RC_CONSTS.PHYS_DOOR_DOWN)
+            .addRule('@PHYS_CURT_DOWN', RC_CONSTS.PHYS_CURT_DOWN)
+            .addRule('@PHYS_DOOR_LEFT', RC_CONSTS.PHYS_DOOR_LEFT)
+            .addRule('@PHYS_DOOR_RIGHT', RC_CONSTS.PHYS_DOOR_RIGHT)
+            .addRule('@PHYS_DOOR_DOUBLE', RC_CONSTS.PHYS_DOOR_DOUBLE)
+            .addRule('@PHYS_SECRET_BLOCK', RC_CONSTS.PHYS_SECRET_BLOCK)
+            .addRule('@PHYS_TRANSPARENT_BLOCK', RC_CONSTS.PHYS_TRANSPARENT_BLOCK)
+            .addRule('@PHYS_INVISIBLE_BLOCK', RC_CONSTS.PHYS_INVISIBLE_BLOCK)
+            .addRule('@PHYS_OFFSET_BLOCK', RC_CONSTS.PHYS_OFFSET_BLOCK)
+        ;
+        data = oTranslator.translateStructure(data);
+
+        this.initializeRenderer();
+        const rc = this._rc;
+        const cvs = this.getRenderingCanvas();
+        rc.defineOptions({
+            metrics: data.level.metrics,
+            screen: {
+                width: cvs.width,
+                height: cvs.height
+            }
         });
-    }
+        // defines sky, walls and flats
+        feedback('loading background', 1 / ALL_COUNT);
+        rc.setBackground(await CanvasHelper.loadCanvas(data.level.sky));
+        feedback('loading wall textures', 2 / ALL_COUNT);
+        rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.walls));
+        feedback('loading flat textures', 3 / ALL_COUNT);
+        rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.flats));
 
-    configure(data) {
-        // tiles
-        const tiles = data.tiles;
-        for (let sTile in tiles) {
-            const {src, width, height} = tiles[sTile];
+        // creates blueprints
+        let nBp = TEXTURE_COUNT;
+        for (let resref in data.blueprints) {
+            feedback('creating blueprints',  nBp / ALL_COUNT);
+            await this.createBlueprint(resref, data);
+            ++nBp;
+        }
+
+        if (data.level.legend) {
+            const mh = new MapHelper();
+            mh.build(rc, data.level);
+        } else {
 
         }
+        feedback('done',  1);
     }
+
 }
 
-export default Index;
+export default Engine;

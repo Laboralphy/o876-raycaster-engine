@@ -88,7 +88,7 @@ async function main() {
         }
     }
     rc.setCellMaterial(9, 3, 2);
-    rc.setCellPhys(9, 3, CONSTS.PHYS_DOOR_SLIDING_DOUBLE);
+    rc.setCellPhys(9, 3, CONSTS.PHYS_DOOR_DOUBLE);
     rc.setCellOffset(9, 3, 10);
 
     rc.setCellMaterial(9, 5, 3);
@@ -147,7 +147,7 @@ async function main() {
     const rcos = rc.options.shading;
     rc.shadeTileSet(tsExplo, rcos.shades, rcos.color, rcos.filter, rcos.brightness);
     const spr1 = rc.buildSprite(tsExplo);
-    spr1.buildAnimation(0, 9, 100, CONSTS.ANIM_LOOP_FORWARD);
+    spr1.buildAnimation({start: 0, length: 9, duration: 100, loop: CONSTS.ANIM_LOOP_FORWARD});
     spr1.x = 64 * 4 + 32;
     spr1.y = 64 * 2 + 32;
     //spr1.addFlag(CONSTS.FX_LIGHT_SOURCE);

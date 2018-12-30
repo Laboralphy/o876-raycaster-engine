@@ -10,7 +10,7 @@ class Translator {
     /**
      * adds a rule
      * @param r {string|RegExp}
-     * @param alias {string}
+     * @param alias {string|number|boolean}
      */
     addRule(r, alias) {
         if (r instanceof RegExp) {
@@ -20,6 +20,7 @@ class Translator {
         } else {
             this._aliases[r] = alias;
         }
+        return this;
     }
 
     /**
@@ -40,6 +41,36 @@ class Translator {
         return s;
     }
 
+    translateItem(xItem) {
+        switch (typeof xItem) {
+            case 'object':
+                return Array.isArray(xItem)
+                    ? xItem.map(x => this.translateItem(x))
+                    : this.translateStructure(xItem);
+
+            case 'string':
+                return this.translate(xItem);
+
+            default:
+                return xItem;
+        }
+    }
+
+    /**
+     * Deep-translates an ENTIRE structure
+     * @param oStructure {*}
+     */
+    translateStructure(oStructure) {
+        if (oStructure === null) {
+            return null;
+        }
+        const oNewStructure = {};
+        for (let s in oStructure) {
+            const st = oStructure[s];
+            oNewStructure[s] = this.translateItem(st);
+        }
+        return oNewStructure;
+    }
 }
 
 export default Translator;

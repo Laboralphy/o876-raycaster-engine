@@ -1,6 +1,5 @@
 import DoorContext from "./DoorContext";
-import Easing from "../tools/Easing";
-import * as CONSTS from "./consts/index";
+import * as RC_CONSTS from "../raycaster/consts/index";
 
 
 
@@ -45,7 +44,7 @@ class DoorManager {
             return {
                 x: dc.data.x,
                 y: dc.data.y,
-                phys: dc.isOpen() ? CONSTS.RC.PHYS_NONE : dc.data.phys,
+                phys: dc.isOpen() ? RC_CONSTS.PHYS_NONE : dc.data.phys,
                 offset: dc.offset
             };
         });

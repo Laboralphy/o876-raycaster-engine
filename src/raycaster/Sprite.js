@@ -16,7 +16,8 @@ class Sprite {
         this._tileWidth = 0;
         this._tileHeight = 0;
 
-        this._animations = [];
+        this._animationIndex = {};
+        this._animations = {};
         this._animation = null;
         this._tileset = null;
 
@@ -69,37 +70,33 @@ class Sprite {
         this._scale = value;
     }
 
-    buildAnimation(start, count, delay, loop) {
+    buildAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}, ref = 'default') {
         const a = new TileAnimation();
+        if (Array.isArray(start)) {
+            start.forEach((x, i) => this.buildAnimation({start: x, length, duration, loop, iterations}, ref));
+            return;
+        }
         a.base = start;
-        a.count = count;
-        a.duration = delay;
+        a.count = length;
+        a.duration = duration;
         a.loop = loop;
-        this._animations.push(a);
+        a.iterations = iterations === null ? Infinity : iterations;
+        if (!(ref) in this._animations) {
+            this._animations[ref].push(a);
+        }
         if (this._animation === null) {
             this._animation = a;
         }
     }
 
-    /**
-     * Adds a new animations into the sprite's animation collection
-     * @param a {TileAnimation}
-     */
-    addAnimation(a) {
-        this._animations.push(a);
-    }
 
     /**
      * Defines the current animation
+     * @param ref {string} animation group
      * @param iAnim {number} index of the new current animation
      */
-    setCurrentAnimation(iAnim) {
-        const animations = this._animations;
-        if (iAnim >= 0 && iAnim < animations.length) {
-            this._animation = this._animations[iAnim];
-        } else {
-            throw new Error('cannot select "' + iAnim + '" as new current animation : this sprite has "' + animations.length + '" animations');
-        }
+    setCurrentAnimation(ref, iAnim) {
+        this._animation = this._animations[ref][iAnim];
     }
 
     /**
