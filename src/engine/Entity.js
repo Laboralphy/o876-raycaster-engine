@@ -24,6 +24,14 @@ class Entity {
         }
     }
 
+    get thinker() {
+        return this._thinker;
+    }
+
+    set thinker(value) {
+        this._thinker = value;
+    }
+
     get sprite() {
         return this._sprite;
     }

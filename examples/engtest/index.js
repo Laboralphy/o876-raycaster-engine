@@ -1,4 +1,5 @@
 import Engine from "../../src/engine/Engine";
+import DevKbd from "./DevKbd";
 
 
 
@@ -162,14 +163,24 @@ async function main() {
         console.log(phase, progress);
     });
     //const w = engine.createEntity('m-warlock-b');
-    engine.camera.set({
+    const ct = new DevKbd();
+
+    window.addEventListener('keydown', event => ct.keyDown(event.key));
+    window.addEventListener('keyup', event => ct.keyUp(event.key));
+    engine.camera.thinker = ct;
+    engine.camera.location.set({
         x: 384,
         y: 128,
         angle: Math.PI / 2,
         z: 1
     });
     engine.startDoomLoop();
-    engine.delayCommand(1500, () => engine.openDoor(5, 5, true));
+
+    // collision avec mur
+    // déterminer le secteur de l'angle de déplacement
+    // déterminer la liste des yeux de collision
+    // effectuer les tests de collision sur les yeux
+    //
     window.engine = engine;
 }
 

@@ -14,6 +14,7 @@ import CanvasHelper from "../tools/CanvasHelper";
 import Translator from "../tools/Translator";
 import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
+import Camera from "./Camera";
 
 class Engine {
     constructor() {
@@ -43,7 +44,7 @@ class Engine {
         this._dm = new DoorManager();
         this._scheduler = new Scheduler();
         this._horde = new Horde();
-        this._camera = new Location();
+        this._camera = new Camera();
         this._entities = [];
         this._blueprints = {};
         this._timeMod = 0;
@@ -262,6 +263,7 @@ class Engine {
             this._scheduler.schedule(this._time);
             this._doorProcess();
             // entity management
+            this._camera.think(this);
             this._horde.process();
             // special effect management
             bRender = true;
@@ -278,7 +280,8 @@ class Engine {
         // create a new scene for these parameters
         const camera = this._camera;
         if (camera) {
-            const scene = rend.computeScene(camera.x, camera.y, camera.angle, camera.z);
+            const loc = camera.location;
+            const scene = rend.computeScene(loc.x, loc.y, loc.angle, loc.z);
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(scene);
             // display the raycaster internal canvas on the physical DOM canvas
@@ -504,7 +507,7 @@ class Engine {
      */
     unlinkEntity(entity) {
         const aEntities = this._entities;
-        const iEntity = aEntities.indexOf(entity)
+        const iEntity = aEntities.indexOf(entity);
         if (iEntity >= 0) {
             aEntities.splice(iEntity, 1);
         }
@@ -572,11 +575,11 @@ class Engine {
             }
         });
         // defines sky, walls and flats
-        feedback('loading background', 1 / ALL_COUNT);
+        feedback('loading textures', 1 / ALL_COUNT);
         rc.setBackground(await CanvasHelper.loadCanvas(data.level.sky));
-        feedback('loading wall textures', 2 / ALL_COUNT);
+        feedback('loading textures', 2 / ALL_COUNT);
         rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.walls));
-        feedback('loading flat textures', 3 / ALL_COUNT);
+        feedback('loading textures', 3 / ALL_COUNT);
         rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.flats));
 
         // creates blueprints

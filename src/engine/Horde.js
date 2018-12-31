@@ -8,11 +8,11 @@ class Horde {
         this._entities.push(e);
     }
 
-    process() {
+    process(engine) {
         const entities = this._entities;
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
-            e.think();
+            e.think(engine);
         }
     }
 }
