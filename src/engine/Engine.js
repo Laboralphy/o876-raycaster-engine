@@ -371,10 +371,21 @@ class Engine {
         }
     }
 
+	/**
+	 * Delays a command, just like a setTimeout, but the command will be synced with the doomloop
+	 * So it will be fired just before rendering process
+	 * @param nTime {number} delay in millisecond
+	 * @param pCommand {function} function whose execution is delayed
+	 * @return {number} delay identifier usable with the "cancelCommand" function
+	 */
     delayCommand(nTime, pCommand) {
         return this._scheduler.delayCommand(pCommand, nTime);
     }
 
+	/**
+	 * Cancels a previously delayed command.
+	 * @param id {number} identifier produced by the delayCommand function
+	 */
     cancelCommand(id) {
         this._scheduler.cancelCommand(id);
     }

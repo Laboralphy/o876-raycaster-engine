@@ -158,29 +158,38 @@ function getLevel() {
 async function main() {
     // creates engine
     const engine = new Engine();
+    // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
+    // builds level, display progress on console
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
     //const w = engine.createEntity('m-warlock-b');
+    
+    // creates a thinker
     const ct = new DevKbd();
 
+	// plug keyboards events
     window.addEventListener('keydown', event => ct.keyDown(event.key));
     window.addEventListener('keyup', event => ct.keyUp(event.key));
+    
+    // links this thinker to the camera
     engine.camera.thinker = ct;
+    // sets initial location
     engine.camera.location.set({
         x: 384,
         y: 128,
         angle: Math.PI / 2,
         z: 1
     });
+    
+    // starts engine doomloop
     engine.startDoomLoop();
 
     // collision avec mur
     // déterminer le secteur de l'angle de déplacement
     // déterminer la liste des yeux de collision
     // effectuer les tests de collision sur les yeux
-    //
     window.engine = engine;
 }
 
