@@ -44,10 +44,21 @@ class MapHelper {
     }
 
     build(renderer, oMap) {
+
+        const rowProcess = row =>
+            (Array.isArray(row)
+                ? row
+                : row.split('')
+            ).map(cell =>
+                translator.translate(cell)
+            );
+
         this._animFactory = {};
         this._materials = [];
         const translator = new Translator();
         const {map, legend} = oMap;
+
+        // all materials
         legend.forEach((material, i) => {
             const m = this.buildMaterialItem(renderer, material);
             renderer.registerCellMaterial(i, m.faces);
@@ -55,15 +66,31 @@ class MapHelper {
             translator.addRule(m.code, i);
 
         });
+
+        // map
         const size = map.length;
-        const mapData = map.map(row => (Array.isArray(row) ? row : row.split('')).map(cell => translator.translate(cell)));
+        const mapData = map.map(rowProcess);
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
             const m = this._materials[cell];
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
-        }))
+        }));
+
+        // upper storey
+        if ('map-upper' in oMap) {
+            const mapUpper = oMap['map-upper'];
+            const storey = renderer.createStorey();
+            const mapUpperData = mapUpper.map(rowProcess);
+            mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
+                const m = this._materials[cell];
+                storey.setCellMaterial(x, y, cell);
+                storey.setCellPhys(x, y, m.phys);
+                storey.setCellOffset(x, y, m.offset);
+            }));
+        }
+
     }
 }
 

@@ -1,12 +1,8 @@
 import Engine from "../../src/engine/Engine";
 import DevKbd from "./DevKbd";
 
-
-
-
 function getLevel() {
-    const cvs = document.getElementById('screen');
-    const LEVEL_TEST = {
+    return {
 
         "tilesets": {
             "m-warlock-b": {
@@ -59,6 +55,39 @@ function getLevel() {
                         "iterations": 1
                     }
                 }
+            },
+            "o-bluedisc": {
+                "src": "gfx/sprites/o_bluedisc.png",
+                "width": 32,
+                "height": 32,
+                "fx": "@FX_LIGHT_SOURCE",
+                "animations": {
+                    "normal": {
+                        "start": 0,
+                        "length": 5,
+                        "loop": "@LOOP_YOYO"
+                    }
+                }
+            },
+            "o-bluereddisc": {
+                "src": "gfx/sprites/o_bluereddisc.png",
+                "width": 32,
+                "height": 32,
+                "fx": "@FX_LIGHT_SOURCE",
+                "animations": {
+                    "blue": {
+                        "start": 0,
+                        "length": 5,
+                        "loop": "@LOOP_YOYO",
+                        "duration": 160
+                    },
+                    "red": {
+                        "start": 5,
+                        "length": 5,
+                        "loop": "@LOOP_YOYO",
+                        "duration": 40
+                    }
+                }
             }
         },
 
@@ -71,7 +100,20 @@ function getLevel() {
             "p-magbolt-0": {
                 "tileset": "p-magbolt-0",
                 "thinker": null
-            }
+            },
+
+            "o-bluedisc": {
+                "tileset": "o-bluedisc",
+                "thinker": null
+            },
+
+            "o-bluereddisc": {
+                "tileset": "o-bluereddisc",
+                "thinker": null
+            },
+
+
+
         },
 
         "level": {
@@ -86,8 +128,8 @@ function getLevel() {
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0,10,10, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0,10,10, 0, 0, 1],
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 1, 2, 1, 0, 0, 0, 0, 0, 1],
                 [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1],
@@ -96,19 +138,19 @@ function getLevel() {
                 [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
                 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             ],
-            "map2": [
-                "############",
-                "#          #",
-                "#          #",
-                "#          #",
-                "#          #",
-                "#  ##+###  #",
-                "#  #    #  #",
-                "#  #    #  #",
-                "#  ###  #  #",
-                "#    ##-#  #",
-                "#          #",
-                "############",
+            "map-upper": [
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0,11,11,11,11, 0, 1],
+                [1, 0, 0, 0, 0, 0,11, 0, 0,11, 0, 1],
+                [1, 0, 0, 0, 0, 0,11, 0, 0,11, 0, 1],
+                [1, 0, 0, 0, 0, 0,11,11,11,11, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             ],
             "legend": [{
                 "code": 0,
@@ -148,11 +190,33 @@ function getLevel() {
                     "f": 0,
                     "c": 1
                 }
+            }, {
+                "code": 10,
+                "phys": "@PHYS_NONE",
+                "faces": {
+                    "f": 0
+                }
+            }, {
+                "code": 11,
+                "phys": "@PHYS_TRANSPARENT_BLOCK",
+                "faces": {
+                    "n": 0,
+                    "e": 0,
+                    "w": 0,
+                    "s": 0,
+                }
             }
             ]
-        }
+        },
+        "objects": [
+            {
+                "x": 128,
+                "y": 256,
+                "angle": 0,
+                "blueprint": "o-bluereddisc"
+            }
+        ]
     };
-    return LEVEL_TEST;
 }
 // json de configuration
 async function main() {

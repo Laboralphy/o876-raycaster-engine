@@ -72,6 +72,7 @@ class Renderer {
         this._renderContext = null;
         this._renderCanvas = null;
         this._offsetTop = 50; // Y offset of rendering
+        this._scanSectors = null;
     }
 
     configOptions() {
@@ -665,6 +666,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let zbuffer = [];
         let scanSectors = new MarkerRegistry();     // registry of cells traversed by rays
         scanSectors.mark(xCam8, yCam8);
+        this._scanSectors = scanSectors;
         // background
         let bg = this._background;
         if (bg) {
@@ -693,6 +695,16 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             this._storey.computeScreenSliceBuffer(scene.storeyScene);
         }
 	}
+
+    /**
+     * Returns true if the specified cells is visible from the last rendering point of view
+     * @param x {number}
+     * @param y {number}
+     * @return {boolean}
+     */
+	isCellVisible(x, y) {
+        return this._scanSectors.isMarked(x, y);
+    }
 
     /**
      * casts a ray, this may lead to the production of several screen slices (intersecting the ray),
@@ -1587,8 +1599,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     renderSprites(scene) {
         const sprites = this._sprites;
+        const ps = this._options.metrics.spacing;
         for (let i = 0, l = sprites.length; i < l; ++i) {
-            this.renderSprite(scene, sprites[i]);
+            const spr = sprites[i];
+            if (this.isCellVisible(spr.x / ps | 0, spr.y / ps | 0)) {
+                this.renderSprite(scene, spr);
+            }
         }
     }
 

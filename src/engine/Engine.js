@@ -5,7 +5,6 @@ import DoorManager from "./DoorManager";
 import DoorContext from "./DoorContext";
 import Scheduler from "./Scheduler";
 import Horde from "./Horde";
-import Location from "./Location";
 import Easing from "../tools/Easing";
 import Entity from "./Entity";
 import Blueprint from "./Blueprint";
@@ -24,7 +23,6 @@ class Engine {
         this._scheduler = null;
         this._horde = null;
         this._camera = null;
-        this._entities = null;
         this._blueprints = null;
         this._time = 0;
         this._interval = null;
@@ -45,10 +43,13 @@ class Engine {
         this._scheduler = new Scheduler();
         this._horde = new Horde();
         this._camera = new Camera();
-        this._entities = [];
         this._blueprints = {};
         this._timeMod = 0;
         this._time = 0;
+    }
+
+    get horde() {
+        return this._horde;
     }
 
     get camera() {
@@ -264,7 +265,7 @@ class Engine {
             this._doorProcess();
             // entity management
             this._camera.think(this);
-            this._horde.process();
+            this._horde.process(this);
             // special effect management
             bRender = true;
         }
@@ -307,6 +308,10 @@ class Engine {
         return this._renderCanvas;
     }
 
+    getRaycaster() {
+        return this._rc;
+    }
+
     /**
      * get the rendering 2d Context
      * @returns {CanvasRenderingContext2D}
@@ -331,7 +336,6 @@ class Engine {
             clearInterval(this._interval);
         }
     }
-
 
 
     // PUBLIC API
@@ -378,7 +382,10 @@ class Engine {
 	 * @param pCommand {function} function whose execution is delayed
 	 * @return {number} delay identifier usable with the "cancelCommand" function
 	 */
-    delayCommand(nTime, pCommand) {
+    delayCommand(pCommand, nTime) {
+        if (typeof pCommand !== 'function') {
+            throw new Error('delayCommand: first parameter need to be a valid function');
+        }
         return this._scheduler.delayCommand(pCommand, nTime);
     }
 
@@ -482,49 +489,21 @@ class Engine {
         if (animations) {
             // instantiates animations
             for (let iAnim in animations) {
-                sprite.buildAnimation(animations[iAnim]);
+                sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
         entity._thinker = this.createThinkerInstance(bp.thinker);
         entity._sprite = sprite;
+        this._horde.linkEntity(entity);
         return entity;
     }
 
-    /**
-     * checks if an entity is linked into the engine.
-     * only linked entities are thinked and rendered
-     * @param entity {Entity}
-     * @returns {boolean}
-     */
-    isEntityLinked(entity) {
-        return this._entities.indexOf(entity) >= 0;
-    }
-
-    /**
-     * Add an entity into the engine
-     * only linked entities are thinked and rendered
-     * @param entity {Entity}
-     */
-    linkEntity(entity) {
-        if (!this.isEntityLinked(entity)) {
-            this._entities.push(entity);
+    destroyEntity(e) {
+        if (this._horde.isEntityLinked(e)) {
+            this._rc.disposeSprite(e.sprite);
+            this._horde.unlinkEntity(e);
         }
     }
-
-    /**
-     * Remove an entity from the engine
-     * only linked entities are thinked and rendered
-     * @param entity {Entity}
-     */
-    unlinkEntity(entity) {
-        const aEntities = this._entities;
-        const iEntity = aEntities.indexOf(entity);
-        if (iEntity >= 0) {
-            aEntities.splice(iEntity, 1);
-        }
-    }
-
-
 
 
 //    _
@@ -607,7 +586,19 @@ class Engine {
         } else {
 
         }
-        feedback('done',  1);
+
+
+        // static objects
+        if ('objects' in data) {
+            const aObjects = data.objects;
+            aObjects.forEach(o => {
+                const entity = this.createEntity(o.blueprint);
+                entity.location.set(o);
+                entity.visible = true;
+            })
+        }
+
+        feedback('done', 1);
     }
 
 }

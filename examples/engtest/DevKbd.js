@@ -1,5 +1,6 @@
 import Thinker from "../../src/engine/thinkers/Thinker";
 import Easing from "../../src/tools/Easing";
+import {computeWallCollisions} from "../../src/tools/computeWallCollisions"
 
 const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
@@ -82,14 +83,41 @@ class DevKbd extends Thinker {
         }
     }
 
+
     think(entity, engine) {
         const t = this._lastTime = engine.getTime();
         const k = this._keys;
+        const eloc = entity.location;
+        const rc = engine.getRaycaster();
+        const ps = rc.options.metrics.spacing;
+
         if (k.up !== false) {
-            entity.location.forward(SPEED);
+            const cwc = computeWallCollisions(
+                eloc.x,
+                eloc.y,
+                SPEED * Math.cos(eloc.angle),
+                SPEED * Math.sin(eloc.angle),
+                24,
+                rc.options.metrics.spacing,
+                false,
+                (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
+            );
+            entity.location.x += cwc.speed.x;
+            entity.location.y += cwc.speed.y;
         }
         if (k.down !== false) {
-            entity.location.forward(-SPEED);
+            const cwc = computeWallCollisions(
+                eloc.x,
+                eloc.y,
+                -SPEED * Math.cos(eloc.angle),
+                -SPEED * Math.sin(eloc.angle),
+                24,
+                rc.options.metrics.spacing,
+                false,
+                (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
+            );
+            entity.location.x += cwc.speed.x;
+            entity.location.y += cwc.speed.y;
         }
         if (k.right !== false) {
             entity.location.angle += this.computeAngleSpeed(t - k.right);

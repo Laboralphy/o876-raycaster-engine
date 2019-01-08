@@ -13,10 +13,6 @@ class Sprite {
         this._visible = true;
         this._scale = 1;
 
-        this._tileWidth = 0;
-        this._tileHeight = 0;
-
-        this._animationIndex = {};
         this._animations = {};
         this._animation = null;
         this._tileset = null;
@@ -73,7 +69,7 @@ class Sprite {
     buildAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}, ref = 'default') {
         const a = new TileAnimation();
         if (Array.isArray(start)) {
-            start.forEach((x, i) => this.buildAnimation({start: x, length, duration, loop, iterations}, ref));
+            start.forEach(x => this.buildAnimation({start: x, length, duration, loop, iterations}, ref));
             return;
         }
         a.base = start;
@@ -81,9 +77,10 @@ class Sprite {
         a.duration = duration;
         a.loop = loop;
         a.iterations = iterations === null ? Infinity : iterations;
-        if (!(ref) in this._animations) {
-            this._animations[ref].push(a);
+        if (!(ref in this._animations)) {
+            this._animations[ref] = [];
         }
+        this._animations[ref].push(a);
         if (this._animation === null) {
             this._animation = a;
         }

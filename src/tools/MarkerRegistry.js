@@ -38,7 +38,7 @@ class MarkerRegistry {
      * @return {boolean}
      */
     isMarked(x, y) {
-        this._s.has(x << 16 | y);
+        return this._s.has(x << 16 | y);
     }
 
     /**
