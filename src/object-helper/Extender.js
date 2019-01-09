@@ -5,7 +5,7 @@
  * @returns {Array}
  */
 
-class ObjectExtender {
+class Extender {
 
     static getType(x) {
         let sType = typeof x;
@@ -26,8 +26,8 @@ class ObjectExtender {
         for (let key in oObj) {
             if (oObj.hasOwnProperty(key)) {
                 let newPath = path + '.' + key;
-                if (ObjectExtender.getType(oObj[key]) === 'object') {
-                    a = a.concat(ObjectExtender.objectKeyMap(oObj[key], newPath));
+                if (Extender.getType(oObj[key]) === 'object') {
+                    a = a.concat(Extender.objectKeyMap(oObj[key], newPath));
                 } else {
                     a.push(newPath.substr(1));
                 }
@@ -43,8 +43,8 @@ class ObjectExtender {
      * @return {{common: *[], missing: *[]}}
      */
     static objectDiffKeys(a1, a2) {
-        const m1 = ObjectExtender.objectKeyMap(a1);
-        const m2 = ObjectExtender.objectKeyMap(a2);
+        const m1 = Extender.objectKeyMap(a1);
+        const m2 = Extender.objectKeyMap(a2);
         const common = m2.filter(l => m1.includes(l));
         const missing = m2.filter(l => !m1.includes(l));
         return {common, missing};
@@ -71,7 +71,7 @@ class ObjectExtender {
      * @param newValue {*}
      */
     static objectSet(oObj, sBranch, newValue) {
-        const {node, key} = ObjectExtender.objectReachBranch(oObj, sBranch);
+        const {node, key} = Extender.objectReachBranch(oObj, sBranch);
         node[key] = newValue;
     }
 
@@ -82,7 +82,7 @@ class ObjectExtender {
      * @return {*}
      */
     static objectGet(oObj, sBranch) {
-        const {node, key} = ObjectExtender.objectReachBranch(oObj, sBranch);
+        const {node, key} = Extender.objectReachBranch(oObj, sBranch);
         return node[key];
     }
 
@@ -92,11 +92,11 @@ class ObjectExtender {
      * @param oSource
      */
     static objectExtends(oTarget, oSource) {
-        const {common, missing} = ObjectExtender.objectDiffKeys(oTarget, oSource);
+        const {common, missing} = Extender.objectDiffKeys(oTarget, oSource);
         common.forEach(path => {
-            ObjectExtender.objectSet(oTarget, path, ObjectExtender.objectGet(oSource, path));
+            Extender.objectSet(oTarget, path, Extender.objectGet(oSource, path));
         });
     }
 }
 
-export default ObjectExtender;
+export default Extender;

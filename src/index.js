@@ -1,6 +1,6 @@
 import * as CONSTS from './raycaster/consts';
 import Renderer from './raycaster/Renderer';
-import CanvasHelper from './tools/CanvasHelper';
+import CanvasHelper from './canvas-helper/CanvasHelper';
 import MapHelper from './raycaster/MapHelper';
 
 export const Raycaster = {

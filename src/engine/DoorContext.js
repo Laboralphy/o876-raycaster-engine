@@ -1,4 +1,4 @@
-import Easing from "../tools/Easing";
+import Easing from "../easing";
 import EventEmitter from "events";
 import * as CONSTS from "./consts/index";
 

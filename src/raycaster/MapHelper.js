@@ -1,4 +1,4 @@
-import Translator from '../tools/Translator';
+import Translator from '../translator/Translator';
 import * as CONSTS from './consts';
 /**
  * Will transforme a text map into a serie of Renderer.setCellMaterial/Phys/offset calls

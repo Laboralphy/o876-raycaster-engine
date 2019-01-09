@@ -1,3 +1,5 @@
+import Vector from "../geometry/Vector";
+
 class Location {
     constructor({x = 0, y = 0, z = 0, angle = 0, area = null} = {}) {
         this.x = x;
@@ -25,9 +27,21 @@ class Location {
         }
     }
 
-    forward(d) {
-        this.x += d * Math.cos(this.angle);
-        this.y += d * Math.sin(this.angle);
+    /**
+     * Returns a vector from the location
+     * @return {Vector}
+     */
+    vector() {
+        return new Vector(this.x, this.y);
+    }
+
+    /**
+     * Returns a position vector of a point in front of the location, at a given distance
+     * @param d {number} a given distance
+     * @return {Vector}
+     */
+    front(d) {
+        return new Vector(d * Math.cos(this.angle), d * Math.sin(this.angle));
     }
 }
 

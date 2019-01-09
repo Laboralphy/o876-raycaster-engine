@@ -2,7 +2,7 @@
  * Functions concerning angles and distances
  */
 
-class GeometryHelper {
+class Helper {
     /**
      * Distance between 2 points
      * @param x1 {Number} point 1 coordinates
@@ -15,6 +15,12 @@ class GeometryHelper {
         let dx = x1 - x2;
         let dy = y1 - y2;
         return Math.sqrt(dx * dx + dy * dy);
+    }
+
+    static squareDistance(x1, y1, x2, y2) {
+        let dx = x1 - x2;
+        let dy = y1 - y2;
+        return dx * dx + dy * dy;
     }
 
     /**
@@ -63,4 +69,4 @@ class GeometryHelper {
     }
 }
 
-export default GeometryHelper;
+export default Helper;

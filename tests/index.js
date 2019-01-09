@@ -5,3 +5,4 @@ require('./AnimationTest');
 require('./SchedulerTest');
 require('./DoorContextTest');
 require('./LocationTest');
+require('./ColliderTest');

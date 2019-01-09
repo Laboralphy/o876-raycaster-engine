@@ -1,5 +1,5 @@
 /**
- * Manages a collection of 2D boolean
+ * Manages a collection of 2D boolean value, in order to mark certain areas
  */
 class MarkerRegistry {
     constructor() {

@@ -1,6 +1,6 @@
 import Thinker from "../../src/engine/thinkers/Thinker";
-import Easing from "../../src/tools/Easing";
-import {computeWallCollisions} from "../../src/tools/computeWallCollisions"
+import Easing from "../../src/easing/Easing";
+import {computeWallCollisions} from "../../src/wall-collider"
 
 const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;

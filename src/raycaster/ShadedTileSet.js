@@ -1,5 +1,5 @@
-import CanvasHelper from '../tools/CanvasHelper';
-import Rainbow from '../tools/Rainbow';
+import CanvasHelper from '../canvas-helper/CanvasHelper';
+import Rainbow from '../rainbow';
 
 
 const SHADING_LAYERS = 16;
