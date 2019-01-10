@@ -88,7 +88,7 @@ class DevKbd extends Thinker {
         const t = this._lastTime = engine.getTime();
         const k = this._keys;
         const eloc = entity.location;
-        const rc = engine.getRaycaster();
+        const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
 
         if (k.up !== false) {

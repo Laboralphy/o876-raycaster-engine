@@ -308,7 +308,7 @@ class Engine {
         return this._renderCanvas;
     }
 
-    getRaycaster() {
+    get raycaster() {
         return this._rc;
     }
 

@@ -1,4 +1,5 @@
 import ShadedTileSet from './ShadedTileSet';
+import {FACE_EAST, FACE_NORTH, FACE_SOUTH, FACE_WEST} from "./consts";
 
 
 /**
@@ -6,7 +7,9 @@ import ShadedTileSet from './ShadedTileSet';
  */
 class CellSurfaceManager {
     constructor() {
+        this._lmCellCount = 4; // number of lightmap cells in a normal cell
         this._map = null;
+        this._lightMap = null;
         this._width = 0;
         this._height = 0;
         this._wBlock = 0;
@@ -20,26 +23,105 @@ class CellSurfaceManager {
      */
     setMapSize(w, h) {
         this._map = [];
-        let aBlock, aRow, x, y, nSide;
+        let aBlocks, aRow, x, y, nSide;
         this._width = w;
         this._height = h;
         for (y = 0; y < h; ++y) {
             aRow = [];
             for (x = 0; x < w; ++x) {
-                aBlock = [];
+                aBlocks = [];
                 for (nSide = 0; nSide < 6; ++nSide) {
-                    aBlock.push({
+                    aBlocks[nSide] = {
                         x,
                         y,
                         tileset: null,
                         diffuse: 0,
                         imageData: null,  // these are for the flat textures
-                        imageData32: null
-                    });
+                        imageData32: null,
+                        lightMap: []
+                    };
+                    for (let n = 0; n < this._lmCellCount; ++n) {
+                        aBlocks[nSide].lightMap[n] = 0;
+                    }
                 }
-                aRow.push(aBlock);
+                aRow[x] = aBlocks;
             }
-            this._map.push(aRow);
+            this._map[y] = aRow;
+        }
+        this._lightMap = [];
+        let hLM = h * this._lmCellCount;
+        let wLM = w * this._lmCellCount;
+        for (y = 0; y < hLM; ++y) {
+            aRow = [];
+            for (x = 0; x < wLM; ++x) {
+                aRow[x] = 0;
+            }
+            this._lightMap[y] = aRow;
+        }
+    }
+
+
+    /**
+     * Returns the light map value of spécified texel
+     * @param x {number}
+     * @param y {number}
+     * @param ps {number}
+     * @returns {number}
+     */
+    getLightMap(x, y, ps) {
+        let lmc = this._lmCellCount;
+        let xLM = lmc * x / ps | 0;
+        let yLM = lmc * y / ps | 0;
+        return this._lightMap[yLM][xLM];
+    }
+
+
+    setLightMap(xc, yc, value) {
+        let lmc = this._lmCellCount;
+        const lm = this._lightMap;
+        lm[yc][xc] = value;
+        const yMod = yc % lmc;
+        const xMod = xc % lmc;
+        const xCell = xc / lmc | 0;
+        const yCell = yc / lmc | 0;
+        let x0, y0, face, index;
+        if (yMod === 0) {
+            // NORTH ROW
+            // = south of cell x, y-1
+            x0 = xCell;
+            y0 = yCell - 1;
+            face = FACE_SOUTH;
+            index = xMod;
+        }
+        if (yMod === lmc - 1) {
+            // SOUTH ROW
+            // = north of cell x, y+1
+            x0 = xCell;
+            y0 = yCell + 1;
+            face = FACE_NORTH;
+            index = lmc - 1 - xMod;
+        }
+        if (xMod === 0) {
+            // WEST ROW
+            // = east of cell x-1, y
+            x0 = xCell - 1;
+            y0 = yCell;
+            face = FACE_EAST;
+            index = lmc - 1 - yMod;
+        }
+        if (xMod === lmc - 1) {
+            // EAST ROW
+            // = west of cell x+1, y
+            x0 = xCell + 1;
+            y0 = yCell;
+            face = FACE_WEST;
+            index = yMod;
+        }
+        if (x0 !== undefined && y0 !== undefined) {
+            const surf = this.getSurface(x0, y0, face);
+            if (surf) {
+                surf.lightMap[index] = value;
+            }
         }
     }
 
@@ -51,8 +133,8 @@ class CellSurfaceManager {
      * @returns {*}
      */
     getSurface(x, y, nSide) {
-        if (x < 0 || y < 0) {
-            throw new Error('x or y out of bound ' + x + ', ' + y);
+        if (x < 0 || y < 0 || x >= this._width || y >= this._height) {
+            return null;
         }
         return this._map[y][x][nSide];
     }

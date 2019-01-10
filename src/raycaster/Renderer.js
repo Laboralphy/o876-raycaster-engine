@@ -11,6 +11,7 @@ import Sprite from './Sprite';
 import Extender from "../object-helper/Extender";
 import Helper from '../geometry/Helper';
 import DebugDisplay from "./DebugDisplay";
+import LightSources from "./LightSources";
 
 /**
  * @todo VR rendering
@@ -60,6 +61,7 @@ class Renderer {
         this._background = null; // background image
         this._csm = new CellSurfaceManager();
         this._cellCodes = []; // this is an array of array of sides
+        this._lightSources = new LightSources();
 
         this._bgOffset = 0; // oofset between camera and background position
         this._bgCameraOffset = 0; // oofset between camera and background position
@@ -402,6 +404,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
 		});
         this._csm.setMapSize(nSize, nSize);
+        this._lightSources.setSize(nSize * this._csm._lmCellCount, nSize * this._csm._lmCellCount);
         if (this._storey) {
             this._storey.setMapSize(nSize);
         }
@@ -725,6 +728,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oTileSet; // tileset
         let iTile; // offset of the tile (x)
         let nMaxIterations = 6; // watchdog for performance
+        const CSM = this._csm;
+        const CSM_LMC = CSM._lmCellCount;
+        const ps = this._options.metrics.spacing;
 
         if (!visibleRegistry) {
             visibleRegistry = new MarkerRegistry();
@@ -733,7 +739,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             this.projectRay(scene, x, y, dx, dy, exclusionRegistry, visibleRegistry);
             if (!scene.exterior && scene.distance >= 0) {
                 if (xScreen !== undefined) {
-                    oXBlock = this._csm.getSurface(scene.xCell, scene.yCell, scene.cellSide);
+                    oXBlock = CSM.getSurface(scene.xCell, scene.yCell, scene.cellSide);
                     if (oXBlock.tileset) {
                         oTileSet = oXBlock.tileset;
                         iTile = 0;
@@ -746,7 +752,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     	xScreen,
                         oTileSet,
                         iTile,
-						oXBlock.diffuse
+						oXBlock.lightMap[scene.wallColumn * CSM_LMC / ps | 0]
 					));
                 }
                 if (scene.resume.b) {
@@ -1285,6 +1291,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let oXMap = this._csm;
         let oXBlock, oXBlockImage, oXBlockCeil;
         let fBx, fBy;
+        let lmCorr, yOfsCorr; // light map correction
         const offsetTop = this._offsetTop;
         const offsetTopPix = offsetTop * w;
 
@@ -1314,16 +1321,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         nXDrawn = 0;
                         oXBlock = oXMap.getSurface(fx64, fy64, 4);
                         oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
+                        lmCorr = oXMap.getLightMap(fx, fy, ps);
+                        yOfsCorr = Math.max(0, yOfs - lmCorr);
                         if (oXBlock.imageData32) {
                             oXBlockImage = oXBlock.imageData32;
-                            ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                            ofsSrc = (((fy  % ps) + yOfsCorr * ps | 0) * ps + (((fx % ps) | 0)));
                             aRenderSurf[ofsDst] = oXBlockImage[ofsSrc];
                             nXDrawn += 1;
                         }
                         if (oXBlockCeil.imageData32) {
                             oXBlockImage = oXBlockCeil.imageData32;
                             if (nXDrawn === 0) {
-                                ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                                ofsSrc = (((fy  % ps) + yOfsCorr * ps | 0) * ps + (((fx % ps) | 0)));
                             }
                             aRenderSurf[ofsDstCeil] = oXBlockImage[ofsSrc];
                             nXDrawn += 2;
@@ -1335,14 +1344,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                                 if (nXDrawn !== 1) {
                                     xOfs = aFBlock[4];
                                     if (xOfs !== null) {
-                                        ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                        ofsSrc = (((fy % ps) + yOfsCorr * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
                                         aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
                                     }
                                 }
                                 if (nXDrawn !== 2) {
                                     xOfs = aFBlock[5];
                                     if (xOfs !== null) {
-                                        ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                        ofsSrc = (((fy % ps) + yOfsCorr * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
                                         aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
                                     }
                                 }
@@ -1354,7 +1363,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 }
             }
         } else {
-            let yOfsCeil;
+            let yOfsCeil, yOfsCeilCorr;
 
             let fhCeil = yTexture2 + ((fvh - 1) * yTexture2);
             let xDeltaFrontCeil = 0;
@@ -1390,9 +1399,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                     fx64 = fx / ps | 0;
                     if (x >= xStart && x <= xEnd && fx >= 0 && fy >= 0 && fx < xyMax && fy < xyMax) {
                         oXBlock = oXMap.getSurface(fx64, fy64, 4);
+                        lmCorr = oXMap.getLightMap(fx, fy, ps);
+                        yOfsCorr = Math.max(0, yOfs - lmCorr);
                         if (oXBlock.imageData32) {
                             oXBlockImage = oXBlock.imageData32;
-                            ofsSrc = (((fy  % ps) + yOfs * ps | 0) * ps + (((fx % ps) | 0)));
+                            ofsSrc = (((fy  % ps) + yOfsCorr * ps | 0) * ps + (((fx % ps) | 0)));
                             aRenderSurf[ofsDst] = oXBlockImage[ofsSrc];
                         } else {
                             nBlock = aMap[fy64][fx64] & 0xFFF; // **code12** code
@@ -1400,7 +1411,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             if (aFBlock !== null) {
                                 xOfs = aFBlock[4];
                                 if (xOfs !== null) {
-                                    ofsSrc = (((fy % ps) + yOfs * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
+                                    ofsSrc = (((fy % ps) + yOfsCorr * ps | 0) * nFloorWidth + (((fx % ps) + xOfs * ps | 0)));
                                     aRenderSurf[ofsDst] = aFloorSurf[ofsSrc];
                                 }
                             }
@@ -1410,9 +1421,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         fy64 = fyCeil / ps | 0;
                         fx64 = fxCeil / ps | 0;
                         oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
+                        lmCorr = oXMap.getLightMap(fx, fy, ps);
+                        yOfsCeilCorr = Math.max(0, yOfs - lmCorr);
                         if (oXBlockCeil.imageData32) {
                             oXBlockImage = oXBlockCeil.imageData32;
-                            ofsSrc = (((fyCeil  % ps) + yOfsCeil * ps | 0) * ps + (((fxCeil % ps) | 0)));
+                            ofsSrc = (((fyCeil  % ps) + yOfsCeilCorr * ps | 0) * ps + (((fxCeil % ps) | 0)));
                             aRenderSurf[ofsDstCeil] = oXBlockImage[ofsSrc];
                         } else {
                             nBlock = aMap[fy64][fx64] & 0xFFF; // **code12** code
@@ -1420,7 +1433,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                             if (aFBlock !== null) {
                                 xOfs = aFBlock[5];
                                 if (xOfs !== null) {
-                                    ofsSrc = (((fyCeil % ps) + yOfsCeil * ps | 0) * nFloorWidth + (((fxCeil % ps) + xOfs * ps | 0)));
+                                    ofsSrc = (((fyCeil % ps) + yOfsCeilCorr * ps | 0) * nFloorWidth + (((fxCeil % ps) + xOfs * ps | 0)));
                                     aRenderSurf[ofsDstCeil] = aFloorSurf[ofsSrc];
                                 }
                             }
@@ -1504,6 +1517,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             renderContext.rect(scene.xFrom, 0, scene.xTo - scene.xFrom + 1, this._options.screen.height);
             renderContext.clip();
         }
+        this._lightSources.renderSources(this._csm, this._options.shading.shades);
         this.renderBackground(renderContext);
         if (scene.storeyScene) {
             Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
@@ -1656,7 +1670,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const dy = yscr2 + dh_h - hAltitud - (dh >> 1) - this._offsetTop;
 
             const sh = OPTIONS.shading.shades;
-            const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor | 0));
+            // add contextual lighting
+            const lightFactor = this._csm.getLightMap(xspr, yspr, OPTIONS.metrics.spacing);
+            const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor - lightFactor | 0));
 
             const data = [
                 ts.getImage(),

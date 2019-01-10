@@ -73,7 +73,7 @@ function getLevel() {
                 "src": "gfx/sprites/o_bluereddisc.png",
                 "width": 32,
                 "height": 32,
-                "fx": "@FX_LIGHT_SOURCE",
+                "fx": "@FX_NONE",
                 "animations": {
                     "blue": {
                         "start": 0,
