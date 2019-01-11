@@ -1524,6 +1524,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
+        renderContext.drawImage(this._lightSources._canvas, 4, 4);
         this.renderDebug(renderContext);
         if (VR) {
             renderContext.restore();
