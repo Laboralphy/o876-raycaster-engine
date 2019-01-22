@@ -15,6 +15,8 @@ import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
 
+import Events from "events";
+
 class Engine {
     constructor() {
         // to be instanciate for each level
@@ -32,6 +34,12 @@ class Engine {
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
+
+        this._events = new Events();
+    }
+
+    get events() {
+        return this._events;
     }
 
     /**
@@ -46,6 +54,7 @@ class Engine {
         this._blueprints = {};
         this._timeMod = 0;
         this._time = 0;
+        this._events.emit('initialized');
     }
 
     get horde() {
@@ -268,6 +277,7 @@ class Engine {
             this._horde.process(this);
             // special effect management
             bRender = true;
+            this._events.emit('update');
         }
         if (bRender) {
             this._render();
@@ -287,7 +297,10 @@ class Engine {
             rend.render(scene);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
-            requestAnimationFrame(() => rend.flip(this._renderContext));
+            requestAnimationFrame(() => {
+                rend.flip(this._renderContext);
+                this._events.emit('render');
+            });
         }
     }
 
@@ -320,6 +333,7 @@ class Engine {
         return this._renderContext;
     }
 
+
     /**
      * starts the doom loop
      */
@@ -345,6 +359,7 @@ class Engine {
 // | |_) | |_| | |_) | | | (__   / ___ \ _|  __/ | | _
 // | .__/ \__,_|_.__/|_|_|\___| /_/   \_(_)_| (_)___(_)
 // |_|
+
 
     /**
      * Opens a door at a specified position. The cell at x, y must have a PHYS_DOOR_*, PHYS_CURT_* or PHYS_SECRET_BLOCK physical code
@@ -586,6 +601,7 @@ class Engine {
         } else {
 
         }
+
 
 
         // static objects

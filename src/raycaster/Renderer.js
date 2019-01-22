@@ -9,9 +9,9 @@ import Translator from "../translator/Translator";
 import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
 import Extender from "../object-helper/Extender";
-import Helper from '../geometry/Helper';
+import GeometryHelper from '../geometry/GeometryHelper';
 import DebugDisplay from "./DebugDisplay";
-import LightSources from "./LightSources";
+import LightMap from "../light-sources/LightMap";
 
 /**
  * @todo VR rendering
@@ -61,7 +61,7 @@ class Renderer {
         this._background = null; // background image
         this._csm = new CellSurfaceManager();
         this._cellCodes = []; // this is an array of array of sides
-        this._lightSources = new LightSources();
+        this._lightMap = new LightMap();
 
         this._bgOffset = 0; // oofset between camera and background position
         this._bgCameraOffset = 0; // oofset between camera and background position
@@ -75,6 +75,19 @@ class Renderer {
         this._renderCanvas = null;
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
+    }
+
+
+    updateStaticLightMap() {
+        const lm = this._lightMap;
+        if (lm.isInvalid()) {
+            const max = this.options.shading.shades;
+            const csm = this._csm;
+            lm.traceAllSources();
+            lm.filter((x, y, n) => {
+                csm.setLightMap(x, y, n * max | 0);
+            });
+        }
     }
 
     configOptions() {
@@ -404,7 +417,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
 		});
         this._csm.setMapSize(nSize, nSize);
-        this._lightSources.setSize(nSize * this._csm._lmCellCount, nSize * this._csm._lmCellCount);
+        this._lightMap.setSize(nSize * CONSTS.METRIC_LIGHTMAP_SCALE, nSize * CONSTS.METRIC_LIGHTMAP_SCALE);
         if (this._storey) {
             this._storey.setMapSize(nSize);
         }
@@ -459,6 +472,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     setCellPhys(x, y, code) {
         let my = this._map[y];
         my[x] = my[x] & 0xFFFF0FFF | (code << 12);
+        const lm = this._lightMap;
+        const ms = CONSTS.METRIC_LIGHTMAP_SCALE;
+        lm.setLightBlocking(x * ms, y * ms, ms, ms, code !== CONSTS.PHYS_NONE);
     }
 
 
@@ -1504,6 +1520,21 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         return scene;
     }
 
+
+    updateStaticLightMap() {
+        const lm = this._lightMap;
+        if (lm.isInvalid()) {
+            console.time('static light map');
+            const max = this.options.shading.shades;
+            const csm = this._csm;
+            lm.traceAllSources();
+            lm.filter(csm._lmCellCount * this.getMapSize(), csm._lmCellCount * this.getMapSize(), (x, y, n) => {
+                csm.setLightMap(x, y, n * max | 0);
+            });
+            console.timeEnd('static light map');
+        }
+    }
+
     /**
      * This will render the raycasting scene in the specified 2d context
      * @param scene
@@ -1517,14 +1548,16 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             renderContext.rect(scene.xFrom, 0, scene.xTo - scene.xFrom + 1, this._options.screen.height);
             renderContext.clip();
         }
-        this._lightSources.renderSources(this._csm, this._options.shading.shades);
+        //this._lightSources.renderSources(this._csm, this._options.shading.shades);
+        this.updateStaticLightMap();
+
         this.renderBackground(renderContext);
         if (scene.storeyScene) {
             Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
         }
         this.renderFlats(scene, renderContext);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
-        renderContext.drawImage(this._lightSources._canvas, 4, 4);
+        renderContext.drawImage(this._lightMap.toCanvas(), 4, 4);
         this.renderDebug(renderContext);
         if (VR) {
             renderContext.restore();
@@ -1656,7 +1689,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const yscr = SCREEN.width;
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
-            const z = Helper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const z = GeometryHelper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
             const x = Math.sin(fAlpha) * z;         // sprite x position
             const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
             const focal = SCREEN.focal;

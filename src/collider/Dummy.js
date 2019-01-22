@@ -2,7 +2,7 @@
  * @class Mobile
  * This class manages a mobile object.
  */
-import Helper from '../geometry/Helper';
+import GeometryHelper from '../geometry/GeometryHelper';
 import Vector from '../geometry/Vector';
 
 class Dummy {
@@ -67,7 +67,7 @@ class Dummy {
 	nearerThan(oOther, d) {
         let p1 = this.position;
         let p2 = oOther.position;
-        return Helper.squareDistance(p1.x, p1.y, p2.x, p2.y) < (d * d);
+        return GeometryHelper.squareDistance(p1.x, p1.y, p2.x, p2.y) < (d * d);
 	}
 
     /**
@@ -78,7 +78,7 @@ class Dummy {
 	angleTo(oOther) {
         let p1 = this.position;
         let p2 = oOther.position;
-        return Helper.angle(p1.x, p1.y, p2.x, p2.y);
+        return GeometryHelper.angle(p1.x, p1.y, p2.x, p2.y);
 	}
 
     /**

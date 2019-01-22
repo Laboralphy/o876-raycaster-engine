@@ -21,6 +21,11 @@ export const PHYS_DOOR_E = 0x0E;
 export const PHYS_DOOR_F = 0x0F;
 
 
+
+// lightmap / grid cell ratio
+
+export const METRIC_LIGHTMAP_SCALE = 8;     // there is 8 lightmap cells in a block cell
+
 /**
  * Face codes
  * @type {number}

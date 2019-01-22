@@ -6,7 +6,7 @@
  * @property {number} y
  */
 
-import Helper from './Helper';
+import GeometryHelper from './GeometryHelper';
 
 class Vector {
 	/**
@@ -85,7 +85,7 @@ class Vector {
 	 * @return {number}
 	 */
 	distance() {
-		return Helper.distance(0, 0, this.x, this.y);
+		return GeometryHelper.distance(0, 0, this.x, this.y);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class Vector {
 	 * si le vecteur est dans la direction x+ alors l'angle = 0
      */
 	angle() {
-		return Helper.angle(0, 0, this.x, this.y);
+		return GeometryHelper.angle(0, 0, this.x, this.y);
 	}
 
 	toString() {
@@ -139,7 +139,7 @@ class Vector {
 	}
 
 	fromPolar(a, s) {
-		let v = Helper.polar2rect(a, s);
+		let v = GeometryHelper.polar2rect(a, s);
 		this.set(v.dx, v.dy);
 		return this;
 	}

@@ -2,7 +2,7 @@
  * Functions concerning angles and distances
  */
 
-class Helper {
+class GeometryHelper {
     /**
      * Distance between 2 points
      * @param x1 {Number} point 1 coordinates
@@ -69,4 +69,4 @@ class Helper {
     }
 }
 
-export default Helper;
+export default GeometryHelper;

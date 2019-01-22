@@ -42,6 +42,16 @@ class Grid {
 		return this._cells;
 	}
 
+	iterate(f) {
+        const w = this.getWidth();
+        const h = this.getHeight();
+		for (let y = 0; y < h; ++y) {
+			for (let x = 0; x < w; ++x) {
+				this.cell(x, y, f(x, y, this.cell(x, y)));
+			}
+		}
+	}
+
     /**
      * Setter/Getter for the grid width.
 	 * setting a new width will rebuild the grid
@@ -54,7 +64,7 @@ class Grid {
         return this;
     }
 
-    getWidth(w) {
+    getWidth() {
         return this._width;
     }
 
