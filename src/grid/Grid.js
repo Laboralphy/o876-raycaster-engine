@@ -52,6 +52,56 @@ class Grid {
 		}
 	}
 
+	clipAxis(nStart, nRegionWidth, nGridWidth) {
+		const nEnd = nStart + nRegionWidth - 1;
+        if (nEnd < 0 && nStart < 0) {
+            return false;
+        }
+        if (nEnd >= nGridWidth && nStart >= nGridWidth) {
+            return false;
+        }
+        if (nStart < 0 && nEnd >= nGridWidth) {
+        	return {n: 0, w: nGridWidth};
+		}
+		let n = nStart;
+        let w = nRegionWidth;
+		if (n < 0) {
+			w += n;
+			n = 0;
+		}
+		if ((n + w) > nGridWidth) {
+			w = nGridWidth - n;
+		}
+		return {n, w};
+	}
+
+	getRegion(xRegion, yRegion, wRegion, hRegion) {
+        const wGrid = this.getWidth();
+        const hGrid = this.getHeight();
+        const xClip = this.clipAxis(xRegion, wRegion, wGrid);
+        const yClip = this.clipAxis(yRegion, hRegion, hGrid);
+        if (xClip === false || yClip === false) {
+        	return false;
+		}
+		return {
+        	x: xClip.n,
+			y: yClip.n,
+			w: xClip.w,
+			h: yClip.w
+		};
+	}
+
+	iterateRegion(xRegion, yRegion, wRegion, hRegion, f) {
+		const {x, y, w, h} = this.getRegion(xRegion, yRegion, wRegion, hRegion);
+        for (let yi = 0; yi < h; ++yi) {
+        	let ym = y + yi;
+            for (let xi = 0; xi < w; ++xi) {
+                let xm = x + xi;
+                this.cell(xm, ym, f(xm, ym, this.cell(xm, ym)));
+            }
+        }
+	}
+
     /**
      * Setter/Getter for the grid width.
 	 * setting a new width will rebuild the grid

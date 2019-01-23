@@ -46,6 +46,18 @@ class GeometryHelper {
             ay > by2 && ay2 < by;
     }
 
+    static pointInCircle(x, y, xc, yc, r) {
+        return GeometryHelper.squareDistance(x, y, xc, yc) <= (r * r);
+    }
+
+    static circleInRect(xc, yc, r, xr, yr, wr, hr) {
+        const xNearest = Math.max(xr, Math.min(xc, xr + wr));
+        const yNearest = Math.max(yr, Math.min(yc, yr + hr));
+        const xDelta = xc - xNearest;
+        const yDelta = yc - yNearest;
+        return (xDelta * xDelta + yDelta * yDelta) < (r * r);
+    }
+
     /**
      * Renvoie l'ange que fait la doite x1, y1, x2, y2
      * avec l'axe des X+

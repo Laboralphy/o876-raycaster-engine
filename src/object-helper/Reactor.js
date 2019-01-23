@@ -8,7 +8,7 @@ class Reactor {
     constructor(obj) {
         this._events = new Events();
         this.clear();
-        this.makeReactiveObject(obj);
+        this.makeReactiveObject(obj, undefined, obj);
     }
 
     get events() {
@@ -32,10 +32,10 @@ class Reactor {
      * add a hierarchic key to the mutation log
      * @param path {string} hierarchic key
      */
-    notify(path) {
+    notify(path, oRoot) {
         path = path.substr(1);
         this._log[path] = true;
-        this._events.emit('changed', {key: path});
+        this._events.emit('changed', {key: path, root: oRoot});
     }
 
     /**
@@ -43,11 +43,12 @@ class Reactor {
      * @param arr {Array}
      * @param sMethod {string}
      * @param path {string}
+     * @param oRoot {object} root object
      */
-    makeReativeArrayMethod(arr, sMethod, path) {
+    makeReactiveArrayMethod(arr, sMethod, path, oRoot) {
         const oSelf = this;
         arr[sMethod] = (...args) => {
-            oSelf.notify(path);
+            oSelf.notify(path, oRoot);
             return Array.prototype[sMethod].apply(arr, args);
         };
     }
@@ -57,8 +58,9 @@ class Reactor {
      * @param obj {*}
      * @param key {string}
      * @param path {string}
+     * @param oRoot {object} root object
      */
-    makeReactiveArray(obj, key, path) {
+    makeReactiveArray(obj, key, path, oRoot) {
         const arr = obj[key];
         path += '.' + key;
         const meth = [
@@ -70,8 +72,8 @@ class Reactor {
             'splice',
             'reverse'
         ];
-        this.notify(path);
-        meth.forEach(m => this.makeReativeArrayMethod(arr, m, path));
+        this.notify(path, oRoot);
+        meth.forEach(m => this.makeReactiveArrayMethod(arr, m, path, oRoot));
     }
 
     /**
@@ -79,14 +81,15 @@ class Reactor {
      * @param obj {*}
      * @param key {string}
      * @param path {string}
+     * @param oRoot {object} root object
      * @return {*}
      */
-    makeReactiveScalar(obj, key, path) {
+    makeReactiveScalar(obj, key, path, oRoot) {
         let val = obj[key];
         path += '.' + key;
         const oSelf = this;
 
-        this.notify(path);
+        this.notify(path, oRoot);
 
         Object.defineProperty(obj, key, {
             get() {
@@ -95,7 +98,7 @@ class Reactor {
             set(newVal) {
                 if (val !== newVal) {
                     val = newVal; // Save the newVal
-                    oSelf.notify(path);
+                    oSelf.notify(path, oRoot);
                 }
             }
         });
@@ -106,30 +109,31 @@ class Reactor {
      * @param obj
      * @param key
      * @param path
+     * @param oRoot {object} root object
      */
-    makeReactiveItem(obj, key, path) {
+    makeReactiveItem(obj, key, path, oRoot) {
         switch (Extender.getType(obj[key])) {
             case 'object':
-                this.makeReactiveObject(obj[key], path + '.' + key);
+                this.makeReactiveObject(obj[key], path + '.' + key, oRoot);
                 break;
 
             case 'array':
-                this.makeReactiveArray(obj, key, path);
+                this.makeReactiveArray(obj, key, path, oRoot);
                 break;
 
             default:
-                this.makeReactiveScalar(obj, key, path);
+                this.makeReactiveScalar(obj, key, path, oRoot);
                 break;
         }
     }
 
-    makeReactiveObject(obj, path) {
+    makeReactiveObject(obj, path, oRoot) {
         if (path === undefined) {
             path = '';
         }
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {
-                this.makeReactiveItem(obj, key, path);
+                this.makeReactiveItem(obj, key, path, oRoot);
             }
         }
     }

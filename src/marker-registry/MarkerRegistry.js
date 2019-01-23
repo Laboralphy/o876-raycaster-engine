@@ -44,10 +44,13 @@ class MarkerRegistry {
     /**
      * iterates through all markers and call a function back for each marked position
      * @param f {function}
-     * @param oContext {*} passed to f
      */
-    iterate(f, oContext) {
-        this._s.forEach(f, oContext);
+    iterate(f) {
+        this._s.forEach(n => {
+            const y = n & 0xFFFF;
+            const x = n >> 16;
+            f(x, y);
+        });
     }
 }
 

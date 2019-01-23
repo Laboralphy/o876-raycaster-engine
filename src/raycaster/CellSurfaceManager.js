@@ -88,39 +88,33 @@ class CellSurfaceManager {
         if (yMod === 0) {
             // NORTH ROW
             // = south of cell x, y-1
-            x0 = xCell;
-            y0 = yCell - 1;
-            face = FACE_SOUTH;
-            index = xMod;
+            const surf = this.getSurface(xCell, yCell - 1, FACE_SOUTH);
+            if (surf) {
+                surf.lightMap[xMod] = value;
+            }
         }
         if (yMod === lmc - 1) {
             // SOUTH ROW
             // = north of cell x, y+1
-            x0 = xCell;
-            y0 = yCell + 1;
-            face = FACE_NORTH;
-            index = lmc - 1 - xMod;
+            const surf = this.getSurface(xCell, yCell + 1, FACE_NORTH);
+            if (surf) {
+                surf.lightMap[lmc - 1 - xMod] = value;
+            }
         }
         if (xMod === 0) {
             // WEST ROW
             // = east of cell x-1, y
-            x0 = xCell - 1;
-            y0 = yCell;
-            face = FACE_EAST;
-            index = lmc - 1 - yMod;
+            const surf = this.getSurface(xCell - 1, yCell, FACE_EAST);
+            if (surf) {
+                surf.lightMap[lmc - 1 - yMod] = value;
+            }
         }
         if (xMod === lmc - 1) {
             // EAST ROW
             // = west of cell x+1, y
-            x0 = xCell + 1;
-            y0 = yCell;
-            face = FACE_WEST;
-            index = yMod;
-        }
-        if (x0 !== undefined && y0 !== undefined) {
-            const surf = this.getSurface(x0, y0, face);
+            const surf = this.getSurface(xCell + 1, yCell, FACE_WEST);
             if (surf) {
-                surf.lightMap[index] = value;
+                surf.lightMap[yMod] = value;
             }
         }
     }
