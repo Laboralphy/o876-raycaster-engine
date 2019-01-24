@@ -1533,8 +1533,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (lm.isInvalid()) {
             const max = this.options.shading.shades;
             const csm = this._csm;
-            lm.traceAllInvalidRegions();
-            lm.filter(csm._lmCellCount * this.getMapSize(), csm._lmCellCount * this.getMapSize(), (x, y, n) => {
+            lm.traceAllSources();
+            lm.filter((x, y, n) => {
                 csm.setLightMap(x, y, n * max | 0);
             });
         }
@@ -1546,12 +1546,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param y {number} coordinates (y axis) of the lightsource
      * @param r0 {number} radius of full intensity
      * @param r1 {number} maximum radius of zero intensity
-     * @param intensity {number}
+     * @param v {number}
      * @returns {{x: *, y: *, r0: *, r1: *, intensity: *}}
      * The properties of the returned object can be modified, this will change the visual renderieng of the light source
      * The returned object also have a "remove()" method which can be used to remove the lightsource.
      */
-    addLightSource(x, y, r0, r1, intensity) {
+    addLightSource(x, y, r0, r1, v) {
         const r = CONSTS.METRIC_LIGHTMAP_SCALE / this._options.metrics.spacing;
         // the original values, in raycaster referential
         const oRayCasterLightSource = {
@@ -1559,29 +1559,26 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             y,
             r0,
             r1,
-            intensity
-        };
-        // the modified values for the lightmap referential
-        const oLightMapSource = {
-            x: x * r | 0,
-            y: y * r | 0,
-            r0: r0 * r | 0,
-            r1: r1 * r | 0,
-            intensity
+            v
         };
         // the reactive raycaster light source
         const oLightMap = this._lightMap;
         const oReactiveRCLS = new Reactor(oRayCasterLightSource);
-        const source = oLightMap.addSource(oLightMapSource);
+        const source = oLightMap.addSource(
+            x * r | 0,
+            y * r | 0,
+            r0 * r | 0,
+            r1 * r | 0,
+            v
+        );
         oRayCasterLightSource.remove = () => {
             oLightMap.removeSource(source);
         };
         oReactiveRCLS.events.on('changed', ({key, root}) => {
-            oLightMap.invalidateSource(source);
-            if (key === 'intensity') {
-                source[key] = oRayCasterLightSource[key];
+            if (key === 'v') {
+                source.metrics[key] = oRayCasterLightSource[key];
             } else {
-                source[key] = oRayCasterLightSource[key] * r | 0;
+                source.metrics[key] = oRayCasterLightSource[key] * r | 0;
             }
         });
         return oRayCasterLightSource;

@@ -373,6 +373,14 @@ async function main() {
         }
     }
 
+    LIGHTSOURCES[2].r0 = 64;
+    LIGHTSOURCES[2].r1 = 128;
+
+    // engine.events.on('update', () => {
+    //     LIGHTSOURCES[2].x = 700 + 200 * Math.cos(engine.getTime() / 700);
+    //     LIGHTSOURCES[2].y = 300 + 150 * Math.sin(engine.getTime() / 700);
+    // });
+
 
     // starts engine doomloop
     engine.startDoomLoop();

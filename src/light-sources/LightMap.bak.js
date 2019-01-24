@@ -5,12 +5,6 @@ import GeometryHelper from "../geometry/GeometryHelper";
 import {linear} from "../interpolator";
 // import CanvasHelper from "../canvas-helper/CanvasHelper";
 import Reactor from "../object-helper/Reactor";
-import LightSource from "./LightSource";
-
-
-const PIXEL_STATE_DEAD = 0;
-const PIXEL_STATE_LIVE = 1;
-const PIXEL_STATE_NEW = 2;
 
 class LightMap {
     constructor() {
@@ -23,7 +17,8 @@ class LightMap {
         this._lastId = 0;
     }
 
-    invalidate() {
+    invalidate(id) {
+        this._sources.find(s => s.id === id).i = true;
         this._invalid = true;
     }
 
@@ -35,10 +30,6 @@ class LightMap {
         return this._invalid;
     }
 
-    clearInvalidFlag() {
-        this._invalid = false;
-    }
-
     /**
      * Set the size of the light map
      * @param w {number} number of cells (x axis)
@@ -47,7 +38,7 @@ class LightMap {
     setSize(w, h) {
         this._grid.setWidth(w);
         this._grid.setHeight(h);
-        this._grid.iterate((x, y, n) => []);
+        this._grid.iterate((x, y, n) => ({}));
     }
 
     /**
@@ -81,58 +72,33 @@ class LightMap {
         return Math.max(0, Math.min(1, a + b * (1 - a)));
     }
 
-    updatePixel(x, y, value, id) {
+    updateSourceIntensity(x, y, value, id) {
         const g = this._grid;
         const c = g.cell(x, y);
-        // get the corresponding pixel for source id
-        const p = c.find(gp => gp.id === id);
-        if (p) {
-            if (value !== p.v) {
-                p.i = true;  // the pixel is invalid if the value changes
-                p.v = value; // new value
-                this._gu.mark(x & 0xFFFFFFFE, y & 0xFFFFFFFE);
-            }
-            p.s = PIXEL_STATE_LIVE
+        if (value > 0) {
+            c[id] = value;
         } else {
-            // no pixel : add a new pixel to the list
-            c.push({
-                v: value,
-                i: true,
-                id,
-                s: PIXEL_STATE_NEW
-            });
-            this._gu.mark(x & 0xFFFFFFFE, y & 0xFFFFFFFE);
+            delete c[id];
         }
-    }
-
-    removePixel(x, y, id) {
-        const g = this._grid;
-        const c = g.cell(x, y);
-        // get the corresponding pixel for source id
-        const p = c.find(gp => gp.id === id);
-        if (p) {
-            p.i = true;
-            p.v = 0; // new value
-            p.s = PIXEL_STATE_DEAD;
-            this._gu.mark(x & 0xFFFFFFFE, y & 0xFFFFFFFE);
-        }
+        this._gu.mark(x, y);
     }
 
     /**
      * traces a line from the source center to the source edge, stops if the line encounter a light blocking region
+     * @param x0 {number} starting point x axis
+     * @param y0 {number} starting point y axis
      * @param x1 {number} ending point x axis
      * @param y1 {number} ending point y axis
+     * @param r0 {number} radius at full intensity
+     * @param r1 {number} radius at zero intensity (the intensity between r0 and r1 is linear-interpolated)
+     * @param intensity {number} default intensity
      */
-    traceLineOfLight(x1, y1, oSource) {
-        const m = oSource.metrics;
-        const x0 = m.x;
-        const y0 = m.y;
-        const id = oSource.id;
-        const cc = oSource._cc;
+    traceLineOfLight(x0, y0, x1, y1, r0, r1, intensity, oSource) {
+        const cc = this._cc;
         const lb = this._lb;
-        const intensity = m.v;
-        const r0 = m.r0;
-        const r1 = m.r1;
+        const g = this._grid;
+        const id = oSource.id;
+        const cells = oSource.c;
         Bresenham.line(x0, y0, x1, y1, (x, y, n) => {
             if (cc.isMarked(x, y)) {
                 // already computed
@@ -156,49 +122,62 @@ class LightMap {
             }
             // marker le point
             cc.mark(x, y);
-            oSource.lightPixel(x, y);
-            this.updatePixel(x, y, result, id);
+            this.updateSourceIntensity(x, y, result, id);
+            cells.push(x, y, result);
         });
     }
 
     /**
      * draws a light source
+     * @param x {number} center of source x axis
+     * @param y {number} center of source y axis
+     * @param r0 {number} radius at full intensity
+     * @param r1 {number} radius at zero intensity
+     * @param intensity {number} intensity of the light source
      */
     traceLightSource(oSource) {
-        const {x, y, r1} = oSource.metrics;
+        const {x, y, r0, r1, intensity} = oSource.s;
         const id = oSource.id;
-        oSource.resetCache();
+        const cells = oSource.c;
+        this._cc.clear();
         const x0 = x - r1;
         const y0 = y - r1;
         const x9 = x + r1;
         const y9 = y + r1;
-
         for (let i = 0; i < (r1 << 1) + 1; ++i) {
-            this.traceLineOfLight(x0 + i, y0, oSource);
-            this.traceLineOfLight(x0, y0 + i, oSource);
-            this.traceLineOfLight(x0 + i, y9, oSource);
-            this.traceLineOfLight(x9, y0 + i, oSource);
+            this.traceLineOfLight(x, y, x0 + i, y0, r0, r1, intensity, oSource);
+            this.traceLineOfLight(x, y, x0, y0 + i, r0, r1, intensity, oSource);
+            this.traceLineOfLight(x, y, x0 + i, y9, r0, r1, intensity, oSource);
+            this.traceLineOfLight(x, y, x9, y0 + i, r0, r1, intensity, oSource);
         }
-        // remove dead pixels
-        oSource._deadPixels.iterate((x, y) => {
-            this.removePixel(x, y, id);
-        });
+    }
+
+    removeLightSource(oSource) {
+        const cells = oSource.cells;
+        const id = oSource.id;
+        const g = this._grid;
+        for (let i = 0, l = cells.length; i < l; i += 2) {
+            let x = cells[i];
+            let y = cells[i + 1];
+            let c = g.cell(x, y);
+            delete c[id];
+        }
     }
 
     /**
      * draws all light sources, reseting entirely the grid
      */
     traceAllSources() {
-        //console.time('lightmap-trace');
+        console.time('lightmap-trace');
+        this._gu.clear();
         this
             ._sources
-            .filter(oSource => oSource.isInvalid())
+            .filter(oSource => oSource.i)
             .forEach(oSource => {
+                this.removeLightSource(oSource);
                 this.traceLightSource(oSource);
-                oSource.clearInvalidFlag();
             });
-        this.clearInvalidFlag();
-        //console.timeEnd('lightmap-trace');
+        console.timeEnd('lightmap-trace');
     }
 
     /**
@@ -210,20 +189,32 @@ class LightMap {
      * @param intensity {number} intensity of the light source
      * @returns {{x: *, y: *, r0: *, r1: *, intensity: *}}
      */
-    addSource(x, y, r0, r1, intensity) {
-        const oSource = new LightSource();
-        const m = oSource.metrics;
-        m.x = x;
-        m.y = y;
-        m.r0 = r0;
-        m.r1 = r1;
-        m.v = intensity;
-        this._sources.push(oSource);
-        this.invalidate();
-        oSource.on('changed', ({key, root}) => {
-            this.invalidate();
+    addSource({x, y, r0, r1, intensity}) {
+        const s = {x, y, r0, r1, intensity};
+        const r = new Reactor(s);
+        const id = ++this._lastId;
+        this._sources.push({
+            s, // the source metrics (center, radius...)
+            r, // the reactor object
+            id,  // the identifier
+            c: [],  // a list of cell intensities
+            i: true, // an invalid flag
+            dead: false // a dead flag
         });
-        return oSource;
+        this.invalidate(id);
+        r.events.on('changed', ({key, root}) => this.invalidate(id));
+        return s;
+    }
+
+    /**
+     * get a previously defined light source.
+     * the returned objet is reactive : changing its property will invalidate the LightMap instance state thus
+     * re-computing all light sources
+     * @param n {number} index of sources
+     * @returns {{x: *, y: *, r0: *, r1: *, intensity: *}}
+     */
+    getSource(n) {
+        return this._sources[n].s;
     }
 
     /**
@@ -232,48 +223,74 @@ class LightMap {
      * @param oSource
      */
     removeSource(oSource) {
-        oSource.resetCache();
-        const id = oSource.id;
-        oSource._deadPixels.iterate((x, y) => {
-            this.removePixel(x, y, id);
-        });
-
-        const n = this._sources.indexOf(oSource);
-        if (n) {
-            this._sources.splice(n, 1);
-        }
-        this.invalidate();
+        oSource.dead = true;
     }
 
 
     /**
      * This function will transmit all intensity values from the internal grid to another virtual grid having this size : (gdw, gdh)
      * The parameter function "f" will be call for each cell within the (gdw, gdh) range
+     * @param gdw {number} size of the resulting grid
+     * @param gdh {number} size of the resulting grid
      * @param f [function) f(x, y, intensity) the resulting intensity at the resulting cell coordinates
      */
-    filter(f) {
+    filter(gdw, gdh, f) {
         const g = this._grid;
-        let n = 0;
+        const xr = g.getWidth() / gdw;
+        const yr = g.getHeight() / gdh;
+        let n = 0, i = 0;
         this._gu.iterate((x, y) => {
-            for (let yi0 = 0; yi0 < 2; ++yi0) {
-                for (let xi0 = 0; xi0 < 2; ++xi0) {
-                    n += g
-                        .cell(x + xi0, y + yi0)
-                        .reduce((prev, curr) => curr.s > PIXEL_STATE_DEAD ? LightMap.alphaSum(prev, curr.v) : prev, 0);
+            for (let yi0 = 0; yi0 < yr; ++yi0) {
+                for (let xi0 = 0; xi0 < xr; ++xi0) {
+                    n += g.cell(x * xr + xi0 | 0, y * yr + yi0 | 0);
+                    ++i;
                 }
             }
-            n /= 4;
-            f(x >> 1, y >> 1, n);
+            n /= i;
+            f(x, y, n);
         });
     }
 
-    getPixelCount() {
-        let s = 0;
-        this._grid.iterate((x, y, a) => {
-            s += a.length;
-        });
-        return s;
+    clip(x0, y0, x1, y1) {
+        let xmin = Math.min(x0, x1);
+        let xmax = Math.max(x0, x1);
+        let ymin = Math.min(y0, y1);
+        let ymax = Math.max(y0, y1);
+        this._clip = {
+            x: xmin,
+            y: ymin,
+            width: xmax - ymin + 1,
+            height: ymax - ymin + 1
+        };
     }
+
+
+    // /**
+    //  * TODO to be remove if this tool is used with webworker
+    //  * @returns {HTMLCanvasElement}
+    //  */
+    // toCanvas() {
+    //     const g = this._grid;
+    //     const w = g.getWidth();
+    //     const h = g.getHeight();
+    //     const c = CanvasHelper.createCanvas(w, h);
+    //     CanvasHelper.applyFilter(c, (x, y, color) => {
+    //         if (this._lb.isMarked(x, y)) {
+    //             color.r = 255;
+    //             color.g = 0;
+    //             color.b = 0;
+    //             color.a = 255;
+    //         } else {
+    //             const value = g.cell(x, y) * 255 | 0;
+    //             color.r = value;
+    //             color.g = value;
+    //             color.b = value;
+    //             color.a = 255;
+    //         }
+    //     });
+    //     return c;
+    // }
+
 }
 
 export default LightMap;

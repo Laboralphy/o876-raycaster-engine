@@ -7,3 +7,5 @@ require('./DoorContextTest');
 require('./LocationTest');
 require('./ColliderTest');
 require('./GridTest');
+require('./LightSourcesTest');
+require('./LightSourcesTest');
