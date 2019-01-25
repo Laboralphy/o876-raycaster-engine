@@ -3,8 +3,6 @@ import Bresenham from "../bresenham";
 import Grid from "../grid/Grid";
 import GeometryHelper from "../geometry/GeometryHelper";
 import {linear} from "../interpolator";
-// import CanvasHelper from "../canvas-helper/CanvasHelper";
-import Reactor from "../object-helper/Reactor";
 import LightSource from "./LightSource";
 
 
@@ -69,6 +67,16 @@ class LightMap {
                 }
             }
         }
+        // we must list all sources that overlap this rectangular region
+        let ii = 0;
+        this._sources.filter(s => {
+            const m = s.metrics;
+            return GeometryHelper.circleInRect(m.x, m.y, m.r1, x, y, w, h);
+        }).forEach(s => {
+            ++ii;
+            this.invalidate();
+            s.invalidate();
+        });
     }
 
     /**
@@ -133,31 +141,36 @@ class LightMap {
         const intensity = m.v;
         const r0 = m.r0;
         const r1 = m.r1;
+        const g = this._grid;
+        const xMax = g.getWidth();
+        const yMax = g.getHeight();
         Bresenham.line(x0, y0, x1, y1, (x, y, n) => {
-            if (cc.isMarked(x, y)) {
-                // already computed
-                return true;
+            if (x >= 0 && y >= 0 && x < xMax && y < yMax) {
+                if (cc.isMarked(x, y)) {
+                    // already computed
+                    return true;
+                }
+                if (lb.isMarked(x, y)) {
+                    // light blocked : abort
+                    return false;
+                }
+                const dist = GeometryHelper.distance(x0, y0, x, y);
+                let result = 0;
+                if (dist <= r0) {
+                    // full intensity
+                    result = intensity;
+                } else if (dist > r1) {
+                    // zero intensity
+                    result = 0;
+                } else {
+                    // intensity = linearInterpolation(r0, r1, dist, 1, 0)
+                    result = linear(dist, r0, intensity, r1, 0);
+                }
+                // marker le point
+                cc.mark(x, y);
+                oSource.lightPixel(x, y);
+                this.updatePixel(x, y, result, id);
             }
-            if (lb.isMarked(x, y)) {
-                // light blocked : abort
-                return false;
-            }
-            const dist = GeometryHelper.distance(x0, y0, x, y);
-            let result = 0;
-            if (dist <= r0) {
-                // full intensity
-                result = intensity;
-            } else if (dist > r1) {
-                // zero intensity
-                result = 0;
-            } else {
-                // intensity = linearInterpolation(r0, r1, dist, 1, 0)
-                result = linear(dist, r0, intensity, r1, 0);
-            }
-            // marker le point
-            cc.mark(x, y);
-            oSource.lightPixel(x, y);
-            this.updatePixel(x, y, result, id);
         });
     }
 
@@ -180,8 +193,10 @@ class LightMap {
             this.traceLineOfLight(x9, y0 + i, oSource);
         }
         // remove dead pixels
+        let iDead = 0;
         oSource._deadPixels.iterate((x, y) => {
             this.removePixel(x, y, id);
+            ++iDead;
         });
     }
 
@@ -189,7 +204,6 @@ class LightMap {
      * draws all light sources, reseting entirely the grid
      */
     traceAllSources() {
-        //console.time('lightmap-trace');
         this
             ._sources
             .filter(oSource => oSource.isInvalid())
@@ -198,7 +212,6 @@ class LightMap {
                 oSource.clearInvalidFlag();
             });
         this.clearInvalidFlag();
-        //console.timeEnd('lightmap-trace');
     }
 
     /**
@@ -253,8 +266,8 @@ class LightMap {
      */
     filter(f) {
         const g = this._grid;
-        let n = 0;
         this._gu.iterate((x, y) => {
+            let n = 0;
             for (let yi0 = 0; yi0 < 2; ++yi0) {
                 for (let xi0 = 0; xi0 < 2; ++xi0) {
                     n += g

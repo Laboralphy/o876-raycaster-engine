@@ -15,6 +15,7 @@ class Entity {
         this.visible = false;
         this._sprite = null;
         this._thinker = null;
+        this._dummy = new Dummy();   // dummy for the collider
     }
 
     think(engine) {

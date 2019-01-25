@@ -1,8 +1,5 @@
 import Reactor from "../object-helper/Reactor";
 import MarkerRegistry from "../marker-registry/MarkerRegistry";
-import Bresenham from "../bresenham";
-import GeometryHelper from "../geometry/GeometryHelper";
-import {linear} from "../interpolator";
 
 let LAST_ID = 0;
 

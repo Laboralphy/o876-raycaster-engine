@@ -41,7 +41,7 @@ class Location {
      * @return {Vector}
      */
     front(d) {
-        return new Vector(d * Math.cos(this.angle), d * Math.sin(this.angle));
+        return new Vector(this.x + d * Math.cos(this.angle), this.y + d * Math.sin(this.angle));
     }
 }
 

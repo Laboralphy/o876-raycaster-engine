@@ -39,7 +39,8 @@ class MapHelper {
                 f: 'f' in m.faces ? this.buildMaterialFace(renderer, m.faces.f) : null,
                 c: 'c' in m.faces ? this.buildMaterialFace(renderer, m.faces.c) : null
             },
-            offset: 'offset' in m ? m.offset : 0
+            offset: 'offset' in m ? m.offset : 0,
+            light: 'light' in m ? m.light : null
         }
     }
 
@@ -64,18 +65,27 @@ class MapHelper {
             renderer.registerCellMaterial(i, m.faces);
             this._materials[i] = m;
             translator.addRule(m.code, i);
-
         });
 
         // map
         const size = map.length;
         const mapData = map.map(rowProcess);
+        const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
             const m = this._materials[cell];
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
+            if (m.light) {
+                renderer.addLightSource(
+                    ps * x + (ps >> 1),
+                    ps * y + (ps >> 1),
+                    m.light.r0,
+                    m.light.r1,
+                    m.light.v
+                );
+            }
         }));
 
         // upper storey

@@ -52,6 +52,10 @@ class DevKbd extends Thinker {
                     k.right = this._lastTime;
                 }
                 break;
+
+            case ' ':
+                this._keys.use = true;
+                break;
         }
     }
 
@@ -71,6 +75,10 @@ class DevKbd extends Thinker {
 
             case 'ArrowRight':
                 this._keys.right = false;
+                break;
+
+            case ' ':
+                this._keys.use = false;
                 break;
         }
     }
@@ -124,6 +132,15 @@ class DevKbd extends Thinker {
         }
         if (k.left !== false) {
             entity.location.angle -= this.computeAngleSpeed(t - k.left);
+        }
+
+        if (k.use) {
+            k.use = false;
+            const vFront = entity.location.front(ps);
+            vFront.x = vFront.x / ps | 0;
+            vFront.y = vFront.y / ps | 0;
+            console.log('open door', vFront);
+            engine.openDoor(vFront.x, vFront.y, true);
         }
     }
 }

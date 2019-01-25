@@ -28,7 +28,7 @@ class Collider {
         return this;
     }
 
-    cellHeight(h) {
+    setCellHeight(h) {
         this._cellHeight = h;
         return this;
     }

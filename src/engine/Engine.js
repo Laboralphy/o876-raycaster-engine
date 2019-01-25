@@ -16,6 +16,7 @@ import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
 
 import Events from "events";
+import Collider from "../collider/Collider";
 
 class Engine {
     constructor() {
@@ -36,6 +37,7 @@ class Engine {
         this._renderContext = null;
 
         this._events = new Events();
+        this._collider = new Collider();
     }
 
     get events() {
@@ -54,7 +56,27 @@ class Engine {
         this._blueprints = {};
         this._timeMod = 0;
         this._time = 0;
+        this._rc._optionsReactor.events.on('changed', ({key}) => {
+            this.updateRaycasterOption(key);
+        });
         this._events.emit('initialized');
+    }
+
+    /**
+     * The raycaster has new options, we should check them here
+     */
+    updateRaycasterOption(key) {
+        switch (key) {
+            case 'metrics.spacing':
+                const collider = this._collider;
+                const ps = this._rc._options.metrics.spacing;
+                if (collider) {
+                    collider.setCellWidth(ps);
+                    collider.setCellHeight(ps);
+                }
+                break;
+        }
+
     }
 
     get horde() {
@@ -519,6 +541,38 @@ class Engine {
             this._horde.unlinkEntity(e);
         }
     }
+
+
+//  _ _       _     _
+// | (_) __ _| |__ | |_ ___  ___  _   _ _ __ ___ ___  ___
+// | | |/ _` | '_ \| __/ __|/ _ \| | | | '__/ __/ _ \/ __|
+// | | | (_| | | | | |_\__ \ (_) | |_| | | | (_|  __/\__ \
+// |_|_|\__, |_| |_|\__|___/\___/ \__,_|_|  \___\___||___/
+//      |___/
+
+
+    /**
+     * creates a new light source at the given position, with the given radius and intensity
+     * @param x {number} coordinates of the light source center (x axis)
+     * @param y {number} coordinates of the light source center (y axis)
+     * @param r0 {number} inner radius (where light is at full intensity)
+     * @param r1 {number} outer radius (where light is totaly dimmed)
+     * @param v {number} light intensity
+     * @returns {{x: *, y: *, r0: *, r1: *, intensity: *}}
+     * the resulting object properties can be manipulated, this will be reflected in the next rendering
+     */
+    createLightSource(x, y, r0, r1, v) {
+        return this._rc.addLightSource(x, y, r0, r1, v);
+    }
+
+    /**
+     * removes a light source previously created by createLightSource
+     * @param oSource {*}
+     */
+    removeLightSource(oSource) {
+        oSource.remove();
+    }
+
 
 
 //    _
