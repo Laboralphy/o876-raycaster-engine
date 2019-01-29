@@ -20,6 +20,7 @@ class Entity {
         this._thinker = null;
         this._size = 0;
         this._inertia = new Vector();
+        this.data = {};
     }
 
     think(engine) {
@@ -70,8 +71,13 @@ class Entity {
         this._location.set(value);
     }
 
+    get inertia() {
+        return this._inertia;
+    }
 
-
+    set inertia(value) {
+        this._inertia = value;
+    }
 }
 
 export default Entity;

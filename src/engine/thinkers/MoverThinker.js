@@ -1,5 +1,6 @@
 import {computeWallCollisions} from "../../wall-collider";
 import Thinker from "./Thinker";
+import Vector from "../../geometry/Vector";
 
 /**
  * a base thinker for moving entities.
@@ -8,7 +9,38 @@ import Thinker from "./Thinker";
 class MoverThinker extends Thinker {
     constructor() {
         super();
-        this._dummy = null;
+        this._speed = new Vector(); // real speed vector that controls the entity movement
+        this._angle = 0; // visual angle
+        this._bHasChangedMovement = true;
+        this.state('move');
+    }
+
+    /**
+     * thinker main method
+     */
+    $move() {
+        let m = this.entity;
+        m.inertia.set(0, 0);
+        m.location.angle = this._angle;
+        this.slide(this._speed);
+    }
+
+
+    /**
+     * returns true if the entity has changed its movement
+     * i.e. its speed vector has changed, or its angle has changed
+     */
+    hasChangedMovement() {
+        let b = this._bHasChangedMovement;
+        this._bHasChangedMovement = false;
+        return b;
+    }
+
+    /**
+     * the entity movement has changed
+     */
+    changeMovement() {
+        this._bHasChangedMovement = true;
     }
 
     slide(v) {
@@ -35,10 +67,29 @@ class MoverThinker extends Thinker {
         entity._inertia.y = cwc.speed.y;
     }
 
+    getMovement() {
+        let m = this.entity;
+        let loc = m.location;
+        let spd = m.inertia;
+        return {
+            id: m.id,
+            a: loc.angle,
+            x: loc.x,
+            y: loc.y,
+            sx: spd.x,
+            sy: spd.y,
+        };
+    }
 
-    syncDummyLocation() {
-        const {x, y} = this.entity.location;
-        this._dummy.position.set(x, y);
+    setMovement({a, sx, sy}) {
+        if (a !== this._angle) {
+            this.changeMovement();
+            this._angle = a;
+        }
+        if (sx !== this._speed.x || sy !== this._speed.y) {
+            this.changeMovement();
+            this._speed.set(sx, sy);
+        }
     }
 }
 
