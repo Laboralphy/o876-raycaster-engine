@@ -1,12 +1,29 @@
 import Vector from "../geometry/Vector";
 
+const PI = Math.PI;
+const PI2 = 2 * PI;
+
 class Location {
     constructor({x = 0, y = 0, z = 0, angle = 0, area = null} = {}) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.angle = angle;
+        this._angle = angle;
         this.area = area;
+    }
+
+    get angle() {
+        return this._angle;
+    }
+
+    set angle(value) {
+        while (value > PI) {
+            value -= PI2;
+        }
+        while (value < -PI) {
+            value += PI2;
+        }
+        this._angle = value;
     }
 
     set({x = null, y = null, z = null, angle = null, area = null}) {
