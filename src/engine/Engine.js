@@ -16,7 +16,6 @@ import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
 
 import Events from "events";
-import Collider from "../collider/Collider";
 
 class Engine {
     constructor() {
@@ -37,7 +36,6 @@ class Engine {
         this._renderContext = null;
 
         this._events = new Events();
-        this._collider = new Collider();
     }
 
     get events() {
@@ -63,20 +61,14 @@ class Engine {
     }
 
     /**
-     * The raycaster has new options, we should check them here
+     * One of the raycaster options has changed value, we should check it here
      */
     updateRaycasterOption(key) {
         switch (key) {
             case 'metrics.spacing':
-                const collider = this._collider;
                 const ps = this._rc._options.metrics.spacing;
-                if (collider) {
-                    collider.setCellWidth(ps);
-                    collider.setCellHeight(ps);
-                }
                 break;
         }
-
     }
 
     get horde() {
