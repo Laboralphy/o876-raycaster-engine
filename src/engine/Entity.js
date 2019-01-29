@@ -1,4 +1,5 @@
 import Location from "./Location";
+import Vector from "../geometry/Vector";
 
 /**
  * Entities are things that move or stay static in the level.
@@ -12,9 +13,11 @@ import Location from "./Location";
 class Entity {
     constructor() {
         this._location = new Location();
-        this.visible = false;
+        this._visible = false;
         this._sprite = null;
         this._thinker = null;
+        this._size = 0;
+        this._inertia = new Vector();
     }
 
     think(engine) {
@@ -22,6 +25,22 @@ class Entity {
         if (thinker) {
             thinker.think(this, engine);
         }
+    }
+
+    get size() {
+        return this._size;
+    }
+
+    set size(value) {
+        this._size = value;
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
+    set visible(value) {
+        this._visible = value;
     }
 
     get thinker() {

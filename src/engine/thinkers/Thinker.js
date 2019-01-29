@@ -1,3 +1,5 @@
+import {computeWallCollisions} from "../../wall-collider";
+
 const THINKER_METHOD_PREFIX = '$';
 
 class Thinker {
@@ -75,6 +77,31 @@ class Thinker {
 
     get state() {
         return this._state;
+    }
+
+
+    slide(v) {
+        const entity = this.entity;
+        const engine = this.engine;
+        const location = entity.location;
+        const rc = engine.raycaster;
+        const ps = rc.options.metrics.spacing;
+        const size = entity.size;
+
+        const cwc = computeWallCollisions(
+            location.x,
+            location.y,
+            v.x,
+            v.y,
+            size,
+            ps,
+            false,
+            (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
+        );
+        entity.location.x += cwc.speed.x;
+        entity.location.y += cwc.speed.y;
+        entity._inertia.x = cwc.speed.x;
+        entity._inertia.y = cwc.speed.y;
     }
 
     /**

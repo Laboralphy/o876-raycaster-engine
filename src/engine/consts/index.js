@@ -15,3 +15,4 @@ export const DOOR_SLIDING_DURATION = 24;
 export const DOOR_MAINTAIN_DURATION = 300;
 export const DOOR_SECURITY_INTERVAL = 10;   // interval of entity presence checking during "CLOSING" phase
 
+export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity

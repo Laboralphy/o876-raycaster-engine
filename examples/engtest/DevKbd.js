@@ -1,6 +1,6 @@
 import Thinker from "../../src/engine/thinkers/Thinker";
 import Easing from "../../src/easing/Easing";
-import {computeWallCollisions} from "../../src/wall-collider"
+import Vector from "../../src/geometry/Vector";
 
 const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
@@ -101,32 +101,16 @@ class DevKbd extends Thinker {
         const ps = rc.options.metrics.spacing;
 
         if (k.up !== false) {
-            const cwc = computeWallCollisions(
-                eloc.x,
-                eloc.y,
+            this.slide(new Vector(
                 SPEED * Math.cos(eloc.angle),
                 SPEED * Math.sin(eloc.angle),
-                24,
-                rc.options.metrics.spacing,
-                false,
-                (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
-            );
-            entity.location.x += cwc.speed.x;
-            entity.location.y += cwc.speed.y;
+            ));
         }
         if (k.down !== false) {
-            const cwc = computeWallCollisions(
-                eloc.x,
-                eloc.y,
+            this.slide(new Vector(
                 -SPEED * Math.cos(eloc.angle),
                 -SPEED * Math.sin(eloc.angle),
-                24,
-                rc.options.metrics.spacing,
-                false,
-                (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
-            );
-            entity.location.x += cwc.speed.x;
-            entity.location.y += cwc.speed.y;
+            ));
         }
         if (k.right !== false) {
             entity.location.angle += this.computeAngleSpeed(t - k.right);
@@ -140,7 +124,6 @@ class DevKbd extends Thinker {
             const vFront = entity.location.front(ps);
             vFront.x = vFront.x / ps | 0;
             vFront.y = vFront.y / ps | 0;
-            console.log('open door', vFront);
             engine.openDoor(vFront.x, vFront.y, true);
         }
     }

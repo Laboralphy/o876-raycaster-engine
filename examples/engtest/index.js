@@ -95,23 +95,26 @@ function getLevel() {
         "blueprints": {
             "m-warlock-b": {
                 "tileset": "m-warlock-b",
-                "thinker": null
+                "thinker": null,
+                "size": 24
             },
 
             "p-magbolt-0": {
                 "tileset": "p-magbolt-0",
-                "thinker": null
+                "thinker": null,
+                "size": 24
             },
 
             "o-bluedisc": {
                 "tileset": "o-bluedisc",
-                "thinker": null
+                "thinker": null,
+                "size": 24
             },
 
             "o-bluereddisc": {
                 "tileset": "o-bluereddisc",
                 "thinker": null,
-                "hit-radius": 24
+                "size": 24
             },
 
 

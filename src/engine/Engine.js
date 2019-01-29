@@ -53,7 +53,7 @@ class Engine {
         this._dm = new DoorManager();
         this._scheduler = new Scheduler();
         this._horde = new Horde();
-        this._camera = new Camera();
+        this.initializeCamera();
         this._blueprints = {};
         this._timeMod = 0;
         this._time = 0;
@@ -61,6 +61,13 @@ class Engine {
             this.updateRaycasterOption(key);
         });
         this._events.emit('initialized');
+    }
+
+    initializeCamera() {
+        const camera = new Camera();
+        camera.visible = false;
+        camera.size = CONSTS.METRIC_CAMERA_DEFAULT_SIZE;
+        this._camera = camera;
     }
 
     /**
@@ -529,6 +536,7 @@ class Engine {
         const oThinker = this.createThinkerInstance(bp.thinker);
         entity.thinker = oThinker;
         entity.sprite = sprite;
+        entity._size = bp.size;
         this._horde.linkEntity(entity);
         return entity;
     }
