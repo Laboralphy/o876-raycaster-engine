@@ -225,7 +225,10 @@ async function main() {
     //const w = engine.createEntity('m-warlock-b');
     
     // creates a thinker
-    const ct = new DevKbd();
+    engine.declareThinkers({
+        DevKbd
+    });
+    const ct = engine.createThinkerInstance('DevKbd');
 
 	// plug keyboards events
     window.addEventListener('keydown', event => ct.keyDown(event.key));

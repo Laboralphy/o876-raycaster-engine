@@ -23,7 +23,7 @@ class DevKbd extends Thinker {
         };
 
         this._lastTime = 0;
-
+        this.state = 'letsMove';
     }
 
     keyDown(key) {
@@ -91,8 +91,9 @@ class DevKbd extends Thinker {
         }
     }
 
-
-    think(entity, engine) {
+    $letsMove() {
+        const entity = this.entity;
+        const engine = this.engine;
         const t = this._lastTime = engine.getTime();
         const k = this._keys;
         const eloc = entity.location;

@@ -14,6 +14,7 @@ import Translator from "../translator/Translator";
 import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
+import Thinker from "./thinkers/Thinker";
 
 import Events from "events";
 
@@ -30,7 +31,9 @@ class Engine {
         this._interval = null;
 
         // instanciate at construct
-        this._thinkers = {};
+        this._thinkers = {
+            "default": Thinker
+        };
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
@@ -445,19 +448,21 @@ class Engine {
     }
 
     declareThinkers(oThinkers) {
-        for (let sThinker in oThinker) {
-            this.declareThinker(sThinker, oThinker[sThinker]);
+        for (let sThinker in oThinkers) {
+            this.declareThinker(sThinker, oThinkers[sThinker]);
         }
     }
 
     createThinkerInstance(sThinker) {
         if (!sThinker) {
-            return null;
+            sThinker = 'default';
         }
         const thinkers = this._thinkers;
         if (sThinker in thinkers) {
             const pThinker = thinkers[sThinker];
-            return new pThinker();
+            const oThinker = new pThinker();
+            oThinker.engine = this;
+            return oThinker;
         } else {
             const aThinkerNames = Object.keys(thinkers);
             if (aThinkerNames.length > 0) {
@@ -521,8 +526,9 @@ class Engine {
                 sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
-        entity._thinker = this.createThinkerInstance(bp.thinker);
-        entity._sprite = sprite;
+        const oThinker = this.createThinkerInstance(bp.thinker);
+        entity.thinker = oThinker;
+        entity.sprite = sprite;
         this._horde.linkEntity(entity);
         return entity;
     }

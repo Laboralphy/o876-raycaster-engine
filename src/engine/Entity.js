@@ -29,7 +29,12 @@ class Entity {
     }
 
     set thinker(value) {
+        value.entity = this;
         this._thinker = value;
+    }
+
+    set sprite(value) {
+        this._sprite = value;
     }
 
     get sprite() {
