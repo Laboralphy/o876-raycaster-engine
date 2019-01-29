@@ -1,5 +1,7 @@
 import Location from "./Location";
 import Vector from "../geometry/Vector";
+import Dummy from "../collider/Dummy";
+import {computeWallCollisions} from "../wall-collider";
 
 /**
  * Entities are things that move or stay static in the level.
@@ -67,6 +69,9 @@ class Entity {
     set location(value) {
         this._location.set(value);
     }
+
+
+
 }
 
 export default Entity;

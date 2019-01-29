@@ -22,7 +22,7 @@ describe('#Location', function() {
             expect(l2.x).toBe(5);
             expect(l2.y).toBe(10);
             expect(l2.z).toBe(15);
-            expect(l2.angle).toBe(20);
+            expect(Math.round(100 * l2.angle) / 100).toBe(1.15);
             expect(l2.area).toBe('abc');
         });
     });
