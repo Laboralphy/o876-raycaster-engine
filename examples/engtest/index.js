@@ -97,7 +97,7 @@ function getLevel() {
         "blueprints": {
             "m-warlock-b": {
                 "tileset": "m-warlock-b",
-                "thinker": 'StaticThinker',
+                "thinker": 'TangibleThinker',
                 "size": 24
             },
 

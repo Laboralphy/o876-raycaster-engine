@@ -1,6 +1,7 @@
 import {computeWallCollisions} from "../../wall-collider";
 import Thinker from "./Thinker";
 import Vector from "../../geometry/Vector";
+import GeometryHelper from "../../geometry/GeometryHelper";
 
 /**
  * a base thinker for moving entities.
@@ -99,6 +100,22 @@ class MoverThinker extends Thinker {
             this.changeMovement();
             this._speed.set(sx, sy);
         }
+    }
+
+    /**
+     * This will change the animation according to the angle betwin entity.location.angle and camera.location.angle
+     */
+    updateRenderedAngle() {
+        const entity = this.entity;
+        const camera = this.engine.camera;
+        if (entity === camera) {
+            return;
+        }
+        const oEntityLoc = entity.location;
+        const oCameraLoc = camera.location;
+        const fMyAngle = oEntityLoc.angle;
+        const fCamAngle = oCameraLoc.angle;
+        const fDiffAngle = GeometryHelper.angle(oEntityLoc.x, oEntityLoc.y, oCameraLoc.x, oCameraLoc.y);
     }
 }
 
