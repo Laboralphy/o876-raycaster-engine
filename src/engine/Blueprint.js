@@ -3,6 +3,7 @@ class Blueprint {
         this.tileset = null;
         this.thinker = '';
         this.animations = [];
+        this.size = 0; // physical half size (radius)
     }
 
     /**

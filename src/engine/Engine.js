@@ -15,8 +15,10 @@ import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
 import Thinker from "./thinkers/Thinker";
+import {suggest} from "../levenshtein";
 
 import Events from "events";
+import Collider from "../collider/Collider";
 
 class Engine {
     constructor() {
@@ -34,6 +36,10 @@ class Engine {
         this._thinkers = {
             "default": Thinker
         };
+        this._collider = new Collider(); // this collider is freely used by certain thinkers
+        this._collider.setCellWidth(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
+        this._collider.setCellHeight(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
+
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
@@ -503,6 +509,7 @@ class Engine {
         if ('animations' in tsDef) {
             bp.animations = tsDef.animations
         }
+        bp.size = bpDef.size;
         this._blueprints[resref] = bp;
         return bp;
     }
@@ -536,7 +543,7 @@ class Engine {
         const oThinker = this.createThinkerInstance(bp.thinker);
         entity.thinker = oThinker;
         entity.sprite = sprite;
-        entity._size = bp.size;
+        entity.size = bp.size;
         this._horde.linkEntity(entity);
         return entity;
     }
@@ -662,7 +669,10 @@ class Engine {
 
         }
 
-
+        const nMapSize = this._rc.getMapSize();
+        const ps = this._rc.options.metrics.spacing;
+        this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
+        this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
         // static objects
         if ('objects' in data) {
@@ -670,9 +680,11 @@ class Engine {
             aObjects.forEach(o => {
                 const entity = this.createEntity(o.blueprint);
                 entity.location.set(o);
+                entity.location._xxx = 'xxx';
                 entity.visible = true;
             })
         }
+
 
         feedback('done', 1);
     }

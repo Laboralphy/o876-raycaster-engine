@@ -16,3 +16,4 @@ export const DOOR_MAINTAIN_DURATION = 300;
 export const DOOR_SECURITY_INTERVAL = 10;   // interval of entity presence checking during "CLOSING" phase
 
 export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity
+export const METRIC_COLLIDER_SECTOR_SIZE = 128; // default size for collider sector

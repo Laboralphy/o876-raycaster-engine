@@ -1,7 +1,7 @@
 import Engine from "../../src/engine/Engine";
-import DevKbd from "./DevKbd";
-import DevKbd2 from "./DevKbd2";
-import Collider from "../../src/collider/Collider";
+import DevKbdThinker from "./DevKbdThinker";
+import FurnThinker from "./FurnThinker";
+import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 
 function getLevel() {
     return {
@@ -114,8 +114,8 @@ function getLevel() {
 
             "o-bluereddisc": {
                 "tileset": "o-bluereddisc",
-                "thinker": 'TangibleThinker',
-                "size": 24
+                "thinker": 'FurnThinker',
+                "size": 16
             },
 
 
@@ -220,6 +220,12 @@ function getLevel() {
 async function main() {
     // creates engine
     const engine = new Engine();
+    // declare thinkers
+    engine.declareThinkers({
+        DevKbdThinker,
+        FurnThinker,
+        TangibleThinker
+    });
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
     // builds level, display progress on console
@@ -228,14 +234,7 @@ async function main() {
     });
     //const w = engine.createEntity('m-warlock-b');
     
-    // creates a thinker
-    engine.declareThinkers({
-        DevKbd2
-    });
-    const ct = engine.createThinkerInstance('DevKbd2');
-
-    const collider = new Collider();
-    ct._collider = collider;
+    const ct = engine.createThinkerInstance('DevKbdThinker');
 
 	// plug keyboards events
     window.addEventListener('keydown', event => ct.keyDown(event.key));

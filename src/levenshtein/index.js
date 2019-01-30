@@ -59,6 +59,7 @@ export function suggest(sSubject, aStrings) {
         }))
         .sort((a, b) => a.d - b.d)
         .shift()
+        .s;
 }
 
 

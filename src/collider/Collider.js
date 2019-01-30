@@ -25,13 +25,21 @@ class Collider {
 	}
 
     setCellWidth(w) {
-		this._cellWidth = w;
+        this._cellWidth = w;
         return this;
     }
 
     setCellHeight(h) {
         this._cellHeight = h;
         return this;
+    }
+
+    getCellWidth() {
+        return this._cellWidth;
+    }
+
+    getCellHeight() {
+        return this._cellHeight;
     }
 
     get grid() {

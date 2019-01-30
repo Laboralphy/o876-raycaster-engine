@@ -21,8 +21,8 @@ class ForceField {
      * @param extraData {*} extra custom data (identifier etc...) not used in any computation
      * @returns {*} a structure
      */
-    addForce(v, f, extraData) {
-        let fNew = {v, f, ...extraData};
+    addForce(v, f, extraData = {}) {
+        let fNew = Object.assign({}, {v, f}, extraData);
         this._forces.push(fNew);
         return fNew;
     }
