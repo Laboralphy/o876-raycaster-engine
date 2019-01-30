@@ -82,6 +82,14 @@ class TileAnimation {
         this._iterations = value;
     }
 
+    get loopDir() {
+        return this._loopDir;
+    }
+
+    set loopDir(value) {
+        this._loopDir = value;
+    }
+
     animate(nTimeInc) {
         if (this._frozen) {
             return;

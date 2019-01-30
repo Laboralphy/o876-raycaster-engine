@@ -2,6 +2,7 @@ import Engine from "../../src/engine/Engine";
 import DevKbdThinker from "./DevKbdThinker";
 import StaticThinker from "../../src/engine/thinkers/StaticThinker";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
+import DevKbdMobThinker from "./DevKbdMobThinker";
 
 function getLevel() {
     return {
@@ -13,18 +14,18 @@ function getLevel() {
                 "height": 96,
                 "animations": {
                     "stand": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
                     "walk": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
-                        "duration": 400
+                        "duration": 133
                     },
                     "attack": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
                         "duration": 40
@@ -45,7 +46,7 @@ function getLevel() {
                 "fx": "@FX_LIGHT_SOURCE",
                 "animations": {
                     "fly": {
-                        "start": [0, 1, 2, 3, 4, 5, 6, 7],
+                        "start": [4, 5, 6, 7, 0, 1, 2, 3],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
@@ -96,7 +97,7 @@ function getLevel() {
         "blueprints": {
             "m-warlock-b": {
                 "tileset": "m-warlock-b",
-                "thinker": 'TangibleThinker',
+                "thinker": 'DevKbdMobThinker',
                 "size": 24
             },
 
@@ -231,6 +232,7 @@ async function main() {
     // declare thinkers
     engine.declareThinkers({
         DevKbdThinker,
+        DevKbdMobThinker,
         StaticThinker,
         TangibleThinker
     });
@@ -245,8 +247,12 @@ async function main() {
     const ct = engine.createThinkerInstance('DevKbdThinker');
 
 	// plug keyboards events
-    window.addEventListener('keydown', event => ct.keyDown(event.key));
-    window.addEventListener('keyup', event => ct.keyUp(event.key));
+    window.addEventListener('keydown', event => {
+        ct.keyDown(event.key);
+    });
+    window.addEventListener('keyup', event => {
+        ct.keyUp(event.key);
+    });
     
     // links this thinker to the camera
     engine.camera.thinker = ct;

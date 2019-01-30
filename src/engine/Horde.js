@@ -1,6 +1,8 @@
 import GeometryHelper from "../geometry/GeometryHelper";
 import * as CONSTS from "./consts";
 
+const {SPRITE_DIRECTION_COUNT} = CONSTS;
+
 class Horde {
     constructor() {
         this._entities = [];
@@ -53,16 +55,15 @@ class Horde {
         const oCameraLoc = camera.location;
         const fTarget = GeometryHelper.angle(oCameraLoc.x, oCameraLoc.y, oEntityLoc.x, oEntityLoc.y);
         // backup
-        if (entity.data.backupLookingAngle !== fTarget) {
-            entity.data.backupLookingAngle = fTarget;
-            let fAngle1 = oEntityLoc.angle + (Math.PI / CONSTS.SPRITE_DIRECTION_COUNT) - fTarget;
-            if (fAngle1 < 0) {
-                fAngle1 = 2 * Math.PI + fAngle1;
-            }
-            entity.sprite.setDirection(
-                ((CONSTS.SPRITE_DIRECTION_COUNT * fAngle1 / (2 * Math.PI)) | 0)
-                & (CONSTS.SPRITE_DIRECTION_COUNT - 1)
-            );
+        let fAngle1 = oEntityLoc.angle + (Math.PI / SPRITE_DIRECTION_COUNT) - fTarget;
+        if (fAngle1 < 0) {
+            fAngle1 = 2 * Math.PI + fAngle1;
+        }
+        const nDirection = ((SPRITE_DIRECTION_COUNT * fAngle1 / (2 * Math.PI)) | 0)
+            & (SPRITE_DIRECTION_COUNT - 1);
+        if (nDirection !== entity.data.backupDirection) {
+            entity.data.backupDirection = nDirection;
+            entity.sprite.setDirection(nDirection);
         }
     }
 
