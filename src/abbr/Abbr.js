@@ -8,10 +8,10 @@ class Abbr {
 
     /**
      * Defines a new list of vowels. In this context vowels are like separators.
-     * @param sVowel {string}
+     * @param sVowels {string}
      */
-    setVowels(sVowel) {
-        this._VOWELS = sVowel;
+    setVowels(sVowels) {
+        this._VOWELS = sVowels;
         this._rVowels = new RegExp('[' + sVowels + ']', 'i');
     }
 
@@ -38,10 +38,10 @@ class Abbr {
      * @param str {string}
      * @returns {string}
      */
-    abbr(str) {
+    make(str) {
         const a = str.split(' ');
         if (a.length > 1) {
-            return a.map(x => abbr(x)).join(' ');
+            return a.map(x => this.make(x)).join(' ');
         }
         let sx = Abbr.stripAccents(str);
         let sLastChar = sx.substr(0, 1);
@@ -50,7 +50,7 @@ class Abbr {
             ++n;
         }
         for (let i = 1, len = str.length; i < len; ++i) {
-            const sChar = $sx.substr(i, 1);
+            const sChar = sx.substr(i, 1);
             const v1 = this.isVowel(sLastChar);
             const v2 = this.isVowel(sChar);
             const vv1 = v1 ? 'v' : 'c';

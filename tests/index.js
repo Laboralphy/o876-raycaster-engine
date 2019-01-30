@@ -9,3 +9,4 @@ require('./ColliderTest');
 require('./GridTest');
 require('./LightSourcesTest');
 require('./LightSourcesTest');
+require('./AbbrTest');
