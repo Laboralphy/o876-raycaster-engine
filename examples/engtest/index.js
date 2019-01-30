@@ -97,7 +97,7 @@ function getLevel() {
         "blueprints": {
             "m-warlock-b": {
                 "tileset": "m-warlock-b",
-                "thinker": null,
+                "thinker": 'StaticThinker',
                 "size": 24
             },
 
@@ -213,6 +213,12 @@ function getLevel() {
                 "y": 13 * 64 + 32,
                 "angle": 0,
                 "blueprint": "o-bluereddisc"
+            },
+            {
+                "x": 14 * 64 + 32,
+                "y": 13 * 64 + 32,
+                "angle": 0,
+                "blueprint": "m-warlock-b"
             }
         ]
     };
