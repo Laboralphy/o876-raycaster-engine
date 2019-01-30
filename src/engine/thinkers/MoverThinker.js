@@ -12,7 +12,7 @@ class MoverThinker extends Thinker {
         this._speed = new Vector(); // real speed vector that controls the entity movement
         this._angle = 0; // visual angle
         this._bHasChangedMovement = true;
-        this.state('move');
+        this.state = 'move';
     }
 
     /**
@@ -72,7 +72,6 @@ class MoverThinker extends Thinker {
         let loc = m.location;
         let spd = m.inertia;
         return {
-            id: m.id,
             a: loc.angle,
             x: loc.x,
             y: loc.y,
@@ -81,16 +80,26 @@ class MoverThinker extends Thinker {
         };
     }
 
-    setMovement({a, sx, sy}) {
-        if (a !== this._angle) {
+    set angle(value) {
+        if (value !== this._angle) {
             this.changeMovement();
-            this._angle = a;
+            this._angle = value;
         }
-        if (sx !== this._speed.x || sy !== this._speed.y) {
+    }
+
+    get angle() {
+        return this._angle;
+    }
+
+    setSpeed(sx, sy) {
+        if (sx instanceof Vector) {
+            this.changeMovement();
+            this._speed.set(sx);
+        } else if (sx !== this._speed.x || sy !== this._speed.y) {
             this.changeMovement();
             this._speed.set(sx, sy);
         }
     }
 }
 
-export default Thinker;
+export default MoverThinker;

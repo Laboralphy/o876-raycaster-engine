@@ -1,6 +1,7 @@
 import Engine from "../../src/engine/Engine";
 import DevKbd from "./DevKbd";
-import CanvasHelper from "../../src/canvas-helper/CanvasHelper";
+import DevKbd2 from "./DevKbd2";
+import Collider from "../../src/collider/Collider";
 
 function getLevel() {
     return {
@@ -113,7 +114,7 @@ function getLevel() {
 
             "o-bluereddisc": {
                 "tileset": "o-bluereddisc",
-                "thinker": null,
+                "thinker": 'TangibleThinker',
                 "size": 24
             },
 
@@ -229,9 +230,12 @@ async function main() {
     
     // creates a thinker
     engine.declareThinkers({
-        DevKbd
+        DevKbd2
     });
-    const ct = engine.createThinkerInstance('DevKbd');
+    const ct = engine.createThinkerInstance('DevKbd2');
+
+    const collider = new Collider();
+    ct._collider = collider;
 
 	// plug keyboards events
     window.addEventListener('keydown', event => ct.keyDown(event.key));

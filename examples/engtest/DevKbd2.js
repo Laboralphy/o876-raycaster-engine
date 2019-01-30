@@ -1,6 +1,4 @@
-import Thinker from "../../src/engine/thinkers/Thinker";
 import Easing from "../../src/easing/Easing";
-import Vector from "../../src/geometry/Vector";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 
 const ANGLE_INT_MAX_TIME = 666;
@@ -24,7 +22,6 @@ class DevKbd extends TangibleThinker {
         };
 
         this._lastTime = 0;
-        this.state = 'letsMove';
     }
 
     keyDown(key) {
@@ -97,27 +94,37 @@ class DevKbd extends TangibleThinker {
         const engine = this.engine;
         const t = this._lastTime = engine.getTime();
         const k = this._keys;
-        const eloc = entity.location;
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
 
-        if (k.up !== false) {
-            this.slide(new Vector(
-                SPEED * Math.cos(eloc.angle),
-                SPEED * Math.sin(eloc.angle),
-            ));
+        const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
+        switch (forw) {
+            case 'f':
+                this.setSpeed(
+                    SPEED * Math.cos(this.angle),
+                    SPEED * Math.sin(this.angle),
+                );
+                break;
+
+            case 'b':
+                this.setSpeed(
+                    -SPEED * Math.cos(this.angle),
+                    -SPEED * Math.sin(this.angle),
+                );
+                break;
+
+            case '':
+            case 'fb':
+                // no move
+                this.setSpeed(0, 0);
+                break;
         }
-        if (k.down !== false) {
-            this.slide(new Vector(
-                -SPEED * Math.cos(eloc.angle),
-                -SPEED * Math.sin(eloc.angle),
-            ));
-        }
+
         if (k.right !== false) {
-            entity.location.angle += this.computeAngleSpeed(t - k.right);
+            this.angle += this.computeAngleSpeed(t - k.right);
         }
         if (k.left !== false) {
-            entity.location.angle -= this.computeAngleSpeed(t - k.left);
+            this.angle -= this.computeAngleSpeed(t - k.left);
         }
 
         if (k.use) {
@@ -130,6 +137,7 @@ class DevKbd extends TangibleThinker {
     }
 
     $move() {
+        this.computeSpeedVector();
         super.$move();
     }
 }

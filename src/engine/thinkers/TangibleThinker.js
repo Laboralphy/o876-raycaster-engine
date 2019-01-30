@@ -1,5 +1,5 @@
-import MoverThinker from "./MoverThinker";
 import Dummy from "../../collider/Dummy";
+import MoverThinker from "./MoverThinker";
 
 /**
  * this thinker is suitable for moving entities that can interact with other tangible entities
