@@ -1,6 +1,7 @@
 import Engine from "../../src/engine/Engine";
 import DevKbdThinker from "./DevKbdThinker";
 import FurnThinker from "./FurnThinker";
+import StaticThinker from "../../src/engine/thinkers/StaticThinker";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 
 function getLevel() {
@@ -114,7 +115,7 @@ function getLevel() {
 
             "o-bluereddisc": {
                 "tileset": "o-bluereddisc",
-                "thinker": 'FurnThinker',
+                "thinker": 'StaticThinker',
                 "size": 16
             },
 
@@ -223,7 +224,7 @@ async function main() {
     // declare thinkers
     engine.declareThinkers({
         DevKbdThinker,
-        FurnThinker,
+        StaticThinker,
         TangibleThinker
     });
     // defines which physical canvas to use

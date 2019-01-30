@@ -6,11 +6,12 @@ const THINKER_METHOD_PREFIX = '$';
  */
 class Thinker {
     constructor() {
-        this._state = 'idle';
         this._duration = 0;
         this._nextState = 'idle';
         this._entity = null;
         this._engine = null;
+        this._state = 'idle';
+        this._lastState = '';
     }
 
     get entity() {
@@ -71,10 +72,7 @@ class Thinker {
      */
     set state(value) {
         this.next('idle');
-        this._invoke(THINKER_METHOD_PREFIX + this._state + '_exit');
         this._state = value;
-        this._invoke(THINKER_METHOD_PREFIX + this._state + '_enter');
-        return this;
     }
 
     get state() {
@@ -85,6 +83,11 @@ class Thinker {
      * thinks
      */
     think() {
+        if (this._lastState !== this._state) {
+            this._invoke(THINKER_METHOD_PREFIX + this._lastState + '_exit');
+            this._invoke(THINKER_METHOD_PREFIX + this._state + '_enter');
+            this._lastState = this._state;
+        }
         this._invoke(THINKER_METHOD_PREFIX + this._state);
         if (--this._duration <= 0) {
             this._duration = Infinity;
