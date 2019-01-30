@@ -1,7 +1,6 @@
 import Vector from "../geometry/Vector";
+import GeometryHelper from "../geometry/GeometryHelper";
 
-const PI = Math.PI;
-const PI2 = 2 * PI;
 
 class Location {
     constructor({x = 0, y = 0, z = 0, angle = 0, area = null} = {}) {
@@ -17,13 +16,7 @@ class Location {
     }
 
     set angle(value) {
-        while (value > PI) {
-            value -= PI2;
-        }
-        while (value < -PI) {
-            value += PI2;
-        }
-        this._angle = value;
+        this._angle = GeometryHelper.normalizeAngle(value);
     }
 
     set({x = null, y = null, z = null, angle = null, area = null}) {

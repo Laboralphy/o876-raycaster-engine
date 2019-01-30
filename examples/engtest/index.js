@@ -1,6 +1,5 @@
 import Engine from "../../src/engine/Engine";
 import DevKbdThinker from "./DevKbdThinker";
-import FurnThinker from "./FurnThinker";
 import StaticThinker from "../../src/engine/thinkers/StaticThinker";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 
@@ -212,13 +211,15 @@ function getLevel() {
                 "x": 9 * 64 + 32,
                 "y": 13 * 64 + 32,
                 "angle": 0,
-                "blueprint": "o-bluereddisc"
+                "blueprint": "o-bluereddisc",
+                "animation": "blue"
             },
             {
                 "x": 14 * 64 + 32,
                 "y": 13 * 64 + 32,
                 "angle": 0,
-                "blueprint": "m-warlock-b"
+                "blueprint": "m-warlock-b",
+                "animation": "stand"
             }
         ]
     };

@@ -15,6 +15,8 @@ class Sprite {
 
         this._animations = {};
         this._animation = null;
+        this._currentAnimRef = '';
+        this._currentDirection = 0;
         this._tileset = null;
 
         this._children = []; // these sprites will be rendered above the current sprite
@@ -92,8 +94,25 @@ class Sprite {
      * @param ref {string} animation group
      * @param iAnim {number} index of the new current animation
      */
-    setCurrentAnimation(ref, iAnim) {
+    setCurrentAnimation(ref, iAnim = undefined) {
+        if (iAnim === undefined) {
+            iAnim = Math.min(this._currentDirection, this._animations[ref].length);
+        }
+        this._currentAnimRef = ref;
         this._animation = this._animations[ref][iAnim];
+        this._animation.index = 0;
+    }
+
+    /**
+     * For a directionnal sprite, sets a new direction
+     */
+    setDirection(nDirection) {
+        if (this._animations[this._currentAnimRef].length > 1) {
+            let nIndex = this._animation.index;
+            this.setCurrentAnimation(this._currentAnimRef, nDirection);
+            this._animation.index = nIndex;
+            this._currentDirection = nDirection;
+        }
     }
 
     /**

@@ -540,8 +540,7 @@ class Engine {
                 sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
-        const oThinker = this.createThinkerInstance(bp.thinker);
-        entity.thinker = oThinker;
+        entity.thinker = this.createThinkerInstance(bp.thinker);
         entity.sprite = sprite;
         entity.size = bp.size;
         this._horde.linkEntity(entity);
@@ -679,12 +678,11 @@ class Engine {
             const aObjects = data.objects;
             aObjects.forEach(o => {
                 const entity = this.createEntity(o.blueprint);
+                entity.sprite.setCurrentAnimation(o.animation, 0);
                 entity.location.set(o);
-                entity.location._xxx = 'xxx';
                 entity.visible = true;
             })
         }
-
 
         feedback('done', 1);
     }

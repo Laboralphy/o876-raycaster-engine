@@ -17,3 +17,5 @@ export const DOOR_SECURITY_INTERVAL = 10;   // interval of entity presence check
 
 export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity
 export const METRIC_COLLIDER_SECTOR_SIZE = 128; // default size for collider sector
+
+export const SPRITE_DIRECTION_COUNT = 8;
