@@ -1,5 +1,6 @@
 import Easing from "../../src/easing/Easing";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
+import * as CONSTS from "../../src/engine/consts";
 
 const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
@@ -10,6 +11,7 @@ class DevKbdThinker extends TangibleThinker {
 
     constructor() {
         super();
+        this.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
         this._easing = new Easing();
         this._easing.setFunction(Easing.LINEAR);
         this._easing.setStepCount(ANGLE_INT_MAX_TIME);
@@ -98,20 +100,21 @@ class DevKbdThinker extends TangibleThinker {
         const k = this._keys;
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
+        const oEntLoc = this.entity.location;
 
         const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
         switch (forw) {
             case 'f':
                 this.setSpeed(
-                    SPEED * Math.cos(this.angle),
-                    SPEED * Math.sin(this.angle)
+                    SPEED * Math.cos(oEntLoc.angle),
+                    SPEED * Math.sin(oEntLoc.angle)
                 );
                 break;
 
             case 'b':
                 this.setSpeed(
-                    -SPEED * Math.cos(this.angle),
-                    -SPEED * Math.sin(this.angle)
+                    -SPEED * Math.cos(oEntLoc.angle),
+                    -SPEED * Math.sin(oEntLoc.angle)
                 );
                 break;
 
@@ -123,10 +126,10 @@ class DevKbdThinker extends TangibleThinker {
         }
 
         if (k.right !== false) {
-            this.angle += this.computeAngleSpeed(t - k.right);
+            oEntLoc.angle += this.computeAngleSpeed(t - k.right);
         }
         if (k.left !== false) {
-            this.angle -= this.computeAngleSpeed(t - k.left);
+            oEntLoc.angle -= this.computeAngleSpeed(t - k.left);
         }
 
         if (k.use) {

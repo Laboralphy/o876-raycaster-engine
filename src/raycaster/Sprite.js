@@ -110,18 +110,29 @@ class Sprite {
         this._animation.index = 0;
     }
 
+    getCurrentAnimation() {
+        return this._animation;
+    }
+
     /**
      * For a directionnal sprite, sets a new direction
      */
     setDirection(nDirection) {
-        if (this._animations[this._currentAnim.ref].length > 1) {
+        const ca = this._currentAnim;
+        const caRef = ca.ref;
+        if (!(caRef in this._animations)) {
+            throw new Error('this reference : "' + caRef + '" is not in current animation');
+        }
+        // caRef is the last animation type set
+        if (this._animations[caRef].length > 1) {
+            // this animation is directional
             const {index, time, loopDir} = this._animation;
-            this.setCurrentAnimation(this._currentAnim.ref, nDirection);
+            this.setCurrentAnimation(caRef, nDirection);
             const a = this._animation;
             a.index = index;
             a.time = time;
             a.loopDir = loopDir;
-            this._currentAnim.dir = nDirection;
+            ca.dir = nDirection;
         }
     }
 

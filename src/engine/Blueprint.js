@@ -4,6 +4,7 @@ class Blueprint {
         this.thinker = '';
         this.animations = [];
         this.size = 0; // physical half size (radius)
+        this.fx = [];
     }
 
     /**

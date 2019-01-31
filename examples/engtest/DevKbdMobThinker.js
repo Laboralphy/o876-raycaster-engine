@@ -80,21 +80,22 @@ class DevKbdMobThinker extends TangibleThinker {
 
     computeSpeedVector() {
         const k = this._keys;
+        const oEntLoc = this.entity.location;
 
         const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
         switch (forw) {
             case 'f':
                 this.setSpeed(
-                    SPEED * Math.cos(this.angle),
-                    SPEED * Math.sin(this.angle)
+                    SPEED * Math.cos(oEntLoc.angle),
+                    SPEED * Math.sin(oEntLoc.angle)
                 );
                 this.bWalk = true;
                 break;
 
             case 'b':
                 this.setSpeed(
-                    -SPEED * Math.cos(this.angle),
-                    -SPEED * Math.sin(this.angle)
+                    -SPEED * Math.cos(oEntLoc.angle),
+                    -SPEED * Math.sin(oEntLoc.angle)
                 );
                 this.bWalk = true;
                 break;
@@ -108,16 +109,16 @@ class DevKbdMobThinker extends TangibleThinker {
         }
 
         if (k.right !== false) {
-            this.angle += ANGLE_INT_MAX_VALUE;
+            oEntLoc.angle += ANGLE_INT_MAX_VALUE;
         }
         if (k.left !== false) {
-            this.angle -= ANGLE_INT_MAX_VALUE;
+            oEntLoc.angle -= ANGLE_INT_MAX_VALUE;
         }
         if (k.fire !== false) {
             k.fire = false;
-            this.engine.createEntity('')
+            const missile = this.engine.createEntity('p-magbolt-0', this.entity.location);
+            missile.thinker.fire(this.entity);
         }
-
     }
 
     $move() {

@@ -1,9 +1,14 @@
 import Engine from "../../src/engine/Engine";
-import DevKbdThinker from "./DevKbdThinker";
+
+
 import StaticThinker from "../../src/engine/thinkers/StaticThinker";
-import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
+import DevKbdThinker from "./DevKbdThinker";
 import DevKbdMobThinker from "./DevKbdMobThinker";
-import MissileThinker from "./MissileThinker";
+import MagboltThinker from "./MagboltThinker";
+
+const THINKERS = {
+    StaticThinker, DevKbdMobThinker, DevKbdThinker, MagboltThinker
+};
 
 function getLevel() {
     return {
@@ -42,7 +47,7 @@ function getLevel() {
             },
             "p-magbolt-0": {
                 "src": "gfx/sprites/p_magbolt.png",
-                "width": 64,
+                "width": 48,
                 "height": 64,
                 "fx": "@FX_LIGHT_SOURCE",
                 "animations": {
@@ -104,8 +109,9 @@ function getLevel() {
 
             "p-magbolt-0": {
                 "tileset": "p-magbolt-0",
-                "thinker": 'MissileThinker',
-                "size": 24
+                "thinker": 'MagboltThinker',
+                "size": 16,
+                "fx": ["@FX_LIGHT_SOURCE"]
             },
 
             "o-bluedisc": {
@@ -119,9 +125,6 @@ function getLevel() {
                 "thinker": 'StaticThinker',
                 "size": 16
             },
-
-
-
         },
 
         "level": {
@@ -231,13 +234,7 @@ async function main() {
     // creates engine
     const engine = new Engine();
     // declare thinkers
-    engine.declareThinkers({
-        DevKbdThinker,
-        DevKbdMobThinker,
-        StaticThinker,
-        TangibleThinker,
-        MissileThinker
-    });
+    engine.declareThinkers(THINKERS);
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
     // builds level, display progress on console

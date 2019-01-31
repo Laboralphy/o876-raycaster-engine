@@ -90,6 +90,7 @@ class TileAnimation {
         this._loopDir = value;
     }
 
+
     animate(nTimeInc) {
         if (this._frozen) {
             return;
@@ -104,11 +105,11 @@ class TileAnimation {
                     break;
 
                 case 1:
-                    if (this._index < this._count) {
-                        this._index = (this._index + 1) % this._count;
-                    } else {
-                        this._index = 0;
-                        --this._iterations;
+                    ++this._index;
+                    if (this._index >= this._count) {
+                        if (--this._iterations > 0) {
+                            this._index = 0;
+                        }
                     }
                     break;
 

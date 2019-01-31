@@ -292,6 +292,7 @@ class Engine {
      * @param nTime {number} number of milliseconds you want to advance simulation
      */
     _update(nTime) {
+        const rc = this._rc;
         const tp = this._TIME_INTERVAL;
         this._time += nTime;
         const tm = this._timeMod + nTime;
@@ -305,6 +306,10 @@ class Engine {
             // entity management
             this._camera.think(this);
             this._horde.process(this);
+            this
+                ._horde
+                .getDeadEntities()
+                .forEach(e => this.destroyEntity(e));
             // special effect management
             bRender = true;
             this._events.emit('update');
@@ -510,6 +515,7 @@ class Engine {
             bp.animations = tsDef.animations
         }
         bp.size = bpDef.size;
+        bp.fx = bpDef.fx || [];
         this._blueprints[resref] = bp;
         return bp;
     }
@@ -528,11 +534,13 @@ class Engine {
      * @param resref {string} resource reference of the blueprint, to create the entity
      * @returns {Entity}
      */
-    createEntity(resref) {
+    createEntity(resref, location) {
         const rc = this._rc;
         const bp = this._blueprints[resref];
         const entity = new Entity();
+        entity.location.set(location);
         const sprite = rc.buildSprite(bp.tileset);
+        bp.fx.forEach(fx => sprite.addFlag(fx));
         const animations = bp.animations;
         if (animations) {
             // instantiates animations
@@ -677,9 +685,8 @@ class Engine {
         if ('objects' in data) {
             const aObjects = data.objects;
             aObjects.forEach(o => {
-                const entity = this.createEntity(o.blueprint);
+                const entity = this.createEntity(o.blueprint, o);
                 entity.sprite.setCurrentAnimation(o.animation, 0);
-                entity.location.set(o);
                 entity.visible = true;
             })
         }

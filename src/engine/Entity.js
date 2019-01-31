@@ -20,6 +20,7 @@ class Entity {
         this._thinker = null;
         this._size = 0;
         this._inertia = new Vector();
+        this._dead = false;
         this.data = {};
     }
 
@@ -77,6 +78,14 @@ class Entity {
 
     set inertia(value) {
         this._inertia = value;
+    }
+
+    get dead() {
+        return this._dead;
+    }
+
+    set dead(value) {
+        this._dead = value;
     }
 }
 

@@ -10,7 +10,6 @@ class MoverThinker extends Thinker {
     constructor() {
         super();
         this._speed = new Vector(); // real speed vector that controls the entity movement
-        this._angle = 0; // visual angle
         this._bHasChangedMovement = true;
         this._bCrashWall = false;
         this._cwc = null;
@@ -23,7 +22,6 @@ class MoverThinker extends Thinker {
     $move() {
         let m = this.entity;
         m.inertia.set(0, 0);
-        m.location.angle = this._angle;
         this.slide(this._speed);
     }
 
@@ -80,17 +78,6 @@ class MoverThinker extends Thinker {
             sx: spd.x,
             sy: spd.y,
         };
-    }
-
-    set angle(value) {
-        if (value !== this._angle) {
-            this.changeMovement();
-            this._angle = value;
-        }
-    }
-
-    get angle() {
-        return this._angle;
     }
 
     setSpeed(sx, sy) {

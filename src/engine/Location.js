@@ -3,12 +3,11 @@ import GeometryHelper from "../geometry/GeometryHelper";
 
 
 class Location {
-    constructor({x = 0, y = 0, z = 0, angle = 0, area = null} = {}) {
+    constructor({x = 0, y = 0, z = 0, angle = 0} = {}) {
         this.x = x;
         this.y = y;
         this.z = z;
         this._angle = angle;
-        this.area = area;
     }
 
     get angle() {
@@ -19,7 +18,7 @@ class Location {
         this._angle = GeometryHelper.normalizeAngle(value);
     }
 
-    set({x = null, y = null, z = null, angle = null, area = null}) {
+    set({x = null, y = null, z = null, angle = null}) {
         if (x !== null) {
             this.x = x;
         }
@@ -31,9 +30,6 @@ class Location {
         }
         if (angle !== null) {
             this.angle = angle;
-        }
-        if (area !== null) {
-            this.area = area;
         }
     }
 

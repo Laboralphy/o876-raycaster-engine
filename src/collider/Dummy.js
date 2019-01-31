@@ -19,6 +19,10 @@ class Dummy {
 		this.forceField = new ForceField();
 	}
 
+	get tangibility() {
+	    return this._tangibility;
+    }
+
     get position() {
         return this._position;
     }
@@ -48,7 +52,7 @@ class Dummy {
 	 * @param dummy
 	 */
 	tangibleWith(dummy) {
-		return (dummy._tangibility.self & this._tangibility.hitmask) !== 0;
+        return (dummy._tangibility.self & this._tangibility.hitmask) !== 0;
 	}
 
     /**

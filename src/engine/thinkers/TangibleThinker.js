@@ -13,6 +13,10 @@ class TangibleThinker extends MoverThinker {
         this._bUnderForceEffect = false;
     }
 
+    get dummy() {
+        return this._dummy;
+    }
+
     syncDummy() {
         // synchronizing dummy position
         const engine = this.engine;

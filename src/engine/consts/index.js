@@ -19,3 +19,7 @@ export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity
 export const METRIC_COLLIDER_SECTOR_SIZE = 128; // default size for collider sector
 
 export const SPRITE_DIRECTION_COUNT = 8;
+
+export const COLLISION_CHANNEL_CREATURE = 1;  // collision channel for normal tangible creature
+export const COLLISION_CHANNEL_MISSILE = 2;   // collision channel for normal exploding missile of any type
+

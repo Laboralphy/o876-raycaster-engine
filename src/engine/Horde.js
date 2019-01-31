@@ -67,6 +67,10 @@ class Horde {
         }
     }
 
+    getDeadEntities() {
+        return this._entities.filter(e => e.dead);
+    }
+
     process(engine) {
         const entities = this._entities;
         for (let i = 0, l = entities.length; i < l; ++i) {
