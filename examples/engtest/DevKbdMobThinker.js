@@ -1,8 +1,5 @@
-import Easing from "../../src/easing/Easing";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 
-const ANGLE_INT_MAX_TIME = 666;
-const ANGLE_INT_MIN_VALUE = 0.0;
 const ANGLE_INT_MAX_VALUE = 0.1;
 const SPEED = 6;
 
