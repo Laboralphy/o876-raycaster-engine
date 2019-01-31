@@ -25,6 +25,14 @@ class TangibleThinker extends MoverThinker {
         collider.track(dummy);
     }
 
+    /**
+     * retrieve a list of dummies that collides with this entity
+     * @returns {Dummy[]}
+     */
+    getCollidingDummies() {
+        return this.engine._collider.getCollidingDummies(this._dummy);
+    }
+
     processForces() {
         // synchronizing dummy position
         const engine = this.engine;
@@ -32,7 +40,7 @@ class TangibleThinker extends MoverThinker {
         const collider = engine._collider;
         const forceField = dummy.forceField;
         this.syncDummy();
-        const aHitters = collider.getCollidingDummies(dummy);
+        const aHitters = this.getCollidingDummies();
         if (aHitters.length > 0) {
             collider.computeCollidingForces(dummy, aHitters);
         }

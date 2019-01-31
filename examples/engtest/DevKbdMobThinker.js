@@ -11,7 +11,8 @@ class DevKbdMobThinker extends TangibleThinker {
             up: false,
             down: false,
             right: false,
-            left: false
+            left: false,
+            fire: false
         };
         this.bWalk = false;
         window.addEventListener('keydown', event => this.keyDown(event.key));
@@ -44,6 +45,11 @@ class DevKbdMobThinker extends TangibleThinker {
                     k.right = this._lastTime;
                 }
                 break;
+
+            case 'e':
+                k.fire = true;
+                break;
+
         }
     }
 
@@ -63,6 +69,10 @@ class DevKbdMobThinker extends TangibleThinker {
 
             case 'd':
                 this._keys.right = false;
+                break;
+
+            case 'e':
+                this._keys.fire = false;
                 break;
         }
     }
@@ -102,6 +112,10 @@ class DevKbdMobThinker extends TangibleThinker {
         }
         if (k.left !== false) {
             this.angle -= ANGLE_INT_MAX_VALUE;
+        }
+        if (k.fire !== false) {
+            k.fire = false;
+            this.engine.createEntity('')
         }
 
     }

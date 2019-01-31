@@ -3,6 +3,7 @@ import DevKbdThinker from "./DevKbdThinker";
 import StaticThinker from "../../src/engine/thinkers/StaticThinker";
 import TangibleThinker from "../../src/engine/thinkers/TangibleThinker";
 import DevKbdMobThinker from "./DevKbdMobThinker";
+import MissileThinker from "./MissileThinker";
 
 function getLevel() {
     return {
@@ -103,7 +104,7 @@ function getLevel() {
 
             "p-magbolt-0": {
                 "tileset": "p-magbolt-0",
-                "thinker": null,
+                "thinker": 'MissileThinker',
                 "size": 24
             },
 
@@ -234,7 +235,8 @@ async function main() {
         DevKbdThinker,
         DevKbdMobThinker,
         StaticThinker,
-        TangibleThinker
+        TangibleThinker,
+        MissileThinker
     });
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));

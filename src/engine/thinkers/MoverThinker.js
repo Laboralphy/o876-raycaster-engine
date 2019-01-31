@@ -1,8 +1,6 @@
 import {computeWallCollisions} from "../../wall-collider";
 import Thinker from "./Thinker";
 import Vector from "../../geometry/Vector";
-import GeometryHelper from "../../geometry/GeometryHelper";
-import * as CONSTS from "../consts";
 
 /**
  * a base thinker for moving entities.
@@ -14,6 +12,8 @@ class MoverThinker extends Thinker {
         this._speed = new Vector(); // real speed vector that controls the entity movement
         this._angle = 0; // visual angle
         this._bHasChangedMovement = true;
+        this._bCrashWall = false;
+        this._cwc = null;
         this.state = 'move';
     }
 
@@ -53,14 +53,14 @@ class MoverThinker extends Thinker {
         const ps = rc.options.metrics.spacing;
         const size = entity.size;
 
-        const cwc = computeWallCollisions(
+        const cwc = this._cwc = computeWallCollisions(
             location.x,
             location.y,
             v.x,
             v.y,
             size,
             ps,
-            false,
+            this._bCrashWall,
             (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
         );
         entity.location.x += cwc.speed.x;
