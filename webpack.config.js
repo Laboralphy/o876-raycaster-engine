@@ -44,8 +44,8 @@ const testConfig = {
 const exampleConfig = {
     mode: "development",
     entry: {
-        devtest: path.resolve(__dirname, 'examples/devtest/index.js'),
-        engtest: path.resolve(__dirname, 'examples/engtest/index.js')
+        engtest: path.resolve(__dirname, 'examples/engtest/index.js'),
+        "simple-room": path.resolve(__dirname, 'examples/simple-room/index.js'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),
