@@ -24,14 +24,22 @@ const LEVEL = {
         "flats": "textures/flats.png",
         "walls": "textures/walls.png",
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
-            "########",
-            "#  ##  #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "########",
+            "################",
+            "#   ############",
+            "#   ############",
+            "#   ############",
+            "#   *+##########",
+            "#   ############",
+            "#   *##########",
+            "#   ############",
+            "#              #",
+            "#              #",
+            "#     #   #    #",
+            "#              #",
+            "#   #  *    #  #",
+            "#              #",
+            "#              #",
+            "################",
         ],
         "legend": [{
             "code": ' ',
@@ -48,6 +56,22 @@ const LEVEL = {
                 "e": 0, // east wall
                 "w": 0, // west wall
                 "s": 0, // south wall
+            }
+        }, {
+            "code": '+',
+            "phys": "@PHYS_WALL", // you cannot walk on this character,
+            "faces": {
+                "n": 1, // north wall
+                "e": 1, // east wall
+                "w": 1, // west wall
+                "s": 1, // south wall
+            }
+        }, {
+            "code": '*',
+            "phys": "@PHYS_NONE", // you cannot walk on this character,
+            "faces": {
+                "f": 0, // floor texture (taken from "flats" property)
+                "c": 1  // ceiling texture (taken from "flats" property)
             }
         }]
     },

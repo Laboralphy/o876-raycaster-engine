@@ -241,7 +241,6 @@ async function main() {
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
-    //const w = engine.createEntity('m-warlock-b');
     
     const ct = engine.createThinkerInstance('DevKbdThinker');
 

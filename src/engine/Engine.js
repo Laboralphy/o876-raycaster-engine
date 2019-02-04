@@ -693,6 +693,18 @@ class Engine {
             })
         }
 
+        if ('camera' in data) {
+            // sets initial camera location, and orientation
+            const {x, y, z, angle} = data.camera;
+            this.camera.location.set({
+                x: x * 64, // camera coordinates (x-axis)
+                y: y * 64, // camera coordinates (y-axis)
+                angle, // looking angle
+                z: 1 // camera altitude (1 is the default object)
+            });
+            this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
+        }
+
         feedback('done', 1);
     }
 
