@@ -82,7 +82,7 @@ class KeyboardControlThinker extends TangibleThinker {
         const ps = rc.options.metrics.spacing;
         const oEntLoc = this.entity.location;
 
-        const forw = (k.forward.state !== false ? 1 : 0) & (k.backward.state !== false ? 2 : 0);
+        const forw = (k.forward.state !== false ? 1 : 0) | (k.backward.state !== false ? 2 : 0);
         switch (forw) {
             case 1:
                 this.setSpeed(

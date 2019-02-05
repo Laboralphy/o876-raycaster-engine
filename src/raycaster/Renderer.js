@@ -476,7 +476,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (myx !== nValue) {
             const lm = this._lightMap;
             const ms = CONSTS.METRIC_LIGHTMAP_SCALE;
-            lm.setLightBlocking(x * ms, y * ms, ms, ms, code !== CONSTS.PHYS_NONE && code !== CONSTS.PHYS_TRANSPARENT_BLOCK);
+            lm.setLightBlocking(
+                x * ms,
+                y * ms,
+                ms,
+                ms,
+                code !== CONSTS.PHYS_NONE &&
+                code !== CONSTS.PHYS_TRANSPARENT_BLOCK &&
+                code !== CONSTS.PHYS_INVISIBLE_BLOCK
+            );
             my[x] = nValue;
         }
     }

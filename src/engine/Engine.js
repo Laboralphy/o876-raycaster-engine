@@ -611,6 +611,7 @@ class Engine {
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
         const oTranslator = new Translator();
+        oTranslator.strict = false;
         oTranslator
 
             // LOOP constants
@@ -696,9 +697,10 @@ class Engine {
         if ('camera' in data) {
             // sets initial camera location, and orientation
             const {x, y, z, angle} = data.camera;
+            const ps = rc.options.metrics.spacing;
             this.camera.location.set({
-                x: x * 64, // camera coordinates (x-axis)
-                y: y * 64, // camera coordinates (y-axis)
+                x: x * ps + (ps >> 1), // camera coordinates (x-axis)
+                y: y * ps + (ps >> 1), // camera coordinates (y-axis)
                 angle, // looking angle
                 z: 1 // camera altitude (1 is the default object)
             });

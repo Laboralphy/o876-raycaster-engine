@@ -1,10 +1,21 @@
+import {suggest} from "../levenshtein";
 /**
  * this class translates a string or a regular expression into another string
  */
 class Translator {
+
     constructor() {
         this._rules = [];
         this._aliases = {};
+        this._strict = false;
+    }
+
+    get strict() {
+        return this._strict;
+    }
+
+    set strict(value) {
+        this._strict = value;
     }
 
     /**
@@ -37,6 +48,10 @@ class Translator {
             if (s.match(r.expr)) {
                 return r.alias;
             }
+        }
+        if (this._strict) {
+            // strict mode : if no alias or rule found, then throw error
+            throw new Error('could not resolve this identifier : "' + s + '". Did you mean "' + suggest(s, Object.keys(this._aliases)) + '" ?');
         }
         return s;
     }

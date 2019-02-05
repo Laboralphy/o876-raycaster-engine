@@ -23,23 +23,30 @@ const LEVEL = {
         },
         "flats": "textures/flats.png",
         "walls": "textures/walls.png",
+        "sky": "textures/sky-ls.png",
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
-            "################",
-            "#   ############",
-            "#   ############",
-            "#   ############",
-            "#   *+##########",
-            "#   ############",
-            "#   *##########",
-            "#   ############",
-            "#              #",
-            "#              #",
-            "#     #   #    #",
-            "#              #",
-            "#   #  *    #  #",
-            "#              #",
-            "#              #",
-            "################",
+            "######################",
+            "#         ############",
+            "#         ############",
+            "w         ############",
+            "#          *+#########",
+            "#         ############",
+            "#         ############",
+            "#         ############",
+            "#  #      ############",
+            "w  #       *+#########",
+            "#  #      ############",
+            "#         ############",
+            "#         ############",
+            "#         ############",
+            "#                    #",
+            "w                    #",
+            "#           #   #    #",
+            "#                    #",
+            "#         #  *    #  #",
+            "#                    #",
+            "#                    #",
+            "######################",
         ],
         "legend": [{
             "code": ' ',
@@ -58,6 +65,18 @@ const LEVEL = {
                 "s": 0, // south wall
             }
         }, {
+            "code": 'w',
+            "phys": "@PHYS_INVISIBLE_BLOCK", // you cannot walk on this character,
+            "faces": {
+                "f": 0, // floor texture (taken from "flats" property)
+                "c": 1  // ceiling texture (taken from "flats" property)
+            },
+            "light": {
+                "r0": 128,
+                "r1": 256,
+                "v": 0.3
+            }
+        }, {
             "code": '+',
             "phys": "@PHYS_WALL", // you cannot walk on this character,
             "faces": {
@@ -71,15 +90,20 @@ const LEVEL = {
             "phys": "@PHYS_NONE", // you cannot walk on this character,
             "faces": {
                 "f": 0, // floor texture (taken from "flats" property)
-                "c": 1  // ceiling texture (taken from "flats" property)
+                "c": 2  // ceiling texture (taken from "flats" property)
+            },
+            "light": {
+                "r0": 256,
+                "r1": 384,
+                "v": 0.45
             }
         }]
     },
     "camera": {
         "thinker": "KeyboardControlThinker", // the control thinker
-        x: 5, // camera coordinates (x-axis)
-        y: 6, // camera coordinates (y-axis)
-        angle: -Math.PI / 2 - 0.4, // looking angle
+        x: 2, // camera coordinates (x-axis)
+        y: 1, // camera coordinates (y-axis)
+        angle: Math.PI / 2, // looking angle
         z: 1 // camera altitude (1 is the default object)
     },
     "objects": [
