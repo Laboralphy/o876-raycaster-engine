@@ -28,6 +28,7 @@ class Engine {
         this._scheduler = null;
         this._horde = null;
         this._camera = null;
+        this._tilesets = null;
         this._blueprints = null;
         this._time = 0;
         this._interval = null;
@@ -61,6 +62,7 @@ class Engine {
         this._horde = new Horde();
         this.initializeCamera();
         this._blueprints = {};
+        this._tilesets = {};
         this._timeMod = 0;
         this._time = 0;
         this._rc._optionsReactor.events.on('changed', ({key}) => {
@@ -491,6 +493,13 @@ class Engine {
         }
     }
 
+    async loadTileSet(ref, src, tileWidth, tileHeight) {
+        const oImage = await CanvasHelper.loadCanvas(src);
+        const tileset = this._rc.buildTileSet(oImage, tileWidth, tileHeight);
+        this._tilesets[ref] = tileset;
+        return tileset;
+    }
+
     /**
      * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
      * @param resref {string} new blueprint reference
@@ -499,13 +508,11 @@ class Engine {
      */
     async createBlueprint(resref, data) {
         const bpDef = data.blueprints[resref];
-        const rc = this._rc;
         const tsDef = data.tilesets[bpDef.tileset];
         const src = tsDef.src;
         const tileWidth = tsDef.width;
         const tileHeight = tsDef.height;
-        const oImage = await CanvasHelper.loadCanvas(src);
-        const tileset = rc.buildTileSet(oImage, tileWidth, tileHeight);
+        const tileset = await this.loadTileSet(ref, src, tileWidth, tileHeight);
         const bp = new Blueprint();
         bp.tileset = tileset;
         if ('thinker' in bpDef) {
@@ -686,8 +693,7 @@ class Engine {
 
         // static objects
         if ('objects' in data) {
-            const aObjects = data.objects;
-            aObjects.forEach(o => {
+            data.objects.forEach(o => {
                 const entity = this.createEntity(o.blueprint, o);
                 entity.sprite.setCurrentAnimation(o.animation, 0);
                 entity.visible = true;
@@ -705,6 +711,25 @@ class Engine {
                 z: 1 // camera altitude (1 is the default object)
             });
             this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
+        }
+
+        if ('decals' in data) {
+            data.decals.forEach(d => {
+                const {
+                    x,
+                    y,
+                } = d;
+                if ('n' in d) {
+                    const
+                        xi = d.n.x,
+                        yi = d.n.y,
+                        sTileset = d.n.tileset,
+                        iTile = d.n.itile,
+                        ts = ;
+
+
+                }
+            });
         }
 
         feedback('done', 1);

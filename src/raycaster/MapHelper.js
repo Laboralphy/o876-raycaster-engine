@@ -89,10 +89,10 @@ class MapHelper {
         }));
 
         // upper storey
-        if ('map-upper' in oMap) {
-            const mapUpper = oMap['map-upper'];
+        if ('uppermap' in oMap && oMap) {
+            const upperMap = oMap.uppermap;
             const storey = renderer.createStorey();
-            const mapUpperData = mapUpper.map(rowProcess);
+            const mapUpperData = upperMap.map(rowProcess);
             mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
                 const m = this._materials[cell];
                 storey.setCellMaterial(x, y, cell);
