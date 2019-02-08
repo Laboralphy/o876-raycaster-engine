@@ -473,27 +473,53 @@ class Engine {
         }
     }
 
-    createThinkerInstance(sThinker) {
-        if (!sThinker) {
-            sThinker = 'default';
+    /**
+     * this function will extract an item out of a collection
+     * @param sItem {string} item key
+     * @param oItems {object} collection of items
+     * @param sLabel {string} a label in case of error
+     * @returns {*}
+     * @private
+     */
+    _getObjectItem(sItem, oItems, sLabel) {
+        if (typeof oItems !== 'object') {
+            throw new Error(util.format('this is not a collection of "%s"', sLabel));
         }
-        const thinkers = this._thinkers;
-        if (sThinker in thinkers) {
-            const pThinker = thinkers[sThinker];
-            const oThinker = new pThinker();
-            oThinker.engine = this;
-            return oThinker;
+        if (sItem in oItems) {
+            return oItems[sItem];
         } else {
-            const aThinkerNames = Object.keys(thinkers);
-            if (aThinkerNames.length > 0) {
-                throw new Error(util.format('There is no such thinker : "%s". Did you mean "%s" ?', sThinker, suggest(sThinker, aThinkerNames)));
+            const aItems = Object.keys(oItems);
+            if (aItems.length > 0) {
+                throw new Error(util.format('There is no such %s : "%s". Did you mean "%s" ?', sLabel, sItem, suggest(sItem, aItems)));
             } else {
-                throw new Error('No thinkers have been declared so far');
+                throw new Error(util.format('No %s has been declared so far in the given collection', sLabel));
             }
         }
     }
 
+    createThinkerInstance(sThinker) {
+        if (!sThinker) {
+            sThinker = 'default';
+        }
+        const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
+        const oThinker = new pThinker();
+        oThinker.engine = this;
+        return oThinker;
+    }
+
+
+    /**
+     * Loads a tileset
+     * @param ref {string} reference name
+     * @param src {string} url to image
+     * @param tileWidth {number} width
+     * @param tileHeight {number} height
+     * @returns {Promise<*>}
+     */
     async loadTileSet(ref, src, tileWidth, tileHeight) {
+        if (ref in this._tilesets) {
+            return this._tilesets[ref];
+        }
         const oImage = await CanvasHelper.loadCanvas(src);
         const tileset = this._rc.buildTileSet(oImage, tileWidth, tileHeight);
         this._tilesets[ref] = tileset;
@@ -612,8 +638,9 @@ class Engine {
 
     async buildLevel(data, monitor) {
         const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
+        const DECAL_COUNT = Object.keys(data.decals).length;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
@@ -661,20 +688,27 @@ class Engine {
                 height: cvs.height
             }
         });
+
+        let PROGRESS = 0;
+        const showProgress = sLabel => {
+            feedback(sLabel, ++PROGRESS / ALL_COUNT);
+        };
+
         // defines sky, walls and flats
-        feedback('loading textures', 1 / ALL_COUNT);
+        showProgress('loading textures');
         if ('sky' in data.level) {
             rc.setBackground(await CanvasHelper.loadCanvas(data.level.sky));
         }
-        feedback('loading textures', 2 / ALL_COUNT);
+        showProgress('loading textures');
         rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.walls));
-        feedback('loading textures', 3 / ALL_COUNT);
+        showProgress('loading textures');
         rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.flats));
+
 
         // creates blueprints
         let nBp = TEXTURE_COUNT;
         for (let resref in data.blueprints) {
-            feedback('creating blueprints',  nBp / ALL_COUNT);
+            showProgress('creating blueprints');
             await this.createBlueprint(resref, data);
             ++nBp;
         }
@@ -713,23 +747,107 @@ class Engine {
             this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
         }
 
+
+        const FACES = 'wsenfc';
+
+        /**
+         * auto loads a tileset
+         * @param ref {string} reference name
+         * @param data {object} this is a level definition
+         * @returns {Promise<void>}
+         */
+        const autoLoadTileSet = (ref, data) => {
+            try {
+                const tsDef = this._getObjectItem(ref, data.tilesets, 'tileset');
+                const {width, height, src} = tsDef;
+                return this.loadTileSet(ref, src, width, height);
+            } catch(e) {
+                Promise.reject(e.message);
+            }
+        };
+
+
+        const installDecal = async (decal, face) => {
+            const xCell = decal.x;
+            const yCell = decal.y;
+            if (face in decal) {
+                const iFace = FACES.indexOf(face);
+                const {align, tileset} = decal[face];
+                const ts = await autoLoadTileSet(tileset, data);
+                this._rc.paintSurface(xCell, yCell, iFace, (xCell, yCell, iFace, oCanvas) => {
+                    const wCvs = oCanvas.width;
+                    const hCvs = oCanvas.height;
+                    const wTile = ts.tileWidth;
+                    const hTile = ts.tileHeight;
+                    const xLeft = 0;
+                    const xRight = wCvs - wTile;
+                    const xMid = xRight >> 1;
+                    const yTop = 0;
+                    const yBottom = hCvs - hTile;
+                    const yMid = yBottom >> 1;
+                    let xd, yd;
+                    switch (align) {
+                        case 7:
+                            xd = xLeft;
+                            yd = yTop;
+                            break;
+
+                        case 8:
+                            xd = xMid;
+                            yd = yTop;
+                            break;
+
+                        case 9:
+                            xd = xRight;
+                            yd = yTop;
+                            break;
+
+                        case 4:
+                            xd = xLeft;
+                            yd = yMid;
+                            break;
+
+                        case 5:
+                            xd = xMid;
+                            yd = yMid;
+                            break;
+
+                        case 6:
+                            xd = xRight;
+                            yd = yMid;
+                            break;
+
+                        case 1:
+                            xd = xLeft;
+                            yd = yBottom;
+                            break;
+
+                        case 2:
+                            xd = xMid;
+                            yd = yBottom;
+                            break;
+
+                        case 3:
+                            xd = xRight;
+                            yd = yBottom;
+                            break;
+                    }
+                    oCanvas.getContext('2d').drawImage(ts._originalImage, xd, yd);
+                })
+            }
+        };
+
         if ('decals' in data) {
-            data.decals.forEach(d => {
-                const {
-                    x,
-                    y,
-                } = d;
-                if ('n' in d) {
-                    const
-                        xi = d.n.x,
-                        yi = d.n.y,
-                        sTileset = d.n.tileset,
-                        iTile = d.n.itile,
-                        ts = ;
-
-
-                }
-            });
+            for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
+                const decal = data.decals[iDecal];
+                await installDecal(decal, 'n');
+                await installDecal(decal, 'e');
+                await installDecal(decal, 'w');
+                await installDecal(decal, 's');
+                await installDecal(decal, 'f');
+                await installDecal(decal, 'c');
+                showProgress('applying decals');
+            }
         }
 
         feedback('done', 1);

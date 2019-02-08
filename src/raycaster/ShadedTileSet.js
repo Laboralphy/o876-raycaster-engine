@@ -105,7 +105,7 @@ class ShadedTileSet {
 		const y = nLevel !== undefined ? h * nLevel : 0;
 		const oFragment = CanvasHelper.createCanvas(w, fh);
 		const ctx = oFragment.getContext('2d');
-		ctx.drawImage(this._image, x, y, w, fh, 0, 0, w, fh);
+		ctx.drawImage(y === 0 ? this._originalImage : this._image, x, y, w, fh, 0, 0, w, fh);
 		return oFragment;
 	}
 	
