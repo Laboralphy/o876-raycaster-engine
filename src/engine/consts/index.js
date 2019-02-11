@@ -23,3 +23,13 @@ export const SPRITE_DIRECTION_COUNT = 8;
 export const COLLISION_CHANNEL_CREATURE = 1;  // collision channel for normal tangible creature
 export const COLLISION_CHANNEL_MISSILE = 2;   // collision channel for normal exploding missile of any type
 
+
+export const DECAL_ALIGN_TOP_LEFT = 7;
+export const DECAL_ALIGN_TOP = 8;
+export const DECAL_ALIGN_TOP_RIGHT = 9;
+export const DECAL_ALIGN_LEFT = 4;
+export const DECAL_ALIGN_CENTER = 5;
+export const DECAL_ALIGN_RIGHT = 6;
+export const DECAL_ALIGN_BOTTOM_LEFT = 1;
+export const DECAL_ALIGN_BOTTOM = 2;
+export const DECAL_ALIGN_BOTTOM_RIGHT = 3;

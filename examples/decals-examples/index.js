@@ -103,16 +103,15 @@ const LEVEL = {
         // there is no object
     ],
     "decals": [
-        {x: 0, y: 6, e: {align: 1, tileset: 'd1'}},
-        {x: 0, y: 5, e: {align: 2, tileset: 'd2'}},
-        {x: 0, y: 4, e: {align: 3, tileset: 'd3'}},
-        {x: 0, y: 3, e: {align: 4, tileset: 'd4'}},
-        {x: 0, y: 2, e: {align: 5, tileset: 'd5'}},
-        {x: 0, y: 1, e: {align: 6, tileset: 'd6'}},
-        {x: 1, y: 0, s: {align: 7, tileset: 'd7'}},
-        {x: 2, y: 0, s: {align: 8, tileset: 'd8'}},
-        {x: 3, y: 1, w: {align: 9, tileset: 'd9'}},
-
+        {x: 0, y: 6, e: {align: '@DECAL_ALIGN_TOP_LEFT', tileset: 'd1'}},
+        {x: 0, y: 5, e: {align: '@DECAL_ALIGN_TOP', tileset: 'd2'}},
+        {x: 0, y: 4, e: {align: '@DECAL_ALIGN_TOP_RIGHT', tileset: 'd3'}},
+        {x: 0, y: 3, e: {align: '@DECAL_ALIGN_LEFT', tileset: 'd4'}},
+        {x: 0, y: 2, e: {align: '@DECAL_ALIGN_CENTER', tileset: 'd5'}},
+        {x: 0, y: 1, e: {align: '@DECAL_ALIGN_RIGHT', tileset: 'd6'}},
+        {x: 1, y: 0, s: {align: '@DECAL_ALIGN_BOTTOM_LEFT', tileset: 'd7'}},
+        {x: 2, y: 0, s: {align: '@DECAL_ALIGN_BOTTOM', tileset: 'd8'}},
+        {x: 3, y: 1, w: {align: '@DECAL_ALIGN_BOTTOM_RIGHT', tileset: 'd9'}},
     ]
 };
 

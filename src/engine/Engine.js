@@ -675,6 +675,16 @@ class Engine {
             .addRule('@PHYS_TRANSPARENT_BLOCK', RC_CONSTS.PHYS_TRANSPARENT_BLOCK)
             .addRule('@PHYS_INVISIBLE_BLOCK', RC_CONSTS.PHYS_INVISIBLE_BLOCK)
             .addRule('@PHYS_OFFSET_BLOCK', RC_CONSTS.PHYS_OFFSET_BLOCK)
+
+            .addRule('@DECAL_ALIGN_TOP_LEFT',     CONSTS.DECAL_ALIGN_TOP_LEFT)
+            .addRule('@DECAL_ALIGN_TOP_RIGHT',    CONSTS.DECAL_ALIGN_TOP_RIGHT)
+            .addRule('@DECAL_ALIGN_TOP',          CONSTS.DECAL_ALIGN_TOP)
+            .addRule('@DECAL_ALIGN_LEFT',         CONSTS.DECAL_ALIGN_LEFT)
+            .addRule('@DECAL_ALIGN_RIGHT',        CONSTS.DECAL_ALIGN_RIGHT)
+            .addRule('@DECAL_ALIGN_CENTER',       CONSTS.DECAL_ALIGN_CENTER)
+            .addRule('@DECAL_ALIGN_BOTTOM_LEFT',  CONSTS.DECAL_ALIGN_BOTTOM_LEFT)
+            .addRule('@DECAL_ALIGN_BOTTOM_RIGHT', CONSTS.DECAL_ALIGN_BOTTOM_RIGHT)
+            .addRule('@DECAL_ALIGN_BOTTOM',       CONSTS.DECAL_ALIGN_BOTTOM)
         ;
         data = oTranslator.translateStructure(data);
 
