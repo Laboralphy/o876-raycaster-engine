@@ -114,6 +114,7 @@ class DevKbdMobThinker extends TangibleThinker {
         if (k.left !== false) {
             oEntLoc.angle -= ANGLE_INT_MAX_VALUE;
         }
+
         if (k.fire !== false) {
             k.fire = false;
             const missile = this.engine.createEntity('p-magbolt-0', this.entity.location);

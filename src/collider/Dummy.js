@@ -6,6 +6,7 @@ import GeometryHelper from '../geometry/GeometryHelper';
 import Vector from '../geometry/Vector';
 import ForceField from "../force-field/ForceField";
 
+
 class Dummy {
 	constructor() {
 		this._position = new Vector();
@@ -46,6 +47,7 @@ class Dummy {
     set radius(value) {
         this._radius = value;
     }
+
 
     /**
 	 * Renvoie true si le masque-tangibilité de ce dummy correspond au type-tangibilité du dummy spécifié

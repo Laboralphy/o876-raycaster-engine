@@ -226,7 +226,8 @@ function getLevel() {
                 "blueprint": "m-warlock-b",
                 "animation": "stand"
             }
-        ]
+        ],
+        "decals": []
     };
 }
 // json de configuration

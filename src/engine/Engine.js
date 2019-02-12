@@ -19,6 +19,7 @@ import {suggest} from "../levenshtein";
 
 import Events from "events";
 import Collider from "../collider/Collider";
+import TagGrid from "../tag-grid";
 
 class Engine {
     constructor() {
@@ -46,6 +47,7 @@ class Engine {
         this._renderContext = null;
 
         this._events = new Events();
+        this._tagGrid = new TagGrid();
     }
 
     get events() {
@@ -294,7 +296,6 @@ class Engine {
      * @param nTime {number} number of milliseconds you want to advance simulation
      */
     _update(nTime) {
-        const rc = this._rc;
         const tp = this._TIME_INTERVAL;
         this._time += nTime;
         const tm = this._timeMod + nTime;
@@ -449,6 +450,16 @@ class Engine {
         this._scheduler.cancelCommand(id);
     }
 
+//  _                                                                            _
+// | |_ __ _  __ _   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+// | __/ _` |/ _` | | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// | || (_| | (_| | | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \__\__,_|\__, | |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//           |___/                               |___/
+
+    addTag(x, y, sTag) {
+        this._tagGrid.addTag(x, y, sTag);
+    }
 
 //  _____ _     _       _                                                                           _
 // |_   _| |__ (_)_ __ | | _____ _ __   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
@@ -538,7 +549,7 @@ class Engine {
         const src = tsDef.src;
         const tileWidth = tsDef.width;
         const tileHeight = tsDef.height;
-        const tileset = await this.loadTileSet(ref, src, tileWidth, tileHeight);
+        const tileset = await this.loadTileSet(bpDef.tileset, src, tileWidth, tileHeight);
         const bp = new Blueprint();
         bp.tileset = tileset;
         if ('thinker' in bpDef) {
@@ -549,8 +560,7 @@ class Engine {
         }
         bp.size = bpDef.size;
         bp.fx = bpDef.fx || [];
-        this._blueprints[resref] = bp;
-        return bp;
+        return this._blueprints[resref] = bp;
     }
 
 
@@ -726,11 +736,12 @@ class Engine {
         if (data.level.legend) {
             const mh = new MapHelper();
             mh.build(rc, data.level);
-        } else {
-
         }
 
         const nMapSize = this._rc.getMapSize();
+        // sync with tag grid
+        this._tagGrid.setWidth(nMapSize);
+        this._tagGrid.setHeight(nMapSize);
         const ps = this._rc.options.metrics.spacing;
         this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());

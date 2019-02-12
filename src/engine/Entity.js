@@ -1,7 +1,5 @@
 import Location from "./Location";
 import Vector from "../geometry/Vector";
-import Dummy from "../collider/Dummy";
-import {computeWallCollisions} from "../wall-collider";
 
 /**
  * Entities are things that move or stay static in the level.
@@ -26,9 +24,7 @@ class Entity {
 
     think(engine) {
         const thinker = this._thinker;
-        if (thinker) {
-            thinker.think(this, engine);
-        }
+        thinker.think(this, engine);
     }
 
     get size() {

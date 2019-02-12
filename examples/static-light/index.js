@@ -108,7 +108,8 @@ const LEVEL = {
     },
     "objects": [
         // there is no object
-    ]
+    ],
+    "decals": []
 };
 
 // note that we use an "async" function, because we deal with promises when texture are loading

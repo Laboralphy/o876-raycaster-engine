@@ -36,7 +36,7 @@ class CanvasHelper {
 	 * @return {string}
      */
 	static getHash(oCanvas, sType = 'md5') {
-		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).digest('hex');
+		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).hash('hex');
 	}
 	
 	/**

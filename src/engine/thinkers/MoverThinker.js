@@ -11,9 +11,12 @@ class MoverThinker extends Thinker {
         super();
         this._speed = new Vector(); // real speed vector that controls the entity movement
         this._bHasChangedMovement = true;
+        this._bNewSector = false;
         this._bCrashWall = false;
         this._cwc = null;
         this.state = 'move';
+        this._xSector = -1;
+        this._ySector = -1;
     }
 
     /**
@@ -43,7 +46,14 @@ class MoverThinker extends Thinker {
         this._bHasChangedMovement = true;
     }
 
+    /**
+     * smooth movement from current position to a new position
+     * @param v
+     */
     slide(v) {
+        if (v.x === 0 && v.y === 0) {
+            return;
+        }
         const entity = this.entity;
         const engine = this.engine;
         const location = entity.location;
@@ -61,10 +71,34 @@ class MoverThinker extends Thinker {
             this._bCrashWall,
             (x0, y0) => rc.getCellPhys(x0 / ps | 0, y0 / ps | 0) !== 0
         );
-        entity.location.x += cwc.speed.x;
-        entity.location.y += cwc.speed.y;
+        location.x += cwc.speed.x;
+        location.y += cwc.speed.y;
         entity._inertia.x = cwc.speed.x;
         entity._inertia.y = cwc.speed.y;
+    }
+
+    /**
+     * Jump to another location without translation (disappear, then reappear)
+     * no collision is computed
+     * @param v
+     */
+    setLocation(x, y) {
+        const entity = this.entity;
+        const location = entity.location;
+        const engine = this.engine;
+        const rc = engine.raycaster;
+        const ps = rc.options.metrics.spacing;
+        const xSector1 = this._xSector;
+        const ySector1 = this._ySector;
+        const xSector2 = x / ps | 0;
+        const ySector2 = y / ps | 0;
+        location.x = x;
+        location.y = y;
+        if (xSector1 !== xSector2 || ySector1 !== ySector2) {
+            this._xSector = xSector2;
+            this._ySector = ySector2;
+            this._bNewSector = true;
+        }
     }
 
     getMovement() {

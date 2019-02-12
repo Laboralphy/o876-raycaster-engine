@@ -74,6 +74,28 @@ class ArrayHelper {
 		return Array.prototype.slice.call(a, 0)
 	}
 
+
+	/**
+	 * returns two arrays
+	 * array 'old' contains all items that are in A but not in B
+	 * array 'new' contains all items that are in B but not in A
+	 *
+	 * @param a
+	 * @param b
+	 * @returns {{new: ...*[], old: ...*[]}}
+	 */
+	static diff(a, b) {
+		const a1 = new Set(a);
+		const b1 = new Set(b);
+		// in a & not in b
+		const notInB = [...new Set([...a].filter(x => !b1.has(x)))];
+		const notInA = [...new Set([...b].filter(x => !a1.has(x)))];
+		return {
+			'new': notInA,
+			'old': notInB
+		};
+	}
+
 }
 
 export default ArrayHelper;

@@ -1,7 +1,7 @@
 class Blueprint {
     constructor() {
         this.tileset = null;
-        this.thinker = '';
+        this.thinker = null;
         this.animations = [];
         this.size = 0; // physical half size (radius)
         this.fx = [];

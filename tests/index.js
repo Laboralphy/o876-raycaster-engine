@@ -10,3 +10,4 @@ require('./GridTest');
 require('./LightSourcesTest');
 require('./LightSourcesTest');
 require('./AbbrTest');
+require('./TagGridTest');
