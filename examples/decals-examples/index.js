@@ -94,24 +94,24 @@ const LEVEL = {
     },
     "camera": {
         "thinker": "KeyboardControlThinker", // the control thinker
-        x: 5, // camera coordinates (x-axis)
-        y: 6, // camera coordinates (y-axis)
-        angle: -Math.PI / 2 - 0.4, // looking angle
-        z: 1 // camera altitude (1 is the default object)
+        "x": 5, // camera coordinates (x-axis)
+        "y": 6, // camera coordinates (y-axis)
+        "angle": -Math.PI / 2 - 0.4, // looking angle
+        "z": 1 // camera altitude (1 is the default object)
     },
     "objects": [
         // there is no object
     ],
     "decals": [
-        {x: 0, y: 6, e: {align: '@DECAL_ALIGN_TOP_LEFT', tileset: 'd1'}},
-        {x: 0, y: 5, e: {align: '@DECAL_ALIGN_TOP', tileset: 'd2'}},
-        {x: 0, y: 4, e: {align: '@DECAL_ALIGN_TOP_RIGHT', tileset: 'd3'}},
-        {x: 0, y: 3, e: {align: '@DECAL_ALIGN_LEFT', tileset: 'd4'}},
-        {x: 0, y: 2, e: {align: '@DECAL_ALIGN_CENTER', tileset: 'd5'}},
-        {x: 0, y: 1, e: {align: '@DECAL_ALIGN_RIGHT', tileset: 'd6'}},
-        {x: 1, y: 0, s: {align: '@DECAL_ALIGN_BOTTOM_LEFT', tileset: 'd7'}},
-        {x: 2, y: 0, s: {align: '@DECAL_ALIGN_BOTTOM', tileset: 'd8'}},
-        {x: 3, y: 1, w: {align: '@DECAL_ALIGN_BOTTOM_RIGHT', tileset: 'd9'}},
+        {"x": 0, "y": 6, "e": {"align": '@DECAL_ALIGN_TOP_LEFT', "tileset": 'd1'}},
+        {"x": 0, "y": 5, "e": {"align": '@DECAL_ALIGN_TOP', "tileset": 'd2'}},
+        {"x": 0, "y": 4, "e": {"align": '@DECAL_ALIGN_TOP_RIGHT', "tileset": 'd3'}},
+        {"x": 0, "y": 3, "e": {"align": '@DECAL_ALIGN_LEFT', "tileset": 'd4'}},
+        {"x": 0, "y": 2, "e": {"align": '@DECAL_ALIGN_CENTER', "tileset": 'd5'}},
+        {"x": 0, "y": 1, "e": {"align": '@DECAL_ALIGN_RIGHT', "tileset": 'd6'}},
+        {"x": 1, "y": 0, "s": {"align": '@DECAL_ALIGN_BOTTOM_LEFT', "tileset": 'd7'}},
+        {"x": 2, "y": 0, "s": {"align": '@DECAL_ALIGN_BOTTOM', "tileset": 'd8'}},
+        {"x": 3, "y": 1, "w": {"align": '@DECAL_ALIGN_BOTTOM_RIGHT', "tileset": 'd9'}},
     ]
 };
 
