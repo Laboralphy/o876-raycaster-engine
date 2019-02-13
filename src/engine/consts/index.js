@@ -15,8 +15,10 @@ export const DOOR_SLIDING_DURATION = 24;
 export const DOOR_MAINTAIN_DURATION = 300;
 export const DOOR_SECURITY_INTERVAL = 10;   // interval of entity presence checking during "CLOSING" phase
 
+// these value are expressed in texels
 export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity
 export const METRIC_COLLIDER_SECTOR_SIZE = 128; // default size for collider sector
+export const METRIC_PUSH_DISTANCE = 48; // distance of pushing action
 
 export const SPRITE_DIRECTION_COUNT = 8;
 

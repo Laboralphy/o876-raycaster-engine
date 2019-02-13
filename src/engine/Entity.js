@@ -1,6 +1,9 @@
 import Location from "./Location";
 import Vector from "../geometry/Vector";
 
+
+let LAST_ID = 0;
+
 /**
  * Entities are things that move or stay static in the level.
  * Each entity has a position and a thinker
@@ -12,6 +15,7 @@ import Vector from "../geometry/Vector";
 
 class Entity {
     constructor() {
+        this._id = ++LAST_ID;
         this._location = new Location();
         this._visible = false;
         this._sprite = null;
@@ -20,6 +24,10 @@ class Entity {
         this._inertia = new Vector();
         this._dead = false;
         this.data = {};
+    }
+
+    get id() {
+        return this._id;
     }
 
     think(engine) {

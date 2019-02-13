@@ -676,8 +676,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xCamera = scene.camera.x;
         let yCamera = scene.camera.y;
         let fDirection = scene.camera.direction;
-        const METRICS = this._options.metrics;
         const SCREEN = this._options.screen;
+        const METRICS = this._options.metrics;
         let xScreenSize = SCREEN.width;
         let fViewAngle = scene.camera.fov;
         let nSpacing = METRICS.spacing;
@@ -1720,6 +1720,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const CAMERA = scene.camera;
         const SCREEN = OPTIONS.screen;
+        const METRICS = OPTIONS.metrics;
         const xspr = oSprite.x;
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
@@ -1728,6 +1729,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const dy = yspr - ycam;
         const ts = oSprite.getTileSet();
         const fov = CAMERA.fov;
+        const ps = METRICS.spacing;
 
         const fTarget = Math.atan2(dy, dx);
         let fAlpha = fTarget - CAMERA.direction; // Angle
@@ -1761,7 +1763,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
             const sh = OPTIONS.shading.shades;
             // add contextual lighting
-            const lightFactor = this._csm.getLightMap(xspr, yspr, OPTIONS.metrics.spacing);
+            const lightFactor = this._csm.getLightMap(xspr, yspr, ps);
             const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor - lightFactor | 0));
 
             const data = [

@@ -19,7 +19,7 @@ import {suggest} from "../levenshtein";
 
 import Events from "events";
 import Collider from "../collider/Collider";
-import TagGrid from "../tag-grid";
+import TagManager from "./TagManager";
 
 class Engine {
     constructor() {
@@ -47,7 +47,6 @@ class Engine {
         this._renderContext = null;
 
         this._events = new Events();
-        this._tagGrid = new TagGrid();
     }
 
     get events() {
@@ -60,6 +59,7 @@ class Engine {
     initializeRenderer() {
         this._rc = new Renderer();
         this._dm = new DoorManager();
+        this._tm = new TagManager();
         this._scheduler = new Scheduler();
         this._horde = new Horde();
         this.initializeCamera();
@@ -70,6 +70,9 @@ class Engine {
         this._rc._optionsReactor.events.on('changed', ({key}) => {
             this.updateRaycasterOption(key);
         });
+        this._tm.events.on('tagenter', event => this._tagEnter(event));
+        this._tm.events.on('tagleave', event => this._tagLeave(event));
+        this._tm.events.on('tagpush', event => this._tagPush(event));
         this._events.emit('initialized');
     }
 
@@ -86,7 +89,6 @@ class Engine {
     updateRaycasterOption(key) {
         switch (key) {
             case 'metrics.spacing':
-                const ps = this._rc._options.metrics.spacing;
                 break;
         }
     }
@@ -106,6 +108,15 @@ class Engine {
     getTime() {
         return this._time;
     }
+
+
+
+//      _                                                                                _
+//   __| | ___   ___  _ __   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//  / _` |/ _ \ / _ \| '__| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// | (_| | (_) | (_) | |    | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \__,_|\___/ \___/|_|    |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                                                       |___/
 
 
     /**
@@ -271,7 +282,7 @@ class Engine {
         dc.data.x = x;
         dc.data.y = y;
         dc.data.phys = nPhysCode;
-        dc.event.on('check', event => this._checkDoorClosability(event));
+        //dc.events.on('check', event => this._checkDoorClosability(event));
         const dm = this._dm;
         dm.linkDoorContext(dc);
     }
@@ -314,6 +325,7 @@ class Engine {
                 .getDeadEntities()
                 .forEach(e => this.destroyEntity(e));
             // special effect management
+            this._tm.hordeProcess(this);
             bRender = true;
             this._events.emit('update');
         }
@@ -400,6 +412,16 @@ class Engine {
 
 
     /**
+     * resolves a block action, an action where an entity uses its "push" action on a wall
+     * @param entity {Entity}
+     * @param x {number}
+     * @param y {number}
+     */
+    pushBlock(entity, x, y) {
+        this._tm.entityPushBlock(this, entity, x, y);
+    }
+
+    /**
      * Opens a door at a specified position. The cell at x, y must have a PHYS_DOOR_*, PHYS_CURT_* or PHYS_SECRET_BLOCK physical code
      * @param x {number} position of cell x
      * @param y {number} position of cell y
@@ -457,8 +479,27 @@ class Engine {
 //  \__\__,_|\__, | |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
 //           |___/                               |___/
 
+
+    // script
+    // ref
+    // lock
+    // item
+    //
+
+    _tagEnter({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.enter', {entity, parameters, remove});
+    }
+
+    _tagLeave({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.leave', {entity, parameters, remove});
+    }
+
+    _tagPush({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.push', {entity, parameters, remove});
+    }
+
     addTag(x, y, sTag) {
-        this._tagGrid.addTag(x, y, sTag);
+        this._tm.addTag(x, y, sTag);
     }
 
 //  _____ _     _       _                                                                           _
@@ -595,6 +636,7 @@ class Engine {
         entity.sprite = sprite;
         entity.size = bp.size;
         this._horde.linkEntity(entity);
+        this.events.emit('entitycreated', {entity});
         return entity;
     }
 
@@ -602,6 +644,7 @@ class Engine {
         if (this._horde.isEntityLinked(e)) {
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
+            this.events.emit('entitydestroyed', {entity});
         }
     }
 
@@ -648,9 +691,10 @@ class Engine {
 
     async buildLevel(data, monitor) {
         const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
-        const DECAL_COUNT = Object.keys(data.decals).length;
+        const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
+        const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
@@ -739,9 +783,8 @@ class Engine {
         }
 
         const nMapSize = this._rc.getMapSize();
+        this._tm.setMapSize(nMapSize);
         // sync with tag grid
-        this._tagGrid.setWidth(nMapSize);
-        this._tagGrid.setHeight(nMapSize);
         const ps = this._rc.options.metrics.spacing;
         this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
@@ -758,7 +801,6 @@ class Engine {
         if ('camera' in data) {
             // sets initial camera location, and orientation
             const {x, y, z, angle} = data.camera;
-            const ps = rc.options.metrics.spacing;
             this.camera.location.set({
                 x: x * ps + (ps >> 1), // camera coordinates (x-axis)
                 y: y * ps + (ps >> 1), // camera coordinates (y-axis)
@@ -871,7 +913,16 @@ class Engine {
             }
         }
 
+        showProgress('analyzing tags');
+        if ('tags' in data) {
+            for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
+                const tagEntry = data.tags[iTag];
+                tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
+            }
+        }
+
         feedback('done', 1);
+        this.events.emit('levelbuilt');
     }
 
 }
