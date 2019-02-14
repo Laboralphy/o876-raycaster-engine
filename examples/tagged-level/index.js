@@ -24,14 +24,16 @@ const LEVEL = {
         "flats": "textures/flats.png",
         "walls": "textures/walls.png",
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
-            "########",
-            "#  ##  #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "#      #",
-            "########",
+            "##########",
+            "#        #",
+            "##+##    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "##########",
         ],
         "legend": [{
             "code": ' ',
@@ -49,23 +51,39 @@ const LEVEL = {
                 "w": 0, // west wall
                 "s": 0, // south wall
             }
+        }, {
+            "code": '+',
+            "phys": "@PHYS_DOOR_UP",
+            "faces": {
+                "n": 1, // north wall
+                "e": 1, // east wall
+                "w": 1, // west wall
+                "s": 1, // south wall
+                "f": 0,
+                "c": 1
+            }
         }]
     },
     "tags": [
         {
             "x": 1,
-            "y": 1,
-            "tags": ["tag_test 111"]
+            "y": 5,
+            "tags": ["open_door 2 2"]
         },
         {
             "x": 2,
-            "y": 1,
-            "tags": ["tag_test 111"]
+            "y": 5,
+            "tags": ["open_door 2 2"]
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "tags": ["open_door 2 2"]
         }
     ],
     "camera": {
         "thinker": "KeyboardControlThinker", // the control thinker
-        "x": 5, // camera coordinates (x-axis)
+        "x": 2, // camera coordinates (x-axis)
         "y": 6, // camera coordinates (y-axis)
         "angle": -Math.PI / 2 - 0.4, // looking angle
         "z": 1 // camera altitude (1 is the default object)
@@ -97,11 +115,11 @@ async function main() {
     // starts engine doomloop
     engine.startDoomLoop();
 
-    engine.events.on('tag.tag_test.enter', ({id, parameters, remove}) => {
-        console.log('entering tag test', id, ...parameters);
+    engine.events.on('tag.open_door.enter', ({id, parameters, remove}) => {
+        // the tag has two parameter
+        engine.openDoor(parameters[0] | 0, parameters[1] | 0, false);
         remove();
     });
-    //engine.events.on('tag.tag_test.leave', ({id, parameters}) => console.log('leaving tag test', id, ...parameters));
 }
 
 window.addEventListener('load', main);

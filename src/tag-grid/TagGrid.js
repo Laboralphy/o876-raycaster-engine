@@ -75,7 +75,6 @@ class TagGrid extends Grid {
             const tags = this.cell(xCell, yCell);
             if (tags.has(id)) {
                 tags.delete(id);
-                console.log('remove', xCell, yCell);
                 return true;
             } else {
                 return false;

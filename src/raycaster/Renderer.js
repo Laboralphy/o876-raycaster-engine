@@ -1137,13 +1137,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[2] += nOffset;
                 if (nOffset > 0) {
                     aData[4] = ytex - nOffset;
-                    aData[8] = ((aData[4] / (z / xscr) + 0.5)) << 1;
+                    aData[8] = ((aData[4] / (z / xscr) + 0.5));
                 }
                 break;
 
             case CONSTS.PHYS_CURT_UP: // rideau coulissant vers le haut
                 if (nOffset > 0) {
-                    aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5)) << 1;
+                    aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5));
                 }
                 break;
 

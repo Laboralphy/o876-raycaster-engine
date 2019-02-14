@@ -1,5 +1,7 @@
 import Translator from '../translator/Translator';
 import * as CONSTS from './consts';
+import util from "util";
+
 /**
  * Will transforme a text map into a serie of Renderer.setCellMaterial/Phys/offset calls
  */
@@ -44,6 +46,14 @@ class MapHelper {
         }
     }
 
+    getMaterial(legend) {
+        const m = this._materials[legend];
+        if (!m) {
+            throw new Error(util.format('[MapHelper] this material code does not exist : "%s"', legend));
+        }
+        return m;
+    }
+
     build(renderer, oMap) {
 
         const rowProcess = row =>
@@ -73,7 +83,7 @@ class MapHelper {
         const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
-            const m = this._materials[cell];
+            const m = this.getMaterial(cell);
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);

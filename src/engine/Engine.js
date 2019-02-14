@@ -480,12 +480,6 @@ class Engine {
 //           |___/                               |___/
 
 
-    // script
-    // ref
-    // lock
-    // item
-    //
-
     _tagEnter({entity, command, parameters, remove}) {
         this._events.emit('tag.' + command + '.enter', {entity, parameters, remove});
     }
