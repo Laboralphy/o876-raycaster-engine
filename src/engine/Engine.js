@@ -342,9 +342,8 @@ class Engine {
         const camera = this._camera;
         if (camera) {
             const loc = camera.location;
-            const scene = rend.computeScene(loc.x, loc.y, loc.angle, loc.z);
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
-            rend.render(scene);
+            rend.render(loc.x, loc.y, loc.angle, loc.z);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {

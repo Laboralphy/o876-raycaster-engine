@@ -73,6 +73,8 @@ class Renderer {
         this._debugDisplay = new DebugDisplay();
         this._renderContext = null;
         this._renderCanvas = null;
+        this._renderVRContext = null;
+        this._renderVRCanvas = null;
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
     }
@@ -554,11 +556,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * Creates a raycasting scene
      * @return {*}
      */
-    createScene(xCamera, yCamera, fDirection, fHeight = 1) {
+    createScene(xCamera, yCamera, fDirection, fHeight = 1, vrPanel = 0) {
+        if (vrPanel != 0) {
+            xCamera += 16 * Math.cos(fDirection + vrPanel * Math.PI / 2);
+            yCamera += 16 * Math.sin(fDirection + vrPanel * Math.PI / 2);
+        }
         const SCREEN = this._options.screen;
         let oStorey = null;
         if (!!this._storey) {
-            oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2);
+            oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2, vrPanel);
         }
         const focal = SCREEN.focal;
         const w = SCREEN.width;
@@ -590,6 +596,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             zbuffer: null,      // zbuffer to be drawn
             storeyScene: oStorey, // first story scene
             vr: SCREEN.vr,
+            vrPanel,
             xFrom: SCREEN.vr ? (w >> 1) - (w >> 2) : 0,
             xTo: SCREEN.vr ? (w >> 1) + (w >> 2) : w
         };
@@ -1523,11 +1530,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * Will precompute anything necessary for the rendering phase
      */
-    computeScene(x, y, angle, height) {
+    computeScene(x, y, angle, height, vrPanel = 0) {
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
-        const scene = this.createScene(x, y, angle, height);
+        const scene = this.createScene(x, y, angle, height, vrPanel);
         this.computeScreenSliceBuffer(scene);
         return scene;
     }
@@ -1592,30 +1599,98 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         return oRayCasterLightSource;
     }
 
+
+    _setupVRRenderCanvas(oOriginalRenderCanvas) {
+        if (!this._renderVRCanvas) {
+            this._renderVRCanvas = CanvasHelper.cloneCanvas(oOriginalRenderCanvas);
+            this._renderVRContext = this._renderVRCanvas.getContext('2d');
+        }
+        const canvas = this._renderVRCanvas;
+        const context = this._renderVRContext;
+        if (canvas.width !== oOriginalRenderCanvas.width) {
+            canvas.width = oOriginalRenderCanvas.width;
+        }
+        if (canvas.height !== oOriginalRenderCanvas.height) {
+            canvas.height = oOriginalRenderCanvas.height;
+        }
+        return {
+            canvas, context
+        };
+    }
+
+
     /**
      * This will render the raycasting scene in the specified 2d context
-     * @param scene
+     * @param x {number}
+     * @param y {number}
+     * @param angle {number}
+     * @param height {number}
      */
-    render(scene) {
+    renderVR(x, y, angle, height) {
+        this.render(x, y, angle, height, -1);
+        const w = this._renderCanvas.width;
+        const h = this._renderCanvas.height;
+        const {canvas, context} = this._setupVRRenderCanvas(this._renderCanvas);
+        context.drawImage(
+            this._renderCanvas,
+            w >> 2,
+            0,
+            w >> 1,
+            h,
+            0,
+            0,
+            w >> 1,
+            h
+        );
+        this.render(x, y, angle, height, 1);
+        context.drawImage(
+            this._renderCanvas,
+            w >> 2,
+            0,
+            w >> 1,
+            h,
+            w >> 1,
+            0,
+            w >> 1,
+            h
+        );
+        this._renderContext.drawImage(canvas, 0, 0)
+    }
+
+
+    /**
+     * This will render the raycasting scene in the specified 2d context
+     * @param x {number}
+     * @param y {number}
+     * @param angle {number}
+     * @param height {number}
+     * @param vrPanel {number}
+     */
+    render(x, y, angle, height, vrPanel = 0) {
+        const vr = vrPanel !== 0;
+        if (!vr && this._options.screen.vr) {
+            this.renderVR(x, y, angle, height);
+            return;
+        }
+        const scene = this.computeScene(x, y, angle, height, vrPanel);
         const renderContext = this._renderContext;
-        const VR = scene.vr;
-        if (VR) {
+        if (vr) {
             renderContext.save();
             renderContext.beginPath();
             renderContext.rect(scene.xFrom, 0, scene.xTo - scene.xFrom + 1, this._options.screen.height);
             renderContext.clip();
         }
-        //this._lightSources.renderSources(this._csm, this._options.shading.shades);
+
         this.updateStaticLightMap();
 
         this.renderBackground(renderContext);
         if (scene.storeyScene) {
             Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
         }
-        this.renderFlats(scene, renderContext);
+        this.renderFlats(scene);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
         this.renderDebug(renderContext);
-        if (VR) {
+        if (vr) {
             renderContext.restore();
         }
     }
