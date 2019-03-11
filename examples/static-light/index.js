@@ -120,7 +120,7 @@ async function main() {
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
 
-    // declares all thinkers (tere is only one here)
+    // declares all thinkers (there is only one here)
     engine.declareThinkers({
         KeyboardControlThinker
     });
