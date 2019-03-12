@@ -1,5 +1,6 @@
-import Engine from "../../src/engine/Engine";
-import KeyboardControlThinker from "../../src/engine/thinkers/KeyboardControlThinker";
+import RCE from "../../src";
+const Engine = RCE.Engine;
+const KeyboardControlThinker = RCE.Thinkers.KeyboardControl;
 
 /**
  * This program is one of the simplest example we can give to build a level, and control a camera view inside
@@ -64,7 +65,7 @@ const LEVEL = {
     "decals": []
 };
 
-// note that we use an "async" function, because we deal with promises when texture are loading
+// note that we use an "async" function, because we deal with promises when textures are loading
 async function main() {
     // creates engine
     const engine = new Engine();
@@ -72,14 +73,14 @@ async function main() {
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
 
-    // declares all thinkers (tere is only one here)
-    engine.declareThinkers({
+    // declares all thinkers (there is only one here : the keyboard controller)
+    engine.useThinkers({
         KeyboardControlThinker
     });
 
     // builds level.
-    // there is asynchronous image loading, so the buildLevel() function returns a promise,
-    // we should use the "await" keywork, because we are in a "async" function.
+    // buildLevel() is an ASYNCHRONOUS function, which return a promise
+    // we use the "await" keywork to be sure the level is completly loaded before doing something else.
     await engine.buildLevel(LEVEL);
 
     // starts engine doomloop

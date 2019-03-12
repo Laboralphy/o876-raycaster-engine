@@ -7,7 +7,10 @@ import DevKbdMobThinker from "./DevKbdMobThinker";
 import MagboltThinker from "./MagboltThinker";
 
 const THINKERS = {
-    StaticThinker, DevKbdMobThinker, DevKbdThinker, MagboltThinker
+    StaticThinker,
+    DevKbdMobThinker,
+    DevKbdThinker,
+    MagboltThinker
 };
 
 function getLevel() {
@@ -227,7 +230,14 @@ function getLevel() {
                 "animation": "stand"
             }
         ],
-        "decals": []
+        "decals": [],
+        "camera": {
+            "thinker": "DevKbdThinker", // the control thinker
+            x: 9, // camera coordinates (x-axis)
+            y: 18, // camera coordinates (y-axis)
+            angle: -1 * Math.PI / 2, // looking angle
+            z: 1 // camera altitude (1 is the default object)
+        },
     };
 }
 // json de configuration
@@ -235,33 +245,27 @@ async function main() {
     // creates engine
     const engine = new Engine();
     // declare thinkers
-    engine.declareThinkers(THINKERS);
+    engine.useThinkers(THINKERS);
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
     // builds level, display progress on console
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
-    
-    const ct = engine.createThinkerInstance('DevKbdThinker');
 
-	// plug keyboards events
+    // retrieves the camera thinker. it's a DevKbdThinker
+    // which is a thinker of keyboard control, for controlling the camera
+    // we want to customize keyboard event
+    const ct = engine.camera.thinker;
+
+	// plugs keyboard events
     window.addEventListener('keydown', event => {
         ct.keyDown(event.key);
     });
     window.addEventListener('keyup', event => {
         ct.keyUp(event.key);
     });
-    
-    // links this thinker to the camera
-    engine.camera.thinker = ct;
-    // sets initial location
-    engine.camera.location.set({
-        x: 9 * 64,
-        y: 18 * 64,
-        angle: -1 * Math.PI / 2,
-        z: 1
-    });
+
 
     // starts engine doomloop
     engine.startDoomLoop();

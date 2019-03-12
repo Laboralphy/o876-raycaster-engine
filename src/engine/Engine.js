@@ -508,13 +508,13 @@ class Engine {
      * @param sThinker {string} reference of thinker
      * @param pThinker {prototype}
      */
-    declareThinker(sThinker, pThinker) {
+    useThinker(sThinker, pThinker) {
         this._thinkers[sThinker] = pThinker;
     }
 
-    declareThinkers(oThinkers) {
+    useThinkers(oThinkers) {
         for (let sThinker in oThinkers) {
-            this.declareThinker(sThinker, oThinkers[sThinker]);
+            this.useThinker(sThinker, oThinkers[sThinker]);
         }
     }
 

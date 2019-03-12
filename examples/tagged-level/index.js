@@ -1,5 +1,6 @@
-import Engine from "../../src/engine/Engine";
-import KeyboardControlThinker from "../../src/engine/thinkers/KeyboardControlThinker";
+import RCE from "../../src";
+const Engine = RCE.Engine;
+const KeyboardControlThinker = RCE.Thinkers.KeyboardControl;
 
 /**
  * This program is one of the simplest example we can give to build a level, and control a camera view inside
@@ -76,7 +77,7 @@ const LEVEL = {
             "tags": ["open_door 2 2"]
         },
         {
-            "x": 2,
+            "x": 3,
             "y": 5,
             "tags": ["open_door 2 2"]
         }
@@ -94,7 +95,7 @@ const LEVEL = {
     "decals": []
 };
 
-// note that we use an "async" function, because we deal with promises when texture are loading
+// note that we use an "async" function, because we deal with promises when textures are loading
 async function main() {
     // creates engine
     const engine = new Engine();
@@ -102,21 +103,23 @@ async function main() {
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
 
-    // declares all thinkers (tere is only one here)
-    engine.declareThinkers({
+    // declares all thinkers (there is only one here)
+    engine.useThinkers({
         KeyboardControlThinker
     });
 
     // builds level.
-    // there is asynchronous image loading, so the buildLevel() function returns a promise,
-    // we should use the "await" keywork, because we are in a "async" function.
+    // buildLevel() is an ASYNCHRONOUS function, which return a promise
+    // we use the "await" keywork to be sure the level is completly loaded before doing something else.
     await engine.buildLevel(LEVEL);
 
     // starts engine doomloop
     engine.startDoomLoop();
 
+    // this is what happens when we enter the tag zone "open_door"
+    // (we open the door)
     engine.events.on('tag.open_door.enter', ({id, parameters, remove}) => {
-        // the tag has two parameter
+        // the tag has two parameters : the coordinates of the door we want to open
         engine.openDoor(parameters[0] | 0, parameters[1] | 0, false);
         remove();
     });
