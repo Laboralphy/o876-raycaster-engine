@@ -5,15 +5,7 @@
             <td><div><h1>{{ caption }}</h1></div></td>
         </tr>
         <tr class="toolbar">
-            <td><div>
-                <button
-                    v-for="b in commands"
-                    :key="b.id"
-                    @click="$emit('command', {id: b.id})"
-                >
-                    {{b.caption}}
-                </button>
-            </div></td>
+            <td><div><slot name="toolbar"></slot></div></td>
         </tr>
         <tr class="body floatingHeight">
             <td>
@@ -32,7 +24,13 @@
 
         props: {
             caption: String,
-            commands: Array
+            commands: {
+                type: Array,
+                required: false,
+                default: function() {
+                    return [];
+                }
+            }
         }
     }
 </script>

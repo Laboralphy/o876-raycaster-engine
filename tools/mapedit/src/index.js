@@ -7,18 +7,43 @@ import Application from './components/Application.vue';
 
 import './styles/base.css';
 import './styles/o876structure/o876structure.css';
+import LevelGrid from "./components/LevelGrid.vue";
+import TileBrowser from "./components/TileBrowser.vue";
+import TileLoader from "./components/TileLoader.vue";
+import WallTileLoader from "./components/WallTileLoader.vue";
+import FlatTileLoader from "./components/FlatTileLoader.vue";
 
 
 Vue.use(Vuex);
+Vue.use(VueRouter);
 
 function createApplication() {
 
     const routes = [
-       // {path: "/", component: Splash},
-       // {path: "/workspace", component: Workspace},
-    ];
+        {
+            path: "/",
+            components: {
+                default: TileLoader,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/walltileload",
+            components: {
+                default: WallTileLoader,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/flattileload",
+            components: {
+                default: FlatTileLoader,
+                side: TileBrowser
+            }
+        },
 
-    console.log('OK');
+        // {path: "/workspace", component: Workspace},
+    ];
 
     return new Vue({
         el: '#vue-application',

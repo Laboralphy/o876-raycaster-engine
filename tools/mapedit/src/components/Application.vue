@@ -4,18 +4,12 @@
             <tr class="floatingHeight">
                 <td class="floatingWidth">
                     <div>
-                        <Window
-                            caption="Super window 1"
-                            :commands="mainWindowCommands"
-                            @command="clickouille"
-                        >Youpi</Window>
+                        <router-view></router-view>
                     </div>
                 </td>
                 <td class="side-panel">
                     <div>
-                        <Window
-                            caption="Browser"
-                        >Super</Window>
+                        <router-view name="side"></router-view>
                     </div>
                 </td>
             </tr>
@@ -84,14 +78,14 @@
     /* Large devices (laptops/desktops, 992px and up) */
     @media only screen and (min-width: 992px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 256px;
+            width: 280px;
         }
     }
 
     /* Extra large devices (large laptops and desktops, 1200px and up) */
     @media only screen and (min-width: 1200px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 320px;
+            width: 360px;
         }
     }
 </style>
