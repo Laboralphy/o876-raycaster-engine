@@ -7,12 +7,12 @@ import Application from './components/Application.vue';
 
 import './styles/base.css';
 import './styles/o876structure/o876structure.css';
+import 'vue-material-design-icons/styles.css';
+
 import LevelGrid from "./components/LevelGrid.vue";
 import TileBrowser from "./components/TileBrowser.vue";
 import TileLoader from "./components/TileLoader.vue";
-import WallTileLoader from "./components/WallTileLoader.vue";
-import FlatTileLoader from "./components/FlatTileLoader.vue";
-
+import ConfigPad from "./components/ConfigPad.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -23,21 +23,21 @@ function createApplication() {
         {
             path: "/",
             components: {
+                default: LevelGrid,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/load-tiles",
+            components: {
                 default: TileLoader,
                 side: TileBrowser
             }
         },
         {
-            path: "/walltileload",
+            path: "/config",
             components: {
-                default: WallTileLoader,
-                side: TileBrowser
-            }
-        },
-        {
-            path: "/flattileload",
-            components: {
-                default: FlatTileLoader,
+                default: ConfigPad,
                 side: TileBrowser
             }
         },

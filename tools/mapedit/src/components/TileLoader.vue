@@ -3,21 +3,51 @@
             caption="Tile loader"
     >
         <template v-slot:toolbar>
-            <ReturnButton></ReturnButton>
+            <HomeButton></HomeButton>
+            <ImageLoader
+                    hint="Import a wall tileset from an image"
+                    @load="onWallImageLoaded"
+            ><WallIcon></WallIcon> Load walls</ImageLoader>
+            <ImageLoader
+                    hint="Import a flat tileset from an image"
+                    @load="onFlatImageLoaded"
+            ><ViewGridIcon></ViewGridIcon> Load flats</ImageLoader>
+            <MyButton
+                    hint="Import all selected tiles into current project"
+                    @click="doImport"
+            ><ImportIcon></ImportIcon> Import</MyButton>
         </template>
         <div v-if="wallImages.length === 0 && flatImages.length === 0">
             <h3>Tileset importation</h3>
             <ul>
-                <li><button type="button" @click="$router.push('/walltileload')">Import <b>wall</b> tiles</button></li>
-                <li><button type="button" @click="$router.push('/flattileload')">Import <b>flat</b> tiles</button></li>
+                <li>Click on "<WallIcon></WallIcon>" or "<ViewGridIcon></ViewGridIcon>" to load tilesets.</li>
+                <li>Click on tiles to select them. Click again to toggle selection.</li>
+                <li>Click on "<ImportIcon></ImportIcon> Import" to copy the selected tiles into the current project, and make them available as wall, floor or ceiling textures.</li>
             </ul>
+        </div>
+        <div v-else-if="wallImages.length > 0">
+            <h3>Wall tiles ({{ getTileWidth }} * {{ getTileHeight }})</h3>
+            <SelectableImage
+                    v-for="image in wallImages"
+                    :key="image.id"
+                    :src="image.src"
+                    @selected="({value}) => setTileSelection(image, value)"
+            />
+        </div>
+        <div v-else-if="flatImages.length > 0">
+            <h3>Flat tiles ({{ getTileWidth }} * {{ getTileWidth }})</h3>
+            <SelectableImage
+                    v-for="image in flatImages"
+                    :key="image.id"
+                    :src="image.src"
+                    @selected="({value}) => setTileSelection(image, value)"
+            />
         </div>
     </Window>
 </template>
 
 <script>
     // libraries
-    import * as EMOJI from '../libraries/emoji';
     import TilesetSplitter from '../libraries/tileset-splitter';
 
     // vuex
@@ -26,10 +56,13 @@
 
     // components
     import Window from "./Window.vue";
-    import ButtonBar from "./ButtonBar.vue";
     import ImageLoader from "./ImageLoader.vue";
     import SelectableImage from "./SelectableImage.vue";
-    import ReturnButton from "./ReturnButton.vue";
+    import HomeButton from "./HomeButton.vue";
+    import MyButton from "./MyButton.vue";
+    import ImportIcon from "vue-material-design-icons/Import.vue";
+    import WallIcon from "vue-material-design-icons/Wall.vue";
+    import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
 
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
@@ -39,8 +72,10 @@
 
 
     export default {
-        name: "TileLoader",
-        components: {ReturnButton, SelectableImage, ImageLoader, ButtonBar, Window},
+        name: "WallTileLoader",
+        components: {
+            ViewGridIcon,
+            WallIcon, ImportIcon, MyButton, HomeButton, SelectableImage, ImageLoader, Window},
         computed: {
             ...levelMapGetter([
                 'getTileHeight',
@@ -49,9 +84,9 @@
         },
         data: function() {
             return {
-                EMOJI,
-                flatImages: [],
                 wallImages: [],
+                flatImages: [],
+                loadedTypeTiles: '',
                 commands: [{
                     // return to main view
                     caption: '↩',
@@ -69,23 +104,25 @@
                 tile.selected = value;
             },
 
+            clearTiles: function() {
+                this.flatImages.splice(0, this.flatImages.length);
+                this.wallImages.splice(0, this.wallImages.length);
+            },
+
             onWallImageLoaded: async function(event) {
+                this.clearTiles();
                 const tss = new TilesetSplitter();
                 const aImages = await tss.split(event.data, this.getTileWidth, this.getTileHeight);
                 aImages.forEach(img => this.wallImages.push({id: ++IMAGE_LAST_ID, src: img}));
+                this.loadedTypeTiles = 'wall';
             },
 
             onFlatImageLoaded: async function(event) {
+                this.clearTiles();
                 const tss = new TilesetSplitter();
                 const aImages = await tss.split(event.data, this.getTileWidth, this.getTileWidth);
                 aImages.forEach(img => this.flatImages.push({id: ++IMAGE_LAST_ID, src: img}));
-            },
-
-            onCommand: function({id}) {
-                switch (id) {
-                    case 'c_load':
-                        break;
-                }
+                this.loadedTypeTiles = 'flat';
             },
 
             doImportType: function(type, images) {
@@ -101,19 +138,22 @@
             },
 
             doImport: function() {
-                this.doImportType('wall', this.wallImages);
-                this.doImportType('flat', this.flatImages);
+                switch (this.loadedTypeTiles) {
+                    case 'wall':
+                        this.doImportType('wall', this.wallImages);
+                        break;
+
+                    case 'flat':
+                        this.doImportType('flat', this.flatImages);
+                        break;
+                }
             }
         }
     }
 </script>
 
 <style scoped>
-
+    .choice {
+        width: 9em;
+    }
 </style>
-< script >
-import ReturnButton from "./ReturnButton";
-export default {
-    components: {ReturnButton}
-}
-                    </script>

@@ -5,18 +5,18 @@
                 type="file"
                 @change="onFileInputChange"
         />
-        <button
-                type="button"
-                :title="hint"
+        <MyButton
+                :hint="hint"
                 @click="onClick"
-        ><slot></slot></button>
+        ><slot></slot></MyButton>
     </div>
 </template>
 
 <script>
+    import MyButton from "./MyButton.vue";
     export default {
         name: "ImageLoader",
-
+        components: {MyButton},
         props: {
             hint: String
         },
