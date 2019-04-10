@@ -13,6 +13,7 @@ import LevelGrid from "./components/LevelGrid.vue";
 import TileBrowser from "./components/TileBrowser.vue";
 import TileLoader from "./components/TileLoader.vue";
 import ConfigPad from "./components/ConfigPad.vue";
+import BlockBuilder from "./components/BlockBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -31,6 +32,13 @@ function createApplication() {
             path: "/load-tiles",
             components: {
                 default: TileLoader,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/build-blocks",
+            components: {
+                default: BlockBuilder,
                 side: TileBrowser
             }
         },

@@ -3,8 +3,14 @@
         caption="Level grid"
     >
     <template v-slot:toolbar>
-        <MyButton @click="$router.push('/load-tiles')"><MapIcon></MapIcon> Tiles</MyButton>
-        <MyButton @click="$router.push('/load-tiles')"><MapIcon></MapIcon> Tiles</MyButton>
+        <MyButton
+                title="Go to tile loading screen"
+                @click="$router.push('/load-tiles')"
+        ><MapIcon></MapIcon> Tiles</MyButton>
+        <MyButton
+                title="Go to block building screen"
+                @click="$router.push('/build-blocks')"
+        ><OfficeBuildingIcon></OfficeBuildingIcon> Blocks</MyButton>
     </template>
 
         Youpi</Window>
@@ -14,9 +20,10 @@
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MapIcon from "vue-material-design-icons/Map.vue";
+    import OfficeBuildingIcon from "vue-material-design-icons/OfficeBuilding.vue";
     export default {
         name: "LevelGrid",
-        components: {MapIcon, MyButton, Window}
+        components: {MapIcon, OfficeBuildingIcon, MyButton, Window}
     }
 </script>
 

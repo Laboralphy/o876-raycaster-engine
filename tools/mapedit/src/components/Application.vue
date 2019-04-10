@@ -31,24 +31,11 @@
 
         data: function() {
             return {
-                statusBarHeight: 32,
-                mainWindowCommands: [
-                    {
-                        caption: 'Click1',
-                        id: 'k1'
-                    },
-                    {
-                        caption: 'Click2',
-                        id: 'k2'
-                    }
-                ]
+                statusBarHeight: 32
             }
         },
 
         methods: {
-            clickouille: function({id}) {
-                console.log('click sur', id);
-            }
         }
     }
 </script>
