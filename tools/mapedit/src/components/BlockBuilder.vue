@@ -19,7 +19,7 @@
                             -->
                             <div>
                                 <label>Phys:
-                                    <select>
+                                    <select v-model="mPhys">
                                         <option value="p0">Walkable</option>
                                         <option value="p1">Solid block</option>
                                         <option value="p2">Door up</option>
@@ -39,7 +39,11 @@
                                 </label>
                             </div>
                             <div>
-                                <label>Offs: <input type="number" min="0" :max="getTileWidth"/></label>
+                                <label>Offs: <input v-model="mOffset" type="number" min="0" :max="getTileWidth"/></label>
+                            </div>
+                            <hr/>
+                            <div>
+                                <MyButton>Construire</MyButton>
                             </div>
                         </td>
                         <td class="tiles">
@@ -87,12 +91,20 @@
 
     // vuex
     import {createNamespacedHelpers} from'vuex';
+    import MyButton from "./MyButton.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "BlockBuilder",
-        components: {HomeButton, Window},
+        components: {MyButton, HomeButton, Window},
+
+        data: function() {
+            return {
+                mOffset: 0,
+                mPhys: 'p0'
+            }
+        },
 
         computed: {
             ...levelMapGetter([
@@ -104,6 +116,10 @@
 </script>
 
 <style scoped>
+    .form input[type="number"] {
+        width: 4em;
+    }
+
     canvas.tile {
         border: solid 4px black;
     }

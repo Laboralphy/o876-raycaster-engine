@@ -120,7 +120,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\ncanvas.tile[data-v-38f92121] {\n    border: solid 4px black;\n}\ntd.tiles table.block-def td[data-v-38f92121] {\n    text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.form input[type=\"number\"][data-v-38f92121] {\n    width: 4em;\n}\ncanvas.tile[data-v-38f92121] {\n    border: solid 4px black;\n}\ntd.tiles table.block-def td[data-v-38f92121] {\n    text-align: center;\n}\n", ""]);
 
 
 
@@ -2049,6 +2049,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
 /* harmony import */ var _HomeButton_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HomeButton.vue */ "./tools/mapedit/src/components/HomeButton.vue");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+//
+//
+//
+//
 //
 //
 //
@@ -2139,11 +2144,19 @@ __webpack_require__.r(__webpack_exports__);
 // vuex
 
 
+
 const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_2__["createNamespacedHelpers"])('level');
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "BlockBuilder",
-    components: {HomeButton: _HomeButton_vue__WEBPACK_IMPORTED_MODULE_1__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_0__["default"]},
+    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_3__["default"], HomeButton: _HomeButton_vue__WEBPACK_IMPORTED_MODULE_1__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_0__["default"]},
+
+    data: function() {
+        return {
+            mOffset: 0,
+            mPhys: 'p0'
+        }
+    },
 
     computed: {
         ...levelMapGetter([
@@ -3384,67 +3397,95 @@ var render = function() {
                 _c("div", [
                   _c("label", [
                     _vm._v("Phys:\n                                "),
-                    _c("select", [
-                      _c("option", { attrs: { value: "p0" } }, [
-                        _vm._v("Walkable")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p1" } }, [
-                        _vm._v("Solid block")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p2" } }, [
-                        _vm._v("Door up")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p3" } }, [
-                        _vm._v("Curtain up")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p4" } }, [
-                        _vm._v("Door down")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p5" } }, [
-                        _vm._v("Curtain down")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p6" } }, [
-                        _vm._v("Door left")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p7" } }, [
-                        _vm._v("Curtain left")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p8" } }, [
-                        _vm._v("Door right")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p9" } }, [
-                        _vm._v("Curtain right")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p10" } }, [
-                        _vm._v("Door slide double")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p11" } }, [
-                        _vm._v("Secret block")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p12" } }, [
-                        _vm._v("Transparent block")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p13" } }, [
-                        _vm._v("Invisible block")
-                      ]),
-                      _vm._v(" "),
-                      _c("option", { attrs: { value: "p14" } }, [
-                        _vm._v("Offset block")
-                      ])
-                    ])
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.mPhys,
+                            expression: "mPhys"
+                          }
+                        ],
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.mPhys = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", { attrs: { value: "p0" } }, [
+                          _vm._v("Walkable")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p1" } }, [
+                          _vm._v("Solid block")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p2" } }, [
+                          _vm._v("Door up")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p3" } }, [
+                          _vm._v("Curtain up")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p4" } }, [
+                          _vm._v("Door down")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p5" } }, [
+                          _vm._v("Curtain down")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p6" } }, [
+                          _vm._v("Door left")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p7" } }, [
+                          _vm._v("Curtain left")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p8" } }, [
+                          _vm._v("Door right")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p9" } }, [
+                          _vm._v("Curtain right")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p10" } }, [
+                          _vm._v("Door slide double")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p11" } }, [
+                          _vm._v("Secret block")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p12" } }, [
+                          _vm._v("Transparent block")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p13" } }, [
+                          _vm._v("Invisible block")
+                        ]),
+                        _vm._v(" "),
+                        _c("option", { attrs: { value: "p14" } }, [
+                          _vm._v("Offset block")
+                        ])
+                      ]
+                    )
                   ])
                 ]),
                 _vm._v(" "),
@@ -3452,10 +3493,35 @@ var render = function() {
                   _c("label", [
                     _vm._v("Offs: "),
                     _c("input", {
-                      attrs: { type: "number", min: "0", max: _vm.getTileWidth }
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.mOffset,
+                          expression: "mOffset"
+                        }
+                      ],
+                      attrs: {
+                        type: "number",
+                        min: "0",
+                        max: _vm.getTileWidth
+                      },
+                      domProps: { value: _vm.mOffset },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.mOffset = $event.target.value
+                        }
+                      }
                     })
                   ])
-                ])
+                ]),
+                _vm._v(" "),
+                _c("hr"),
+                _vm._v(" "),
+                _c("div", [_c("MyButton", [_vm._v("Construire")])], 1)
               ]),
               _vm._v(" "),
               _c("td", { staticClass: "tiles" }, [
