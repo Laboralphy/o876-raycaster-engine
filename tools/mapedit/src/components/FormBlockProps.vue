@@ -48,6 +48,20 @@
                 </div>
             </fieldset>
         </div>
+        <div>
+            <label>Light: <input v-model="mLight" type="checkbox"/></label>
+        </div>
+        <div>
+            <fieldset v-show="mLight">
+                <legend>Light source properties</legend>
+                <div>
+                    <label>in. rad.: <input v-model="mLightInnerRadius" type="number" min="0"/></label>
+                </div>
+                <div>
+                    <label>out. rad.: <input v-model="mLightOuterRadius" type="number" min="0" step="20"/></label>
+                </div>
+            </fieldset>
+        </div>
         <hr/>
         <div>
             <MyButton>Construire</MyButton>
@@ -56,7 +70,10 @@
 </template>
 
 <script>
+    import {createNamespacedHelpers} from'vuex';
     import MyButton from "./MyButton.vue";
+
+    const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "FormBlockProps",
@@ -66,12 +83,33 @@
             return {
                 mPhys: 0,
                 mOffset: 0,
-                mAnim: false
+                mAnim: false,
+                mAnimCount: 1,
+                mAnimDuration: 0,
+                mAnimLoop: 0,
+                mLight: false,
+                mLightInnerRadius: 0,
+                mLightOuterRadius: 0,
             }
+        },
+
+        computed: {
+            ...levelMapGetter([
+                'getTileHeight',
+                'getTileWidth'
+            ])
         }
     }
 </script>
 
 <style scoped>
+
+    input[type="number"] {
+        width: 5em;
+    }
+
+    select {
+        width: 13em;
+    }
 
 </style>
