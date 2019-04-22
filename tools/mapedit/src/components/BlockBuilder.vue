@@ -10,41 +10,7 @@
                 <tbody>
                     <tr>
                         <td class="form">
-                            <!--
-
-                            phys
-                            offs
-
-
-                            -->
-                            <div>
-                                <label>Phys:
-                                    <select v-model="mPhys">
-                                        <option value="p0">Walkable</option>
-                                        <option value="p1">Solid block</option>
-                                        <option value="p2">Door up</option>
-                                        <option value="p3">Curtain up</option>
-                                        <option value="p4">Door down</option>
-                                        <option value="p5">Curtain down</option>
-                                        <option value="p6">Door left</option>
-                                        <option value="p7">Curtain left</option>
-                                        <option value="p8">Door right</option>
-                                        <option value="p9">Curtain right</option>
-                                        <option value="p10">Door slide double</option>
-                                        <option value="p11">Secret block</option>
-                                        <option value="p12">Transparent block</option>
-                                        <option value="p13">Invisible block</option>
-                                        <option value="p14">Offset block</option>
-                                    </select>
-                                </label>
-                            </div>
-                            <div>
-                                <label>Offs: <input v-model="mOffset" type="number" min="0" :max="getTileWidth"/></label>
-                            </div>
-                            <hr/>
-                            <div>
-                                <MyButton>Construire</MyButton>
-                            </div>
+                            <FormBlockProps></FormBlockProps>
                         </td>
                         <td class="tiles">
                             <table class="block-def">
@@ -85,24 +51,22 @@
 </template>
 
 <script>
+    // vuex
+    import {createNamespacedHelpers} from'vuex';
 
     import Window from "./Window.vue";
     import HomeButton from "./HomeButton.vue";
-
-    // vuex
-    import {createNamespacedHelpers} from'vuex';
     import MyButton from "./MyButton.vue";
+    import FormBlockProps from "./FormBlockProps.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "BlockBuilder",
-        components: {MyButton, HomeButton, Window},
+        components: {FormBlockProps, MyButton, HomeButton, Window},
 
         data: function() {
             return {
-                mOffset: 0,
-                mPhys: 'p0'
             }
         },
 

@@ -1,7 +1,7 @@
 // a grid of tags
 
 import Grid from "../grid";
-import Painting from "../painting-algorithm";
+import Painting from "../painting";
 
 class TagGrid extends Grid {
 

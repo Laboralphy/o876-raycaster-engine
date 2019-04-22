@@ -1,4 +1,4 @@
-import Painting from "../src/painting-algorithm";
+import Painting from "../src/painting";
 
 describe('#Painting', function() {
     describe('basic', function() {
