@@ -15,5 +15,9 @@ export default {
     [ACTION.LOAD_TILE]: ({commit}, {type, content}) => {
         const id = ++TILE_LAST_ID;
         commit(MUTATION.ADD_TILE, {id, type, content});
+    },
+
+    [ACTION.REORDER_TILE]: ({commit}, {idSource, idTarget}) => {
+        commit(MUTATION.MOVE_TILE, {idSource, idTarget});
     }
 }

@@ -6,6 +6,7 @@
             <Siblings @select="({index}) => selectTileFamily(index)">
                 <SiblingButton hint="Display project wall tiles" :default="true"><WallIcon></WallIcon></SiblingButton>
                 <SiblingButton hint="Display project flat tiles"><ViewGridIcon></ViewGridIcon></SiblingButton>
+                <MyButton><PlayCircleIcon></PlayCircleIcon></MyButton>
             </Siblings>
         </template>
         <div v-if="selectedFamily === 'wall'">
@@ -37,12 +38,16 @@
     import SiblingButton from "./SiblingButton.vue";
     import WallIcon from "vue-material-design-icons/Wall.vue";
     import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
+    import PlayCircleIcon from "vue-material-design-icons/PlayCircle.vue";
+    import MyButton from "./MyButton.vue";
 
     const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
 
     export default {
         name: "TileBrowser",
         components: {
+            MyButton,
+            PlayCircleIcon,
             ViewGridIcon,
             WallIcon,
             SiblingButton, Siblings, SibblingButton: SiblingButton, SelectableImage, Window},

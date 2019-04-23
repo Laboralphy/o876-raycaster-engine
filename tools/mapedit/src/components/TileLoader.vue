@@ -32,6 +32,7 @@
                     :tileId="image.id"
                     :key="image.id"
                     :src="image.src"
+                    :draggable="false"
                     @selected="({value}) => setTileSelection(image, value)"
             />
         </div>
@@ -42,6 +43,7 @@
                     :tileId="image.id"
                     :key="image.id"
                     :src="image.src"
+                    :draggable="false"
                     @selected="({value}) => setTileSelection(image, value)"
             />
         </div>
@@ -127,6 +129,11 @@
                 this.loadedTypeTiles = 'flat';
             },
 
+            /**
+             * importation des image spécifiée en tant que tile flat ou wall
+             * @param type {string} 'flat' ou 'wall'
+             * @param images {array} tableau d'image
+             */
             doImportType: function(type, images) {
                 const tiles = images.filter(t => t.selected);
                 tiles.forEach(t => {

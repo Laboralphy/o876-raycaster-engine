@@ -107,7 +107,7 @@
     import HomeButton from "./HomeButton.vue";
     import MyButton from "./MyButton.vue";
     import FormBlockProps from "./FormBlockProps.vue";
-    import DropZoneCanvas from "./DropZoneCanvas.vue";
+    import DropZoneCanvas from "./Tile.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');

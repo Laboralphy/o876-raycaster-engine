@@ -1,6 +1,6 @@
 <template>
     <figure>
-        <figcaption>{{ label }}</figcaption>
+        <figcaption>{{ label }} <span @click="clearTile" class="close-button"><CloseCircleIcon></CloseCircleIcon></span></figcaption>
         <img
                 :src="tileId !== null ? getTile(this.tileId).content : ''"
                 :class="getMainClass"
@@ -12,8 +12,8 @@
                 @drop="dropEvent"
         />
         <figcaption>
-            <MyButton @click="clearTile">
-                <CloseIcon></CloseIcon>
+            <MyButton>
+                <PlayIcon></PlayIcon>anim.
             </MyButton>
         </figcaption>
     </figure>
@@ -23,7 +23,8 @@
     import {createNamespacedHelpers} from'vuex';
 
     import MyButton from "./MyButton.vue";
-    import CloseIcon from "vue-material-design-icons/Close.vue";
+    import CloseCircleIcon from "vue-material-design-icons/CloseCircle.vue";
+    import PlayIcon from "vue-material-design-icons/Play.vue";
 
 
     const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
@@ -31,7 +32,7 @@
 
     export default {
         name: "DropZoneCanvas",
-        components: {CloseIcon, MyButton},
+        components: {PlayIcon, CloseCircleIcon, MyButton},
         props: {
             width: Number,
             height: Number,
@@ -113,5 +114,16 @@
 
     img.tile.drag-over {
         border-color: limegreen;
+    }
+
+    span.close-button {
+        color: #880000;
+        font-weight: bold;
+        font-size: 1.2em;
+        cursor: pointer;
+    }
+
+    span.close-button:hover {
+        color: #FF0000;
     }
 </style>

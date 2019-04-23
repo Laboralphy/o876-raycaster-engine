@@ -2,18 +2,18 @@
     <Window
         caption="Level grid"
     >
-    <template v-slot:toolbar>
-        <MyButton
-                title="Go to tile loading screen"
-                @click="$router.push('/load-tiles')"
-        ><MapIcon></MapIcon> Tiles</MyButton>
-        <MyButton
-                title="Go to block building screen"
-                @click="$router.push('/build-blocks')"
-        ><OfficeBuildingIcon></OfficeBuildingIcon> Blocks</MyButton>
-    </template>
-
-        Youpi</Window>
+        <template v-slot:toolbar>
+            <MyButton
+                    title="Go to tile loading screen"
+                    @click="$router.push('/load-tiles')"
+            ><MapIcon></MapIcon> Tiles</MyButton>
+            <MyButton
+                    title="Go to block building screen"
+                    @click="$router.push('/build-blocks')"
+            ><OfficeBuildingIcon></OfficeBuildingIcon> Blocks</MyButton>
+        </template>
+        <div>Youpi</div>
+    </Window>
 </template>
 
 <script>
