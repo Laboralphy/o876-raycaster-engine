@@ -3,6 +3,8 @@
         :class="getMainClass"
         :src="src"
         @click="toggleSelect"
+        draggable="true"
+        @dragstart="dragstartEvent"
     />
 </template>
 
@@ -10,7 +12,8 @@
     export default {
         name: "SelectableImage",
         props: {
-            src: String
+            src: String,
+            tileId: Number
         },
 
         data: function() {
@@ -33,7 +36,12 @@
             toggleSelect: function() {
                 this.selected = !this.selected;
                 this.$emit('selected', {value: this.selected});
-            }
+            },
+
+            dragstartEvent: function(event) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text', this.tileId.toString());
+            },
         }
     }
 </script>
@@ -43,6 +51,7 @@
         border: solid 0.4em #00C;
         margin: 0.3em;
         cursor: pointer;
+        user-select: none;
     }
 
     .tile:hover {

@@ -29,6 +29,7 @@
             <h3>Wall tiles ({{ getTileWidth }} * {{ getTileHeight }})</h3>
             <SelectableImage
                     v-for="image in wallImages"
+                    :tileId="image.id"
                     :key="image.id"
                     :src="image.src"
                     @selected="({value}) => setTileSelection(image, value)"
@@ -38,6 +39,7 @@
             <h3>Flat tiles ({{ getTileWidth }} * {{ getTileWidth }})</h3>
             <SelectableImage
                     v-for="image in flatImages"
+                    :tileId="image.id"
                     :key="image.id"
                     :src="image.src"
                     @selected="({value}) => setTileSelection(image, value)"

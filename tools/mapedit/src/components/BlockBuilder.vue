@@ -10,35 +10,83 @@
                 <tbody>
                     <tr>
                         <td class="form">
-                            <FormBlockProps></FormBlockProps>
+                            <FormBlockProps ref="blockProps" @submit="onFormSubmit"></FormBlockProps>
                         </td>
                         <td class="tiles">
                             <table class="block-def">
                                 <tbody>
-                                <tr>
-                                    <td colspan="4">
-                                        <canvas ref="tc" class="tile ceiling" :width="getTileWidth" :height="getTileWidth"></canvas>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <canvas ref="tw0" class="tile wall0" :width="getTileWidth" :height="getTileHeight"></canvas>
-                                    </td>
-                                    <td>
-                                        <canvas ref="tw1" class="tile wall1" :width="getTileWidth" :height="getTileHeight"></canvas>
-                                    </td>
-                                    <td>
-                                        <canvas ref="tw2" class="tile wall2" :width="getTileWidth" :height="getTileHeight"></canvas>
-                                    </td>
-                                    <td>
-                                        <canvas ref="tw3" class="tile wall3" :width="getTileWidth" :height="getTileHeight"></canvas>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td colspan="4">
-                                        <canvas ref="tf" class="tile floor" :width="getTileWidth" :height="getTileWidth"></canvas>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <DropZoneCanvas
+                                                    ref="tc"
+                                                    @change="id => tileUpdate('c', id)"
+                                                    :tile="getBlockBuilderFaceCeiling"
+                                                    label="ceiling"
+                                                    class="tile ceiling"
+                                                    :width="getTileWidth"
+                                                    :height="getTileWidth"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <DropZoneCanvas
+                                                    ref="tw"
+                                                    @change="id => tileUpdate('w', id)"
+                                                    :tile="getBlockBuilderFaceWest"
+                                                    label="west"
+                                                    class="tile wall0"
+                                                    :width="getTileWidth"
+                                                    :height="getTileHeight"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                        <td>
+                                            <DropZoneCanvas
+                                                    ref="tn"
+                                                    @change="id => tileUpdate('n', id)"
+                                                    :tile="getBlockBuilderFaceNorth"
+                                                    label="north"
+                                                    class="tile wall1"
+                                                    :width="getTileWidth"
+                                                    :height="getTileHeight"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                        <td>
+                                            <DropZoneCanvas
+                                                    ref="ts"
+                                                    @change="id => tileUpdate('s', id)"
+                                                    :tile="getBlockBuilderFaceSouth"
+                                                    label="south"
+                                                    class="tile wall2"
+                                                    :width="getTileWidth"
+                                                    :height="getTileHeight"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                        <td>
+                                            <DropZoneCanvas
+                                                    ref="te"
+                                                    @change="id => tileUpdate('e', id)"
+                                                    :tile="getBlockBuilderFaceEast"
+                                                    label="east"
+                                                    class="tile wall3"
+                                                    :width="getTileWidth"
+                                                    :height="getTileHeight"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4">
+                                            <DropZoneCanvas
+                                                    ref="tf"
+                                                    @change="id => tileUpdate('f', id)"
+                                                    :tile="getBlockBuilderFaceFloor"
+                                                    label="floor"
+                                                    class="tile floor"
+                                                    :width="getTileWidth"
+                                                    :height="getTileWidth"
+                                            ></DropZoneCanvas>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </td>
@@ -51,6 +99,7 @@
 </template>
 
 <script>
+    import * as MUTATION from '../store/modules/editor/mutation-types';
     // vuex
     import {createNamespacedHelpers} from'vuex';
 
@@ -58,12 +107,14 @@
     import HomeButton from "./HomeButton.vue";
     import MyButton from "./MyButton.vue";
     import FormBlockProps from "./FormBlockProps.vue";
+    import DropZoneCanvas from "./DropZoneCanvas.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "BlockBuilder",
-        components: {FormBlockProps, MyButton, HomeButton, Window},
+        components: {DropZoneCanvas, FormBlockProps, MyButton, HomeButton, Window},
 
         data: function() {
             return {
@@ -74,7 +125,29 @@
             ...levelMapGetter([
                 'getTileHeight',
                 'getTileWidth'
+            ]),
+
+            ...editorMapGetter([
+                'getBlockBuilderFaceNorth',
+                'getBlockBuilderFaceEast',
+                'getBlockBuilderFaceWest',
+                'getBlockBuilderFaceSouth',
+                'getBlockBuilderFaceFloor',
+                'getBlockBuilderFaceCeiling'
             ])
+        },
+
+        methods: {
+            ...editorMapMutations([
+                MUTATION.BLOCKBUILDER_SET_FACE
+            ]),
+
+            onFormSubmit: function(data) {
+            },
+
+            tileUpdate(face, value) {
+                this[MUTATION.BLOCKBUILDER_SET_FACE]({face, value});
+            }
         }
     }
 </script>
@@ -82,10 +155,6 @@
 <style scoped>
     .form input[type="number"] {
         width: 4em;
-    }
-
-    canvas.tile {
-        border: solid 4px black;
     }
 
     td.tiles table.block-def td {

@@ -120,7 +120,22 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\n.form input[type=\"number\"][data-v-38f92121] {\n    width: 4em;\n}\ncanvas.tile[data-v-38f92121] {\n    border: solid 4px black;\n}\ntd.tiles table.block-def td[data-v-38f92121] {\n    text-align: center;\n}\n", ""]);
+exports.push([module.i, "\n.form input[type=\"number\"][data-v-38f92121] {\n    width: 4em;\n}\ntd.tiles table.block-def td[data-v-38f92121] {\n    text-align: center;\n}\n", ""]);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "\ncanvas.tile[data-v-35082a06] {\n    border: solid 4px black;\n}\ncanvas.tile.drag-over[data-v-35082a06] {\n    border-color: limegreen;\n}\nimg.tile[data-v-35082a06] {\n    border: solid 4px black;\n}\nimg.tile.drag-over[data-v-35082a06] {\n    border-color: limegreen;\n}\n", ""]);
 
 
 
@@ -135,7 +150,7 @@ exports.push([module.i, "\n.form input[type=\"number\"][data-v-38f92121] {\n    
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\ninput[type=\"number\"][data-v-3ab3ef4c] {\n    width: 5em;\n}\nselect[data-v-3ab3ef4c] {\n    width: 13em;\n}\n\n", ""]);
+exports.push([module.i, "\ninput[type=\"number\"][data-v-3ab3ef4c] {\n    width: 5em;\n}\nselect.w13em[data-v-3ab3ef4c] {\n    width: 13em;\n}\nselect.w8em[data-v-3ab3ef4c] {\n    width: 8em;\n}\n\n", ""]);
 
 
 
@@ -180,7 +195,7 @@ exports.push([module.i, "\n.myButton[data-v-6a5ed451] {\n    box-shadow:inset 0 
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\n.tile[data-v-87fcdcbc] {\n    border: solid 0.4em #00C;\n    margin: 0.3em;\n    cursor: pointer;\n}\n.tile[data-v-87fcdcbc]:hover {\n    border-color: #55F;\n    filter: brightness(140%);\n}\n.tile.selected[data-v-87fcdcbc] {\n    border-color: limegreen;\n    filter: brightness(120%);\n}\n.tile.selected[data-v-87fcdcbc]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\n", ""]);
+exports.push([module.i, "\n.tile[data-v-87fcdcbc] {\n    border: solid 0.4em #00C;\n    margin: 0.3em;\n    cursor: pointer;\n    user-select: none;\n}\n.tile[data-v-87fcdcbc]:hover {\n    border-color: #55F;\n    filter: brightness(140%);\n}\n.tile.selected[data-v-87fcdcbc] {\n    border-color: limegreen;\n    filter: brightness(120%);\n}\n.tile.selected[data-v-87fcdcbc]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\n", ""]);
 
 
 
@@ -834,6 +849,36 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./BlockBuilder.vue?vue&type=style&index=0&id=38f92121&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/BlockBuilder.vue?vue&type=style&index=0&id=38f92121&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1709,6 +1754,59 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "CloseIcon",
+  props: {
+    title: {
+      type: String,
+      default: "Close icon"
+    },
+    decorative: {
+      type: Boolean,
+      default: false
+    },
+    fillColor: {
+      type: String,
+      default: "currentColor"
+    },
+    size: {
+      type: Number,
+      default: 24
+    }
+  }
+});
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Home.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Home.vue?vue&type=script&lang=js& ***!
@@ -2091,11 +2189,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _HomeButton_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./HomeButton.vue */ "./tools/mapedit/src/components/HomeButton.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var _FormBlockProps_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FormBlockProps.vue */ "./tools/mapedit/src/components/FormBlockProps.vue");
+/* harmony import */ var _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store/modules/editor/mutation-types */ "./tools/mapedit/src/store/modules/editor/mutation-types.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _HomeButton_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./HomeButton.vue */ "./tools/mapedit/src/components/HomeButton.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var _FormBlockProps_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FormBlockProps.vue */ "./tools/mapedit/src/components/FormBlockProps.vue");
+/* harmony import */ var _DropZoneCanvas_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./DropZoneCanvas.vue */ "./tools/mapedit/src/components/DropZoneCanvas.vue");
 //
 //
 //
@@ -2148,6 +2248,55 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 // vuex
 
@@ -2157,11 +2306,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('level');
+
+const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createNamespacedHelpers"])('level');
+const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createNamespacedHelpers"])('editor');
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "BlockBuilder",
-    components: {FormBlockProps: _FormBlockProps_vue__WEBPACK_IMPORTED_MODULE_4__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_3__["default"], HomeButton: _HomeButton_vue__WEBPACK_IMPORTED_MODULE_2__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_1__["default"]},
+    components: {DropZoneCanvas: _DropZoneCanvas_vue__WEBPACK_IMPORTED_MODULE_6__["default"], FormBlockProps: _FormBlockProps_vue__WEBPACK_IMPORTED_MODULE_5__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__["default"], HomeButton: _HomeButton_vue__WEBPACK_IMPORTED_MODULE_3__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_2__["default"]},
 
     data: function() {
         return {
@@ -2172,7 +2323,29 @@ const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__W
         ...levelMapGetter([
             'getTileHeight',
             'getTileWidth'
+        ]),
+
+        ...editorMapGetter([
+            'getBlockBuilderFaceNorth',
+            'getBlockBuilderFaceEast',
+            'getBlockBuilderFaceWest',
+            'getBlockBuilderFaceSouth',
+            'getBlockBuilderFaceFloor',
+            'getBlockBuilderFaceCeiling'
         ])
+    },
+
+    methods: {
+        ...editorMapMutations([
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE"]
+        ]),
+
+        onFormSubmit: function(data) {
+        },
+
+        tileUpdate(face, value) {
+            this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE"]]({face, value});
+        }
     }
 });
 
@@ -2219,6 +2392,120 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue-material-design-icons/Close.vue */ "./node_modules/vue-material-design-icons/Close.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
+
+const {mapGetters: levelMapGetters} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('level');
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "DropZoneCanvas",
+    components: {CloseIcon: vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_2__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_1__["default"]},
+    props: {
+        width: Number,
+        height: Number,
+        label: String,
+        cardinal: String,
+        tile: Number
+    },
+
+    data: function() {
+        return {
+            dragover: false,
+            tileId: this.tile,
+        };
+    },
+
+    watch: {
+        tileId: function(value, oldValue) {
+            if (value !== oldValue) {
+                this.$emit('change', value);
+            }
+        }
+    },
+
+    computed: {
+        ...levelMapGetters([
+            'getTile'
+        ]),
+
+        getMainClass: function() {
+            const aClasses = [
+                'tile'
+            ];
+            if (this.dragover) {
+                aClasses.push('drag-over');
+            }
+            return aClasses.join(' ');
+        },
+    },
+
+    methods: {
+        dragenterEvent: function(event) {
+            this.dragover = true;
+        },
+
+        dragleaveEvent: function(event) {
+            this.dragover = false;
+        },
+
+        dragoverEvent: function(event) {
+            event.preventDefault();
+            event.dataTransfer.dropEffect = 'move';
+        },
+
+        dropEvent: function(event) {
+            event.preventDefault();
+            this.dragover = false;
+            this.tileId = parseInt(event.dataTransfer.getData('text'));
+        },
+
+        clearTile: function() {
+            this.tileId = null;
+        }
+    }
+});
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/FormBlockProps.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/FormBlockProps.vue?vue&type=script&lang=js& ***!
@@ -2228,21 +2515,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony import */ var _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../store/modules/editor/mutation-types */ "./tools/mapedit/src/store/modules/editor/mutation-types.js");
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
 //
 //
 //
@@ -2305,31 +2580,165 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["createNamespacedHelpers"])('level');
+
+const {mapGetters: levelMapGetter, mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createNamespacedHelpers"])('level');
+const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_1__["createNamespacedHelpers"])('editor');
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "FormBlockProps",
-    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_1__["default"]},
+    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_2__["default"]},
 
     data: function() {
         return {
-            mPhys: 0,
-            mOffset: 0,
-            mAnim: false,
-            mAnimCount: 1,
-            mAnimDuration: 0,
-            mAnimLoop: 0,
-            mLight: false,
-            mLightInnerRadius: 0,
-            mLightOuterRadius: 0,
         }
+    },
+
+    methods: {
+        ...editorMapMutations([
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_PHYS"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_OFFS"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_FRAMES"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_DURATION"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_LOOP"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_VALUE"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_INNER_RADIUS"],
+            _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS"],
+        ])
     },
 
     computed: {
         ...levelMapGetter([
             'getTileHeight',
             'getTileWidth'
-        ])
+        ]),
+
+        ...editorMapGetter([
+            'getBlockBuilderPhysicalData',
+            'getBlockBuilderAnimLoopData',
+            'getBlockBuilderPhys',
+            'getBlockBuilderOffs',
+            'getBlockBuilderAnim',
+            'getBlockBuilderAnimFrames',
+            'getBlockBuilderAnimDuration',
+            'getBlockBuilderAnimLoop',
+            'getBlockBuilderLight',
+            'getBlockBuilderLightValue',
+            'getBlockBuilderLightInnerRadius',
+            'getBlockBuilderLightOuterRadius'
+        ]),
+
+        mPhys: {
+            get () {
+                return this.getBlockBuilderPhys;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_PHYS"]]({value});
+            }
+        },
+
+        mOffs: {
+            get () {
+                return this.getBlockBuilderOffs;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_OFFS"]]({value});
+            }
+        },
+
+        mAnim: {
+            get () {
+                return this.getBlockBuilderAnim;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM"]]({value});
+            }
+        },
+
+        mAnimFrames: {
+            get () {
+                return this.getBlockBuilderAnimFrames;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_FRAMES"]]({value});
+            }
+        },
+
+        mAnimDuration: {
+            get () {
+                return this.getBlockBuilderAnimDuration;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_DURATION"]]({value});
+            }
+        },
+
+        mAnimLoop: {
+            get () {
+                return this.getBlockBuilderAnimLoop;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_LOOP"]]({value});
+            }
+        },
+
+        mLight: {
+            get () {
+                return this.getBlockBuilderLight;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT"]]({value});
+            }
+        },
+
+        mLightValue: {
+            get () {
+                return this.getBlockBuilderLightValue;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_VALUE"]]({value});
+            }
+        },
+
+        mLightInnerRadius: {
+            get () {
+                return this.getBlockBuilderLightInnerRadius;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_INNER_RADIUS"]]({value});
+            }
+        },
+
+        mLightOuterRadius: {
+            get () {
+                return this.getBlockBuilderLightOuterRadius;
+            },
+            set (value) {
+                this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS"]]({value});
+            }
+        },
+
+
+
+        getData: function() {
+            return {
+                phys: parseInt(this.mPhys),
+                offs: parseInt(this.mOffs),
+                anim: {
+                    enabled: this.mAnim,
+                    count: parseInt(this.mAnimFrames),
+                    duration: parseInt(this.mAnimDuration),
+                    loop: parseInt(this.mAnimLoop)
+                },
+                light: {
+                    enabled: this.mLight,
+                    value: parseFloat(this.mLightValue),
+                    inner: parseInt(this.mLightInnerRadius),
+                    outer: parseInt(this.mLightOuterRadius)
+                }
+            }
+        }
     }
 });
 
@@ -2579,11 +2988,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "SelectableImage",
     props: {
-        src: String
+        src: String,
+        tileId: Number
     },
 
     data: function() {
@@ -2606,7 +3018,12 @@ __webpack_require__.r(__webpack_exports__);
         toggleSelect: function() {
             this.selected = !this.selected;
             this.$emit('selected', {value: this.selected});
-        }
+        },
+
+        dragstartEvent: function(event) {
+            event.dataTransfer.effectAllowed = 'move';
+            event.dataTransfer.setData('text', this.tileId.toString());
+        },
     }
 });
 
@@ -2763,6 +3180,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
@@ -2852,6 +3273,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_material_design_icons_Import_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Import.vue */ "./node_modules/vue-material-design-icons/Import.vue");
 /* harmony import */ var vue_material_design_icons_Wall_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/Wall.vue */ "./node_modules/vue-material-design-icons/Wall.vue");
 /* harmony import */ var vue_material_design_icons_ViewGrid_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! vue-material-design-icons/ViewGrid.vue */ "./node_modules/vue-material-design-icons/ViewGrid.vue");
+//
+//
 //
 //
 //
@@ -3052,6 +3475,71 @@ __webpack_require__.r(__webpack_exports__);
         }
     }
 });
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "span",
+    {
+      staticClass: "material-design-icon close-icon",
+      attrs: {
+        "aria-hidden": _vm.decorative,
+        "aria-label": _vm.title,
+        role: "img"
+      },
+      on: {
+        click: function($event) {
+          return _vm.$emit("click", $event)
+        }
+      }
+    },
+    [
+      _c(
+        "svg",
+        {
+          staticClass: "material-design-icon__svg",
+          attrs: {
+            fill: _vm.fillColor,
+            width: _vm.size,
+            height: _vm.size,
+            viewBox: "0 0 24 24"
+          }
+        },
+        [
+          _c(
+            "path",
+            {
+              attrs: {
+                d:
+                  "M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z"
+              }
+            },
+            [_c("title", [_vm._v(_vm._s(_vm.title))])]
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
 
 
 /***/ }),
@@ -3520,81 +4008,159 @@ var render = function() {
         _c("table", [
           _c("tbody", [
             _c("tr", [
-              _c("td", { staticClass: "form" }, [_c("FormBlockProps")], 1),
+              _c(
+                "td",
+                { staticClass: "form" },
+                [
+                  _c("FormBlockProps", {
+                    ref: "blockProps",
+                    on: { submit: _vm.onFormSubmit }
+                  })
+                ],
+                1
+              ),
               _vm._v(" "),
               _c("td", { staticClass: "tiles" }, [
                 _c("table", { staticClass: "block-def" }, [
                   _c("tbody", [
                     _c("tr", [
-                      _c("td", { attrs: { colspan: "4" } }, [
-                        _c("canvas", {
-                          ref: "tc",
-                          staticClass: "tile ceiling",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileWidth
-                          }
-                        })
-                      ])
+                      _c(
+                        "td",
+                        { attrs: { colspan: "4" } },
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "tc",
+                            staticClass: "tile ceiling",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceCeiling,
+                              label: "ceiling",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileWidth
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("c", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
                     ]),
                     _vm._v(" "),
                     _c("tr", [
-                      _c("td", [
-                        _c("canvas", {
-                          ref: "tw0",
-                          staticClass: "tile wall0",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileHeight
-                          }
-                        })
-                      ]),
+                      _c(
+                        "td",
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "tw",
+                            staticClass: "tile wall0",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceWest,
+                              label: "west",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileHeight
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("w", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("td", [
-                        _c("canvas", {
-                          ref: "tw1",
-                          staticClass: "tile wall1",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileHeight
-                          }
-                        })
-                      ]),
+                      _c(
+                        "td",
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "tn",
+                            staticClass: "tile wall1",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceNorth,
+                              label: "north",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileHeight
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("n", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("td", [
-                        _c("canvas", {
-                          ref: "tw2",
-                          staticClass: "tile wall2",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileHeight
-                          }
-                        })
-                      ]),
+                      _c(
+                        "td",
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "ts",
+                            staticClass: "tile wall2",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceSouth,
+                              label: "south",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileHeight
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("s", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      ),
                       _vm._v(" "),
-                      _c("td", [
-                        _c("canvas", {
-                          ref: "tw3",
-                          staticClass: "tile wall3",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileHeight
-                          }
-                        })
-                      ])
+                      _c(
+                        "td",
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "te",
+                            staticClass: "tile wall3",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceEast,
+                              label: "east",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileHeight
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("e", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
                     ]),
                     _vm._v(" "),
                     _c("tr", [
-                      _c("td", { attrs: { colspan: "4" } }, [
-                        _c("canvas", {
-                          ref: "tf",
-                          staticClass: "tile floor",
-                          attrs: {
-                            width: _vm.getTileWidth,
-                            height: _vm.getTileWidth
-                          }
-                        })
-                      ])
+                      _c(
+                        "td",
+                        { attrs: { colspan: "4" } },
+                        [
+                          _c("DropZoneCanvas", {
+                            ref: "tf",
+                            staticClass: "tile floor",
+                            attrs: {
+                              tile: _vm.getBlockBuilderFaceFloor,
+                              label: "floor",
+                              width: _vm.getTileWidth,
+                              height: _vm.getTileWidth
+                            },
+                            on: {
+                              change: function(id) {
+                                return _vm.tileUpdate("f", id)
+                              }
+                            }
+                          })
+                        ],
+                        1
+                      )
                     ])
                   ])
                 ])
@@ -3679,6 +4245,53 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("figure", [
+    _c("figcaption", [_vm._v(_vm._s(_vm.label))]),
+    _vm._v(" "),
+    _c("img", {
+      class: _vm.getMainClass,
+      attrs: {
+        src: _vm.tileId !== null ? _vm.getTile(this.tileId).content : "",
+        width: _vm.width,
+        height: _vm.height
+      },
+      on: {
+        dragenter: _vm.dragenterEvent,
+        dragleave: _vm.dragleaveEvent,
+        dragover: _vm.dragoverEvent,
+        drop: _vm.dropEvent
+      }
+    }),
+    _vm._v(" "),
+    _c(
+      "figcaption",
+      [_c("MyButton", { on: { click: _vm.clearTile } }, [_c("CloseIcon")], 1)],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/FormBlockProps.vue?vue&type=template&id=3ab3ef4c&scoped=true&":
 /*!**********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./tools/mapedit/src/components/FormBlockProps.vue?vue&type=template&id=3ab3ef4c&scoped=true& ***!
@@ -3709,6 +4322,7 @@ var render = function() {
                 expression: "mPhys"
               }
             ],
+            staticClass: "w13em",
             on: {
               change: function($event) {
                 var $$selectedVal = Array.prototype.filter
@@ -3725,43 +4339,12 @@ var render = function() {
               }
             }
           },
-          [
-            _c("option", { attrs: { value: "0" } }, [_vm._v("Walkable")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "1" } }, [_vm._v("Solid block")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "2" } }, [_vm._v("Door up")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "3" } }, [_vm._v("Curtain up")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "4" } }, [_vm._v("Door down")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "5" } }, [_vm._v("Curtain down")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "6" } }, [_vm._v("Door left")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "7" } }, [_vm._v("Curtain left")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "8" } }, [_vm._v("Door right")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "9" } }, [_vm._v("Curtain right")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "10" } }, [
-              _vm._v("Door slide double")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "11" } }, [_vm._v("Secret block")]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "12" } }, [
-              _vm._v("Transparent block")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "13" } }, [
-              _vm._v("Invisible block")
-            ]),
-            _vm._v(" "),
-            _c("option", { attrs: { value: "14" } }, [_vm._v("Offset block")])
-          ]
+          _vm._l(_vm.getBlockBuilderPhysicalData, function(p) {
+            return _c("option", { key: p.id, domProps: { value: p.id } }, [
+              _vm._v(_vm._s(p.label))
+            ])
+          }),
+          0
         )
       ])
     ]),
@@ -3774,18 +4357,18 @@ var render = function() {
             {
               name: "model",
               rawName: "v-model",
-              value: _vm.mOffset,
-              expression: "mOffset"
+              value: _vm.mOffs,
+              expression: "mOffs"
             }
           ],
           attrs: { type: "number", min: "0", max: _vm.getTileWidth },
-          domProps: { value: _vm.mOffset },
+          domProps: { value: _vm.mOffs },
           on: {
             input: function($event) {
               if ($event.target.composing) {
                 return
               }
-              _vm.mOffset = $event.target.value
+              _vm.mOffs = $event.target.value
             }
           }
         })
@@ -3851,24 +4434,24 @@ var render = function() {
           _vm._v(" "),
           _c("div", [
             _c("label", [
-              _vm._v("Count: "),
+              _vm._v("Frames: "),
               _c("input", {
                 directives: [
                   {
                     name: "model",
                     rawName: "v-model",
-                    value: _vm.mAnimCount,
-                    expression: "mAnimCount"
+                    value: _vm.mAnimFrames,
+                    expression: "mAnimFrames"
                   }
                 ],
                 attrs: { type: "number", min: "1" },
-                domProps: { value: _vm.mAnimCount },
+                domProps: { value: _vm.mAnimFrames },
                 on: {
                   input: function($event) {
                     if ($event.target.composing) {
                       return
                     }
-                    _vm.mAnimCount = $event.target.value
+                    _vm.mAnimFrames = $event.target.value
                   }
                 }
               })
@@ -3887,7 +4470,7 @@ var render = function() {
                     expression: "mAnimDuration"
                   }
                 ],
-                attrs: { type: "number", min: "0", step: "20" },
+                attrs: { type: "number", min: "0" },
                 domProps: { value: _vm.mAnimDuration },
                 on: {
                   input: function($event) {
@@ -3915,6 +4498,7 @@ var render = function() {
                       expression: "mAnimLoop"
                     }
                   ],
+                  staticClass: "w8em",
                   on: {
                     change: function($event) {
                       var $$selectedVal = Array.prototype.filter
@@ -3931,13 +4515,14 @@ var render = function() {
                     }
                   }
                 },
-                [
-                  _c("option", { attrs: { value: "0" } }, [_vm._v("None")]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "1" } }, [_vm._v("Forward")]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "2" } }, [_vm._v("Yoyo")])
-                ]
+                _vm._l(_vm.getBlockBuilderAnimLoopData, function(p) {
+                  return _c(
+                    "option",
+                    { key: p.id, domProps: { value: p.id } },
+                    [_vm._v(_vm._s(p.label))]
+                  )
+                }),
+                0
               )
             ])
           ])
@@ -4004,7 +4589,33 @@ var render = function() {
           _vm._v(" "),
           _c("div", [
             _c("label", [
-              _vm._v("in. rad.: "),
+              _vm._v("Value: "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.mLightValue,
+                    expression: "mLightValue"
+                  }
+                ],
+                attrs: { type: "number", min: "0", max: "1", step: "0.01" },
+                domProps: { value: _vm.mLightValue },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.mLightValue = $event.target.value
+                  }
+                }
+              })
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c("label", [
+              _vm._v("In.rad.: "),
               _c("input", {
                 directives: [
                   {
@@ -4030,7 +4641,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", [
             _c("label", [
-              _vm._v("out. rad.: "),
+              _vm._v("Out.rad.: "),
               _c("input", {
                 directives: [
                   {
@@ -4040,7 +4651,7 @@ var render = function() {
                     expression: "mLightOuterRadius"
                   }
                 ],
-                attrs: { type: "number", min: "0", step: "20" },
+                attrs: { type: "number", min: "0" },
                 domProps: { value: _vm.mLightOuterRadius },
                 on: {
                   input: function($event) {
@@ -4059,7 +4670,23 @@ var render = function() {
     _vm._v(" "),
     _c("hr"),
     _vm._v(" "),
-    _c("div", [_c("MyButton", [_vm._v("Construire")])], 1)
+    _c(
+      "div",
+      [
+        _c(
+          "MyButton",
+          {
+            on: {
+              click: function($event) {
+                return _vm.$emit("submit", _vm.getData)
+              }
+            }
+          },
+          [_vm._v("Construire")]
+        )
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = []
@@ -4285,8 +4912,8 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("img", {
     class: _vm.getMainClass,
-    attrs: { src: _vm.src },
-    on: { click: _vm.toggleSelect }
+    attrs: { src: _vm.src, draggable: "true" },
+    on: { click: _vm.toggleSelect, dragstart: _vm.dragstartEvent }
   })
 }
 var staticRenderFns = []
@@ -4450,7 +5077,7 @@ var render = function() {
             _vm._l(_vm.getWallTiles, function(image) {
               return _c("SelectableImage", {
                 key: image.id,
-                attrs: { src: image.content }
+                attrs: { tileId: image.id, src: image.content, draggable: true }
               })
             }),
             1
@@ -4463,7 +5090,7 @@ var render = function() {
             _vm._l(_vm.getFlatTiles, function(image) {
               return _c("SelectableImage", {
                 key: image.id,
-                attrs: { src: image.content }
+                attrs: { tileId: image.id, src: image.content, draggable: true }
               })
             }),
             1
@@ -4597,7 +5224,7 @@ var render = function() {
               _vm._l(_vm.wallImages, function(image) {
                 return _c("SelectableImage", {
                   key: image.id,
-                  attrs: { src: image.src },
+                  attrs: { tileId: image.id, src: image.src },
                   on: {
                     selected: function(ref) {
                       var value = ref.value
@@ -4627,7 +5254,7 @@ var render = function() {
               _vm._l(_vm.flatImages, function(image) {
                 return _c("SelectableImage", {
                   key: image.id,
-                  attrs: { src: image.src },
+                  attrs: { tileId: image.id, src: image.src },
                   on: {
                     selected: function(ref) {
                       var value = ref.value
@@ -4792,6 +5419,75 @@ function normalizeComponent (
     options: options
   }
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Close.vue":
+/*!**********************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Close.vue ***!
+  \**********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Close.vue?vue&type=template&id=3cc2737c& */ "./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c&");
+/* harmony import */ var _Close_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Close.vue?vue&type=script&lang=js& */ "./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Close_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "node_modules/vue-material-design-icons/Close.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_index_js_vue_loader_options_Close_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib??vue-loader-options!./Close.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Close.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_vue_loader_lib_index_js_vue_loader_options_Close_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c&":
+/*!*****************************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c& ***!
+  \*****************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../vue-loader/lib??vue-loader-options!./Close.vue?vue&type=template&id=3cc2737c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Close.vue?vue&type=template&id=3cc2737c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Close_vue_vue_type_template_id_3cc2737c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
 
 
 /***/ }),
@@ -5250,8 +5946,8 @@ if(false) {}
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /*!
-  * vue-router v3.0.6
-  * (c) 2019 Evan You
+  * vue-router v3.0.2
+  * (c) 2018 Evan You
   * @license MIT
   */
 /*  */
@@ -5263,7 +5959,7 @@ function assert (condition, message) {
 }
 
 function warn (condition, message) {
-  if ( true && !condition) {
+  if (true && !condition) {
     typeof console !== 'undefined' && console.warn(("[vue-router] " + message));
   }
 }
@@ -5309,14 +6005,11 @@ var View = {
     var depth = 0;
     var inactive = false;
     while (parent && parent._routerRoot !== parent) {
-      var vnodeData = parent.$vnode && parent.$vnode.data;
-      if (vnodeData) {
-        if (vnodeData.routerView) {
-          depth++;
-        }
-        if (vnodeData.keepAlive && parent._inactive) {
-          inactive = true;
-        }
+      if (parent.$vnode && parent.$vnode.data.routerView) {
+        depth++;
+      }
+      if (parent._inactive) {
+        inactive = true;
       }
       parent = parent.$parent;
     }
@@ -5353,17 +6046,6 @@ var View = {
     // in case the same component instance is reused across different routes
     ;(data.hook || (data.hook = {})).prepatch = function (_, vnode) {
       matched.instances[name] = vnode.componentInstance;
-    };
-
-    // register instance in init hook
-    // in case kept-alive component be actived when routes changed
-    data.hook.init = function (vnode) {
-      if (vnode.data.keepAlive &&
-        vnode.componentInstance &&
-        vnode.componentInstance !== matched.instances[name]
-      ) {
-        matched.instances[name] = vnode.componentInstance;
-      }
     };
 
     // resolve props
@@ -5433,7 +6115,7 @@ function resolveQuery (
   try {
     parsedQuery = parse(query || '');
   } catch (e) {
-     true && warn(false, e.message);
+    true && warn(false, e.message);
     parsedQuery = {};
   }
   for (var key in extraQuery) {
@@ -6347,24 +7029,16 @@ function fillParams (
   params,
   routeMsg
 ) {
-  params = params || {};
   try {
     var filler =
       regexpCompileCache[path] ||
       (regexpCompileCache[path] = pathToRegexp_1.compile(path));
-
-    // Fix #2505 resolving asterisk routes { name: 'not-found', params: { pathMatch: '/not-found' }}
-    if (params.pathMatch) { params[0] = params.pathMatch; }
-
-    return filler(params, { pretty: true })
+    return filler(params || {}, { pretty: true })
   } catch (e) {
     if (true) {
       warn(false, ("missing param for " + routeMsg + ": " + (e.message)));
     }
     return ''
-  } finally {
-    // delete the 0 if it was added
-    delete params[0];
   }
 }
 
@@ -6504,7 +7178,7 @@ function addRouteRecord (
   if (name) {
     if (!nameMap[name]) {
       nameMap[name] = record;
-    } else if ( true && !matchAs) {
+    } else if (true && !matchAs) {
       warn(
         false,
         "Duplicate named routes definition: " +
@@ -6543,10 +7217,8 @@ function normalizeLocation (
 ) {
   var next = typeof raw === 'string' ? { path: raw } : raw;
   // named target
-  if (next._normalized) {
+  if (next.name || next._normalized) {
     return next
-  } else if (next.name) {
-    return extend({}, raw)
   }
 
   // relative params
@@ -7027,7 +7699,7 @@ function resolveAsyncComponents (matched) {
 
         var reject = once(function (reason) {
           var msg = "Failed to resolve async component " + key + ": " + reason;
-           true && warn(false, msg);
+          true && warn(false, msg);
           if (!error) {
             error = isError(reason)
               ? reason
@@ -7403,7 +8075,7 @@ function poll (
 
 /*  */
 
-var HTML5History = /*@__PURE__*/(function (History$$1) {
+var HTML5History = (function (History$$1) {
   function HTML5History (router, base) {
     var this$1 = this;
 
@@ -7491,7 +8163,7 @@ function getLocation (base) {
 
 /*  */
 
-var HashHistory = /*@__PURE__*/(function (History$$1) {
+var HashHistory = (function (History$$1) {
   function HashHistory (router, base, fallback) {
     History$$1.call(this, router, base);
     // check history fallback deeplinking
@@ -7600,23 +8272,7 @@ function getHash () {
   // consistent across browsers - Firefox will pre-decode it!
   var href = window.location.href;
   var index = href.indexOf('#');
-  // empty path
-  if (index < 0) { return '' }
-
-  href = href.slice(index + 1);
-  // decode the hash but not the search or hash
-  // as search(query) is already decoded
-  // https://github.com/vuejs/vue-router/issues/2708
-  var searchIndex = href.indexOf('?');
-  if (searchIndex < 0) {
-    var hashIndex = href.indexOf('#');
-    if (hashIndex > -1) { href = decodeURI(href.slice(0, hashIndex)) + href.slice(hashIndex); }
-    else { href = decodeURI(href); }
-  } else {
-    if (searchIndex > -1) { href = decodeURI(href.slice(0, searchIndex)) + href.slice(searchIndex); }
-  }
-
-  return href
+  return index === -1 ? '' : decodeURI(href.slice(index + 1))
 }
 
 function getUrl (path) {
@@ -7644,7 +8300,7 @@ function replaceHash (path) {
 
 /*  */
 
-var AbstractHistory = /*@__PURE__*/(function (History$$1) {
+var AbstractHistory = (function (History$$1) {
   function AbstractHistory (router, base) {
     History$$1.call(this, router, base);
     this.stack = [];
@@ -7759,7 +8415,7 @@ prototypeAccessors.currentRoute.get = function () {
 VueRouter.prototype.init = function init (app /* Vue component instance */) {
     var this$1 = this;
 
-   true && assert(
+  true && assert(
     install.installed,
     "not installed. Make sure to call `Vue.use(VueRouter)` " +
     "before creating root instance."
@@ -7767,19 +8423,7 @@ VueRouter.prototype.init = function init (app /* Vue component instance */) {
 
   this.apps.push(app);
 
-  // set up app destroyed handler
-  // https://github.com/vuejs/vue-router/issues/2639
-  app.$once('hook:destroyed', function () {
-    // clean out app from this.apps array once destroyed
-    var index = this$1.apps.indexOf(app);
-    if (index > -1) { this$1.apps.splice(index, 1); }
-    // ensure we still have a main app or null if no apps
-    // we do not release the router so it can be reused
-    if (this$1.app === app) { this$1.app = this$1.apps[0] || null; }
-  });
-
-  // main app previously initialized
-  // return as we don't need to set up new history listener
+  // main app already initialized.
   if (this.app) {
     return
   }
@@ -7869,10 +8513,9 @@ VueRouter.prototype.resolve = function resolve (
   current,
   append
 ) {
-  current = current || this.history.current;
   var location = normalizeLocation(
     to,
-    current,
+    current || this.history.current,
     append,
     this
   );
@@ -7913,7 +8556,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.0.6';
+VueRouter.version = '3.0.2';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
@@ -8655,7 +9298,7 @@ Dep.prototype.depend = function depend () {
 Dep.prototype.notify = function notify () {
   // stabilize the subscriber list first
   var subs = this.subs.slice();
-  if ( true && !config.async) {
+  if (true && !config.async) {
     // subs aren't sorted in scheduler if not running async
     // we need to sort them now to make sure they fire in correct
     // order
@@ -8976,7 +9619,7 @@ function defineReactive$$1 (
         return
       }
       /* eslint-enable no-self-compare */
-      if ( true && customSetter) {
+      if (true && customSetter) {
         customSetter();
       }
       // #7981: for accessor properties without setter
@@ -8998,7 +9641,7 @@ function defineReactive$$1 (
  * already exist.
  */
 function set (target, key, val) {
-  if ( true &&
+  if (true &&
     (isUndef(target) || isPrimitive(target))
   ) {
     warn(("Cannot set reactive property on undefined, null, or primitive value: " + ((target))));
@@ -9014,7 +9657,7 @@ function set (target, key, val) {
   }
   var ob = (target).__ob__;
   if (target._isVue || (ob && ob.vmCount)) {
-     true && warn(
+    true && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
       'at runtime - declare it upfront in the data option.'
     );
@@ -9033,7 +9676,7 @@ function set (target, key, val) {
  * Delete a property and trigger change if necessary.
  */
 function del (target, key) {
-  if ( true &&
+  if (true &&
     (isUndef(target) || isPrimitive(target))
   ) {
     warn(("Cannot delete reactive property on undefined, null, or primitive value: " + ((target))));
@@ -9044,7 +9687,7 @@ function del (target, key) {
   }
   var ob = (target).__ob__;
   if (target._isVue || (ob && ob.vmCount)) {
-     true && warn(
+    true && warn(
       'Avoid deleting properties on a Vue instance or its root $data ' +
       '- just set it to null.'
     );
@@ -9180,7 +9823,7 @@ strats.data = function (
 ) {
   if (!vm) {
     if (childVal && typeof childVal !== 'function') {
-       true && warn(
+      true && warn(
         'The "data" option should be a function ' +
         'that returns a per-instance value in component ' +
         'definitions.',
@@ -9243,7 +9886,7 @@ function mergeAssets (
 ) {
   var res = Object.create(parentVal || null);
   if (childVal) {
-     true && assertObjectType(key, childVal, vm);
+    true && assertObjectType(key, childVal, vm);
     return extend(res, childVal)
   } else {
     return res
@@ -9513,7 +10156,7 @@ function resolveAsset (
   if (hasOwn(assets, PascalCaseId)) { return assets[PascalCaseId] }
   // fallback to prototype chain
   var res = assets[id] || assets[camelizedId] || assets[PascalCaseId];
-  if ( true && warnMissing && !res) {
+  if (true && warnMissing && !res) {
     warn(
       'Failed to resolve ' + type.slice(0, -1) + ': ' + id,
       options
@@ -9577,7 +10220,7 @@ function getPropDefaultValue (vm, prop, key) {
   }
   var def = prop.default;
   // warn against non-factory defaults for Object & Array
-  if ( true && isObject(def)) {
+  if (true && isObject(def)) {
     warn(
       'Invalid default value for prop "' + key + '": ' +
       'Props with type Object/Array must use a factory function ' +
@@ -10130,7 +10773,7 @@ function updateListeners (
     old = oldOn[name];
     event = normalizeEvent(name);
     if (isUndef(cur)) {
-       true && warn(
+      true && warn(
         "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
         vm
       );
@@ -10606,7 +11249,7 @@ function renderSlot (
   if (scopedSlotFn) { // scoped slot
     props = props || {};
     if (bindObject) {
-      if ( true && !isObject(bindObject)) {
+      if (true && !isObject(bindObject)) {
         warn(
           'slot v-bind without argument expects an Object',
           this
@@ -10682,7 +11325,7 @@ function bindObjectProps (
 ) {
   if (value) {
     if (!isObject(value)) {
-       true && warn(
+      true && warn(
         'v-bind without argument expects an Object or Array value',
         this
       );
@@ -10790,7 +11433,7 @@ function markStaticNode (node, key, isOnce) {
 function bindObjectListeners (data, value) {
   if (value) {
     if (!isPlainObject(value)) {
-       true && warn(
+      true && warn(
         'v-on without argument expects an Object value',
         this
       );
@@ -10841,7 +11484,7 @@ function bindDynamicKeys (baseObj, values) {
     var key = values[i];
     if (typeof key === 'string' && key) {
       baseObj[values[i]] = values[i + 1];
-    } else if ( true && key !== '' && key !== null) {
+    } else if (true && key !== '' && key !== null) {
       // null is a speical value for explicitly removing a binding
       warn(
         ("Invalid value for dynamic directive argument (expected string or null): " + key),
@@ -11292,7 +11935,7 @@ function _createElement (
   normalizationType
 ) {
   if (isDef(data) && isDef((data).__ob__)) {
-     true && warn(
+    true && warn(
       "Avoid using observed data object as vnode data: " + (JSON.stringify(data)) + "\n" +
       'Always create fresh vnode data objects in each render!',
       context
@@ -11308,7 +11951,7 @@ function _createElement (
     return createEmptyVNode()
   }
   // warn against non-primitive key
-  if ( true &&
+  if (true &&
     isDef(data) && isDef(data.key) && !isPrimitive(data.key)
   ) {
     {
@@ -11473,7 +12116,7 @@ function renderMixin (Vue) {
       // return error render result,
       // or previous vnode to prevent render error causing blank component
       /* istanbul ignore else */
-      if ( true && vm.$options.renderError) {
+      if (true && vm.$options.renderError) {
         try {
           vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
         } catch (e) {
@@ -11492,7 +12135,7 @@ function renderMixin (Vue) {
     }
     // return empty vnode in case the render function errored out
     if (!(vnode instanceof VNode)) {
-      if ( true && Array.isArray(vnode)) {
+      if (true && Array.isArray(vnode)) {
         warn(
           'Multiple root nodes returned from render function. Render function ' +
           'should return a single root node.',
@@ -11595,7 +12238,7 @@ function resolveAsyncComponent (
     });
 
     var reject = once(function (reason) {
-       true && warn(
+      true && warn(
         "Failed to resolve async component: " + (String(factory)) +
         (reason ? ("\nReason: " + reason) : '')
       );
@@ -11966,7 +12609,7 @@ function mountComponent (
 
   var updateComponent;
   /* istanbul ignore if */
-  if ( true && config.performance && mark) {
+  if (true && config.performance && mark) {
     updateComponent = function () {
       var name = vm._name;
       var id = vm._uid;
@@ -12231,7 +12874,7 @@ function flushSchedulerQueue () {
     has[id] = null;
     watcher.run();
     // in dev build, check and stop circular updates.
-    if ( true && has[id] != null) {
+    if (true && has[id] != null) {
       circular[id] = (circular[id] || 0) + 1;
       if (circular[id] > MAX_UPDATE_COUNT) {
         warn(
@@ -12317,7 +12960,7 @@ function queueWatcher (watcher) {
     if (!waiting) {
       waiting = true;
 
-      if ( true && !config.async) {
+      if (true && !config.async) {
         flushSchedulerQueue();
         return
       }
@@ -12377,7 +13020,7 @@ var Watcher = function Watcher (
     this.getter = parsePath(expOrFn);
     if (!this.getter) {
       this.getter = noop;
-       true && warn(
+      true && warn(
         "Failed watching path: \"" + expOrFn + "\" " +
         'Watcher only accepts simple dot-delimited paths. ' +
         'For full control, use a function instead.',
@@ -12626,7 +13269,7 @@ function initData (vm) {
     : data || {};
   if (!isPlainObject(data)) {
     data = {};
-     true && warn(
+    true && warn(
       'data functions should return an object:\n' +
       'https://vuejs.org/v2/guide/components.html#data-Must-Be-a-Function',
       vm
@@ -12648,7 +13291,7 @@ function initData (vm) {
       }
     }
     if (props && hasOwn(props, key)) {
-       true && warn(
+      true && warn(
         "The data property \"" + key + "\" is already declared as a prop. " +
         "Use prop default value instead.",
         vm
@@ -12685,7 +13328,7 @@ function initComputed (vm, computed) {
   for (var key in computed) {
     var userDef = computed[key];
     var getter = typeof userDef === 'function' ? userDef : userDef.get;
-    if ( true && getter == null) {
+    if (true && getter == null) {
       warn(
         ("Getter is missing for computed property \"" + key + "\"."),
         vm
@@ -12736,7 +13379,7 @@ function defineComputed (
       : noop;
     sharedPropertyDefinition.set = userDef.set || noop;
   }
-  if ( true &&
+  if (true &&
       sharedPropertyDefinition.set === noop) {
     sharedPropertyDefinition.set = function () {
       warn(
@@ -12889,7 +13532,7 @@ function initMixin (Vue) {
 
     var startTag, endTag;
     /* istanbul ignore if */
-    if ( true && config.performance && mark) {
+    if (true && config.performance && mark) {
       startTag = "vue-perf-start:" + (vm._uid);
       endTag = "vue-perf-end:" + (vm._uid);
       mark(startTag);
@@ -12926,7 +13569,7 @@ function initMixin (Vue) {
     callHook(vm, 'created');
 
     /* istanbul ignore if */
-    if ( true && config.performance && mark) {
+    if (true && config.performance && mark) {
       vm._name = formatComponentName(vm, false);
       mark(endTag);
       measure(("vue " + (vm._name) + " init"), startTag, endTag);
@@ -12995,7 +13638,7 @@ function resolveModifiedOptions (Ctor) {
 }
 
 function Vue (options) {
-  if ( true &&
+  if (true &&
     !(this instanceof Vue)
   ) {
     warn('Vue is a constructor and should be called with the `new` keyword');
@@ -13064,7 +13707,7 @@ function initExtend (Vue) {
     }
 
     var name = extendOptions.name || Super.options.name;
-    if ( true && name) {
+    if (true && name) {
       validateComponentName(name);
     }
 
@@ -13147,7 +13790,7 @@ function initAssetRegisters (Vue) {
         return this.options[type + 's'][id]
       } else {
         /* istanbul ignore if */
-        if ( true && type === 'component') {
+        if (true && type === 'component') {
           validateComponentName(id);
         }
         if (type === 'component' && isPlainObject(definition)) {
@@ -13586,7 +14229,7 @@ function query (el) {
   if (typeof el === 'string') {
     var selected = document.querySelector(el);
     if (!selected) {
-       true && warn(
+      true && warn(
         'Cannot find element: ' + el
       );
       return document.createElement('div')
@@ -13876,7 +14519,7 @@ function createPatchFunction (backend) {
         insert(parentElm, vnode.elm, refElm);
       }
 
-      if ( true && data && data.pre) {
+      if (true && data && data.pre) {
         creatingElmInVPre--;
       }
     } else if (isTrue(vnode.isComment)) {
@@ -14310,7 +14953,7 @@ function createPatchFunction (backend) {
           if (isDef(i = data) && isDef(i = i.domProps) && isDef(i = i.innerHTML)) {
             if (i !== elm.innerHTML) {
               /* istanbul ignore if */
-              if ( true &&
+              if (true &&
                 typeof console !== 'undefined' &&
                 !hydrationBailed
               ) {
@@ -14336,7 +14979,7 @@ function createPatchFunction (backend) {
             // longer than the virtual children list.
             if (!childrenMatch || childNode) {
               /* istanbul ignore if */
-              if ( true &&
+              if (true &&
                 typeof console !== 'undefined' &&
                 !hydrationBailed
               ) {
@@ -15484,7 +16127,7 @@ function enter (vnode, toggleDisplay) {
       : duration
   );
 
-  if ( true && explicitEnterDuration != null) {
+  if (true && explicitEnterDuration != null) {
     checkDuration(explicitEnterDuration, 'enter', vnode);
   }
 
@@ -15592,7 +16235,7 @@ function leave (vnode, rm) {
       : duration
   );
 
-  if ( true && isDef(explicitLeaveDuration)) {
+  if (true && isDef(explicitLeaveDuration)) {
     checkDuration(explicitLeaveDuration, 'leave', vnode);
   }
 
@@ -15819,7 +16462,7 @@ function actuallySetSelected (el, binding, vm) {
   var value = binding.value;
   var isMultiple = el.multiple;
   if (isMultiple && !Array.isArray(value)) {
-     true && warn(
+    true && warn(
       "<select multiple v-model=\"" + (binding.expression) + "\"> " +
       "expects an Array value for its binding, but got " + (Object.prototype.toString.call(value).slice(8, -1)),
       vm
@@ -16036,7 +16679,7 @@ var Transition = {
     }
 
     // warn multiple elements
-    if ( true && children.length > 1) {
+    if (true && children.length > 1) {
       warn(
         '<transition> can only be used on a single element. Use ' +
         '<transition-group> for lists.',
@@ -16047,7 +16690,7 @@ var Transition = {
     var mode = this.mode;
 
     // warn invalid mode
-    if ( true &&
+    if (true &&
       mode && mode !== 'in-out' && mode !== 'out-in'
     ) {
       warn(
@@ -16349,7 +16992,7 @@ if (inBrowser) {
         );
       }
     }
-    if ( true &&
+    if (true &&
       config.productionTip !== false &&
       typeof console !== 'undefined'
     ) {
@@ -16773,7 +17416,7 @@ Store.prototype.commit = function commit (_type, _payload, _options) {
   this._subscribers.forEach(function (sub) { return sub(mutation, this$1.state); });
 
   if (
-     true &&
+    true &&
     options && options.silent
   ) {
     console.warn(
@@ -17030,7 +17673,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if ( true && !store._actions[type]) {
+        if (true && !store._actions[type]) {
           console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
           return
         }
@@ -17047,7 +17690,7 @@ function makeLocalContext (store, namespace, path) {
 
       if (!options || !options.root) {
         type = namespace + type;
-        if ( true && !store._mutations[type]) {
+        if (true && !store._mutations[type]) {
           console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
           return
         }
@@ -17270,7 +17913,7 @@ var mapGetters = normalizeNamespace(function (namespace, getters) {
       if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
         return
       }
-      if ( true && !(val in this.$store.getters)) {
+      if (true && !(val in this.$store.getters)) {
         console.error(("[vuex] unknown getter: " + val));
         return
       }
@@ -17366,7 +18009,7 @@ function normalizeNamespace (fn) {
  */
 function getModuleByNamespace (store, helper, namespace) {
   var module = store._modulesNamespaceMap[namespace];
-  if ( true && !module) {
+  if (true && !module) {
     console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
   }
   return module
@@ -17405,7 +18048,7 @@ g = (function() {
 
 try {
 	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
+	g = g || Function("return this")() || (1, eval)("this");
 } catch (e) {
 	// This works if the window reference is available
 	if (typeof window === "object") g = window;
@@ -17658,6 +18301,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConfigPad_vue_vue_type_template_id_69d61eae_scoped_true_xmlns_3Av_slot_http_3A_2F_2Fwww_w3_org_2F1999_2FXSL_2FTransform___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ConfigPad_vue_vue_type_template_id_69d61eae_scoped_true_xmlns_3Av_slot_http_3A_2F_2Fwww_w3_org_2F1999_2FXSL_2FTransform___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/components/DropZoneCanvas.vue":
+/*!*********************************************************!*\
+  !*** ./tools/mapedit/src/components/DropZoneCanvas.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true& */ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true&");
+/* harmony import */ var _DropZoneCanvas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DropZoneCanvas.vue?vue&type=script&lang=js& */ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& */ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _DropZoneCanvas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "35082a06",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "tools/mapedit/src/components/DropZoneCanvas.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib??vue-loader-options!./DropZoneCanvas.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&":
+/*!******************************************************************************************************************!*\
+  !*** ./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& ***!
+  \******************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=style&index=0&id=35082a06&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_style_index_0_id_35082a06_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./tools/mapedit/src/components/DropZoneCanvas.vue?vue&type=template&id=35082a06&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_DropZoneCanvas_vue_vue_type_template_id_35082a06_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -18908,15 +19638,352 @@ class TilesetSplitter {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_level__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/level */ "./tools/mapedit/src/store/modules/level/index.js");
+/* harmony import */ var _modules_editor__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/editor */ "./tools/mapedit/src/store/modules/editor/index.js");
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     modules: {
-        level: _modules_level__WEBPACK_IMPORTED_MODULE_0__["default"]
+        level: _modules_level__WEBPACK_IMPORTED_MODULE_0__["default"],
+        editor: _modules_editor__WEBPACK_IMPORTED_MODULE_1__["default"]
     }
 });
 
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/store/modules/editor/getters.js":
+/*!***********************************************************!*\
+  !*** ./tools/mapedit/src/store/modules/editor/getters.js ***!
+  \***********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+    // BLOCK BUILDER
+    getBlockBuilderPhysicalData: state => state.data.phys,
+    getBlockBuilderAnimLoopData: state => state.data.loops,
+
+    getBlockBuilderPhys: state => state.models.blockBuilder.phys,
+    getBlockBuilderOffs: state => state.models.blockBuilder.offs,
+
+    getBlockBuilderAnim: state => state.models.blockBuilder.anim.enabled,
+    getBlockBuilderAnimFrames: state => state.models.blockBuilder.anim.frames,
+    getBlockBuilderAnimDuration: state => state.models.blockBuilder.anim.duration,
+    getBlockBuilderAnimLoop: state => state.models.blockBuilder.anim.loop,
+
+    getBlockBuilderLight: state => state.models.blockBuilder.light.enabled,
+    getBlockBuilderLightValue: state => state.models.blockBuilder.light.value,
+    getBlockBuilderLightInnerRadius: state => state.models.blockBuilder.light.inner,
+    getBlockBuilderLightOuterRadius: state => state.models.blockBuilder.light.outer,
+
+    getBlockBuilderFaceNorth: state => state.models.blockBuilder.faces.n,
+    getBlockBuilderFaceEast: state => state.models.blockBuilder.faces.e,
+    getBlockBuilderFaceWest: state => state.models.blockBuilder.faces.w,
+    getBlockBuilderFaceSouth: state => state.models.blockBuilder.faces.s,
+    getBlockBuilderFaceFloor: state => state.models.blockBuilder.faces.f,
+    getBlockBuilderFaceCeiling: state => state.models.blockBuilder.faces.c,
+
+});
+
+
+
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/store/modules/editor/index.js":
+/*!*********************************************************!*\
+  !*** ./tools/mapedit/src/store/modules/editor/index.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _getters__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getters */ "./tools/mapedit/src/store/modules/editor/getters.js");
+/* harmony import */ var _mutations__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./mutations */ "./tools/mapedit/src/store/modules/editor/mutations.js");
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./state */ "./tools/mapedit/src/store/modules/editor/state.js");
+//import actions from './actions';
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    namespaced: true,
+    //actions,
+    mutations: _mutations__WEBPACK_IMPORTED_MODULE_1__["default"],
+    state: _state__WEBPACK_IMPORTED_MODULE_2__["default"],
+    getters: _getters__WEBPACK_IMPORTED_MODULE_0__["default"]
+});
+
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/store/modules/editor/mutation-types.js":
+/*!******************************************************************!*\
+  !*** ./tools/mapedit/src/store/modules/editor/mutation-types.js ***!
+  \******************************************************************/
+/*! exports provided: BLOCKBUILDER_SET_PHYS, BLOCKBUILDER_SET_OFFS, BLOCKBUILDER_SET_ANIM, BLOCKBUILDER_SET_ANIM_FRAMES, BLOCKBUILDER_SET_ANIM_DURATION, BLOCKBUILDER_SET_ANIM_LOOP, BLOCKBUILDER_SET_LIGHT, BLOCKBUILDER_SET_LIGHT_VALUE, BLOCKBUILDER_SET_LIGHT_INNER_RADIUS, BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS, BLOCKBUILDER_SET_FACE, BLOCKBUILDER_SET_FACE_NORTH, BLOCKBUILDER_SET_FACE_EAST, BLOCKBUILDER_SET_FACE_WEST, BLOCKBUILDER_SET_FACE_SOUTH, BLOCKBUILDER_SET_FACE_FLOOR, BLOCKBUILDER_SET_FACE_CEILING */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_PHYS", function() { return BLOCKBUILDER_SET_PHYS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_OFFS", function() { return BLOCKBUILDER_SET_OFFS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_ANIM", function() { return BLOCKBUILDER_SET_ANIM; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_ANIM_FRAMES", function() { return BLOCKBUILDER_SET_ANIM_FRAMES; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_ANIM_DURATION", function() { return BLOCKBUILDER_SET_ANIM_DURATION; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_ANIM_LOOP", function() { return BLOCKBUILDER_SET_ANIM_LOOP; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_LIGHT", function() { return BLOCKBUILDER_SET_LIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_LIGHT_VALUE", function() { return BLOCKBUILDER_SET_LIGHT_VALUE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_LIGHT_INNER_RADIUS", function() { return BLOCKBUILDER_SET_LIGHT_INNER_RADIUS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS", function() { return BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE", function() { return BLOCKBUILDER_SET_FACE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_NORTH", function() { return BLOCKBUILDER_SET_FACE_NORTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_EAST", function() { return BLOCKBUILDER_SET_FACE_EAST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_WEST", function() { return BLOCKBUILDER_SET_FACE_WEST; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_SOUTH", function() { return BLOCKBUILDER_SET_FACE_SOUTH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_FLOOR", function() { return BLOCKBUILDER_SET_FACE_FLOOR; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BLOCKBUILDER_SET_FACE_CEILING", function() { return BLOCKBUILDER_SET_FACE_CEILING; });
+
+// BLOCK BUILDER
+const BLOCKBUILDER_SET_PHYS = 'BLOCKBUILDER_SET_PHYS';
+const BLOCKBUILDER_SET_OFFS = 'BLOCKBUILDER_SET_OFFS';
+const BLOCKBUILDER_SET_ANIM = 'BLOCKBUILDER_SET_ANIM';
+const BLOCKBUILDER_SET_ANIM_FRAMES = 'BLOCKBUILDER_SET_ANIM_FRAMES';
+const BLOCKBUILDER_SET_ANIM_DURATION = 'BLOCKBUILDER_SET_ANIM_DURATION';
+const BLOCKBUILDER_SET_ANIM_LOOP = 'BLOCKBUILDER_SET_ANIM_LOOP';
+const BLOCKBUILDER_SET_LIGHT = 'BLOCKBUILDER_SET_LIGHT';
+const BLOCKBUILDER_SET_LIGHT_VALUE = 'BLOCKBUILDER_SET_LIGHT_VALUE';
+const BLOCKBUILDER_SET_LIGHT_INNER_RADIUS = 'BLOCKBUILDER_SET_LIGHT_INNER_RADIUS';
+const BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS = 'BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS';
+const BLOCKBUILDER_SET_FACE = 'BLOCKBUILDER_SET_FACE';
+const BLOCKBUILDER_SET_FACE_NORTH = 'BLOCKBUILDER_SET_FACE_NORTH';
+const BLOCKBUILDER_SET_FACE_EAST = 'BLOCKBUILDER_SET_FACE_EAST';
+const BLOCKBUILDER_SET_FACE_WEST = 'BLOCKBUILDER_SET_FACE_WEST';
+const BLOCKBUILDER_SET_FACE_SOUTH = 'BLOCKBUILDER_SET_FACE_SOUTH';
+const BLOCKBUILDER_SET_FACE_FLOOR = 'BLOCKBUILDER_SET_FACE_FLOOR';
+const BLOCKBUILDER_SET_FACE_CEILING = 'BLOCKBUILDER_SET_FACE_CEILING';
+
+
+
+
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/store/modules/editor/mutations.js":
+/*!*************************************************************!*\
+  !*** ./tools/mapedit/src/store/modules/editor/mutations.js ***!
+  \*************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _mutation_types__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mutation-types */ "./tools/mapedit/src/store/modules/editor/mutation-types.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_PHYS"]]: (state, {value}) => state.models.blockBuilder.phys = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_OFFS"]]: (state, {value}) => state.models.blockBuilder.offs = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM"]]: (state, {value}) => state.models.blockBuilder.anim.enabled = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_DURATION"]]: (state, {value}) => state.models.blockBuilder.anim.duration = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_FRAMES"]]: (state, {value}) => state.models.blockBuilder.anim.frames = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_ANIM_LOOP"]]: (state, {value}) => state.models.blockBuilder.anim.loop = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT"]]: (state, {value}) => state.models.blockBuilder.light.enabled = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_VALUE"]]: (state, {value}) => state.models.blockBuilder.light.value = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_INNER_RADIUS"]]: (state, {value}) => state.models.blockBuilder.light.inner = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS"]]: (state, {value}) => state.models.blockBuilder.light.outer = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE"]]: (state, {face, value}) => state.models.blockBuilder.faces[face] = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_NORTH"]]: (state, {value}) => state.models.blockBuilder.faces.n = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_EAST"]]: (state, {value}) => state.models.blockBuilder.faces.e = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_WEST"]]: (state, {value}) => state.models.blockBuilder.faces.w = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_SOUTH"]]: (state, {value}) => state.models.blockBuilder.faces.s = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_FLOOR"]]: (state, {value}) => state.models.blockBuilder.faces.f = value,
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["BLOCKBUILDER_SET_FACE_CEILING"]]: (state, {value}) => state.models.blockBuilder.faces.c = value,
+});
+
+
+
+
+/***/ }),
+
+/***/ "./tools/mapedit/src/store/modules/editor/state.js":
+/*!*********************************************************!*\
+  !*** ./tools/mapedit/src/store/modules/editor/state.js ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({
+
+
+    data: {
+
+        phys: [
+            {
+                id: 0,
+                label: 'Walkable',
+                desc: 'You can walk on this type of block',
+                tiles: 'fc',
+                offset: false
+            },
+            {
+                id: 1,
+                label: 'Solid',
+                desc: 'You cannot walk on this type of block : this is a plain solid wall',
+                tiles: 'news',
+                offset: false
+            },
+            {
+                id: 2,
+                label: 'Door up',
+                desc: 'This is a door that slides up when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 3,
+                label: 'Curtain up',
+                desc: 'This is a curtain that slides up when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 4,
+                label: 'Door down',
+                desc: 'This is a door that slides down when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 5,
+                label: 'Curtain up',
+                desc: 'This is a curtain that slides down when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 6,
+                label: 'Door right',
+                desc: 'This is a door that slides to the right when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 7,
+                label: 'Curtain right',
+                desc: 'This is a curtain that slides to the right when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 8,
+                label: 'Door left',
+                desc: 'This is a door that slides to the left when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 9,
+                label: 'Curtain left',
+                desc: 'This is a curtain that slides to the left when opened',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 10,
+                label: 'Door double',
+                desc: 'This is a double panel door',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 11,
+                label: 'Secret block',
+                desc: 'This is a secret block (they work in pair)',
+                tiles: 'fcnews',
+                offset: false
+            },
+            {
+                id: 12,
+                label: 'Transparent block',
+                desc: 'This is a transparent block : It is not walkable, but you can build windows with this because rays will pass through it.',
+                tiles: 'fcnews',
+                offset: true
+            },
+            {
+                id: 13,
+                label: 'Invisible block',
+                desc: 'This is an invisible block : It is not walkable',
+                tiles: 'fc',
+                offset: false
+            },
+            {
+                id: 14,
+                label: 'Offset block',
+                desc: 'This block is like a solid block, with an offset',
+                tiles: 'fcnews',
+                offset: true
+            },
+        ],
+
+
+        loops: [
+            {
+                id: 0,
+                label: 'None',
+                desc: 'No animation at all'
+            },
+            {
+                id: 1,
+                label: 'Forward',
+                desc: 'Forward animation only'
+            },
+            {
+                id: 2,
+                label: 'Yoyo',
+                desc: 'Forward and backward animation'
+            }
+        ]
+    },
+
+
+
+
+    models: {
+        blockBuilder: {
+            phys: 0,
+            offs: 0,
+            anim: {
+                enabled: false,
+                frames: 1,
+                duration: 0,
+                loop: 0
+            },
+            light: {
+                enabled: false,
+                value: 0.6,
+                inner: 0,
+                outer: 150
+            },
+            faces: {
+                n: null,
+                e: null,
+                w: null,
+                s: null,
+                f: null,
+                c: null
+            }
+        }
+    }
+});
 
 /***/ }),
 
@@ -18979,6 +20046,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
     getWallTiles: state => state.tiles.filter(t => t.type === 'wall'),
     getFlatTiles: state => state.tiles.filter(t => t.type === 'flat'),
+    getTile: state => tid => state.tiles.find(t => t.id === tid),
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
 });

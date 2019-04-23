@@ -11,15 +11,19 @@
         <div v-if="selectedFamily === 'wall'">
             <SelectableImage
                     v-for="image in getWallTiles"
+                    :tileId="image.id"
                     :key="image.id"
                     :src="image.content"
+                    :draggable="true"
             ></SelectableImage>
         </div>
         <div v-if="selectedFamily === 'flat'">
             <SelectableImage
                     v-for="image in getFlatTiles"
+                    :tileId="image.id"
                     :key="image.id"
                     :src="image.content"
+                    :draggable="true"
             ></SelectableImage>
         </div>
     </Window>
