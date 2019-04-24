@@ -10,13 +10,7 @@ import './styles/o876structure/o876structure.css';
 import 'vue-material-design-icons/styles.css';
 
 import LevelGrid from "./components/LevelGrid.vue";
-import TileBrowser from "./components/TileBrowser.vue";
-import TileLoader from "./components/TileLoader.vue";
-import ConfigPad from "./components/ConfigPad.vue";
-import BlockBuilder from "./components/BlockBuilder.vue";
-import MainPanel from "./components/MainPanel.vue";
 import MainSide from "./components/MainSide.vue";
-import AnimationBuilder from "./components/AnimationBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -31,36 +25,6 @@ function createApplication() {
                 side: MainSide
             }
         },
-        {
-            path: "/load-tiles",
-            components: {
-                default: TileLoader,
-                side: TileBrowser
-            }
-        },
-        {
-            path: "/build-anim",
-            components: {
-                default: AnimationBuilder,
-                side: TileBrowser
-            }
-        },
-        {
-            path: "/build-blocks",
-            components: {
-                default: BlockBuilder,
-                side: TileBrowser
-            }
-        },
-        {
-            path: "/config",
-            components: {
-                default: ConfigPad,
-                side: TileBrowser
-            }
-        },
-
-        // {path: "/workspace", component: Workspace},
     ];
 
     return new Vue({

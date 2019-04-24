@@ -1,6 +1,11 @@
 <template>
     <table class="o876structure">
         <tbody>
+            <tr>
+                <td colspan="2">
+                    <MainMenu></MainMenu>
+                </td>
+            </tr>
             <tr class="floatingHeight">
                 <td class="floatingWidth">
                     <div>
@@ -25,18 +30,12 @@
 <script>
     import Window from "./Window.vue";
     import StatusBar from "./StatusBar.vue";
+    import MyButton from "./MyButton.vue";
+    import MainMenu from "./MainMenu.vue";
+
     export default {
         name: "Application",
-        components: {StatusBar, Window},
-
-        data: function() {
-            return {
-                statusBarHeight: 32
-            }
-        },
-
-        methods: {
-        }
+        components: {MainMenu, MyButton, StatusBar, Window},
     }
 </script>
 
