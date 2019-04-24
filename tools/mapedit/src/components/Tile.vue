@@ -162,6 +162,7 @@
         background-color: rgba(0, 0, 0, 0.5);
         border-radius: 15%;
         width: 1em;
+        position: absolute;
     }
 
     div.tile {

@@ -17,12 +17,11 @@
                                 <label>Duration: <input v-model="duration" type="number" min="0"/></label>
                             </div>
                             <div>
-                                <label>
-                                    Loop:
-                                    <select v-model="loop">
-                                        <option v-for="p in getBlockBuilderAnimLoopData" :key="p.id" :value="p.id">{{ p.label }}</option>
-                                    </select>
-                                </label>
+                                <ul>
+                                    <li v-for="p in getBlockBuilderAnimLoopData" :key="p.id">
+                                        <label><input :value="p.id" v-model="loop" type="radio"/> {{ p.label }}</label>
+                                    </li>
+                                </ul>
                             </div>
                         </form>
                     </td>
@@ -41,9 +40,9 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <MyButton>Create</MyButton>
-                        <MyButton>Update</MyButton>
-                        <MyButton>Delete</MyButton>
+                        <MyButton @click="doCreate" :disabled="!showCreate"><AnimationIcon></AnimationIcon> Create</MyButton>
+                        <MyButton @click="doUpdate" :disabled="!showUpdate"><UpdateIcon></UpdateIcon> Update</MyButton>
+                        <MyButton @click="doDelete" :disabled="!showUpdate"><DeleteIcon></DeleteIcon> Delete</MyButton>
                     </td>
                 </tr>
             </tbody>
@@ -53,6 +52,7 @@
 
 <script>
     import {createNamespacedHelpers} from 'vuex';
+    import * as ACTION from '../store/modules/level/action-types';
     import * as MUTATION from '../store/modules/editor/mutation-types';
     import * as CONSTS from '../consts';
 
@@ -60,13 +60,17 @@
     import Window from "./Window.vue";
     import Tile from "./Tile.vue";
     import MyButton from "./MyButton.vue";
+    import DeleteIcon from "vue-material-design-icons/Delete.vue";
+    import UpdateIcon from "vue-material-design-icons/Update.vue";
+    import AnimationIcon from "vue-material-design-icons/Animation.vue";
+    import TileAnimation from "../../../../src/raycaster/TileAnimation";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "AnimationBuilder",
-        components: {MyButton, Tile, Window},
+        components: {AnimationIcon, UpdateIcon, DeleteIcon, MyButton, Tile, Window},
 
 
         data: function() {
@@ -79,7 +83,8 @@
                 timer: 0,
 
                 frameIndex: 0,
-                runAnimation: false
+
+                oTileAnimation: new TileAnimation()
             };
         },
 
@@ -117,6 +122,7 @@
 
                 set (value) {
                     this.setFrames({value});
+                    this.oTileAnimation.count = parseInt(value);
                 }
             },
 
@@ -127,6 +133,7 @@
 
                 set (value) {
                     this.setDuration({value});
+                    this.oTileAnimation.duration = parseInt(value);
                 }
             },
 
@@ -137,6 +144,7 @@
 
                 set (value) {
                     this.setLoop({value});
+                    this.oTileAnimation.loop = parseInt(value);
                 }
             },
 
@@ -161,11 +169,43 @@
                 } else {
                     return this.content;
                 }
-            }
+            },
 
+            /**
+             * renvoie true si le bouton create doit etre montrer
+             * on montre le bouton create lorsqu'on droppe une texture sans donnée d'animation précédente
+             */
+            showCreate: function() {
+                const id = this.tile;
+                const oTile = this.getTile(id);
+                if (oTile) {
+                    return !oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+            /**
+             * renvoie true si le bouton update doit etre montré, si on a droppé une texture ayant été
+             * défini comme image initiale d'animation.
+             */
+            showUpdate: function() {
+                const id = this.tile;
+                const oTile = this.getTile(id);
+                if (oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
         },
 
         methods: {
+
+            ...levelMapActions({
+                setTileAnimation: ACTION.SET_TILE_ANIMATION,
+                clearTileAnimation: ACTION.CLEAR_TILE_ANIMATION
+            }),
 
             ...editorMapMutations({
                 setStart: MUTATION.ANIMBUILDER_SET_START,
@@ -181,18 +221,19 @@
                     this.content = oTile.content;
                     this.width = this.getTileWidth;
                     this.height = oTile.type === CONSTS.TILE_TYPE_WALL ? this.getTileHeight : this.getTileWidth;
+                    if (oTile.animation) {
+                        this.duration = oTile.animation.duration;
+                        this.loop = oTile.animation.loop;
+                        this.frames = oTile.animation.frames;
+                    }
                 }
             },
 
             doomloop: function() {
                 if (this.isValidAnimation) {
-                    this.timer += 40;
-                    while (this.timer >= this.duration) {
-                        this.frameIndex = (this.frameIndex + 1) % this.frames;
-                        this.timer -= this.duration;
-                    }
+                    this.oTileAnimation.animate(40);
+                    this.frameIndex = this.oTileAnimation.frame();
                 }
-
             },
 
             /**
@@ -201,6 +242,10 @@
             startTimer: function() {
                 this.stopTimer();
                 this.interval = setInterval(() => this.doomloop(), 40);
+                const ta = this.oTileAnimation;
+                ta.count = this.frames;
+                ta.duration = this.duration;
+                ta.loop = this.loop;
             },
 
             /**
@@ -211,6 +256,28 @@
                     clearInterval(this.interval);
                 }
                 this.interval = null;
+            },
+
+            doCreate: function() {
+                // ajouter les donnée d'animation à la frame
+                const animation = {
+                    start: this.tile,
+                    frames: this.frames,
+                    duration: this.duration,
+                    loop: this.loop
+                };
+                const oTile = this.getTile(this.tile);
+                if (!!oTile) {
+                    this.setTileAnimation(animation);
+                }
+            },
+
+            doUpdate: function() {
+                this.doCreate();
+            },
+
+            doDelete: function() {
+                this.clearTileAnimation({tile: this.tile});
             }
         },
 

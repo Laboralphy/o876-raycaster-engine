@@ -1,2 +1,4 @@
 export const ADD_TILE = 'ADD_TILE';
 export const MOVE_TILE = 'MOVE_TILE';
+export const SET_TILE_ANIMATION = 'SET_TILE_ANIMATION';
+export const CLEAR_TILE_ANIMATION = 'CLEAR_TILE_ANIMATION';

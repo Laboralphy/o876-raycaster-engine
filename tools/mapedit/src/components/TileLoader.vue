@@ -12,6 +12,7 @@
                     @load="onFlatImageLoaded"
             ><ViewGridIcon title="Import a flat tileset from an image"></ViewGridIcon> Load flats</ImageLoader>
             <MyButton
+                    :disabled="wallImages.length === 0 && flatImages.length === 0"
                     hint="Import all selected tiles into current project"
                     @click="doImport"
             ><ImportIcon title="Import all selected tiles into current project"></ImportIcon> Import</MyButton>

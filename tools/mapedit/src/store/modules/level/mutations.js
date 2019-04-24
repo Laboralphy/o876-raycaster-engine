@@ -11,7 +11,7 @@ export default {
             id,
             type,
             content,
-            animation: false
+            animation: null
         });
     },
 
@@ -34,6 +34,28 @@ export default {
             tiles.splice(iTrg, 0, oTile);
         } else {
             throw new Error('could not get target tile : ' + idTarget);
+        }
+    },
+
+    [MUTATION.SET_TILE_ANIMATION]: (state, {start, duration, frames, loop}) => {
+        const tiles = CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const oTile = tiles.find(t => t.id === start);
+        if (oTile) {
+            oTile.animation = {
+                duration, frames, loop
+            };
+        } else {
+            throw new Error('could not find this tile : #' + start);
+        }
+    },
+
+    [MUTATION.CLEAR_TILE_ANIMATION]: (state, {tile}) => {
+        const tiles = CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const oTile = tiles.find(t => t.id === tile);
+        if (oTile) {
+            oTile.animation = null;
+        } else {
+            throw new Error('could not find this tile : #' + tile);
         }
     }
 }
