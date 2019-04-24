@@ -2,7 +2,7 @@
     <Window
             caption="Tile loader"
     >
-        <template v-slot:toolbar="1">
+        <template v-slot:toolbar>
             <ImageLoader
                     hint="Import a wall tileset from an image"
                     @load="onWallImageLoaded"

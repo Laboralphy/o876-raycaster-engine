@@ -2,7 +2,7 @@
     <Window
         caption="Level grid"
     >
-        <template v-slot:toolbar="1">
+        <template v-slot:toolbar>
         </template>
         <div>
         </div>

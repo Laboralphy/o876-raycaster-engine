@@ -2,7 +2,7 @@
     <Window
             caption="Animation builder"
     >
-        <template v-slot:toolbar="1">
+        <template v-slot:toolbar>
         </template>
         <table>
             <tbody>
@@ -39,6 +39,13 @@
                         ></Tile>
                     </td>
                 </tr>
+                <tr>
+                    <td colspan="2">
+                        <MyButton>Create</MyButton>
+                        <MyButton>Update</MyButton>
+                        <MyButton>Delete</MyButton>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </Window>
@@ -52,13 +59,14 @@
     // componentns
     import Window from "./Window.vue";
     import Tile from "./Tile.vue";
+    import MyButton from "./MyButton.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "AnimationBuilder",
-        components: {Tile, Window},
+        components: {MyButton, Tile, Window},
 
 
         data: function() {

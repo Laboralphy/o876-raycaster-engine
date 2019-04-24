@@ -2,7 +2,7 @@
     <Window
         :caption="getTitle"
     >
-        <template v-slot:toolbar="1">
+        <template v-slot:toolbar>
             <Siblings @select="({index}) => selectTileFamily(index)">
                 <SiblingButton hint="Display project wall tiles" :default="true"><WallIcon></WallIcon></SiblingButton>
                 <SiblingButton hint="Display project flat tiles"><ViewGridIcon></ViewGridIcon></SiblingButton>
