@@ -8,11 +8,10 @@
 <script>
     import MyButton from "./MyButton.vue";
     import * as EMOJI from '../libraries/emoji';
-    import Mdi from "./Mdi.vue";
     import HomeIcon from "vue-material-design-icons/Home.vue";
     export default {
         name: "HomeButton",
-        components: {HomeIcon, Mdi, MyButton},
+        components: {HomeIcon, MyButton},
         data: function() {
             return {
                 caption: EMOJI.HOUSE_BUILDING

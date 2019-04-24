@@ -11,6 +11,10 @@
                     title="Go to block building screen"
                     @click="$router.push('/build-blocks')"
             ><OfficeBuildingIcon></OfficeBuildingIcon> Blocks</MyButton>
+            <MyButton
+                    hint="Go to animation builder"
+                    @click="$router.push('/build-anim')"
+            ><FilmstripIcon title="Go to animation builder"></FilmstripIcon> Anim.</MyButton>
         </template>
         <div>Youpi</div>
     </Window>
@@ -21,9 +25,10 @@
     import MyButton from "./MyButton.vue";
     import MapIcon from "vue-material-design-icons/Map.vue";
     import OfficeBuildingIcon from "vue-material-design-icons/OfficeBuilding.vue";
+    import FilmstripIcon from "vue-material-design-icons/Filmstrip.vue";
     export default {
         name: "LevelGrid",
-        components: {MapIcon, OfficeBuildingIcon, MyButton, Window}
+        components: {FilmstripIcon, MapIcon, OfficeBuildingIcon, MyButton, Window}
     }
 </script>
 

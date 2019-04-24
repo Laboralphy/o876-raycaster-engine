@@ -6,26 +6,21 @@
             <Siblings @select="({index}) => selectTileFamily(index)">
                 <SiblingButton hint="Display project wall tiles" :default="true"><WallIcon></WallIcon></SiblingButton>
                 <SiblingButton hint="Display project flat tiles"><ViewGridIcon></ViewGridIcon></SiblingButton>
-                <MyButton><PlayCircleIcon></PlayCircleIcon></MyButton>
             </Siblings>
         </template>
         <div v-if="selectedFamily === 'wall'">
-            <SelectableImage
-                    v-for="image in getWallTiles"
-                    :tileId="image.id"
-                    :key="image.id"
-                    :src="image.content"
-                    :draggable="true"
-            ></SelectableImage>
+<!--            <Tile-->
+<!--                    v-for="image in getWallTiles"-->
+<!--                    :tile="image.id"-->
+<!--                    :key="image.id"-->
+<!--            ></Tile>-->
         </div>
         <div v-if="selectedFamily === 'flat'">
-            <SelectableImage
-                    v-for="image in getFlatTiles"
-                    :tileId="image.id"
-                    :key="image.id"
-                    :src="image.content"
-                    :draggable="true"
-            ></SelectableImage>
+<!--            <Tile-->
+<!--                    v-for="image in getFlatTiles"-->
+<!--                    :tile="image.id"-->
+<!--                    :key="image.id"-->
+<!--            ></Tile>-->
         </div>
     </Window>
 </template>
@@ -33,24 +28,26 @@
 <script>
     import Window from "./Window.vue";
     import {createNamespacedHelpers} from 'vuex';
-    import SelectableImage from "./SelectableImage.vue";
     import Siblings from "./Siblings.vue";
     import SiblingButton from "./SiblingButton.vue";
     import WallIcon from "vue-material-design-icons/Wall.vue";
     import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
-    import PlayCircleIcon from "vue-material-design-icons/PlayCircle.vue";
     import MyButton from "./MyButton.vue";
+    import Tile from "./Tile.vue";
 
     const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
 
     export default {
         name: "TileBrowser",
         components: {
+            Tile,
             MyButton,
-            PlayCircleIcon,
             ViewGridIcon,
             WallIcon,
-            SiblingButton, Siblings, SibblingButton: SiblingButton, SelectableImage, Window},
+            SiblingButton,
+            Siblings,
+            Window
+        },
         data: function() {
             return {
                 tileFamily: [{

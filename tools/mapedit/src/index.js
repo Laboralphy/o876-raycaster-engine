@@ -16,6 +16,7 @@ import ConfigPad from "./components/ConfigPad.vue";
 import BlockBuilder from "./components/BlockBuilder.vue";
 import MainPanel from "./components/MainPanel.vue";
 import MainSide from "./components/MainSide.vue";
+import AnimationBuilder from "./components/AnimationBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -34,6 +35,13 @@ function createApplication() {
             path: "/load-tiles",
             components: {
                 default: TileLoader,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/build-anim",
+            components: {
+                default: AnimationBuilder,
                 side: TileBrowser
             }
         },

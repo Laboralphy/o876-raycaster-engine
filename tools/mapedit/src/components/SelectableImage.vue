@@ -16,8 +16,6 @@
     import {createNamespacedHelpers} from 'vuex';
     import * as ACTION from '../store/modules/level/action-types';
 
-
-
     const {mapActions: levelMapAcctions} = createNamespacedHelpers('level');
 
     export default {

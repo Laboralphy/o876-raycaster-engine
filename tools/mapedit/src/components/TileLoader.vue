@@ -7,15 +7,15 @@
             <ImageLoader
                     hint="Import a wall tileset from an image"
                     @load="onWallImageLoaded"
-            ><WallIcon></WallIcon> Load walls</ImageLoader>
+            ><WallIcon title="Import a wall tileset from an image"></WallIcon> Load walls</ImageLoader>
             <ImageLoader
                     hint="Import a flat tileset from an image"
                     @load="onFlatImageLoaded"
-            ><ViewGridIcon></ViewGridIcon> Load flats</ImageLoader>
+            ><ViewGridIcon title="Import a flat tileset from an image"></ViewGridIcon> Load flats</ImageLoader>
             <MyButton
                     hint="Import all selected tiles into current project"
                     @click="doImport"
-            ><ImportIcon></ImportIcon> Import</MyButton>
+            ><ImportIcon title="Import all selected tiles into current project"></ImportIcon> Import</MyButton>
         </template>
         <div v-if="wallImages.length === 0 && flatImages.length === 0">
             <h3>Tileset importation</h3>
@@ -27,25 +27,25 @@
         </div>
         <div v-else-if="wallImages.length > 0">
             <h3>Wall tiles ({{ getTileWidth }} * {{ getTileHeight }})</h3>
-            <SelectableImage
-                    v-for="image in wallImages"
-                    :tileId="image.id"
-                    :key="image.id"
-                    :src="image.src"
-                    :draggable="false"
-                    @selected="({value}) => setTileSelection(image, value)"
-            />
+<!--            <Tile-->
+<!--                    v-for="image in wallImages"-->
+<!--                    :tile="image.id"-->
+<!--                    :key="image.id"-->
+<!--                    :content="image.src"-->
+<!--                    type="w"-->
+<!--                    @selected="({value}) => setTileSelection(image, value)"-->
+<!--            />-->
         </div>
         <div v-else-if="flatImages.length > 0">
             <h3>Flat tiles ({{ getTileWidth }} * {{ getTileWidth }})</h3>
-            <SelectableImage
-                    v-for="image in flatImages"
-                    :tileId="image.id"
-                    :key="image.id"
-                    :src="image.src"
-                    :draggable="false"
-                    @selected="({value}) => setTileSelection(image, value)"
-            />
+<!--            <Tile-->
+<!--                    v-for="image in flatImages"-->
+<!--                    :tile="image.id"-->
+<!--                    :key="image.id"-->
+<!--                    :content="image.src"-->
+<!--                    type="f"-->
+<!--                    @selected="({value}) => setTileSelection(image, value)"-->
+<!--            />-->
         </div>
     </Window>
 </template>
@@ -61,12 +61,12 @@
     // components
     import Window from "./Window.vue";
     import ImageLoader from "./ImageLoader.vue";
-    import SelectableImage from "./SelectableImage.vue";
     import HomeButton from "./HomeButton.vue";
     import MyButton from "./MyButton.vue";
     import ImportIcon from "vue-material-design-icons/Import.vue";
     import WallIcon from "vue-material-design-icons/Wall.vue";
     import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
+    import Tile from "./Tile.vue";
 
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
@@ -78,8 +78,15 @@
     export default {
         name: "WallTileLoader",
         components: {
+            Tile,
             ViewGridIcon,
-            WallIcon, ImportIcon, MyButton, HomeButton, SelectableImage, ImageLoader, Window},
+            WallIcon,
+            ImportIcon,
+            MyButton,
+            HomeButton,
+            ImageLoader,
+            Window
+        },
         computed: {
             ...levelMapGetter([
                 'getTileHeight',

@@ -5,7 +5,12 @@ export default {
         if (state.tiles.find(t => t.id === id)) {
             throw new Error('this id is already present in store');
         }
-        state.tiles.push({id, type, content});
+        state.tiles.push({
+            id,
+            type,
+            content,
+            animation: false
+        });
     },
 
     /**
