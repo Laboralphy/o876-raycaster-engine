@@ -10,7 +10,9 @@ import './styles/o876structure/o876structure.css';
 import 'vue-material-design-icons/styles.css';
 
 import LevelGrid from "./components/LevelGrid.vue";
-import MainSide from "./components/MainSide.vue";
+import TileLoader from "./components/TileLoader.vue";
+import TileBrowser from "./components/TileBrowser.vue";
+import AnimationBuilder from "./components/AnimationBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -22,9 +24,24 @@ function createApplication() {
             path: "/",
             components: {
                 default: LevelGrid,
-                side: MainSide
+                side: TileBrowser
             }
         },
+        {
+            path: "/load-tiles",
+            components: {
+                default: TileLoader,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/build-anim",
+            components: {
+                default: AnimationBuilder,
+                side: TileBrowser
+            }
+        },
+
     ];
 
     return new Vue({

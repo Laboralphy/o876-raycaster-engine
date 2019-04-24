@@ -2,9 +2,10 @@
     <Window
         caption="Level grid"
     >
-        <template v-slot:toolbar>
+        <template v-slot:toolbar="1">
         </template>
-        <div>Youpi</div>
+        <div>
+        </div>
     </Window>
 </template>
 
@@ -14,9 +15,10 @@
     import MapIcon from "vue-material-design-icons/Map.vue";
     import OfficeBuildingIcon from "vue-material-design-icons/OfficeBuilding.vue";
     import FilmstripIcon from "vue-material-design-icons/Filmstrip.vue";
+    import Tile from "./Tile.vue";
     export default {
         name: "LevelGrid",
-        components: {FilmstripIcon, MapIcon, OfficeBuildingIcon, MyButton, Window}
+        components: {Tile, FilmstripIcon, MapIcon, OfficeBuildingIcon, MyButton, Window}
     }
 </script>
 

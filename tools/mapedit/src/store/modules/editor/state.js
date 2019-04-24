@@ -138,12 +138,6 @@ export default {
         blockBuilder: {
             phys: 0,
             offs: 0,
-            anim: {
-                enabled: false,
-                frames: 1,
-                duration: 0,
-                loop: 0
-            },
             light: {
                 enabled: false,
                 value: 0.6,
@@ -158,6 +152,13 @@ export default {
                 f: null,
                 c: null
             }
+        },
+
+        animationBuilder: {
+            start: 0,
+            frames: 0,
+            duration: 0,
+            loop: 0
         }
     }
 };

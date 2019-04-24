@@ -1,6 +1,10 @@
 <template>
     <StatusBar>
         <MyButton
+                title="Level editor"
+                @click="$router.push('/')"
+        ><GridIcon title="Level editor"></GridIcon> Level</MyButton>
+        <MyButton
                 title="Load tileset and import wall and flat tiles"
                 @click="$router.push('/load-tiles')"
         ><MapIcon title="Load tileset and import wall and flat tiles"></MapIcon> Tiles</MyButton>
@@ -21,9 +25,10 @@
     import MapIcon from "vue-material-design-icons/Map.vue";
     import OfficeBuildingIcon from "vue-material-design-icons/OfficeBuilding.vue";
     import FilmstripIcon from "vue-material-design-icons/Filmstrip.vue";
+    import GridIcon from "vue-material-design-icons/Grid.vue";
     export default {
         name: "MainMenu",
-        components: {FilmstripIcon, OfficeBuildingIcon, MapIcon, MyButton, StatusBar}
+        components: {GridIcon, FilmstripIcon, OfficeBuildingIcon, MapIcon, MyButton, StatusBar}
     }
 </script>
 

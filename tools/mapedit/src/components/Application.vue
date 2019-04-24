@@ -18,24 +18,18 @@
                     </div>
                 </td>
             </tr>
-            <tr>
-                <td colspan="2">
-                    <StatusBar>bon...</StatusBar>
-                </td>
-            </tr>
         </tbody>
     </table>
 </template>
 
 <script>
     import Window from "./Window.vue";
-    import StatusBar from "./StatusBar.vue";
     import MyButton from "./MyButton.vue";
     import MainMenu from "./MainMenu.vue";
 
     export default {
         name: "Application",
-        components: {MainMenu, MyButton, StatusBar, Window},
+        components: {MainMenu, MyButton, Window},
     }
 </script>
 
