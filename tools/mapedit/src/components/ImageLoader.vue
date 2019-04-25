@@ -6,7 +6,7 @@
                 @change="onFileInputChange"
         />
         <MyButton
-                :hint="hint"
+                title="title"
                 @click="onClick"
         ><slot></slot></MyButton>
     </div>
@@ -18,7 +18,7 @@
         name: "ImageLoader",
         components: {MyButton},
         props: {
-            hint: String
+            title: String
         },
 
         data: function() {

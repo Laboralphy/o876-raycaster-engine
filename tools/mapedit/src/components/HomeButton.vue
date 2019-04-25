@@ -1,6 +1,6 @@
 <template>
     <MyButton
-            hint="Return to the main page"
+            title="Return to the main page"
             @click="goHome"
     ><HomeIcon></HomeIcon></MyButton>
 </template>

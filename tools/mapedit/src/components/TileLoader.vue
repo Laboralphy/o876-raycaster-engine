@@ -13,7 +13,7 @@
             ><ViewGridIcon title="Import a flat tileset from an image"></ViewGridIcon> Load flats</ImageLoader>
             <MyButton
                     :disabled="wallImages.length === 0 && flatImages.length === 0"
-                    hint="Import all selected tiles into current project"
+                    title="Import all selected tiles into current project"
                     @click="doImport"
             ><ImportIcon title="Import all selected tiles into current project"></ImportIcon> Import</MyButton>
         </template>
@@ -104,14 +104,15 @@
                 commands: [{
                     // return to main view
                     caption: '↩',
-                    hint: 'Close the tileset loader',
+                    title: 'Close the tileset loader',
                     id: 'c_return'
                 }]
             };
         },
         methods: {
             ...levelMapActions({
-                importTile: ACTION.LOAD_TILE
+                importTile: ACTION.LOAD_TILE,
+                importTiles: ACTION.LOAD_TILES
             }),
 
             setTileSelection: function(tile, value) {
@@ -145,15 +146,15 @@
              * @param images {array} tableau d'image
              */
             doImportType: function(type, images) {
-                const tiles = images.filter(t => t.selected);
-                tiles.forEach(t => {
-                    this.importTile({type, content: t.src});
-                });
+                const aSrc = [];
                 for (let i = images.length - 1; i >= 0; --i) {
-                    if (images[i].selected) {
+                    const t = images[i];
+                    if (t.selected) {
+                        aSrc.push(t.src);
                         images.splice(i, 1);
                     }
                 }
+                this.importTiles({type, contents: aSrc});
             },
 
             doImport: function() {

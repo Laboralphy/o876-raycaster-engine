@@ -136,6 +136,8 @@ export default {
 
     models: {
         blockBuilder: {
+            id: null,
+            ref: '',
             phys: 0,
             offs: 0,
             light: {
@@ -156,8 +158,8 @@ export default {
 
         animationBuilder: {
             start: 0,
-            frames: 0,
-            duration: 0,
+            frames: 2,
+            duration: 80,
             loop: 0
         }
     }

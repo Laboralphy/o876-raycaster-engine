@@ -2,7 +2,7 @@
     <MyButton
             @click="onClick"
             :class="selected ? 'selected' : ''"
-            :hint="hint"
+            title="title"
     >
         <slot></slot>
     </MyButton>
@@ -14,7 +14,7 @@
         name: "SiblingButton",
         components: {MyButton},
         props: {
-            hint: String,
+            title: String,
             default: {
                 type: Boolean,
                 default: function() {

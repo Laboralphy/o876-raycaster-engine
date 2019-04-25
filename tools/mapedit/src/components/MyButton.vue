@@ -1,7 +1,7 @@
 <template>
     <a
             href="#"
-            :title="hint"
+            :title="title"
             :class="'myButton' + (disabled ? ' disabled' : ' enabled')"
             @click.stop="!disabled && $emit('click')"
     ><slot></slot></a>
@@ -11,13 +11,13 @@
     export default {
         name: "MyButton",
         props: {
-            hint: String,
+            title: String,
             disabled: {
                 type: Boolean,
                 required: false,
                 default: false
             }
-        }
+        },
     }
 </script>
 

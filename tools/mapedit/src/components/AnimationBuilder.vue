@@ -14,7 +14,7 @@
                                 <label>Frames: <input v-model="frames" type="number" min="2"/></label>
                             </div>
                             <div>
-                                <label>Duration: <input v-model="duration" type="number" min="0"/></label>
+                                <label>Duration: <input v-model="duration" type="number" :min="getTimeInterval" :step="getTimeInterval"/></label>
                             </div>
                             <div>
                                 <ul>
@@ -40,8 +40,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <MyButton @click="doCreate" :disabled="!showCreate"><AnimationIcon></AnimationIcon> Create</MyButton>
-                        <MyButton @click="doUpdate" :disabled="!showUpdate"><UpdateIcon></UpdateIcon> Update</MyButton>
+                        <MyButton @click="doCreate"><AnimationIcon></AnimationIcon> Apply</MyButton>
                         <MyButton @click="doDelete" :disabled="!showUpdate"><DeleteIcon></DeleteIcon> Delete</MyButton>
                     </td>
                 </tr>
@@ -94,7 +93,8 @@
                 'getTileHeight',
                 'getTile',
                 'getWallTiles',
-                'getFlatTiles'
+                'getFlatTiles',
+                'getTimeInterval'
             ]),
 
             ...editorMapGetter([
@@ -172,20 +172,6 @@
             },
 
             /**
-             * renvoie true si le bouton create doit etre montrer
-             * on montre le bouton create lorsqu'on droppe une texture sans donnée d'animation précédente
-             */
-            showCreate: function() {
-                const id = this.tile;
-                const oTile = this.getTile(id);
-                if (oTile) {
-                    return !oTile.animation;
-                } else {
-                    return false;
-                }
-            },
-
-            /**
              * renvoie true si le bouton update doit etre montré, si on a droppé une texture ayant été
              * défini comme image initiale d'animation.
              */
@@ -225,6 +211,10 @@
                         this.duration = oTile.animation.duration;
                         this.loop = oTile.animation.loop;
                         this.frames = oTile.animation.frames;
+                    } else {
+                        this.duration = this.getTimeInterval * 2;
+                        this.loop = 0;
+                        this.frames = 2;
                     }
                 }
             },
@@ -272,12 +262,8 @@
                 }
             },
 
-            doUpdate: function() {
-                this.doCreate();
-            },
-
             doDelete: function() {
-                this.clearTileAnimation({tile: this.tile});
+                this.clearTileAnimation({idTile: this.tile});
             }
         },
 

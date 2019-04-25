@@ -4,9 +4,10 @@
     >
         <template v-slot:toolbar>
             <Siblings @select="({index}) => selectTileFamily(index)">
-                <SiblingButton hint="Display project wall tiles" :default="true"><WallIcon></WallIcon></SiblingButton>
-                <SiblingButton hint="Display project flat tiles"><ViewGridIcon></ViewGridIcon></SiblingButton>
+                <SiblingButton title="Display project wall tiles" :default="true"><WallIcon title="Display project wall tiles" decorative></WallIcon></SiblingButton>
+                <SiblingButton title="Display project flat tiles"><ViewGridIcon title="Display project flat tiles" decorative></ViewGridIcon></SiblingButton>
             </Siblings>
+            <MyButton title="Delete the selected tiles" @click="deleteClick"><DeleteIcon title="Delete the selected tiles" decorative></DeleteIcon></MyButton>
         </template>
         <div v-if="selectedFamily === CONSTS.TILE_TYPE_WALL">
             <Tile
@@ -20,6 +21,7 @@
                     :draggable="true"
                     :dropzone="true"
                     @drop="({incoming}) => handleDrop(image.id, incoming)"
+                    @selected="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
         <div v-if="selectedFamily === CONSTS.TILE_TYPE_FLAT">
@@ -34,6 +36,7 @@
                     :draggable="true"
                     :dropzone="true"
                     @drop="({incoming}) => handleDrop(image.id, incoming)"
+                    @selected="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
     </Window>
@@ -50,12 +53,18 @@
     import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
     import MyButton from "./MyButton.vue";
     import Tile from "./Tile.vue";
+    import DeleteIcon from "vue-material-design-icons/Delete.vue";
+    import ContentDuplicateIcon from "vue-material-design-icons/ContentDuplicate.vue";
+    import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "TileBrowser",
         components: {
+            AnimationPlayIcon,
+            ContentDuplicateIcon,
+            DeleteIcon,
             Tile,
             MyButton,
             ViewGridIcon,
@@ -75,7 +84,9 @@
                 }],
 
                 selectedFamily: CONSTS.TILE_TYPE_WALL,
-                CONSTS
+                CONSTS,
+
+                selectedTiles: {},
             }
         },
         computed: {
@@ -99,16 +110,37 @@
 
             pluralFlatTiles: function() {
                 return this.getFlatTiles.length > 1 ? 's' : '';
+            },
+
+            areSomeTileSelected: function() {
+                for (let id in this.selectedTiles) {
+                    if (this.selectedTiles[id]) {
+                        return true;
+                    }
+                }
+                return false;
             }
         },
 
         methods: {
 
             ...levelMapActions({
-                reorderTile: ACTION.REORDER_TILE
+                reorderTile: ACTION.REORDER_TILE,
+                deleteTile: ACTION.DELETE_TILE
             }),
 
+            setTileSelection: function(idTile, value) {
+                this.selectedTiles[idTile] = value;
+            },
+
+            clearTileSelection: function() {
+                for (let id in this.selectedTiles) {
+                    this.selectedTiles[id] = false;
+                }
+            },
+
             selectTileFamily: function(index) {
+                this.clearTileSelection();
                 switch (index) {
                     case 0:
                         this.selectedFamily = CONSTS.TILE_TYPE_WALL;
@@ -140,7 +172,16 @@
                     idSource: oMovingTile.id,
                     idTarget: oTargetTile.id
                 });
-            }
+            },
+
+            deleteClick: function() {
+                for (let id in this.selectedTiles) {
+                    if (this.selectedTiles[id]) {
+                        this.selectedTiles[id] = false;
+                        this.deleteTile({id: parseInt(id)});
+                    }
+                }
+            },
         }
     }
 </script>

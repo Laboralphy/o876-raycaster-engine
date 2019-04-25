@@ -3,6 +3,8 @@ export default {
     getBlockBuilderPhysicalData: state => state.data.phys,
     getBlockBuilderAnimLoopData: state => state.data.loops,
 
+    getBlockBuilderId: state => state.models.blockBuilder.id,
+    getBlockBuilderRef: state => state.models.blockBuilder.ref,
     getBlockBuilderPhys: state => state.models.blockBuilder.phys,
     getBlockBuilderOffs: state => state.models.blockBuilder.offs,
     getBlockBuilderLight: state => state.models.blockBuilder.light.enabled,

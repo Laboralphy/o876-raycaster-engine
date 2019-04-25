@@ -13,6 +13,7 @@ import LevelGrid from "./components/LevelGrid.vue";
 import TileLoader from "./components/TileLoader.vue";
 import TileBrowser from "./components/TileBrowser.vue";
 import AnimationBuilder from "./components/AnimationBuilder.vue";
+import BlockBuilder from "./components/BlockBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -38,6 +39,13 @@ function createApplication() {
             path: "/build-anim",
             components: {
                 default: AnimationBuilder,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/build-block",
+            components: {
+                default: BlockBuilder,
                 side: TileBrowser
             }
         },

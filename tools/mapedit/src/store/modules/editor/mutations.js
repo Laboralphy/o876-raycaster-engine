@@ -1,6 +1,8 @@
 import * as MUTATION from './mutation-types';
 
 export default {
+    [MUTATION.BLOCKBUILDER_SET_ID]: (state, {value}) => state.models.blockBuilder.id = value,
+    [MUTATION.BLOCKBUILDER_SET_REF]: (state, {value}) => state.models.blockBuilder.ref = value,
     [MUTATION.BLOCKBUILDER_SET_PHYS]: (state, {value}) => state.models.blockBuilder.phys = value,
     [MUTATION.BLOCKBUILDER_SET_OFFS]: (state, {value}) => state.models.blockBuilder.offs = value,
     [MUTATION.BLOCKBUILDER_SET_LIGHT]: (state, {value}) => state.models.blockBuilder.light.enabled = value,

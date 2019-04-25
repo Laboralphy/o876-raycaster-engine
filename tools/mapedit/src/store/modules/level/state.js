@@ -2,9 +2,14 @@ export default {
     tiles: {
         walls: [],
         flats: []
-    }, // all the loaded tiles {uniqid, content}
+    },
+    blocks: [
+    ],
     metrics: {
         tileHeight: 96,
         tileWidth: 64
+    },
+    time: {
+        interval: 40
     }
 };

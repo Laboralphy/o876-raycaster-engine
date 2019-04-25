@@ -1,10 +1,6 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
 
-
-let TILE_LAST_ID = 0;
-
-
 export default {
 
     /**
@@ -12,9 +8,20 @@ export default {
      * @param commit
      * @param content {string}
      */
-    [ACTION.LOAD_TILE]: ({commit}, {type, content}) => {
-        const id = ++TILE_LAST_ID;
-        commit(MUTATION.ADD_TILE, {id, type, content});
+    [ACTION.LOAD_TILE]: ({commit, getters, state}, {type, content}) => {
+        commit(MUTATION.ADD_TILE, {id: getters.getMaxTileId + 1, type, content});
+    },
+
+    /**
+     * pushes a new tile in the collection
+     * @param commit
+     * @param content {string}
+     */
+    [ACTION.LOAD_TILES]: ({commit, getters, state}, {type, contents}) => {
+        let id = getters.getMaxTileId + 1;
+        for (let i = 0, l = contents.length; i < l; ++i) {
+            commit(MUTATION.ADD_TILE, {id: id + i, type, content: contents[i]});
+        }
     },
 
     /**
@@ -23,8 +30,9 @@ export default {
      * @param idSource
      * @param idTarget
      */
-    [ACTION.REORDER_TILE]: ({commit}, {idSource, idTarget}) => {
-        commit(MUTATION.MOVE_TILE, {idSource, idTarget});
+    [ACTION.REORDER_TILE]: ({commit, getters}, {idSource, idTarget}) => {
+        const tileSource = getters.getTile(idSource);
+        commit(MUTATION.MOVE_TILE, {type: tileSource.type, idSource, idTarget});
     },
 
     /**
@@ -35,11 +43,45 @@ export default {
      * @param frames {number} number of frames in the animation
      * @param loop {number} type of loop
      */
-    [ACTION.SET_TILE_ANIMATION]: ({commit}, {start, duration, frames, loop}) => {
-        commit(MUTATION.SET_TILE_ANIMATION, {start, duration, frames, loop});
+    [ACTION.SET_TILE_ANIMATION]: ({commit, getters}, {start, duration, frames, loop}) => {
+        const tile = getters.getTile(start);
+        commit(MUTATION.SET_TILE_ANIMATION, {type: tile.type, start, duration, frames, loop});
     },
 
-    [ACTION.CLEAR_TILE_ANIMATION]: ({commit}, {tile}) => {
-        commit(MUTATION.CLEAR_TILE_ANIMATION, {tile});
+    /**
+     * Supprime les donnée d'animation associée à une tile initiale
+     * @param commit
+     * @param getters
+     * @param idTile {number} identifiant de la tile
+     */
+    [ACTION.CLEAR_TILE_ANIMATION]: ({commit, getters}, {idTile}) => {
+        const tile = getters.getTile(idTile);
+        commit(MUTATION.CLEAR_TILE_ANIMATION, {type: tile.type, tile});
+    },
+
+    /**
+     * suppression de la tile spécifiée
+     * @param commit
+     * @param getters
+     * @param id {number} identifiant de la tile qu'on veut supprimer
+     */
+    [ACTION.DELETE_TILE]: ({commit, getters}, {id}) => {
+        const tile = getters.getTile(id);
+        if (!tile) {
+            throw new Error('could not find this tile : ' + id);
+        }
+        commit(MUTATION.DELETE_TILE, {type: tile.type, id});
+    },
+
+
+    /**
+     *
+     */
+    [ACTION.CREATE_BLOCK]: ({commit, getters}, data) => {
+        const oBlock = {
+            id: getters.getMaxBlockId + 1,
+            ...data
+        };
+        commit(MUTATION.DEFINE_BLOCK, oBlock);
     }
 }
