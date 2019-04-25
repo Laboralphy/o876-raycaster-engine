@@ -1,5 +1,6 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
+import {render} from '../../../libraries/block-renderer';
 
 export default {
 

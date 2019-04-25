@@ -14,6 +14,7 @@ import TileLoader from "./components/TileLoader.vue";
 import TileBrowser from "./components/TileBrowser.vue";
 import AnimationBuilder from "./components/AnimationBuilder.vue";
 import BlockBuilder from "./components/BlockBuilder.vue";
+import BlockBrowser from "./components/BlockBrowser.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -25,7 +26,7 @@ function createApplication() {
             path: "/",
             components: {
                 default: LevelGrid,
-                side: TileBrowser
+                side: BlockBrowser
             }
         },
         {

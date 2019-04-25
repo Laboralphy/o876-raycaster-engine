@@ -30,7 +30,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('c', incoming)"
                                                 ></Tile>
-                                                <figcaption>Ceiling <span class="clear-button"><CloseCircleIcon @click="clearTile('c')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>Ceiling <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('c')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                     </tr>
@@ -46,7 +46,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('w', incoming)"
                                                 ></Tile>
-                                                <figcaption>West <span class="clear-button"><CloseCircleIcon @click="clearTile('w')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>West <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('w')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                         <td>
@@ -60,7 +60,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('n', incoming)"
                                                 ></Tile>
-                                                <figcaption>North <span class="clear-button"><CloseCircleIcon @click="clearTile('n')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>North <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('n')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                         <td>
@@ -74,7 +74,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('s', incoming)"
                                                 ></Tile>
-                                                <figcaption>South <span class="clear-button"><CloseCircleIcon @click="clearTile('s')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>South <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('s')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                         <td>
@@ -88,7 +88,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('e', incoming)"
                                                 ></Tile>
-                                                <figcaption>East <span class="clear-button"><CloseCircleIcon @click="clearTile('e')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>East <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('e')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                     </tr>
@@ -104,7 +104,7 @@
                                                         :dropzone="true"
                                                         @drop="({incoming}) => handleDrop('f', incoming)"
                                                 ></Tile>
-                                                <figcaption>Floor <span class="clear-button"><CloseCircleIcon @click="clearTile('f')"></CloseCircleIcon></span></figcaption>
+                                                <figcaption>Floor <span class="clear-button"><CloseCircleIcon title="clear this placeholder" @click="clearTile('f')"></CloseCircleIcon></span></figcaption>
                                             </figure>
                                         </td>
                                     </tr>

@@ -78,6 +78,7 @@ export default {
             ref: data.ref,
             phys: data.phys,
             offs: data.offs,
+            preview: '',
             light: {
                 enabled: data.light.enabled,
                 value: data.light.value,
@@ -98,5 +99,9 @@ export default {
         } else {
             state.blocks.push(oBlock);
         }
+    },
+
+    [MUTATION.SET_BLOCK_PREVIEW]: (state, {id, content}) => {
+        state.blocks.find(b => b.id === id).preview = content;
     }
 }

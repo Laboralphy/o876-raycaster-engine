@@ -19,4 +19,6 @@ export default {
     getTile: state => tid => state.tiles.walls.find(t => t.id === tid) || state.tiles.flats.find(t => t.id === tid),
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
+
+    getBlocks: state => state.blocks
 }

@@ -41,7 +41,7 @@ export default {
             },
             {
                 id: 5,
-                label: 'Curtain up',
+                label: 'Curtain down',
                 desc: 'This is a curtain that slides down when opened',
                 tiles: 'fcnews',
                 offset: false
@@ -55,55 +55,41 @@ export default {
             },
             {
                 id: 7,
-                label: 'Curtain right',
-                desc: 'This is a curtain that slides to the right when opened',
-                tiles: 'fcnews',
-                offset: false
-            },
-            {
-                id: 8,
                 label: 'Door left',
                 desc: 'This is a door that slides to the left when opened',
                 tiles: 'fcnews',
                 offset: false
             },
             {
-                id: 9,
-                label: 'Curtain left',
-                desc: 'This is a curtain that slides to the left when opened',
-                tiles: 'fcnews',
-                offset: false
-            },
-            {
-                id: 10,
+                id: 8,
                 label: 'Door double',
                 desc: 'This is a double panel door',
                 tiles: 'fcnews',
                 offset: false
             },
             {
-                id: 11,
+                id: 9,
                 label: 'Secret block',
                 desc: 'This is a secret block (they work in pair)',
                 tiles: 'fcnews',
                 offset: false
             },
             {
-                id: 12,
+                id: 10,
                 label: 'Transparent block',
                 desc: 'This is a transparent block : It is not walkable, but you can build windows with this because rays will pass through it.',
                 tiles: 'fcnews',
                 offset: true
             },
             {
-                id: 13,
+                id: 11,
                 label: 'Invisible block',
                 desc: 'This is an invisible block : It is not walkable',
                 tiles: 'fc',
                 offset: false
             },
             {
-                id: 14,
+                id: 12,
                 label: 'Offset block',
                 desc: 'This block is like a solid block, with an offset',
                 tiles: 'fcnews',
