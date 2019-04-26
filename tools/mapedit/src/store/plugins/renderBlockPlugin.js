@@ -24,7 +24,7 @@ export default store => {
                 c: getTile(state, CONSTS.TILE_TYPE_FLAT, inFaces.c)
             };
             // calculer le block rendu
-            render(CanvasHelper.createCanvas(128, 128), payload.phys, oFaces).then(oCanvas => {
+            render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), payload.phys, oFaces).then(oCanvas => {
                 const sSrc = CanvasHelper.getData(oCanvas);
                 store.commit('level/' + MUTATION.SET_BLOCK_PREVIEW, {id: payload.id, content: sSrc});
             });

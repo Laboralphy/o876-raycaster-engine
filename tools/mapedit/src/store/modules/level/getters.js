@@ -1,3 +1,5 @@
+import * as CONSTS from '../../../../../../src/raycaster/consts';
+
 export default {
     getMaxTileId: state =>
         Math.max(
@@ -20,5 +22,5 @@ export default {
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
 
-    getBlocks: state => state.blocks
+    getBlocks: state => state.blocks.sort((b1, b2) => b1.phys - b2.phys),
 }

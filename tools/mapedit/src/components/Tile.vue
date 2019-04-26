@@ -179,7 +179,7 @@
     }
 
     div.tile.selected {
-        border-color: limegreen;
+        border-color: lime;
         filter: brightness(120%);
     }
 
@@ -190,7 +190,7 @@
 
     @keyframes dragover-pulse {
         from {
-            border-color: limegreen;
+            border-color: lime;
         }
         to {
             border-color: black;

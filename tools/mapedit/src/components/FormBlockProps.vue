@@ -36,8 +36,8 @@
         </div>
         <hr/>
         <div>
-            <MyButton @click="$emit('submitCreate', getData)">Create</MyButton>
-            <MyButton @click="$emit('submitUpdate', getData)">Update</MyButton>
+            <MyButton v-if="!getBlockBuilderId" @click="$emit('submitCreate', getData)">Create</MyButton>
+            <MyButton v-else @click="$emit('submitUpdate', getData)">Update</MyButton>
         </div>
     </form>
 </template>
@@ -78,6 +78,7 @@
             ]),
 
             ...editorMapGetter([
+                'getBlockBuilderId',
                 'getBlockBuilderPhysicalData',
                 'getBlockBuilderAnimLoopData',
                 'getBlockBuilderRef',

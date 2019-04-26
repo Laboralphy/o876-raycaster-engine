@@ -103,5 +103,14 @@ export default {
 
     [MUTATION.SET_BLOCK_PREVIEW]: (state, {id, content}) => {
         state.blocks.find(b => b.id === id).preview = content;
+    },
+
+    [MUTATION.DESTROY_BLOCK]: (state, {id}) => {
+        const iBlock = state.blocks.findIndex(b => b.id === id);
+        if (iBlock >= 0) {
+            state.blocks.splice(iBlock, 1);
+        } else {
+            console.log('could not delete block', id);
+        }
     }
 }

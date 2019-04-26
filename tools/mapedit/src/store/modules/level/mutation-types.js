@@ -6,3 +6,4 @@ export const DELETE_TILE = 'DELETE_TILE';
 
 export const DEFINE_BLOCK = 'DEFINE_BLOCK';
 export const SET_BLOCK_PREVIEW = 'SET_BLOCK_PREVIEW';
+export const DESTROY_BLOCK = 'DESTROY_BLOCK';

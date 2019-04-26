@@ -37,35 +37,35 @@
     /* Extra small devices (phones, 600px and down) */
     @media only screen and (max-width: 600px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 128px;
+            width: 240px;
         }
     }
 
     /* Small devices (portrait tablets and large phones, 600px and up) */
     @media only screen and (min-width: 600px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 192px;
+            width: 280px;
         }
     }
 
     /* Medium devices (landscape tablets, 768px and up) */
     @media only screen and (min-width: 768px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 224px;
+            width: 320px;
         }
     }
 
     /* Large devices (laptops/desktops, 992px and up) */
     @media only screen and (min-width: 992px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 280px;
+            width: 360px;
         }
     }
 
     /* Extra large devices (large laptops and desktops, 1200px and up) */
     @media only screen and (min-width: 1200px) {
         table.o876structure > tbody > tr > td.side-panel {
-            width: 360px;
+            width: 420px;
         }
     }
 </style>

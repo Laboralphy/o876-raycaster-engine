@@ -1,6 +1,11 @@
 import CanvasHelper from "../../../../../src/canvas-helper";
 import * as CONSTS from "../../../../../src/raycaster/consts";
 
+
+const SIMILARITY_NONE = 0;
+const SIMILARITY_OPPOSITE = 1;
+const SIMILARITY_ALL = 2;
+
 /**
  * Render a wall tile with a streching factor
  * @param oCanvas canvas to be rendered on
@@ -11,23 +16,27 @@ import * as CONSTS from "../../../../../src/raycaster/consts";
  * @param yOffset
  */
 async function renderTile(oCanvas, sContent, xStretch, yStretch, xOffset, yOffset) {
-    const w = oCanvas.width;
-    const h = oCanvas.height;
-    const c = oCanvas.getContext('2d');
-    const wFinal = w * xStretch | 0;
-    const hFinal = h * yStretch | 0;
-    const xFinal = w * xOffset | 0;
-    const yFinal = h * yOffset | 0;
-    const oSrc = await CanvasHelper.loadCanvas(sContent);
-    if (oSrc) {
-        c.drawImage(oSrc,
-            0, 0, oSrc.width, oSrc.height,
-            xFinal, yFinal, wFinal, hFinal
-        );
+    try {
+        const w = oCanvas.width;
+        const h = oCanvas.height;
+        const c = oCanvas.getContext('2d');
+        const wFinal = w * xStretch | 0;
+        const hFinal = h * yStretch | 0;
+        const xFinal = w * xOffset | 0;
+        const yFinal = h * yOffset | 0;
+        const oSrc = await CanvasHelper.loadCanvas(sContent);
+        if (oSrc) {
+            c.drawImage(oSrc,
+                0, 0, oSrc.width, oSrc.height,
+                xFinal, yFinal, wFinal, hFinal
+            );
+        }
+        c.strokeStyle = '#000000';
+        c.strokeRect(xFinal, yFinal, wFinal, hFinal);
+        return oCanvas;
+    } catch(e) {
+        return CanvasHelper.createCanvas(1, 1);
     }
-    c.strokeStyle = '#000000';
-    c.strokeRect(xFinal, yFinal, wFinal, hFinal);
-    return oCanvas;
 }
 
 
@@ -111,6 +120,18 @@ function ornateDoorIcon(c, phys, w, h) {
 }
 
 
+function getSimilarities({n, e, w, s}) {
+    const x = w === e;
+    const y = n === s;
+    if (x && y && n === w) {
+        return SIMILARITY_ALL;
+    }
+    if (x && y) {
+        return SIMILARITY_OPPOSITE;
+    }
+    return SIMILARITY_NONE;
+}
+
 /**
  * render a flat view of the block
  * in order to be display in the grid
@@ -122,6 +143,7 @@ export async function render(oCanvas, phys, faces) {
     c.clearRect(0, 0, w, h);
 
     // drawing textures
+    const sim = getSimilarities(faces);
     switch (phys) {
         case CONSTS.PHYS_NONE:
         case CONSTS.PHYS_INVISIBLE_BLOCK:
@@ -134,10 +156,23 @@ export async function render(oCanvas, phys, faces) {
             break;
 
         case CONSTS.PHYS_WALL:
-            await renderTile(oCanvas, faces.w, 0.5, 0.5, 0, 0);
-            await renderTile(oCanvas, faces.n, 0.5, 0.5, 0.5, 0);
-            await renderTile(oCanvas, faces.s, 0.5, 0.5, 0, 0.5);
-            await renderTile(oCanvas, faces.e, 0.5, 0.5, 0.5, 0.5);
+            switch (sim) {
+                case SIMILARITY_ALL:
+                    await renderTile(oCanvas, faces.w, 1, 1, 0, 0);
+                    break;
+
+                case SIMILARITY_OPPOSITE:
+                    await renderTile(oCanvas, faces.w, 0.5, 1, 0, 0);
+                    await renderTile(oCanvas, faces.n, 0.5, 1, 0.5, 0);
+                    break;
+
+                default:
+                    await renderTile(oCanvas, faces.w, 0.5, 0.5, 0, 0);
+                    await renderTile(oCanvas, faces.n, 0.5, 0.5, 0.5, 0);
+                    await renderTile(oCanvas, faces.s, 0.5, 0.5, 0, 0.5);
+                    await renderTile(oCanvas, faces.e, 0.5, 0.5, 0.5, 0.5);
+                    break;
+            }
             break;
 
         case CONSTS.PHYS_TRANSPARENT_BLOCK:
@@ -156,16 +191,44 @@ export async function render(oCanvas, phys, faces) {
             if (faces.c) {
                 await renderCeil(oCanvas, 0.25, faces.c);
                 await renderFloor(oCanvas, 0.25, faces.f);
-                await renderTile(oCanvas, faces.w, 0.5, 0.25, 0, 0.25);
-                await renderTile(oCanvas, faces.n, 0.5, 0.25, 0.5, 0.25);
-                await renderTile(oCanvas, faces.s, 0.5, 0.25, 0, 0.5);
-                await renderTile(oCanvas, faces.e, 0.5, 0.25, 0.5, 0.5);
+                switch (sim) {
+                    case SIMILARITY_ALL:
+                        await renderTile(oCanvas, faces.w, 1, 0.5, 0, 0.25);
+                        break;
+
+                    case SIMILARITY_OPPOSITE:
+                        await renderTile(oCanvas, faces.w, 0.5, 0.5, 0, 0.25);
+                        await renderTile(oCanvas, faces.n, 0.5, 0.5, 0.5, 0.25);
+                        break;
+
+                    default:
+                        await renderTile(oCanvas, faces.w, 0.5, 0.25, 0, 0.25);
+                        await renderTile(oCanvas, faces.n, 0.5, 0.25, 0.5, 0.25);
+                        await renderTile(oCanvas, faces.s, 0.5, 0.25, 0, 0.5);
+                        await renderTile(oCanvas, faces.e, 0.5, 0.25, 0.5, 0.5);
+                        break;
+                }
             } else {
                 await renderFloor(oCanvas, 0.25, faces.f);
-                await renderTile(oCanvas, faces.w, 0.5, 0.37, 0, 0);
-                await renderTile(oCanvas, faces.n, 0.5, 0.37, 0.5, 0);
-                await renderTile(oCanvas, faces.s, 0.5, 0.38, 0, 0.37);
-                await renderTile(oCanvas, faces.e, 0.5, 0.38, 0.5, 0.37);
+                switch (sim) {
+                    case SIMILARITY_ALL:
+                        await renderTile(oCanvas, faces.w, 1, 0.75, 0, 0);
+                        break;
+
+                    case SIMILARITY_OPPOSITE:
+                        await renderTile(oCanvas, faces.w, 0.5, 0.75, 0, 0);
+                        await renderTile(oCanvas, faces.n, 0.5, 0.75, 0.5, 0);
+                        break;
+
+                    default:
+                        await renderTile(oCanvas, faces.w, 0.5, 0.37, 0, 0);
+                        await renderTile(oCanvas, faces.n, 0.5, 0.37, 0.5, 0);
+                        await renderTile(oCanvas, faces.s, 0.5, 0.38, 0, 0.37);
+                        await renderTile(oCanvas, faces.e, 0.5, 0.38, 0.5, 0.37);
+                        break;
+                }
+
+
             }
             break;
     }

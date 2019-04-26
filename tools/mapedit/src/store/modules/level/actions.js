@@ -76,7 +76,7 @@ export default {
 
 
     /**
-     *
+     * creation d'un block
      */
     [ACTION.CREATE_BLOCK]: ({commit, getters}, data) => {
         const oBlock = {
@@ -84,5 +84,18 @@ export default {
             ...data
         };
         commit(MUTATION.DEFINE_BLOCK, oBlock);
+    },
+
+    [ACTION.MODIFY_BLOCK]: ({commit}, data) => {
+        commit(MUTATION.DEFINE_BLOCK, data);
+    },
+
+    /**
+     * Effacer block
+     * @param commit
+     * @param id
+     */
+    [ACTION.DELETE_BLOCK]: ({commit}, {id}) => {
+        commit(MUTATION.DESTROY_BLOCK, {id});
     }
 }

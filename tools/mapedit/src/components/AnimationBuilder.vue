@@ -40,7 +40,7 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <MyButton @click="doCreate"><AnimationIcon></AnimationIcon> Apply</MyButton>
+                        <MyButton :disabled="saved" @click="doCreate"><AnimationIcon></AnimationIcon> Apply</MyButton>
                         <MyButton @click="doDelete" :disabled="!showUpdate"><DeleteIcon></DeleteIcon> Delete</MyButton>
                     </td>
                 </tr>
@@ -77,13 +77,11 @@
                 content: '',
                 width: 0,
                 height: 0,
-
                 interval: null,
                 timer: 0,
-
                 frameIndex: 0,
-
-                oTileAnimation: new TileAnimation()
+                oTileAnimation: new TileAnimation(),
+                saved: false
             };
         },
 
@@ -111,6 +109,7 @@
                 },
 
                 set (value) {
+                    this.saved = false;
                     this.setStart({value});
                 }
             },
@@ -121,6 +120,7 @@
                 },
 
                 set (value) {
+                    this.saved = false;
                     this.setFrames({value});
                     this.oTileAnimation.count = parseInt(value);
                 }
@@ -132,6 +132,7 @@
                 },
 
                 set (value) {
+                    this.saved = false;
                     this.setDuration({value});
                     this.oTileAnimation.duration = parseInt(value);
                 }
@@ -143,6 +144,7 @@
                 },
 
                 set (value) {
+                    this.saved = false;
                     this.setLoop({value});
                     this.oTileAnimation.loop = parseInt(value);
                 }
@@ -258,6 +260,7 @@
                 };
                 const oTile = this.getTile(this.tile);
                 if (!!oTile) {
+                    this.saved = true;
                     this.setTileAnimation(animation);
                 }
             },
