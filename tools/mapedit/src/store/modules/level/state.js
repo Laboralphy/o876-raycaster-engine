@@ -5,6 +5,8 @@ export default {
     },
     blocks: [
     ],
+    grid: [
+    ],
     metrics: {
         tileHeight: 96,
         tileWidth: 64

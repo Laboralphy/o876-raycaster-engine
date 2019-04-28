@@ -7,3 +7,11 @@ export const DELETE_TILE = 'DELETE_TILE';
 export const DEFINE_BLOCK = 'DEFINE_BLOCK';
 export const SET_BLOCK_PREVIEW = 'SET_BLOCK_PREVIEW';
 export const DESTROY_BLOCK = 'DESTROY_BLOCK';
+
+export const SET_GRID_SIZE = 'SET_GRID_SIZE';
+export const SET_CELL_BLOCK = 'SET_CELL_BLOCK';
+export const SET_CELL_TAG = 'SET_CELL_TAG';
+export const SET_CELL_MARK = 'SET_CELL_MARK';
+export const SET_CELL_SELECTED = 'SET_CELL_SELECTED';
+export const SET_CELL_THING = 'SET_CELL_THING';
+

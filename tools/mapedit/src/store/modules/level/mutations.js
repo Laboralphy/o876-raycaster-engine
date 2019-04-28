@@ -112,5 +112,76 @@ export default {
         } else {
             console.log('could not delete block', id);
         }
+    },
+
+
+
+
+    [MUTATION.SET_GRID_SIZE]: (state, {size}) => {
+        const g = state.grid;
+        // la grille est carrée ; determiner combien de row, col il faut ajouter/enlever
+        const nPrevSize = g.length;
+        const nDiff = nPrevSize - size;
+        if (nDiff > 0) {
+            // il faut enlever des ligne
+            g.splice(size, nDiff);
+            g.forEach(row => row.splice(size, nDiff));
+        }
+        if (nDiff < 0) {
+            for (let i = 0; i < size; ++i) {
+                const row = g[i];
+                while (row.length < size) {
+                    row.push({
+                        block: 0,
+                        tag: '',
+                        mark: {
+                            color: 0,
+                            shape: 0
+                        },
+                        modified: false,
+                        selected: false,
+                    });
+                }
+            }
+        }
+    },
+
+    [MUTATION.SET_CELL_BLOCK]: (state, {x, y, value}) => {
+        const cell = state.grid[y][x];
+        if (cell.block !== value) {
+            cell.modified = true;
+            cell.block = value;
+        }
+    },
+
+    [MUTATION.SET_CELL_TAG]: (state, {x, y, value}) => {
+        const cell = state.grid[y][x];
+        if (cell.tag !== value) {
+            cell.modified = true;
+            cell.tag = value;
+        }
+    },
+
+    [MUTATION.SET_CELL_MARK]: (state, {x, y, shape, color}) => {
+        const cell = state.grid[y][x];
+        if (cell.mark.color !== color) {
+            cell.modified = true;
+            cell.mark.color = color;
+        }
+        if (cell.mark.shape !== shape) {
+            cell.modified = true;
+            cell.mark.shape = shape;
+        }
+    },
+
+    [MUTATION.SET_CELL_SELECTED]: (state, {x, y, value}) => {
+        const cell = state.grid[y][x];
+        if (cell.selected !== value) {
+            cell.modified = true;
+            cell.selected = value;
+        }
     }
+
+
+
 }
