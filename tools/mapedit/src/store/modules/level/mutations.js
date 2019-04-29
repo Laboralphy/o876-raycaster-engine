@@ -114,9 +114,6 @@ export default {
         }
     },
 
-
-
-
     [MUTATION.SET_GRID_SIZE]: (state, {size}) => {
         const g = state.grid;
         // la grille est carrée ; determiner combien de row, col il faut ajouter/enlever
@@ -129,7 +126,12 @@ export default {
         }
         if (nDiff < 0) {
             for (let i = 0; i < size; ++i) {
-                const row = g[i];
+                let row;
+                if (i < g.length) {
+                    row = g[i];
+                } else {
+                    g.push(row = []);
+                }
                 while (row.length < size) {
                     row.push({
                         block: 0,
@@ -140,6 +142,7 @@ export default {
                         },
                         modified: false,
                         selected: false,
+                        things: []
                     });
                 }
             }
@@ -174,14 +177,29 @@ export default {
         }
     },
 
-    [MUTATION.SET_CELL_SELECTED]: (state, {x, y, value}) => {
+    [MUTATION.SET_CELL_UPPER_BLOCK]: (state, {x, y, value}) => {
         const cell = state.grid[y][x];
-        if (cell.selected !== value) {
+        if (cell.upperblock !== value) {
             cell.modified = true;
-            cell.selected = value;
+            cell.upperblock = value;
         }
+    },
+
+    [MUTATION.SET_CELL_THING]: (state, {x, y, id}) => {
+        const cell = state.grid[y][x];
+        const oThing = cell.things.find(t => t.x === x && t.y === y);
+        if (oThing) {
+            oThing.id = id;
+        } else {
+            cell.things.push({x, y, id});
+        }
+    },
+
+    [MUTATION.SAVE_SELECT_REGION]: (state, {x1, y1, x2, y2}) => {
+        state.selectedRegion.x1 = x1;
+        state.selectedRegion.y1 = y1;
+        state.selectedRegion.x2 = x2;
+        state.selectedRegion.y2 = y2;
     }
-
-
 
 }

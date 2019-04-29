@@ -12,6 +12,7 @@ export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 export const SET_CELL_BLOCK = 'SET_CELL_BLOCK';
 export const SET_CELL_TAG = 'SET_CELL_TAG';
 export const SET_CELL_MARK = 'SET_CELL_MARK';
-export const SET_CELL_SELECTED = 'SET_CELL_SELECTED';
 export const SET_CELL_THING = 'SET_CELL_THING';
+export const SET_CELL_UPPER_BLOCK = 'SET_CELL_UPPER_BLOCK';
 
+export const SAVE_SELECT_REGION = 'SAVE_SELECT_REGION';

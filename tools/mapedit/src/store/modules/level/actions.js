@@ -1,6 +1,5 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
-import {render} from '../../../libraries/block-renderer';
 
 export default {
 
@@ -97,5 +96,47 @@ export default {
      */
     [ACTION.DELETE_BLOCK]: ({commit}, {id}) => {
         commit(MUTATION.DESTROY_BLOCK, {id});
-    }
+    },
+
+
+    [ACTION.SELECT_CELLS]: ({commit}, data) => {
+        commit(MUTATION.SAVE_SELECT_REGION, data);
+    },
+
+    [ACTION.SET_GRID_SIZE]: ({commit}, {value}) => {
+        commit(MUTATION.SET_GRID_SIZE, {size: value});
+    },
+
+    [ACTION.SET_CELL_PROPS]: ({commit}, data) => {
+        const {x, y} = data;
+        for(let sProp in data) {
+            const value = data[sProp];
+            switch (sProp) {
+                case 'block':
+                    commit(MUTATION.SET_CELL_BLOCK, {x, y, value});
+                    break;
+
+                case 'upperblock':
+                    commit(MUTATION.SET_CELL_UPPER_BLOCK, {x, y, value});
+                    break;
+
+                case 'tag':
+                    commit(MUTATION.SET_CELL_TAG, {x, y, value});
+                    break;
+
+                case 'mark': {
+                    const a = value.split(' ');
+                    commit(MUTATION.SET_CELL_MARK, {x, y, color: a[0], shape: a[1]});
+                    break;
+                }
+
+                case 'thing':
+                    commit(MUTATION.SET_CELL_THING, {x, y, id: value});
+                    break;
+            }
+        }
+    },
+
+
+
 }

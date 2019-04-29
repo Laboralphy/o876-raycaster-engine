@@ -4,13 +4,13 @@ import CanvasHelper from '../../../../../src/canvas-helper';
 const DEFAULT_CELL_WIDTH = 32;
 const DEFAULT_CELL_HEIGHT = 32;
 
-class CellRenderer {
+class GridRenderer {
 
     constructor() {
         this.events = new Events();
         this._cellWidth = DEFAULT_CELL_WIDTH;
         this._cellHeight = DEFAULT_CELL_HEIGHT;
-        this._cellCanvas = CanvasHelper.createCanvas(32, 32);
+        this._cellCanvas = CanvasHelper.createCanvas(DEFAULT_CELL_WIDTH, DEFAULT_CELL_WIDTH);
         this._cellContext = this._cellCanvas.getContext('2d');
     }
 
@@ -41,19 +41,33 @@ class CellRenderer {
             canvas: this._cellCanvas,
             cell: grid[y][x]
         });
-        oCanvas.getContext('2d').drawImage(this._cellCanvas, x * this.cellWidth, y * this.cellHeight);
+        const ctx = oCanvas.getContext('2d');
+        this._cellContext.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        this._cellContext.strokeRect(0, 0, this.cellWidth, this.cellHeight);
+        ctx.drawImage(this._cellCanvas, x * this.cellWidth, y * this.cellHeight);
     }
 
     render(oCanvas, grid, aModif) {
-        for (let i = 0, l = aModif.length; i < l; ++i) {
-            const {x, y} = aModif[i];
-            this.renderCell(oCanvas, grid, x, y);
+        const s = grid.length;
+        oCanvas.width = s * this._cellWidth;
+        oCanvas.height = s * this._cellHeight;
+        if (aModif === undefined) {
+            for (let y = 0; y < s; ++y) {
+                for (let x = 0; x < s; ++x) {
+                    this.renderCell(oCanvas, grid, x, y);
+                }
+            }
+        } else {
+            for (let i = 0, l = aModif.length; i < l; ++i) {
+                const {x, y} = aModif[i];
+                this.renderCell(oCanvas, grid, x, y);
+            }
         }
     }
 }
 
 
-
+export default GridRenderer;
 
 
 

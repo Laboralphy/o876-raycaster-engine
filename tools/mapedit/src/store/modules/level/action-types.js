@@ -9,4 +9,9 @@ export const CREATE_BLOCK = 'CREATE_BLOCK';
 export const MODIFY_BLOCK = 'MODIFY_BLOCK';
 export const DELETE_BLOCK = 'DELETE_BLOCK';
 
+export const SET_GRID_SIZE = 'SET_GRID_SIZE';
+
+export const SET_CELL_PROPS = 'SET_CELL_PROPS';
+export const SELECT_CELLS = 'SELECT_CELLS';
+
 
