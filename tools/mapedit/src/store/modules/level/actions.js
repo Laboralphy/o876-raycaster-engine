@@ -99,10 +99,6 @@ export default {
     },
 
 
-    [ACTION.SELECT_CELLS]: ({commit}, data) => {
-        commit(MUTATION.SAVE_SELECT_REGION, data);
-    },
-
     [ACTION.SET_GRID_SIZE]: ({commit}, {value}) => {
         commit(MUTATION.SET_GRID_SIZE, {size: value});
     },
@@ -137,6 +133,12 @@ export default {
         }
     },
 
+    [ACTION.SAVE_LEVEL]: ({commit}, {name}) => {
 
+    },
+
+    [ACTION.LOAD_LEVEL]: ({commit}, {name}) => {
+
+    }
 
 }

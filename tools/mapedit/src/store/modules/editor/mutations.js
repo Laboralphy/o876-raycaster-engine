@@ -21,6 +21,14 @@ export default {
     [MUTATION.ANIMBUILDER_SET_DURATION]: (state, {value}) => state.models.animationBuilder.duration = value,
     [MUTATION.ANIMBUILDER_SET_FRAMES]: (state, {value}) => state.models.animationBuilder.frames = value,
     [MUTATION.ANIMBUILDER_SET_LOOP]: (state, {value}) => state.models.animationBuilder.loop = value,
+
+
+    [MUTATION.SELECT_REGION]: (state, {x1, y1, x2, y2}) => {
+        state.selectedRegion.x1 = x1;
+        state.selectedRegion.y1 = y1;
+        state.selectedRegion.x2 = x2;
+        state.selectedRegion.y2 = y2;
+    }
 };
 
 

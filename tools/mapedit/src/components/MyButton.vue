@@ -40,10 +40,12 @@
         font-family:Arial;
         font-size:1em;
         font-weight:bold;
-        padding:0.4em 1em;
+        /*padding:0.4em 1em;*/
+        padding:0.3em 0.5em;
         text-decoration:none;
         text-shadow:0 0.1em 0 #7cacde;
     }
+
     .myButton.enabled:hover {
         /*background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #468ccf), color-stop(1, #63b8ee));*/
         /*background:-moz-linear-gradient(top, #468ccf 5%, #63b8ee 100%);*/

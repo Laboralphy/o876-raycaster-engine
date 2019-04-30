@@ -12,6 +12,9 @@ export const DELETE_BLOCK = 'DELETE_BLOCK';
 export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 
 export const SET_CELL_PROPS = 'SET_CELL_PROPS';
-export const SELECT_CELLS = 'SELECT_CELLS';
+
+export const SAVE_LEVEL = 'SAVE_LEVEL';
+export const LOAD_LEVEL = 'LOAD_LEVEL';
+
 
 

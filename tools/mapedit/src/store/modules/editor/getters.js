@@ -21,7 +21,9 @@ export default {
     getAnimBuilderStart: state => state.models.animationBuilder.start,
     getAnimBuilderFrames: state => state.models.animationBuilder.frames,
     getAnimBuilderDuration: state => state.models.animationBuilder.duration,
-    getAnimBuilderLoop: state => state.models.animationBuilder.loop
+    getAnimBuilderLoop: state => state.models.animationBuilder.loop,
+
+    getSelectedRegion: state => state.selectedRegion
 }
 
 

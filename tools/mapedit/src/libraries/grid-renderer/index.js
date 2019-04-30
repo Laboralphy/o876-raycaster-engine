@@ -4,6 +4,10 @@ import CanvasHelper from '../../../../../src/canvas-helper';
 const DEFAULT_CELL_WIDTH = 32;
 const DEFAULT_CELL_HEIGHT = 32;
 
+const ZOOM_MIN = 16;
+const ZOOM_MAX = 64;
+const ZOOM_STEP = 8;
+
 class GridRenderer {
 
     constructor() {
@@ -31,6 +35,16 @@ class GridRenderer {
     set cellHeight(value) {
         this._cellHeight = value;
         this._cellCanvas.height = value;
+    }
+
+    zoomIn() {
+        let n = Math.min(ZOOM_MAX, this.cellWidth + ZOOM_STEP);
+        this.cellWidth = this.cellHeight = n;
+    }
+
+    zoomOut() {
+        let n = Math.max(ZOOM_MIN, this.cellWidth - ZOOM_STEP);
+        this.cellWidth = this.cellHeight = n;
     }
 
     renderCell(oCanvas, grid, x, y) {

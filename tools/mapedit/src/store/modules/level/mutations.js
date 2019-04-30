@@ -195,11 +195,10 @@ export default {
         }
     },
 
-    [MUTATION.SAVE_SELECT_REGION]: (state, {x1, y1, x2, y2}) => {
-        state.selectedRegion.x1 = x1;
-        state.selectedRegion.y1 = y1;
-        state.selectedRegion.x2 = x2;
-        state.selectedRegion.y2 = y2;
+    [MUTATION.SET_STATE_CONTENT]: (state, {content}) => {
+        for (let sKey in content) {
+            state[sKey] = content[sKey];
+        }
     }
 
 }
