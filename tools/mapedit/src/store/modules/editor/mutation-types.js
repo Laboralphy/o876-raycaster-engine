@@ -23,3 +23,5 @@ export const ANIMBUILDER_SET_LOOP = 'ANIMBUILDER_SET_LOOP';
 
 export const SELECT_REGION = 'SELECT_REGION';
 
+export const SET_LEVEL_LIST = 'SET_LEVEL_LIST';
+

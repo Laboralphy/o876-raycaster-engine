@@ -9,12 +9,15 @@ import './styles/base.css';
 import './styles/o876structure/o876structure.css';
 import 'vue-material-design-icons/styles.css';
 
+import './'
+
 import LevelGrid from "./components/LevelGrid.vue";
 import TileLoader from "./components/TileLoader.vue";
 import TileBrowser from "./components/TileBrowser.vue";
 import AnimationBuilder from "./components/AnimationBuilder.vue";
 import BlockBuilder from "./components/BlockBuilder.vue";
 import BlockBrowser from "./components/BlockBrowser.vue";
+import LevelList from "./components/LevelList.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -50,6 +53,13 @@ function createApplication() {
                 side: TileBrowser
             }
         },
+        {
+            path: "/list-levels",
+            components: {
+                default: LevelList,
+                side: BlockBrowser
+            }
+        }
 
     ];
 

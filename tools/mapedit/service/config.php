@@ -1,4 +1,3 @@
 <?php
-
-define('VAULT_DIR', '/home/ralphy/.rc-mapedit-vault');
-define('LOG_FILE', '/var/log/rc-mapedit.log');
+define('VAULT_DIR', '/var/tmp/rc-mapedit-vault');
+define('LOG_FILE', '/var/tmp/rc-mapedit.log');

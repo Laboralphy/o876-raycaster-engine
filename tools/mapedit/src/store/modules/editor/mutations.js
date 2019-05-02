@@ -28,6 +28,10 @@ export default {
         state.selectedRegion.y1 = y1;
         state.selectedRegion.x2 = x2;
         state.selectedRegion.y2 = y2;
+    },
+
+    [MUTATION.SET_LEVEL_LIST]: (state, {list}) => {
+        state.levelList = list;
     }
 };
 

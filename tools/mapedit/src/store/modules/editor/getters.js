@@ -25,7 +25,7 @@ export default {
 
     getSelectedRegion: state => state.selectedRegion,
 
-    getStoredLevel: state => state.levelStored
+    getLevelList: state => state.levelList
 }
 
 

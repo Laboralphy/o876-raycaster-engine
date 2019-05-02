@@ -16,15 +16,16 @@ function printLog() {
  * @return string
  */
 function getFullName($name) {
+	if (!$name) {
+		throw new Exception('the given resource name is empty');
+	}
 	return VAULT_DIR . '/' . $name;
 }
 
-function checkVaultDirectory($sDir) {
+function checkTargetDirectory($sDir) {
 	if (!file_exists($sDir)) {
-		try {
-			mkdir($sDir, 0777, true);
-		} catch (Exception $e) {
-			throw new Exception("target directory \"$sDir\" : does not exists, and could not be created : " . $e->getMessage());
+		if (!mkdir($sDir, 0777, true)) {
+			throw new Exception("target directory \"$sDir\" : does not exists, and could not be created (mkdir failed)");
 		}
 	}
 	if (!file_exists($sDir)) {
@@ -45,25 +46,35 @@ function checkVaultDirectory($sDir) {
  * save data into a file
  */
 function saveAction($name, $data) {
-	printLog('saving', $name);
 	$filename = getFullName($name);
 	if (!file_exists($filename)) {
 		mkdir($filename, 0777, true);
 	}
-	file_put_contents($filename . '/level.json', $filename . '/level.json');	
+	file_put_contents($filename . '/level.json', json_encode($data));	
 	sendOutput('{"status":"OK"}');
 }
 
 function loadAction($name) {
-	printLog('loading', $name);
 	$filename = getFullName($name);
 	sendOutput(file_get_contents($filename . '/level.json'));
 }
 
 function listAction() {
-	$aList = array_filter(scandir(VAULT_DIR), function($s) {
+	$aList = array_map(function($s) {
+		// get level.json data
+		$filename = VAULT_DIR . '/' . $s . '/level.json';
+		$previewFilename = VAULT_DIR . '/' . $s . '/preview.png';
+		$date = filemtime($filename);
+		$name = $s;
+		$preview = file_exists($previewFilename) ? false : false;
+		return array(
+			'name' => $name,
+			'date' => $date,
+			'preview' => $preview
+		);
+	}, array_filter(scandir(VAULT_DIR), function($s) {
 		return substr($s, 0, 1) !== '.';
-	});
+	}));
 	sendOutput(json_encode($aList));
 }
 
@@ -83,14 +94,14 @@ function sendError($e) {
 
 function main($action, $post) {
 	try {
-		checkVaultDirectory(VAULT_DIR);
+		checkTargetDirectory(VAULT_DIR);
 		switch ($action) {
 			case 'save':
-				saveAction($post['name'], $post['data']);
+				saveAction($post->name, $post->data);
 				break;
 
 			case 'load':
-				loadAction($post['name']);
+				loadAction($post->name);
 				break;
 				
 			case 'list':
@@ -103,5 +114,5 @@ function main($action, $post) {
 	}
 }
 
-printLog('test');
-main($_GET['action'], $_POST);
+$POST = json_decode(file_get_contents('php://input'));
+main($_GET['action'], $POST);

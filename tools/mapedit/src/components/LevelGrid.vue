@@ -82,7 +82,6 @@
 
 <script>
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -152,10 +151,6 @@
             }),
 
 
-            ...editorMapActions({
-                listLevel: EDITOR_ACTION.LIST_LEVELS
-            }),
-
 
             redraw: function() {
                 this.$nextTick(() => this.gridRenderer.render(this.$refs.levelgrid, this.getGrid));
@@ -219,7 +214,7 @@
             },
 
             loadClick: function() {
-                this.listLevel();
+                this.$router.push('/list-levels');
             },
 
             /**
