@@ -158,5 +158,8 @@ export default {
         y2: -1
     },
 
+
+    levelStored: []
+
     
 };

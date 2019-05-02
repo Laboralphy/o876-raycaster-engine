@@ -23,7 +23,9 @@ export default {
     getAnimBuilderDuration: state => state.models.animationBuilder.duration,
     getAnimBuilderLoop: state => state.models.animationBuilder.loop,
 
-    getSelectedRegion: state => state.selectedRegion
+    getSelectedRegion: state => state.selectedRegion,
+
+    getStoredLevel: state => state.levelStored
 }
 
 

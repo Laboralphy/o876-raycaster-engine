@@ -17,6 +17,17 @@
 
 
             <MyButton
+                    title="Load level"
+                    @click="loadClick"
+            >
+                <FolderOpenIcon
+                        title="Load level"
+                        decorative>
+                </FolderOpenIcon>
+            </MyButton>
+
+
+            <MyButton
                     title="Decrease grid size (-1 row & column)"
                     @click="smallerGridClick"
             >
@@ -70,7 +81,8 @@
 </template>
 
 <script>
-    import * as ACTION from '../store/modules/level/action-types';
+    import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -83,14 +95,16 @@
     import MagnifyPlusIcon from "vue-material-design-icons/MagnifyPlus.vue";
     import MagnifyMinusIcon from "vue-material-design-icons/MagnifyMinus.vue";
     import ContentSaveIcon from "vue-material-design-icons/ContentSave.vue";
+    import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
+    const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
 
     export default {
         name: "LevelGrid",
         components: {
+            FolderOpenIcon,
             ContentSaveIcon,
             MagnifyMinusIcon,
             MagnifyPlusIcon,
@@ -132,8 +146,16 @@
 
         methods: {
             ...levelMapActions({
-                setGridSize: ACTION.SET_GRID_SIZE
+                setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
+                saveLevel: LEVEL_ACTION.SAVE_LEVEL,
+                loadLevel: LEVEL_ACTION.LOAD_LEVEL,
             }),
+
+
+            ...editorMapActions({
+                listLevel: EDITOR_ACTION.LIST_LEVELS
+            }),
+
 
             redraw: function() {
                 this.$nextTick(() => this.gridRenderer.render(this.$refs.levelgrid, this.getGrid));
@@ -193,6 +215,11 @@
              */
             saveClick: function() {
                 const sFileName = prompt('Enter a filename');
+                this.saveLevel({name: sFileName});
+            },
+
+            loadClick: function() {
+                this.listLevel();
             },
 
             /**
