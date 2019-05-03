@@ -1,5 +1,8 @@
 <template>
-    <figure class="level-thumbnail">
+    <figure
+            class="level-thumbnail"
+            @click="$emit('click')"
+    >
         <img
                 :src="getSource"
         />
@@ -27,17 +30,17 @@
             getSource: function() {
                 return './assets/images/no-preview.png';
             }
-        }
+        },
     }
 </script>
 
 <style scoped>
     figure.level-thumbnail {
         display: inline-block;
-        border: outset #999 0.2em;
+        border: outset #AAA 0.2em;
         border-radius: 0.3em;
         padding: 0.4em;
-        background-color: #999;
+        background-color: #AAA;
         margin: 1.5em;
         cursor: pointer;
     }

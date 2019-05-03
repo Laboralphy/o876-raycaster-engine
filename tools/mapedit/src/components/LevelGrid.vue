@@ -138,10 +138,11 @@
         },
 
         watch: {
-            getGridSize: function(value) {
-
+            getGrid: function(value) {
+                this.redraw();
             }
         },
+
 
         methods: {
             ...levelMapActions({
@@ -153,7 +154,9 @@
 
 
             redraw: function() {
-                this.$nextTick(() => this.gridRenderer.render(this.$refs.levelgrid, this.getGrid));
+                this.$nextTick(() => {
+                    this.gridRenderer.render(this.$refs.levelgrid, this.getGrid);
+                });
             },
 
 
@@ -221,14 +224,14 @@
              * Grid shrinks : loses one row and one column
              */
             smallerGridClick: function() {
-                this.setGridSize({value: Math.max(1, this.getGridSize - 1)}).then(() => this.redraw());
+                this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
             },
 
             /**
              * Grid grows : gain one row and one column
              */
             largerGridClick: function() {
-                this.setGridSize({value: Math.min(256, this.getGridSize + 1)}).then(() => this.redraw());
+                this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
             },
 
             /**

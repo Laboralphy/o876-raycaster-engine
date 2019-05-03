@@ -1,7 +1,25 @@
 <?php
+/**
+ * This is a micro web service which manages a file storage
+ * 
+ * POST this.webservice.url?action=save
+ * post-data: {
+ * 		name: String
+ * 		data: any
+ * }
+ *  creates folder with level.json
+ * 
+ * GET this.webservice.url?action=list
+ * lists all files
+ * 
+ * GET this.webservice.url?action=load
+ * returns the specified file content
+ */
 require('config.php');
 
-
+/**
+ * simple log manager
+ */
 function printLog() {
 	$fp = fopen(LOG_FILE, 'a');
 	if (!$fp) {
@@ -22,6 +40,12 @@ function getFullName($name) {
 	return VAULT_DIR . '/' . $name;
 }
 
+/**
+ * If the specified directory does not exists : attempt to create it
+ * throws various exceptions if the file system prevents from create the directory
+ * @param $sDir String target directory name
+ * @throws Exception
+ */
 function checkTargetDirectory($sDir) {
 	if (!file_exists($sDir)) {
 		if (!mkdir($sDir, 0777, true)) {
@@ -43,7 +67,9 @@ function checkTargetDirectory($sDir) {
 }
 
 /**
- * save data into a file
+ * save project content into a folder
+ * @param $name String project name
+ * @param $data * project content
  */
 function saveAction($name, $data) {
 	$filename = getFullName($name);
@@ -54,11 +80,18 @@ function saveAction($name, $data) {
 	sendOutput('{"status":"OK"}');
 }
 
+/**
+ * load data from project folder
+ * @param $name String project name
+ */
 function loadAction($name) {
 	$filename = getFullName($name);
 	sendOutput(file_get_contents($filename . '/level.json'));
 }
 
+/**
+ * lists all project saved so far
+ */
 function listAction() {
 	$aList = array_map(function($s) {
 		// get level.json data
@@ -78,11 +111,19 @@ function listAction() {
 	sendOutput(json_encode($aList));
 }
 
+/**
+ * Sends an object as a JSON output
+ * @param $s output
+ */
 function sendOutput($s) {
 	header('content-type: application/json');
 	print $s;
 }
 
+/**
+ * Sends a 500 error with description
+ * @param $e Exception
+ */
 function sendError($e) {
 	header('HTTP/1.1 500 Internal Server Error');
 	header('Content-Type: application/json; charset=UTF-8');
@@ -92,19 +133,24 @@ function sendError($e) {
 	print json_encode($result);
 }
 
-function main($action, $post) {
+/**
+ * main procedure
+ * @param $action string action name
+ * @param $post StdClass post parsed data 
+ */
+function main($method, $get, $post) {
 	try {
 		checkTargetDirectory(VAULT_DIR);
-		switch ($action) {
-			case 'save':
-				saveAction($post->name, $post->data);
+		switch ($method . '/' . $get['action']) {
+			case 'POST/save':
+				saveAction($get['name'], $post->data);
 				break;
 
-			case 'load':
-				loadAction($post->name);
+			case 'GET/load':
+				loadAction($get['name']);
 				break;
 				
-			case 'list':
+			case 'GET/list':
 				listAction();
 				break;
 				
@@ -115,4 +161,4 @@ function main($action, $post) {
 }
 
 $POST = json_decode(file_get_contents('php://input'));
-main($_GET['action'], $POST);
+main($_SERVER['REQUEST_METHOD'], $_GET, $POST);

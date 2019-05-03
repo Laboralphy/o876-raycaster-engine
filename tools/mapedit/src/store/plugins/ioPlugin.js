@@ -7,7 +7,7 @@ import * as CONSTS from '../../consts';
 export default store => {
 
 
-    const fetchJSON = async function(url, postData = null) {
+    const fetchJSON = async function (url, postData = null) {
         const bPost = !!postData;
         const oRequest = {
             method: bPost ? 'POST' : 'GET',
@@ -28,18 +28,15 @@ export default store => {
     };
 
 
-    const saveLevel = function(name, data) {
-        return fetchJSON(CONSTS.SERVICE_URL_SAVE, {
-            name,
-            data
-        });
+    const saveLevel = function (name, data) {
+        return fetchJSON(CONSTS.SERVICE_URL_SAVE + '&name=' + name, {data});
     };
 
-    const loadLevel = async function(name) {
+    const loadLevel = async function (name) {
         return fetchJSON(CONSTS.SERVICE_URL_LOAD + '&name=' + name);
     };
 
-    const getLevelList = async function() {
+    const getLevelList = async function () {
         return fetchJSON(CONSTS.SERVICE_URL_LIST);
     };
 
@@ -57,7 +54,8 @@ export default store => {
                     break;
 
                 case 'level/' + LEVEL_ACTION.LOAD_LEVEL: {
-                    store.commit('level/' + LEVEL_MUTATION.SET_STATE_CONTENT, {content: await loadLevel(payload.name)});
+                    const content = await loadLevel(payload.name);
+                    store.commit('level/' + LEVEL_MUTATION.SET_STATE_CONTENT, {content});
                 }
                 break;
             }

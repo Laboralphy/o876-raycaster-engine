@@ -11,6 +11,7 @@
                     :name="l.name"
                     :date="l.date"
                     :preview="l.preview"
+                    @click="() => onClick(l.name)"
             ></LevelThumbnail>
         </div>
     </Window>
@@ -20,10 +21,12 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
+    import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
 
     const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
+    const {mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
@@ -38,6 +41,15 @@
             ...editorMapActions({
                 listLevel: EDITOR_ACTION.LIST_LEVELS
             }),
+
+            ...levelMapActions({
+                loadLevel: LEVEL_ACTION.LOAD_LEVEL
+            }),
+
+            onClick: async function(name) {
+                await this.loadLevel({name});
+                this.$router.push('/');
+            }
 
         },
 
