@@ -60,8 +60,9 @@
 
             onClick: async function(name) {
                 this.selectedLevel = name;
-                // await this.loadLevel({name});
-                // this.$router.push('/');
+                await this.loadLevel({name});
+                this.$router.push('/');
+                this.$nextTick(() => alert('Level ' + name + ' successfuly loaded.'));
             }
 
         },
