@@ -1,6 +1,6 @@
 <template>
     <figure
-            class="level-thumbnail"
+            :class="getComputedClass"
             @click="$emit('click')"
     >
         <img
@@ -23,10 +23,23 @@
                 type: Boolean,
                 required: false,
                 default: false
+            },
+            selected: {
+                type: Boolean,
+                required: false,
+                default: false
             }
         },
 
         computed: {
+            getComputedClass: function() {
+                const a = ['level-thumbnail'];
+                if (this.selected) {
+                    a.push('selected');
+                }
+                return a.join(' ');
+            },
+
             getSource: function() {
                 return './assets/images/no-preview.png';
             }
@@ -54,6 +67,18 @@
     }
 
     figure.level-thumbnail:hover {
-        filter: brightness(133%);
+        filter: brightness(140%);
     }
+
+    figure.level-thumbnail.selected {
+        border-color: lime;
+        filter: brightness(120%);
+    }
+
+    figure.level-thumbnail.selected:hover {
+        border-color: #8F8;
+        filter: brightness(140%);
+    }
+
+
 </style>

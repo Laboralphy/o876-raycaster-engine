@@ -1,35 +1,53 @@
 <template>
-    <table class="o876structure">
-        <tbody>
-            <tr>
-                <td colspan="2">
-                    <MainMenu></MainMenu>
-                </td>
-            </tr>
-            <tr class="floatingHeight">
-                <td class="floatingWidth">
-                    <div>
-                        <router-view></router-view>
-                    </div>
-                </td>
-                <td class="side-panel">
-                    <div>
-                        <router-view name="side"></router-view>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div>
+        <table class="o876structure">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <MainMenu></MainMenu>
+                    </td>
+                </tr>
+                <tr class="floatingHeight">
+                    <td class="floatingWidth">
+                        <div>
+                            <router-view></router-view>
+                        </div>
+                    </td>
+                    <td class="side-panel">
+                        <div>
+                            <router-view name="side"></router-view>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <Popup
+                v-if="popup.visible"
+                :title="popup.title"
+        >
+            {{ popup.content }}
+        </Popup>
+    </div>
 </template>
 
 <script>
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MainMenu from "./MainMenu.vue";
+    import Popup from "./Popup";
 
     export default {
         name: "Application",
-        components: {MainMenu, MyButton, Window},
+        components: {Popup, MainMenu, MyButton, Window},
+        data: function() {
+            return {
+                popup: {
+                    visible: false,
+                    title: '',
+                    content: ''
+                }
+            };
+        }
     }
 </script>
 

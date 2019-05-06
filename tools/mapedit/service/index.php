@@ -111,6 +111,22 @@ function listAction() {
 	sendOutput(json_encode($aList));
 }
 
+function deleteFile($s) {
+	if (file_exists($s)) {
+		unlink($s);
+	}
+}
+
+
+/**
+ * deletes a project
+ */
+function deleteAction($name) {
+	deleteFile(VAULT_DIR . "/$name/level.json");
+	deleteFile(VAULT_DIR . "/$name/preview.png");
+	rmdir(VAULT_DIR . "/$name");
+}
+
 /**
  * Sends an object as a JSON output
  * @param $s output
@@ -133,6 +149,7 @@ function sendError($e) {
 	print json_encode($result);
 }
 
+
 /**
  * main procedure
  * @param $action string action name
@@ -140,8 +157,13 @@ function sendError($e) {
  */
 function main($method, $get, $post) {
 	try {
+		$a = array($method);
+		if (array_key_exists('action', $get)) {
+			$a[] = $get['action'];
+		}
 		checkTargetDirectory(VAULT_DIR);
-		switch ($method . '/' . $get['action']) {
+		printLog('action ' . implode('/', $a));
+		switch (implode('/', $a)) {
 			case 'POST/save':
 				saveAction($get['name'], $post->data);
 				break;
@@ -152,6 +174,10 @@ function main($method, $get, $post) {
 				
 			case 'GET/list':
 				listAction();
+				break;
+				
+			case 'DELETE':
+				deleteAction($get['name']);
 				break;
 				
 		}

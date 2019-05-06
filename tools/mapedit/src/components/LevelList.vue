@@ -3,6 +3,8 @@
             caption="Open level"
     >
         <template v-slot:toolbar>
+            <MyButton><FolderOpenIcon decorative></FolderOpenIcon> Open</MyButton>
+            <MyButton><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -11,6 +13,7 @@
                     :name="l.name"
                     :date="l.date"
                     :preview="l.preview"
+                    :selected="l.name === selectedLevel"
                     @click="() => onClick(l.name)"
             ></LevelThumbnail>
         </div>
@@ -24,13 +27,22 @@
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
+    import MyButton from "./MyButton.vue";
+    import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
+    import DeleteIcon from "vue-material-design-icons/Delete.vue";
 
     const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
     const {mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
-        components: {Window, LevelThumbnail},
+        components: {DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
+
+        data: function() {
+            return {
+                selectedLevel: null
+            };
+        },
 
         computed: {
             ...editorMapGetters(['getLevelList'])
@@ -47,8 +59,9 @@
             }),
 
             onClick: async function(name) {
-                await this.loadLevel({name});
-                this.$router.push('/');
+                this.selectedLevel = name;
+                // await this.loadLevel({name});
+                // this.$router.push('/');
             }
 
         },
