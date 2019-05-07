@@ -2,7 +2,7 @@
     <MyButton
             @click="onClick"
             :class="selected ? 'selected' : ''"
-            title="title"
+            :title="title"
     >
         <slot></slot>
     </MyButton>
@@ -30,15 +30,7 @@
         },
         methods: {
             onClick: function() {
-                let iFound = -1;
-                this.$parent.$children.forEach((c, i) => {
-                    const selected = c === this;
-                    if (selected) {
-                        iFound = i
-                    }
-                    c.selected = selected;
-                });
-                this.$parent.$emit('select', {index: iFound});
+                this.$parent.selectSibling(this);
             },
         }
     }

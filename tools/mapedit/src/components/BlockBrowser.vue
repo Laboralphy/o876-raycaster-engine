@@ -72,15 +72,19 @@
                 MUTATION.BLOCKBUILDER_SET_FACE_WEST,
                 MUTATION.BLOCKBUILDER_SET_FACE_SOUTH,
                 MUTATION.BLOCKBUILDER_SET_FACE_FLOOR,
-                MUTATION.BLOCKBUILDER_SET_FACE_CEILING
+                MUTATION.BLOCKBUILDER_SET_FACE_CEILING,
+
+                MUTATION.BLOCKBROWSER_SET_SELECTED
             ]),
 
 
             onClicked: function(id) {
                 if (this.selected === id) {
                     this.selected = null;
+                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
                 } else {
                     this.selected = id;
+                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: id});
                 }
             },
 

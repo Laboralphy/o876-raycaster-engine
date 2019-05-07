@@ -6,6 +6,7 @@
                 :title="r.title"
                 :class="currentRoute === r.route ? 'selected' : ''"
                 @click="$router.push(r.route)"
+                style="margin-right: 0.5em"
         >{{ r.caption }}</MyButton>
     </StatusBar>
 </template>

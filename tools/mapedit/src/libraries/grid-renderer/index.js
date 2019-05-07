@@ -58,13 +58,22 @@ class GridRenderer {
         const ctx = oCanvas.getContext('2d');
         this._cellContext.strokeStyle = 'rgba(0, 0, 0, 0.5)';
         this._cellContext.strokeRect(0, 0, this.cellWidth, this.cellHeight);
+        ctx.clearRect(x * this.cellWidth, y * this.cellHeight, this.cellWidth, this.cellHeight);
         ctx.drawImage(this._cellCanvas, x * this.cellWidth, y * this.cellHeight);
     }
 
     render(oCanvas, grid, aModif) {
         const s = grid.length;
-        oCanvas.width = s * this._cellWidth;
-        oCanvas.height = s * this._cellHeight;
+        const w = s * this._cellWidth;
+        const h = s * this._cellHeight;
+
+        if (oCanvas.width != w) {
+            oCanvas.width = s * this._cellWidth;
+        }
+        if (oCanvas.height != h) {
+            oCanvas.height= s * this._cellHeight;
+        }
+
         if (aModif === undefined) {
             for (let y = 0; y < s; ++y) {
                 for (let x = 0; x < s; ++x) {

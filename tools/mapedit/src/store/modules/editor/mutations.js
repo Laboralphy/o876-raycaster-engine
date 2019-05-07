@@ -22,12 +22,13 @@ export default {
     [MUTATION.ANIMBUILDER_SET_FRAMES]: (state, {value}) => state.models.animationBuilder.frames = value,
     [MUTATION.ANIMBUILDER_SET_LOOP]: (state, {value}) => state.models.animationBuilder.loop = value,
 
+    [MUTATION.BLOCKBROWSER_SET_SELECTED]: (state, {value}) => state.models.blockBrowser.selected = value,
 
     [MUTATION.SELECT_REGION]: (state, {x1, y1, x2, y2}) => {
-        state.selectedRegion.x1 = Math.min(x1, x2);
-        state.selectedRegion.y1 = Math.min(y1, y2);
-        state.selectedRegion.x2 = Math.max(x1, x2);
-        state.selectedRegion.y2 = Math.max(y1, y2);
+        state.models.levelGrid.selectedRegion.x1 = Math.min(x1, x2);
+        state.models.levelGrid.selectedRegion.y1 = Math.min(y1, y2);
+        state.models.levelGrid.selectedRegion.x2 = Math.max(x1, x2);
+        state.models.levelGrid.selectedRegion.y2 = Math.max(y1, y2);
     },
 
     [MUTATION.SET_LEVEL_LIST]: (state, {list}) => {
@@ -36,7 +37,7 @@ export default {
 
     [MUTATION.SET_STATUSBAR_TEXT]: (state, {text}) => {
         state.statusBar.content = text;
-    }
-};
+    },
 
 
+}

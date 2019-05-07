@@ -23,7 +23,9 @@ export default {
     getAnimBuilderDuration: state => state.models.animationBuilder.duration,
     getAnimBuilderLoop: state => state.models.animationBuilder.loop,
 
-    getSelectedRegion: state => state.selectedRegion,
+    getBlockBrowserSelected: state => state.models.blockBrowser.selected,
+
+    getLevelGridSelectedRegion: state => state.models.levelGrid.selectedRegion,
 
     getLevelList: state => state.levelList,
 

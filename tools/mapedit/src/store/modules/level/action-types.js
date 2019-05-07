@@ -16,5 +16,6 @@ export const SET_CELL_PROPS = 'SET_CELL_PROPS';
 export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
 
+export const SET_GRID_CELL = 'SET_GRID_CELL';
 
 

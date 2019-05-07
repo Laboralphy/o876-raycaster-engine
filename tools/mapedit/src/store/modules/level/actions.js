@@ -139,6 +139,21 @@ export default {
 
     [ACTION.LOAD_LEVEL]: ({commit}, {name}) => {
 
+    },
+
+    [ACTION.SET_GRID_CELL]: ({commit}, {x, y, floor, block}) => {
+        switch (floor) {
+            case 0:
+                commit(MUTATION.SET_CELL_BLOCK, {x, y, value: block});
+                break;
+
+            case 1:
+                commit(MUTATION.SET_CELL_UPPER_BLOCK, {x, y, value: block});
+                break;
+
+            default:
+                throw new Error('setting cell block : this floor is invalid ' + floor);
+        }
     }
 
 }

@@ -7,10 +7,18 @@
 <script>
     export default {
         name: "Siblings",
-        data: function() {
-            return {
 
-            };
+        methods: {
+            selectSibling: function(s) {
+                this.selectSiblingIndex(this.$children.indexOf(s));
+            },
+
+            selectSiblingIndex: function(n) {
+                this.$children.forEach((c, i) => {
+                    c.selected = i === n;
+                });
+                this.$emit('input', {index: n});
+            }
         }
     }
 </script>

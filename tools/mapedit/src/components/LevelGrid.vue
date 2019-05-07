@@ -68,6 +68,50 @@
                 </MagnifyPlusIcon>
             </MyButton>
 
+            <Siblings @input="selectTool">
+                <SiblingButton
+                        title="Select region"
+                        :default="true"
+                >
+                    <SelectIcon
+                            title="Select region"
+                            decorative
+                    ></SelectIcon>
+                </SiblingButton>
+
+                <SiblingButton
+                        title="Draw blocks"
+                >
+                    <PencilIcon
+                            title="Draw blocks"
+                            decorative
+                    ></PencilIcon>
+                </SiblingButton>
+
+            </Siblings>
+
+            <Siblings @input="selectFloor">
+                <SiblingButton
+                        title="Lower floor"
+                        :default="true"
+                >
+                    <ArrowDownBoldIcon
+                            title="Lower floor"
+                            decorative
+                    ></ArrowDownBoldIcon>
+                </SiblingButton>
+
+                <SiblingButton
+                        title="Upper floor"
+                >
+                    <ArrowUpBoldIcon
+                            title="Upper floor"
+                            decorative
+                    ></ArrowUpBoldIcon>
+                </SiblingButton>
+
+            </Siblings>
+
         </template>
         <div ref="scrollzone" class="canvas-container" :style="'width: ' + containerWidth + 'px'">
             <canvas
@@ -85,6 +129,7 @@
 <script>
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
+    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -99,14 +144,26 @@
     import ContentSaveIcon from "vue-material-design-icons/ContentSave.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
     import MarkerRegistry from "../../../../src/marker-registry";
+    import Siblings from "./Siblings.vue";
+    import SiblingButton from "./SiblingButton.vue";
+    import SelectIcon from "vue-material-design-icons/Select.vue";
+    import PencilIcon from "vue-material-design-icons/Pencil.vue";
+    import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
+    import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
+    const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "LevelGrid",
         components: {
+            ArrowDownBoldIcon,
+            ArrowUpBoldIcon,
+            PencilIcon,
+            SelectIcon,
+            SiblingButton,
+            Siblings,
             FolderOpenIcon,
             ContentSaveIcon,
             MagnifyMinusIcon,
@@ -117,7 +174,8 @@
             MapIcon,
             OfficeBuildingIcon,
             MyButton,
-            Window},
+            Window
+        },
 
         computed: {
             ...levelMapGetters([
@@ -126,12 +184,13 @@
             ]),
 
             ...editorMapGetters([
-                'getSelectedRegion'
+                'getLevelGridSelectedRegion',
+                'getBlockBrowserSelected',
             ]),
 
             getCellSize: function() {
                 return this.gridRenderer.cellWidth;
-            }
+            },
         },
 
         data: function() {
@@ -140,6 +199,8 @@
                 containerWidth: 0,
                 modifications: new MarkerRegistry(),
                 selecting: false,
+                selectedFloor: 0,
+                selectedTool: 0,
                 select: {
                     x: -1,
                     y: -1
@@ -159,14 +220,25 @@
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
                 saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 loadLevel: LEVEL_ACTION.LOAD_LEVEL,
+                setGridCell: LEVEL_ACTION.SET_GRID_CELL
             }),
 
 
             ...editorMapActions({
                 setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
-                selectRegion: EDITOR_ACTION.SELECT_REGION
+                selectRegion: EDITOR_ACTION.SELECT_REGION,
             }),
 
+
+
+            selectTool: function({index}) {
+                console.log('tool is now', index);
+                this.selectedTool = index;
+            },
+
+            selectFloor: function({index}) {
+                this.selectedFloor = index;
+            },
 
             invalidateRect: function(x1, y1, x2, y2) {
                 if (x1 > x2) {
@@ -191,12 +263,10 @@
 
 
             redraw: function() {
+                const a = this.modifications.toArray();
+                this.modifications.clear();
                 this.$nextTick(() => {
-                    //const a = this.modifications.toArray();
-                    let a = [];
                     this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
-                    this.modifications.clear();
-                    console.log('redraw');
                 });
             },
 
@@ -208,29 +278,27 @@
                     // save canvas display
                     const sDisplay = oCanvas.style.display;
                     oCanvas.style.display = 'none';
-                    // previously : $scrollzone.width('');
                     oScrollZone.style.width = '';
-                    // previously : var w = $canvas.parent().width();
                     const w = oCanvas.parentNode.offsetWidth;
-                    // previously : $canvas.show();
                     oCanvas.style.display = sDisplay;
-                    // previously : $scrollzone.width(w);
                     oScrollZone.style.width = w + 'px';
-
-                    //console.log(this.$refs.scrollzone.parentNode.offsetWidth);
-                    //this.containerWidth = 500; //this.$refs.container.parentNode.offsetWidth;
                 });
+            },
+
+            pixelToCell(x, y) {
+                const nCellSize = this.getCellSize;
+                const xc = Math.floor(x / nCellSize);
+                const yc = Math.floor(y / nCellSize);
+                return {x: xc, y: yc};
             },
 
             mousedownEvent(event) {
                 const x = event.layerX;
                 const y = event.layerY;
-                const oPrevRegion = this.getSelectedRegion;
-                const nCellSize = this.getCellSize;
-                const xc = Math.floor(x / nCellSize);
-                const yc = Math.floor(y / nCellSize);
-                this.selectRegion({x1: xc, y1: yc, x2: xc, y2: yc});
+                const {x: xc, y: yc} = this.pixelToCell(x, y);
+                const oPrevRegion = this.getLevelGridSelectedRegion;
                 this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                this.selectRegion({x1: xc, y1: yc, x2: xc, y2: yc});
                 this.invalidateRect(xc, yc, xc, yc);
                 this.redraw();
                 this.selecting = true;
@@ -239,22 +307,36 @@
             },
 
             mouseupEvent(event) {
+                const x = event.layerX;
+                const y = event.layerY;
+                const {x: xc, y: yc} = this.pixelToCell(x, y);
                 this.selecting = false;
+                // déterminer si on est en mode "paint" avec un block selectionné
+                console.log({xc, yc, tool: this.selectedTool, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+                if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
+                    console.log({x: xc, y: yc, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+                    const oPrevRegion = this.getLevelGridSelectedRegion;
+                    this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                    this.modifications.iterate((cx, cy) => {
+                        this.setGridCell({x: cx, y: cy, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+                    });
+                    this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
+                    this.redraw();
+                }
             },
 
             mousemoveEvent(event) {
                 if (this.selecting) {
                     const x = event.layerX;
                     const y = event.layerY;
-                    const oPrevRegion = this.getSelectedRegion;
-                    const nCellSize = this.getCellSize;
-                    const xc = Math.floor(x / nCellSize);
-                    const yc = Math.floor(y / nCellSize);
-                    this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
-                    this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
-                    this.invalidateRect(this.select.x, this.select.y, xc, yc);
-                    this.redraw();
-                    this.selecting = true;
+                    const {x: xc, y: yc} = this.pixelToCell(x, y);
+                    const oPrevRegion = this.getLevelGridSelectedRegion;
+                    if (xc !== oPrevRegion.x2 || yc !== oPrevRegion.y2) {
+                        this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                        this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
+                        this.invalidateRect(this.select.x, this.select.y, xc, yc);
+                        this.redraw();
+                    }
                 }
             },
 
@@ -269,11 +351,15 @@
                 const ctx = canvas.getContext('2d');
                 const w = canvas.width;
                 const h = canvas.height;
-                ctx.fillStyle = 'red';
-                ctx.fillRect(w - 15, h - 15, 15, 15);
+
+                // code du block
+                if (cell.block > 0) {
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(5, 5, 10, 10);
+                }
 
                 // peinture selection
-                const {x1, y1, x2, y2} = this.getSelectedRegion;
+                const {x1, y1, x2, y2} = this.getLevelGridSelectedRegion;
                 const bSelected = x >= x1 && x <= x2 && y >= y1 && y <= y2;
                 if (bSelected) {
                     ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';

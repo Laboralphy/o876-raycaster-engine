@@ -3,7 +3,7 @@
         :caption="getTitle"
     >
         <template v-slot:toolbar>
-            <Siblings @select="({index}) => selectTileFamily(index)">
+            <Siblings @input="({index}) => selectTileFamily(index)">
                 <SiblingButton title="Display project wall tiles" :default="true"><WallIcon title="Display project wall tiles" decorative></WallIcon></SiblingButton>
                 <SiblingButton title="Display project flat tiles"><ViewGridIcon title="Display project flat tiles" decorative></ViewGridIcon></SiblingButton>
             </Siblings>

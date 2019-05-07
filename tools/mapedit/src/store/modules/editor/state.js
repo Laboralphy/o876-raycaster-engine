@@ -147,16 +147,24 @@ export default {
             frames: 2,
             duration: 80,
             loop: 0
+        },
+
+        blockBrowser: {
+            selected: null
+        },
+
+        levelGrid: {
+            selectedRegion: {
+                x1: -1,
+                y1: -1,
+                x2: -1,
+                y2: -1
+            },
         }
     },
 
 
-    selectedRegion: {
-        x1: -1,
-        y1: -1,
-        x2: -1,
-        y2: -1
-    },
+
 
 
     levelList: [],
