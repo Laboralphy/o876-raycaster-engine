@@ -75,6 +75,8 @@
                     :width="getGridSize * getCellSize"
                     :height="getGridSize * getCellSize"
                     @mousedown="mousedownEvent"
+                    @mouseup="mouseupEvent"
+                    @mousemove="mousemoveEvent"
             ></canvas>
         </div>
     </Window>
@@ -82,6 +84,7 @@
 
 <script>
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -95,6 +98,7 @@
     import MagnifyMinusIcon from "vue-material-design-icons/MagnifyMinus.vue";
     import ContentSaveIcon from "vue-material-design-icons/ContentSave.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
+    import MarkerRegistry from "../../../../src/marker-registry";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
@@ -133,7 +137,13 @@
         data: function() {
             return {
                 gridRenderer: new GridRenderer(),
-                containerWidth: 0
+                containerWidth: 0,
+                modifications: new MarkerRegistry(),
+                selecting: false,
+                select: {
+                    x: -1,
+                    y: -1
+                }
             };
         },
 
@@ -152,10 +162,41 @@
             }),
 
 
+            ...editorMapActions({
+                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
+                selectRegion: EDITOR_ACTION.SELECT_REGION
+            }),
+
+
+            invalidateRect: function(x1, y1, x2, y2) {
+                if (x1 > x2) {
+                    let a = x2;
+                    x2 = x1;
+                    x1 = a;
+                }
+                if (y1 > y2) {
+                    let a = y2;
+                    y2 = y1;
+                    y1 = a;
+                }
+                for (let y = y1; y <= y2; ++y) {
+                    for (let x = x1; x <= x2; ++x) {
+                        if (x >= 0 && y >= 0) {
+                            this.modifications.mark(x, y);
+                        }
+                    }
+                }
+            },
+
+
 
             redraw: function() {
                 this.$nextTick(() => {
-                    this.gridRenderer.render(this.$refs.levelgrid, this.getGrid);
+                    //const a = this.modifications.toArray();
+                    let a = [];
+                    this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
+                    this.modifications.clear();
+                    console.log('redraw');
                 });
             },
 
@@ -182,7 +223,39 @@
             },
 
             mousedownEvent(event) {
+                const x = event.layerX;
+                const y = event.layerY;
+                const oPrevRegion = this.getSelectedRegion;
+                const nCellSize = this.getCellSize;
+                const xc = Math.floor(x / nCellSize);
+                const yc = Math.floor(y / nCellSize);
+                this.selectRegion({x1: xc, y1: yc, x2: xc, y2: yc});
+                this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                this.invalidateRect(xc, yc, xc, yc);
+                this.redraw();
+                this.selecting = true;
+                this.select.x = xc;
+                this.select.y = yc;
+            },
 
+            mouseupEvent(event) {
+                this.selecting = false;
+            },
+
+            mousemoveEvent(event) {
+                if (this.selecting) {
+                    const x = event.layerX;
+                    const y = event.layerY;
+                    const oPrevRegion = this.getSelectedRegion;
+                    const nCellSize = this.getCellSize;
+                    const xc = Math.floor(x / nCellSize);
+                    const yc = Math.floor(y / nCellSize);
+                    this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
+                    this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                    this.invalidateRect(this.select.x, this.select.y, xc, yc);
+                    this.redraw();
+                    this.selecting = true;
+                }
             },
 
             /**
@@ -214,6 +287,7 @@
             saveClick: function() {
                 const sFileName = prompt('Enter a filename');
                 this.saveLevel({name: sFileName});
+                this.setStatusBarText({text: 'Level saved : ' + sFileName});
             },
 
             loadClick: function() {

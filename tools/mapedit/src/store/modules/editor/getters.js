@@ -25,7 +25,9 @@ export default {
 
     getSelectedRegion: state => state.selectedRegion,
 
-    getLevelList: state => state.levelList
+    getLevelList: state => state.levelList,
+
+    getStatusBarText: state => state.statusBar.content
 }
 
 

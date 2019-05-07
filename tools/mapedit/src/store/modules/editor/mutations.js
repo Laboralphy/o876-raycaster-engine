@@ -24,14 +24,18 @@ export default {
 
 
     [MUTATION.SELECT_REGION]: (state, {x1, y1, x2, y2}) => {
-        state.selectedRegion.x1 = x1;
-        state.selectedRegion.y1 = y1;
-        state.selectedRegion.x2 = x2;
-        state.selectedRegion.y2 = y2;
+        state.selectedRegion.x1 = Math.min(x1, x2);
+        state.selectedRegion.y1 = Math.min(y1, y2);
+        state.selectedRegion.x2 = Math.max(x1, x2);
+        state.selectedRegion.y2 = Math.max(y1, y2);
     },
 
     [MUTATION.SET_LEVEL_LIST]: (state, {list}) => {
         state.levelList = list;
+    },
+
+    [MUTATION.SET_STATUSBAR_TEXT]: (state, {text}) => {
+        state.statusBar.content = text;
     }
 };
 

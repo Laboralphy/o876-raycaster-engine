@@ -159,7 +159,13 @@ export default {
     },
 
 
-    levelList: []
+    levelList: [],
+
+
+    statusBar: {
+        content: 'Welcome to Raycaster Map Editor',
+        color: '#000'
+    }
 
     
 };

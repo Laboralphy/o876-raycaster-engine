@@ -18,6 +18,11 @@
                     </div>
                 </td>
             </tr>
+            <tr>
+                <StatusBar>
+                    <FlashyText></FlashyText>
+                </StatusBar>
+            </tr>
         </tbody>
     </table>
 </template>
@@ -26,10 +31,12 @@
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MainMenu from "./MainMenu.vue";
+    import StatusBar from "./StatusBar.vue";
+    import FlashyText from "./FlashyText.vue";
 
     export default {
         name: "Application",
-        components: {MainMenu, MyButton, Window},
+        components: {FlashyText, StatusBar, MainMenu, MyButton, Window},
         data: function() {
             return {
                 popup: {

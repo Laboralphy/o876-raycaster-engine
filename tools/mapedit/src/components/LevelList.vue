@@ -45,13 +45,16 @@
         },
 
         computed: {
-            ...editorMapGetters(['getLevelList'])
+            ...editorMapGetters([
+                'getLevelList'
+            ])
         },
 
         methods: {
 
             ...editorMapActions({
-                listLevel: EDITOR_ACTION.LIST_LEVELS
+                listLevel: EDITOR_ACTION.LIST_LEVELS,
+                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT
             }),
 
             ...levelMapActions({
@@ -61,8 +64,8 @@
             onClick: async function(name) {
                 this.selectedLevel = name;
                 await this.loadLevel({name});
+                await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
                 this.$router.push('/');
-                this.$nextTick(() => alert('Level ' + name + ' successfuly loaded.'));
             }
 
         },
