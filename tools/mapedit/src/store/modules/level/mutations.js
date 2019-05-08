@@ -189,9 +189,13 @@ export default {
         const cell = state.grid[y][x];
         const oThing = cell.things.find(t => t.x === x && t.y === y);
         if (oThing) {
-            oThing.id = id;
+            if (oThing.id != id) {
+                cell.modified = true;
+                oThing.id = id;
+            }
         } else {
             cell.things.push({x, y, id});
+            cell.modified = true;
         }
     },
 

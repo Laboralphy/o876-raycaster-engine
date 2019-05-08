@@ -150,6 +150,7 @@
     import PencilIcon from "vue-material-design-icons/Pencil.vue";
     import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
     import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
+    import CanvasHelper from "../../../../src/canvas-helper";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
@@ -347,15 +348,49 @@
              * @param canvas {HTMLCanvasElement} a canvas, the siez of a cell
              * @param cell {*} cell data
              */
-            paintEvent: function({x, y, canvas, cell}) {
+            paintEvent: async function({x, y, canvas, cell}) {
                 const ctx = canvas.getContext('2d');
                 const w = canvas.width;
                 const h = canvas.height;
 
-                // code du block
-                if (cell.block > 0) {
-                    ctx.fillStyle = 'red';
-                    ctx.fillRect(5, 5, 10, 10);
+                const sMask = (this.selectedFloor == 1 ? 'T' : '') +
+                    (!!cell.upperblock ? 'U' : '') +
+                    (!!cell.block ? 'L' : '');
+
+                //const oLowerCvs = !!cell.block ? CanvasHelper.loadCanvas()
+
+                switch (sMask) {
+                    case '':
+                    case 'T':
+                        // rien : pas de block
+                        break;
+
+                    case 'L':
+                        // seul le lower block est définit, et edité
+                        // on doit dessiner le lower block sur toute la surface, en opacité normale
+
+                        break;
+
+                    case 'U':
+                        // seul le upper block est défini, et non edité
+                        // on doit déssiner le upper block sur la moitié haute, et en opacité 0.5
+                        break;
+
+                    case 'UT':
+                        // que le upper, edité
+                        // o doit desiner le upper block en haut, et en opacité 1
+                        break;
+
+                    case 'LU':
+                        // les deux blocks définis mais on edite le lower
+                        // on doit dessiner les deux block , seul le lower est à opacité 1, l'autre est à opacité 0.5
+                        break;
+
+                    case 'LUT':
+                        // les deux blocks défini mais on edite le upper
+                        // on doit dessiner les deux block , seul le upper est à opacité 1, l'autre est à opacité 0.5
+                        break;
+
                 }
 
                 // peinture selection
