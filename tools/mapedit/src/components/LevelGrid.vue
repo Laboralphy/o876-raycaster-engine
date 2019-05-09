@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <Window
-        caption="Level grid"
+            caption="Level grid"
     >
         <template v-slot:toolbar>
 
@@ -190,12 +190,12 @@
                 'getBlockBrowserSelected',
             ]),
 
-            getCellSize: function() {
+            getCellSize: function () {
                 return this.gridRenderer.cellWidth;
             },
         },
 
-        data: function() {
+        data: function () {
             return {
                 gridRenderer: new GridRenderer(),
                 containerWidth: 0,
@@ -211,17 +211,15 @@
         },
 
         watch: {
-            getGrid: function(value) {
+            getGrid: function (value) {
                 this.redraw();
             }
         },
-
 
         methods: {
             ...levelMapActions({
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
                 saveLevel: LEVEL_ACTION.SAVE_LEVEL,
-                loadLevel: LEVEL_ACTION.LOAD_LEVEL,
                 setGridCell: LEVEL_ACTION.SET_GRID_CELL,
             }),
 
@@ -235,16 +233,16 @@
                 defineBlock: LEVEL_MUTATION.DEFINE_BLOCK
             }),
 
-            selectTool: function({index}) {
+            selectTool: function ({index}) {
                 console.log('tool is now', index);
                 this.selectedTool = index;
             },
 
-            selectFloor: function({index}) {
+            selectFloor: function ({index}) {
                 this.selectedFloor = index;
             },
 
-            invalidateRect: function(x1, y1, x2, y2) {
+            invalidateRect: function (x1, y1, x2, y2) {
                 if (x1 > x2) {
                     let a = x2;
                     x2 = x1;
@@ -264,13 +262,6 @@
                 }
             },
 
-            /**
-             * Reconstruit le cache de canvas permettant un rendu rapide de la grille
-             */
-            rebuildCache: function() {
-                this.getBlocks.forEach(b => this.defineBlock({data: b}));
-            },
-
 
             /**
              * this function is called for each redrawing cell
@@ -279,7 +270,7 @@
              * @param canvas {HTMLCanvasElement} a canvas, the siez of a cell
              * @param cell {*} cell data
              */
-            paintEvent: async function({x, y, canvas, cell}) {
+            paintEvent: async function ({x, y, canvas, cell}) {
                 const ctx = canvas.getContext('2d');
                 const w = canvas.width;
                 const h = canvas.height;
@@ -445,7 +436,7 @@
                 }
             },
 
-            redraw: function() {
+            redraw: function () {
                 const a = this.modifications.toArray();
                 this.modifications.clear();
                 this.$nextTick(() => {
@@ -500,7 +491,12 @@
                     const oPrevRegion = this.getLevelGridSelectedRegion;
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
                     this.modifications.iterate((cx, cy) => {
-                        this.setGridCell({x: cx, y: cy, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+                        this.setGridCell({
+                            x: cx,
+                            y: cy,
+                            floor: this.selectedFloor,
+                            block: this.getBlockBrowserSelected
+                        });
                     });
                     this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
                     this.redraw();
@@ -525,34 +521,34 @@
             /**
              * Save the level
              */
-            saveClick: function() {
+            saveClick: function () {
                 const sFileName = prompt('Enter a filename');
                 this.saveLevel({name: sFileName});
                 this.setStatusBarText({text: 'Level saved : ' + sFileName});
             },
 
-            loadClick: function() {
+            loadClick: function () {
                 this.$router.push('/list-levels');
             },
 
             /**
              * Grid shrinks : loses one row and one column
              */
-            smallerGridClick: function() {
+            smallerGridClick: function () {
                 this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
             },
 
             /**
              * Grid grows : gain one row and one column
              */
-            largerGridClick: function() {
+            largerGridClick: function () {
                 this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
             },
 
             /**
              * zoom the grid out : each cell becomes smaller, you can see a larger level area
              */
-            zoomOutClick: function() {
+            zoomOutClick: function () {
                 this.gridRenderer.zoomOut();
                 this.redraw();
             },
@@ -560,24 +556,23 @@
             /**
              * zoom the grid in : each cell becomes smaller, and you can see each cell more precisely
              */
-            zoomInClick: function() {
+            zoomInClick: function () {
                 this.gridRenderer.zoomIn();
                 this.redraw();
             }
         },
 
-        mounted: function() {
+        mounted: function () {
             this.gridRenderer.events.on('paint', this.paintEvent);
-            this.$nextTick(function() {
+            this.$nextTick(function () {
                 window.addEventListener('resize', this.resizeEvent);
                 this.resizeEvent();
-                this.rebuildCache();
                 this.redraw();
             });
 
         },
 
-        beforeDestroy: function() {
+        beforeDestroy: function () {
             window.removeEventListener('resize', this.resizeEvent);
             this.gridRenderer.events.removeListener('paint', this.paintEvent);
         }

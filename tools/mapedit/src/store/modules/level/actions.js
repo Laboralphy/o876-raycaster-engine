@@ -1,5 +1,8 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
+import CanvasHelper from "../../../../../../src/canvas-helper";
+import CACHE from "../../../libraries/block-cache";
+import {loadLevel, saveLevel} from '../../../libraries/fetch-helper';
 
 export default {
 
@@ -133,12 +136,24 @@ export default {
         }
     },
 
-    [ACTION.SAVE_LEVEL]: ({commit}, {name}) => {
-
+    [ACTION.SAVE_LEVEL]: async ({commit, getters}, {name}) => {
+        await saveLevel(name, getters.getLevel);
     },
 
-    [ACTION.LOAD_LEVEL]: ({commit}, {name}) => {
-
+    [ACTION.LOAD_LEVEL]: async ({commit}, {name}) => {
+        const content = await loadLevel(name);
+        if (!content) {
+            throw new Error('an error occurred while loading level "' + name + '"');
+        }
+        commit(MUTATION.SET_STATE_CONTENT, {content});
+        const blocks = content.blocks;
+        for (let i = 0, l = blocks.length; i < l; ++i) {
+            const b = blocks[i];
+            const sSrc = b.preview;
+            const oCanvas = await CanvasHelper.loadCanvas(sSrc);
+            CACHE.store(b.id, oCanvas);
+            commit(MUTATION.SET_BLOCK_PREVIEW, {id: b.id, content: sSrc});
+        }
     },
 
     [ACTION.SET_GRID_CELL]: ({commit}, {x, y, floor, block}) => {

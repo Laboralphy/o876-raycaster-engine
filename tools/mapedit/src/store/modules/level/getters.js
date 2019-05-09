@@ -25,5 +25,6 @@ export default {
     getBlocks: state => state.blocks.sort((b1, b2) => b1.phys - b2.phys),
 
     getGrid: state => state.grid,
-    getGridSize: state => state.grid.length
+    getGridSize: state => state.grid.length,
+    getLevel: state => state
 }
