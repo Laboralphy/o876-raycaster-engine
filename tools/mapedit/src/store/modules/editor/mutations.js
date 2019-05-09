@@ -49,5 +49,7 @@ export default {
 
     [MUTATION.POP_UNDO]: state => {
         state.models.levelGrid.undo.pop();
-    }
+    },
+
+    [MUTATION.SET_LEVEL_NAME]: (state, {name}) => state.levelName = name,
 }

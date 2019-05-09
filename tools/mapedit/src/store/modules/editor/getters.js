@@ -28,6 +28,7 @@ export default {
     getLevelGridSelectedRegion: state => state.models.levelGrid.selectedRegion,
     getLevelGridTopMostUndo: state => state.models.levelGrid.undo.length > 0 ? state.models.levelGrid.undo[state.models.levelGrid.undo.length - 1] : [],
     getLevelList: state => state.levelList,
+    getLevelName: state => state.levelName,
 
     getStatusBarText: state => state.statusBar.content
 }

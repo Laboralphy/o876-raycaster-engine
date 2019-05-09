@@ -55,7 +55,8 @@
 
             ...editorMapActions({
                 listLevel: EDITOR_ACTION.LIST_LEVELS,
-                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT
+                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
+                setLevelName: EDITOR_ACTION.SET_LEVEL_NAME
             }),
 
             ...levelMapActions({
@@ -65,6 +66,7 @@
             loadAndExit: async function() {
                 await this.loadLevel({name: this.selectedLevel});
                 await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
+                await this.setLevelName({name: this.selectedLevel});
                 this.$router.push('/');
             },
 

@@ -18,5 +18,9 @@ export default {
 
     [ACTION.POP_UNDO]: function({commit}) {
         commit(MUTATION.POP_UNDO);
+    },
+
+    [ACTION.SET_LEVEL_NAME]: function({commit}, {name}) {
+        commit(MUTATION.SET_LEVEL_NAME, {name});
     }
 }

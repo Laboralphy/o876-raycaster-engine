@@ -115,6 +115,7 @@
             <MyButton
                     title="Undo"
                     @click="undo"
+                    :disabled="getLevelGridTopMostUndo.length === 0"
             >
                 <UndoIcon
                         title="Undo"
@@ -122,8 +123,45 @@
                 </UndoIcon>
             </MyButton>
 
+            <MyButton
+                    title="Copy"
+                    @click="copyClick"
+                    :disabled="!isRegionSelected"
+            >
+                <ContentCopyIcon
+                        title="Copy"
+                        decorative>
+                </ContentCopyIcon>
+            </MyButton>
+
+            <MyButton
+                    title="Paste"
+                    @click="pasteClick"
+                    :disabled="clipboard === null && !isRegionSelected"
+            >
+                <ContentPasteIcon
+                        title="Paste"
+                        decorative>
+                </ContentPasteIcon>
+            </MyButton>
+
+            <MyButton
+                    title="Clear"
+                    @click="clearClick"
+                    :disabled="!isRegionSelected"
+            >
+                <CloseIcon
+                        title="Clear"
+                        decorative>
+                </CloseIcon>
+            </MyButton>
+
         </template>
-        <div ref="scrollzone" class="canvas-container" :style="'width: ' + containerWidth + 'px'">
+        <div
+                ref="scrollzone"
+                class="canvas-container"
+                :style="'width: ' + containerWidth + 'px'"
+        >
             <canvas
                     ref="levelgrid"
                     :width="getGridSize * getCellSize"
@@ -163,6 +201,9 @@
     import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
     import BlockCache from "../libraries/block-cache";
     import UndoIcon from "vue-material-design-icons/Undo.vue";
+    import ContentCopyIcon from "vue-material-design-icons/ContentCopy.vue";
+    import ContentPasteIcon from "vue-material-design-icons/ContentPaste.vue";
+    import CloseIcon from "vue-material-design-icons/Close.vue";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
@@ -171,6 +212,9 @@
     export default {
         name: "LevelGrid",
         components: {
+            CloseIcon,
+            ContentPasteIcon,
+            ContentCopyIcon,
             UndoIcon,
             ArrowDownBoldIcon,
             ArrowUpBoldIcon,
@@ -201,12 +245,17 @@
             ...editorMapGetters([
                 'getLevelGridSelectedRegion',
                 'getBlockBrowserSelected',
-                'getLevelGridTopMostUndo'
+                'getLevelGridTopMostUndo',
+                'getLevelName'
             ]),
 
             getCellSize: function () {
                 return this.gridRenderer.cellWidth;
             },
+
+            isRegionSelected: function() {
+                return this.getLevelGridSelectedRegion.x1 >= 0
+            }
         },
 
         data: function () {
@@ -217,6 +266,7 @@
                 selecting: false,
                 selectedFloor: 0,
                 selectedTool: 0,
+                clipboard: null,
                 select: {
                     x: -1,
                     y: -1
@@ -283,7 +333,7 @@
                 }
                 for (let y = y1; y <= y2; ++y) {
                     for (let x = x1; x <= x2; ++x) {
-                        if (x >= 0 && y >= 0) {
+                        if (x >= 0 && y >= 0 && x < this.getGridSize && y < this.getGridSize) {
                             this.modifications.mark(x, y);
                         }
                     }
@@ -570,13 +620,7 @@
                     const aList = [];
                     this.modifications.iterate((cx, cy) => {
                         aList.push({x: cx, y: cy});
-                        const cell = this.getGrid[cy][cx];
-                        aUndoStruct.push({
-                            x: cx,
-                            y: cy,
-                            block: cell.block,
-                            upperblock: cell.upperblock
-                        });
+                        aUndoStruct.push(this.getCellStruct(cx, cy));
                     });
                     this.pushUndo({undo: aUndoStruct});
                     this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
@@ -604,9 +648,13 @@
              * Save the level
              */
             saveClick: function () {
-                const sFileName = prompt('Enter a filename');
-                this.saveLevel({name: sFileName});
-                this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                const sFileName = prompt('Enter a filename', this.getLevelName);
+                if (!!sFileName) {
+                    this.saveLevel({name: sFileName});
+                    this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                } else {
+                    this.setStatusBarText({text: 'Level NOT saved'});
+                }
             },
 
             loadClick: function () {
@@ -641,6 +689,124 @@
             zoomInClick: function () {
                 this.gridRenderer.zoomIn();
                 this.redraw();
+            },
+
+            getCellStruct: function(x, y) {
+                const cell = this.getGrid[y][x];
+                return {
+                    x,
+                    y,
+                    block: cell.block,
+                    upperblock: cell.upperblock
+                };
+            },
+
+            iterateSelection: function(f) {
+                const sr = this.getLevelGridSelectedRegion;
+                for (let y = sr.y1; y <= sr.y2; ++y) {
+                    for (let x = sr.x1; x <= sr.x2; ++x) {
+                        f(x, y);
+                    }
+                }
+            },
+
+            copyClick: function() {
+                const sr = this.getLevelGridSelectedRegion;
+                const cells = [];
+                const clipboard = {
+                    width: sr.x2 - sr.x1 + 1,
+                    height: sr.y2 - sr.y1 + 1
+                };
+                this.iterateSelection((x, y) => cells.push(this.getCellStruct(x, y)));
+                clipboard.cells = cells;
+                this.clipboard = clipboard;
+            },
+
+            pasteClick: async function() {
+                const sr = this.getLevelGridSelectedRegion;
+                const xs = sr.x1;
+                const ys = sr.y1;
+                const clipboard = this.clipboard;
+                let i = 0;
+                const aUndo = [];
+                for (let y = 0; y < clipboard.height; ++y) {
+                    const yi = y + ys;
+                    if (yi < 0 || yi >= this.getGridSize) {
+                        continue;
+                    }
+                    for (let x = 0; x < clipboard.width; ++x) {
+                        const xi = x + xs;
+                        if (xi < 0 || xi >= this.getGridSize) {
+                            continue;
+                        }
+                        aUndo.push(this.getCellStruct(xi, yi));
+                        this.invalidateRect(xi, yi, xi + clipboard.width - 1, yi + clipboard.height - 1);
+                        await this.setGridCell({
+                            x: xi,
+                            y: yi,
+                            floor: 0,
+                            block: clipboard.cells[i].block
+                        });
+                        await this.setGridCell({
+                            x: xi,
+                            y: yi,
+                            floor: 1,
+                            block: clipboard.cells[i].upperblock
+                        });
+                        ++i;
+                    }
+                }
+                await this.pushUndo({undo: aUndo});
+                this.$nextTick(() => this.redraw());
+            },
+
+            clearClick: async function() {
+                const xy = [];
+                const aUndo = [];
+                this.iterateSelection((x, y) => {
+                    aUndo.push(this.getCellStruct(x, y));
+                    this.invalidateRect(x, y, x, y);
+                    xy.push({x, y})
+                });
+                await this.setGridCells({
+                    xy, floor: this.selectedFloor, block: null
+                });
+                await this.pushUndo({undo: aUndo});
+                this.$nextTick(() => this.redraw());
+            },
+
+            keydownEvent: function(event) {
+                switch (event.key) {
+                    case 'F5':
+                        return;
+                }
+                event.preventDefault();
+                event.stopPropagation();
+
+                console.log(event.ctrlKey);
+                const key = (event.ctrlKey ? 'ctrl-' : '') + event.key;
+
+                switch (key) {
+                    case 'ctrl-c':
+                        this.copyClick();
+                        break;
+
+                    case 'ctrl-v':
+                        this.pasteClick();
+                        break;
+
+                    case 'ctrl-z':
+                        this.undo();
+                        break;
+
+                    case 'ctrl-o':
+                        this.loadClick();
+                        break;
+
+                    case 'ctrl-s':
+                        this.saveClick();
+                        break;
+                }
             }
         },
 
@@ -648,6 +814,7 @@
             this.gridRenderer.events.on('paint', this.paintEvent);
             this.$nextTick(function () {
                 window.addEventListener('resize', this.resizeEvent);
+                document.addEventListener('keydown', this.keydownEvent);
                 this.resizeEvent();
                 this.redraw();
             });
@@ -656,6 +823,7 @@
 
         beforeDestroy: function () {
             window.removeEventListener('resize', this.resizeEvent);
+            document.removeEventListener('keydown', this.keydownEvent);
             this.gridRenderer.events.removeListener('paint', this.paintEvent);
         }
     }
