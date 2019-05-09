@@ -72,6 +72,7 @@ function ornateDoorIcon(c, phys, w, h) {
     let hBottom = h - hTop;
 
     c.strokeStyle = 'rgb(0, 255, 96)';
+    c.lineWidth = 3;
     c.strokeRect(1, 1, w - 2, h - 2);
     c.beginPath();
 
@@ -240,11 +241,14 @@ export async function render(oCanvas, phys, faces) {
 
         case CONSTS.PHYS_WALL:
         case CONSTS.PHYS_INVISIBLE_BLOCK:
-            c.strokeStyle = 'rgb(255, 128, 0)';
+            c.lineWidth = 3;
+            c.strokeStyle = 'rgb(255, 64, 64)';
             c.strokeRect(1, 1, w - 2, h - 2);
+            c.strokeRect(5, 5, w - 10, h - 10);
             break;
 
         case CONSTS.PHYS_TRANSPARENT_BLOCK:
+            c.lineWidth = 3;
             c.strokeStyle = 'rgb(255, 0, 255)';
             c.strokeRect(1, 1, w - 2, h - 2);
             c.beginPath();
@@ -267,6 +271,7 @@ export async function render(oCanvas, phys, faces) {
             break;
 
         case CONSTS.PHYS_SECRET_BLOCK:
+            c.lineWidth = 3;
             c.strokeStyle = 'rgb(255, 255, 0)';
             c.strokeRect(1, 1, w - 2, h - 2);
             c.beginPath();
@@ -280,6 +285,7 @@ export async function render(oCanvas, phys, faces) {
             break;
 
         case CONSTS.PHYS_OFFSET_BLOCK:
+            c.lineWidth = 3;
             c.strokeStyle = 'rgb(255, 128, 0)';
             c.strokeRect(1, 1, w - 2, h - 2);
             c.beginPath();

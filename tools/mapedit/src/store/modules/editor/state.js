@@ -160,6 +160,7 @@ export default {
                 x2: -1,
                 y2: -1
             },
+            undo: []
         }
     },
 

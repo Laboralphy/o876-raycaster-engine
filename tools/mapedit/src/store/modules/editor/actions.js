@@ -14,5 +14,9 @@ export default {
 
     [ACTION.SELECT_REGION]: function({commit}, {x1, y1, x2, y2}) {
         commit(MUTATION.SELECT_REGION, {x1, y1, x2, y2});
+    },
+
+    [ACTION.POP_UNDO]: function({commit}) {
+        commit(MUTATION.POP_UNDO);
     }
 }

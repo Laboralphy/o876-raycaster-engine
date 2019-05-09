@@ -169,6 +169,21 @@ export default {
             default:
                 throw new Error('setting cell block : this floor is invalid ' + floor);
         }
+    },
+
+    [ACTION.SET_GRID_CELLS]: ({commit}, {xy, floor, block}) => {
+        switch (floor) {
+            case 0:
+                xy.forEach(({x, y}) => commit(MUTATION.SET_CELL_BLOCK, {x, y, value: block}));
+                break;
+
+            case 1:
+                xy.forEach(({x, y}) => commit(MUTATION.SET_CELL_UPPER_BLOCK, {x, y, value: block}));
+                break;
+
+            default:
+                throw new Error('setting cell block : this floor is invalid ' + floor);
+        }
     }
 
 }

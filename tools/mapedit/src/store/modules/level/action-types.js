@@ -17,5 +17,7 @@ export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
 
 export const SET_GRID_CELL = 'SET_GRID_CELL';
+export const SET_GRID_CELLS = 'SET_GRID_CELLS';
+
 
 

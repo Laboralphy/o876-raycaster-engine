@@ -112,6 +112,16 @@
 
             </Siblings>
 
+            <MyButton
+                    title="Undo"
+                    @click="undo"
+            >
+                <UndoIcon
+                        title="Undo"
+                        decorative>
+                </UndoIcon>
+            </MyButton>
+
         </template>
         <div ref="scrollzone" class="canvas-container" :style="'width: ' + containerWidth + 'px'">
             <canvas
@@ -130,6 +140,7 @@
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import * as LEVEL_MUTATION from '../store/modules/level/mutation-types';
+    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -151,6 +162,7 @@
     import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
     import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
     import BlockCache from "../libraries/block-cache";
+    import UndoIcon from "vue-material-design-icons/Undo.vue";
 
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
@@ -159,6 +171,7 @@
     export default {
         name: "LevelGrid",
         components: {
+            UndoIcon,
             ArrowDownBoldIcon,
             ArrowUpBoldIcon,
             PencilIcon,
@@ -188,6 +201,7 @@
             ...editorMapGetters([
                 'getLevelGridSelectedRegion',
                 'getBlockBrowserSelected',
+                'getLevelGridTopMostUndo'
             ]),
 
             getCellSize: function () {
@@ -221,25 +235,39 @@
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
                 saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 setGridCell: LEVEL_ACTION.SET_GRID_CELL,
+                setGridCells: LEVEL_ACTION.SET_GRID_CELLS,
             }),
 
 
             ...editorMapActions({
                 setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
                 selectRegion: EDITOR_ACTION.SELECT_REGION,
+                popUndo: EDITOR_ACTION.POP_UNDO
             }),
 
             ...levelMapMutation({
                 defineBlock: LEVEL_MUTATION.DEFINE_BLOCK
             }),
 
+
+            ...editorMapMutations({
+                selectBlock: EDITOR_MUTATION.BLOCKBROWSER_SET_SELECTED,
+                pushUndo: EDITOR_MUTATION.PUSH_UNDO
+            }),
+
             selectTool: function ({index}) {
-                console.log('tool is now', index);
                 this.selectedTool = index;
+                switch (index) {
+                    case 0:
+                        // déselect texture
+                        this.selectBlock({value: null});
+                        break;
+                }
             },
 
             selectFloor: function ({index}) {
                 this.selectedFloor = index;
+                this.redraw();
             },
 
             invalidateRect: function (x1, y1, x2, y2) {
@@ -294,12 +322,13 @@
                 switch (sMask) {
                     case '':
                     case 'T':
-                        // rien : pas de block
+                        // Aucun block n'a été défini : on ne doit rien dessiner
                         break;
 
                     case 'L':
-                        // seul le lower block est défini, et on a selectionné le lower level pour edition
-                        // on doit dessiner le lower block sur toute la surface, en opacité normale
+                        // Block inférieur présent, block supérieur absent
+                        // on agit actuellement sur l'étage inférieur
+                        // on doit dessiner le block inférieur sur toute la surface, en opacité 1
                         if (!!oLowerCvs) {
                             ctx.drawImage(
                                 oLowerCvs,
@@ -315,9 +344,32 @@
                         }
                         break;
 
+                    case 'TL':
+                        // Block inférieur présent, block supérieur absent
+                        // on agit actuellement sur l'étage supérieur
+                        // on doit dessiner le block inférieur sur toute la surface, en opacité 0.5
+                        if (!!oLowerCvs) {
+                            const f = ctx.globalAlpha;
+                            ctx.globalAlpha = 0.5;
+                            ctx.drawImage(
+                                oLowerCvs,
+                                0,
+                                0,
+                                oLowerCvs.width,
+                                oLowerCvs.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+                            ctx.globalAlpha = f;
+                        }
+                        break;
+
                     case 'U':
-                        // seul le upper block est défini, et on a selectionné le lower level pour edition
-                        // on doit déssiner le upper block sur la moitié haute, et en opacité 0.5
+                        // Block inférieur absent, block supérieur présent
+                        // on agit actuellement sur l'étage inférieur
+                        // on doit dessiner le upper block sur la moitié haute, en opacité 0.5
                         if (!!oUpperCvs) {
                             const f = ctx.globalAlpha;
                             ctx.globalAlpha = 0.5;
@@ -336,9 +388,10 @@
                         }
                         break;
 
-                    case 'UT':
-                        // que le upper, edité
-                        // on doit desiner le upper block en haut, et en opacité 1
+                    case 'TU':
+                        // Block inférieur absent, block supérieur présent
+                        // on agit actuellement sur l'étage supérieur
+                        // on doit dessiner le upper block sur la moitié haute, en opacité 1
                         if (!!oUpperCvs) {
                             ctx.drawImage(
                                 oUpperCvs,
@@ -354,9 +407,10 @@
                         }
                         break;
 
-                    case 'LU':
-                        // les deux blocks définis mais on edite le lower
-                        // on doit dessiner les deux blocks , seul le lower est à opacité 1, l'autre est à opacité 0.5
+                    case 'UL':
+                        // Blocks inférieur et supérieur présents
+                        // on doit dessiner les deux blocks,
+                        // seul le block inférieur est à opacité 1, l'autre est à opacité 0.5
                         if (!!oUpperCvs) {
                             const f = ctx.globalAlpha;
                             ctx.globalAlpha = 0.5;
@@ -390,9 +444,10 @@
                         }
                         break;
 
-                    case 'LUT':
-                        // les deux blocks défini mais on edite le upper
-                        // on doit dessiner les deux block , seul le upper est à opacité 1, l'autre est à opacité 0.5
+                    case 'TUL':
+                        // Blocks inférieur et supérieur présents
+                        // on doit dessiner les deux blocks,
+                        // seul le block supérieur est à opacité 1, l'autre est à opacité 0.5
                         if (!!oUpperCvs) {
                             if (!!oUpperCvs) {
                                 ctx.drawImage(
@@ -445,6 +500,28 @@
             },
 
 
+            undo: async function() {
+                const aUndoStruct = this.getLevelGridTopMostUndo;
+                for (let i = 0, l = aUndoStruct.length; i < l; ++i) {
+                    const u = aUndoStruct[i];
+                    await this.setGridCell({
+                        x: u.x,
+                        y: u.y,
+                        floor: 0,
+                        block: u.block
+                    });
+                    await this.setGridCell({
+                        x: u.x,
+                        y: u.y,
+                        floor: 1,
+                        block: u.upperblock
+                    });
+                }
+                await this.popUndo();
+                this.$nextTick(() => this.redraw());
+            },
+
+
             resizeEvent() {
                 this.$nextTick(() => {
                     const oCanvas = this.$refs.levelgrid;
@@ -487,17 +564,22 @@
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
                 if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
-                    console.log({x: xc, y: yc, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
                     const oPrevRegion = this.getLevelGridSelectedRegion;
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                    const aUndoStruct = [];
+                    const aList = [];
                     this.modifications.iterate((cx, cy) => {
-                        this.setGridCell({
+                        aList.push({x: cx, y: cy});
+                        const cell = this.getGrid[cy][cx];
+                        aUndoStruct.push({
                             x: cx,
                             y: cy,
-                            floor: this.selectedFloor,
-                            block: this.getBlockBrowserSelected
+                            block: cell.block,
+                            upperblock: cell.upperblock
                         });
                     });
+                    this.pushUndo({undo: aUndoStruct});
+                    this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
                     this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
                     this.redraw();
                 }

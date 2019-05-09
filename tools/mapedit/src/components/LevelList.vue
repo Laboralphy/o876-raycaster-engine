@@ -3,8 +3,8 @@
             caption="Open level"
     >
         <template v-slot:toolbar>
-            <MyButton><FolderOpenIcon decorative></FolderOpenIcon> Open</MyButton>
-            <MyButton><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
+            <MyButton :disabled="!selectedLevel" @click="loadAndExit"><FolderOpenIcon decorative></FolderOpenIcon> Open</MyButton>
+            <MyButton :disabled="!selectedLevel" @click="deleteLevel"><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -15,6 +15,7 @@
                     :preview="l.preview"
                     :selected="l.name === selectedLevel"
                     @click="() => onClick(l.name)"
+                    @dblclick="() => onDblClick(l.name)"
             ></LevelThumbnail>
         </div>
     </Window>
@@ -61,11 +62,23 @@
                 loadLevel: LEVEL_ACTION.LOAD_LEVEL
             }),
 
-            onClick: async function(name) {
-                this.selectedLevel = name;
-                await this.loadLevel({name});
+            loadAndExit: async function() {
+                await this.loadLevel({name: this.selectedLevel});
                 await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
                 this.$router.push('/');
+            },
+
+            onClick: function(name) {
+                this.selectedLevel = name;
+            },
+
+            onDblClick: function(name) {
+                this.onClick(name);
+                this.loadAndExit(name);
+            },
+
+            deleteLevel: function() {
+                alert('not yet implemented');
             }
 
         },

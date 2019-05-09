@@ -39,5 +39,15 @@ export default {
         state.statusBar.content = text;
     },
 
+    [MUTATION.PUSH_UNDO]: (state, {undo}) => {
+        const u = state.models.levelGrid.undo;
+        u.push(undo);
+        while (u.length > 16) {
+            u.shift();
+        }
+    },
 
+    [MUTATION.POP_UNDO]: state => {
+        state.models.levelGrid.undo.pop();
+    }
 }
