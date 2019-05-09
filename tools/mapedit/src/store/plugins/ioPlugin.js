@@ -3,6 +3,7 @@ import * as EDITOR_MUTATION from '../modules/editor/mutation-types';
 import * as LEVEL_ACTION from '../modules/level/action-types';
 import * as LEVEL_MUTATION from '../modules/level/mutation-types';
 import * as CONSTS from '../../consts';
+import CACHE from '../../libraries/block-cache';
 
 export default store => {
 

@@ -2,6 +2,7 @@ import * as MUTATION from '../modules/level/mutation-types';
 import * as CONSTS from '../../consts';
 import {render} from '../../libraries/block-renderer';
 import CanvasHelper from "../../../../../src/canvas-helper";
+import CACHE from '../../libraries/block-cache';
 
 export default store => {
 
@@ -26,6 +27,7 @@ export default store => {
             // calculer le block rendu
             render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), payload.phys, oFaces).then(oCanvas => {
                 const sSrc = CanvasHelper.getData(oCanvas);
+                CACHE.store(payload.id, oCanvas);
                 store.commit('level/' + MUTATION.SET_BLOCK_PREVIEW, {id: payload.id, content: sSrc});
             });
         }

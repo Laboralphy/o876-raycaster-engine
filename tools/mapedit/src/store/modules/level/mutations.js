@@ -135,6 +135,7 @@ export default {
                 while (row.length < size) {
                     row.push({
                         block: 0,
+                        upperblock: 0,
                         tag: '',
                         mark: {
                             color: 0,

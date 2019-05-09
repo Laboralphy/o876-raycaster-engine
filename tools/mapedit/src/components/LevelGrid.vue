@@ -129,7 +129,7 @@
 <script>
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_MUTATION from '../store/modules/level/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -150,10 +150,10 @@
     import PencilIcon from "vue-material-design-icons/Pencil.vue";
     import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
     import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
-    import CanvasHelper from "../../../../src/canvas-helper";
+    import BlockCache from "../libraries/block-cache";
 
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
@@ -181,7 +181,8 @@
         computed: {
             ...levelMapGetters([
                 'getGridSize',
-                'getGrid'
+                'getGrid',
+                'getBlocks'
             ]),
 
             ...editorMapGetters([
@@ -221,7 +222,7 @@
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
                 saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 loadLevel: LEVEL_ACTION.LOAD_LEVEL,
-                setGridCell: LEVEL_ACTION.SET_GRID_CELL
+                setGridCell: LEVEL_ACTION.SET_GRID_CELL,
             }),
 
 
@@ -230,7 +231,9 @@
                 selectRegion: EDITOR_ACTION.SELECT_REGION,
             }),
 
-
+            ...levelMapMutation({
+                defineBlock: LEVEL_MUTATION.DEFINE_BLOCK
+            }),
 
             selectTool: function({index}) {
                 console.log('tool is now', index);
@@ -261,7 +264,186 @@
                 }
             },
 
+            /**
+             * Reconstruit le cache de canvas permettant un rendu rapide de la grille
+             */
+            rebuildCache: function() {
+                this.getBlocks.forEach(b => this.defineBlock({data: b}));
+            },
 
+
+            /**
+             * this function is called for each redrawing cell
+             * @param x {number} cell coordinate (x)
+             * @param y {number} cell coordinate (y)
+             * @param canvas {HTMLCanvasElement} a canvas, the siez of a cell
+             * @param cell {*} cell data
+             */
+            paintEvent: async function({x, y, canvas, cell}) {
+                const ctx = canvas.getContext('2d');
+                const w = canvas.width;
+                const h = canvas.height;
+
+                const sMask = (this.selectedFloor == 1 ? 'T' : '') +
+                    (!!cell.upperblock ? 'U' : '') +
+                    (!!cell.block ? 'L' : '');
+
+                let oLowerCvs = null;
+                let oUpperCvs = null;
+
+                if (!!cell.block) {
+                    oLowerCvs = BlockCache.load(cell.block);
+                }
+
+                if (!!cell.upperblock) {
+                    oUpperCvs = BlockCache.load(cell.upperblock);
+                }
+
+
+                switch (sMask) {
+                    case '':
+                    case 'T':
+                        // rien : pas de block
+                        break;
+
+                    case 'L':
+                        // seul le lower block est défini, et on a selectionné le lower level pour edition
+                        // on doit dessiner le lower block sur toute la surface, en opacité normale
+                        if (!!oLowerCvs) {
+                            ctx.drawImage(
+                                oLowerCvs,
+                                0,
+                                0,
+                                oLowerCvs.width,
+                                oLowerCvs.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height
+                            );
+                        }
+                        break;
+
+                    case 'U':
+                        // seul le upper block est défini, et on a selectionné le lower level pour edition
+                        // on doit déssiner le upper block sur la moitié haute, et en opacité 0.5
+                        if (!!oUpperCvs) {
+                            const f = ctx.globalAlpha;
+                            ctx.globalAlpha = 0.5;
+                            ctx.drawImage(
+                                oUpperCvs,
+                                0,
+                                0,
+                                oUpperCvs.width,
+                                oUpperCvs.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height >> 1
+                            );
+                            ctx.globalAlpha = f;
+                        }
+                        break;
+
+                    case 'UT':
+                        // que le upper, edité
+                        // on doit desiner le upper block en haut, et en opacité 1
+                        if (!!oUpperCvs) {
+                            ctx.drawImage(
+                                oUpperCvs,
+                                0,
+                                0,
+                                oUpperCvs.width,
+                                oUpperCvs.height,
+                                0,
+                                0,
+                                canvas.width,
+                                canvas.height >> 1
+                            );
+                        }
+                        break;
+
+                    case 'LU':
+                        // les deux blocks définis mais on edite le lower
+                        // on doit dessiner les deux blocks , seul le lower est à opacité 1, l'autre est à opacité 0.5
+                        if (!!oUpperCvs) {
+                            const f = ctx.globalAlpha;
+                            ctx.globalAlpha = 0.5;
+                            if (!!oUpperCvs) {
+                                ctx.drawImage(
+                                    oUpperCvs,
+                                    0,
+                                    0,
+                                    oUpperCvs.width,
+                                    oUpperCvs.height,
+                                    0,
+                                    0,
+                                    canvas.width,
+                                    canvas.height >> 1
+                                );
+                            }
+                            ctx.globalAlpha = f;
+                        }
+                        if (!!oLowerCvs) {
+                            ctx.drawImage(
+                                oLowerCvs,
+                                0,
+                                0,
+                                oLowerCvs.width,
+                                oLowerCvs.height,
+                                0,
+                                canvas.height >> 1,
+                                canvas.width,
+                                canvas.height >> 1
+                            );
+                        }
+                        break;
+
+                    case 'LUT':
+                        // les deux blocks défini mais on edite le upper
+                        // on doit dessiner les deux block , seul le upper est à opacité 1, l'autre est à opacité 0.5
+                        if (!!oUpperCvs) {
+                            if (!!oUpperCvs) {
+                                ctx.drawImage(
+                                    oUpperCvs,
+                                    0,
+                                    0,
+                                    oUpperCvs.width,
+                                    oUpperCvs.height,
+                                    0,
+                                    0,
+                                    canvas.width,
+                                    canvas.height >> 1
+                                );
+                            }
+                        }
+                        if (!!oLowerCvs) {
+                            const f = ctx.globalAlpha;
+                            ctx.globalAlpha = 0.5;
+                            ctx.drawImage(
+                                oLowerCvs,
+                                0,
+                                0,
+                                oLowerCvs.width,
+                                oLowerCvs.height,
+                                0,
+                                canvas.height >> 1,
+                                canvas.width,
+                                canvas.height >> 1
+                            );
+                            ctx.globalAlpha = f;
+                        }
+                        break;
+                }
+
+                // peinture selection
+                const {x1, y1, x2, y2} = this.getLevelGridSelectedRegion;
+                const bSelected = x >= x1 && x <= x2 && y >= y1 && y <= y2;
+                if (bSelected) {
+                    ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
+                    ctx.fillRect(0, 0, w, h);
+                }
+            },
 
             redraw: function() {
                 const a = this.modifications.toArray();
@@ -313,7 +495,6 @@
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
-                console.log({xc, yc, tool: this.selectedTool, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
                 if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
                     console.log({x: xc, y: yc, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
                     const oPrevRegion = this.getLevelGridSelectedRegion;
@@ -338,67 +519,6 @@
                         this.invalidateRect(this.select.x, this.select.y, xc, yc);
                         this.redraw();
                     }
-                }
-            },
-
-            /**
-             * this function is called for each redrawing cell
-             * @param x {number} cell coordinate (x)
-             * @param y {number} cell coordinate (y)
-             * @param canvas {HTMLCanvasElement} a canvas, the siez of a cell
-             * @param cell {*} cell data
-             */
-            paintEvent: async function({x, y, canvas, cell}) {
-                const ctx = canvas.getContext('2d');
-                const w = canvas.width;
-                const h = canvas.height;
-
-                const sMask = (this.selectedFloor == 1 ? 'T' : '') +
-                    (!!cell.upperblock ? 'U' : '') +
-                    (!!cell.block ? 'L' : '');
-
-                //const oLowerCvs = !!cell.block ? CanvasHelper.loadCanvas()
-
-                switch (sMask) {
-                    case '':
-                    case 'T':
-                        // rien : pas de block
-                        break;
-
-                    case 'L':
-                        // seul le lower block est définit, et edité
-                        // on doit dessiner le lower block sur toute la surface, en opacité normale
-
-                        break;
-
-                    case 'U':
-                        // seul le upper block est défini, et non edité
-                        // on doit déssiner le upper block sur la moitié haute, et en opacité 0.5
-                        break;
-
-                    case 'UT':
-                        // que le upper, edité
-                        // o doit desiner le upper block en haut, et en opacité 1
-                        break;
-
-                    case 'LU':
-                        // les deux blocks définis mais on edite le lower
-                        // on doit dessiner les deux block , seul le lower est à opacité 1, l'autre est à opacité 0.5
-                        break;
-
-                    case 'LUT':
-                        // les deux blocks défini mais on edite le upper
-                        // on doit dessiner les deux block , seul le upper est à opacité 1, l'autre est à opacité 0.5
-                        break;
-
-                }
-
-                // peinture selection
-                const {x1, y1, x2, y2} = this.getLevelGridSelectedRegion;
-                const bSelected = x >= x1 && x <= x2 && y >= y1 && y <= y2;
-                if (bSelected) {
-                    ctx.fillStyle = 'rgba(0, 0, 255, 0.5)';
-                    ctx.fillRect(0, 0, w, h);
                 }
             },
 
@@ -451,6 +571,7 @@
             this.$nextTick(function() {
                 window.addEventListener('resize', this.resizeEvent);
                 this.resizeEvent();
+                this.rebuildCache();
                 this.redraw();
             });
 
