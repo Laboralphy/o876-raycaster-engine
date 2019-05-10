@@ -26,5 +26,27 @@ export default {
 
     getGrid: state => state.grid,
     getGridSize: state => state.grid.length,
-    getLevel: state => state
+    getLevel: state => state,
+
+    // EN CONJONCTION AVEC LE NAMESPACE EDITOR //
+
+    getHighlightedTags: (state, getters, rootGetters) => {
+        const sr = rootGetters['editor/getLevelGridSelectedRegion'];
+        console.log(sr);
+        if (!sr) {
+            return [];
+        }
+        if (sr.x1 < 0) {
+            return [];
+        }
+        const tags = ['x'];
+        for (let y = sr.y1; y <= sr.y2; ++y) {
+            for (let x = sr.x1; x <= sr.x2; ++x) {
+                const cell = getters.getGrid[y][x];
+                tags.push(...cell.tags);
+            }
+        }
+        console.log(tags);
+        return tags;
+    }
 }

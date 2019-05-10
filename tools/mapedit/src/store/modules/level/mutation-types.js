@@ -10,7 +10,9 @@ export const DESTROY_BLOCK = 'DESTROY_BLOCK';
 
 export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 export const SET_CELL_BLOCK = 'SET_CELL_BLOCK';
-export const SET_CELL_TAG = 'SET_CELL_TAG';
+export const SET_CELL_TAGS = 'SET_CELL_TAGS';
+export const ADD_CELL_TAG = 'ADD_CELL_TAG';
+export const REMOVE_CELL_TAG = 'REMOVE_CELL_TAG';
 export const SET_CELL_MARK = 'SET_CELL_MARK';
 export const SET_CELL_THING = 'SET_CELL_THING';
 export const SET_CELL_UPPER_BLOCK = 'SET_CELL_UPPER_BLOCK';

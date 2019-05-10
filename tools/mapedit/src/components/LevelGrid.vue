@@ -776,6 +776,14 @@
             },
 
             keydownEvent: function(event) {
+                const oActive = document.activeElement;
+                const tag = oActive.tagName.toLowerCase();
+                switch (tag) {
+                    case 'input':
+                    case 'textarea':
+                    case 'select':
+                        return;
+                }
                 switch (event.key) {
                     case 'F5':
                         return;

@@ -1,11 +1,11 @@
 const TagGrid = require('../src/tag-grid').default;
 
-describe('#tag-grid', function() {
+describe('#tags-grid', function() {
     it('should work 1', function() {
         const tg = new TagGrid();
         tg.setWidth(10);
         tg.setHeight(10);
-        let id = tg.addTag(0, 0, 'the first tag');
+        let id = tg.addTag(0, 0, 'the first tags');
         expect(id).toBe(1);
         expect(tg.cell(0, 0)).toEqual(new Set([1]));
     });
@@ -14,12 +14,12 @@ describe('#tag-grid', function() {
         const tg = new TagGrid();
         tg.setWidth(10);
         tg.setHeight(10);
-        let id1 = tg.addTag(4, 0, 'the first tag');
-        let id2 = tg.addTag(4, 0, 'the second tag');
+        let id1 = tg.addTag(4, 0, 'the first tags');
+        let id2 = tg.addTag(4, 0, 'the second tags');
         expect(id1).toBe(1);
         expect(id2).toBe(2);
         expect(tg.cell(4, 0)).toEqual(new Set([1, 2]));
-        let id3 = tg.addTag(4, 0, 'the second tag');
+        let id3 = tg.addTag(4, 0, 'the second tags');
         expect(id3).toBe(2);
         expect(tg.cell(4, 0)).toEqual(new Set([1, 2]));
         tg.removeTag(4, 0, 1);

@@ -12,8 +12,17 @@ export default {
         commit(MUTATION.SET_STATUSBAR_TEXT, {text});
     },
 
-    [ACTION.SELECT_REGION]: function({commit}, {x1, y1, x2, y2}) {
+    [ACTION.SELECT_REGION]: function({commit, getters, rootGetters}, {x1, y1, x2, y2}) {
         commit(MUTATION.SELECT_REGION, {x1, y1, x2, y2});
+        const sr = getters.getLevelGridSelectedRegion;
+        const tags = ['x'];
+        for (let y = sr.y1; y < sr.y2; ++y) {
+            for (let x = sr.x1; x < sr.x2; ++x) {
+                const cell = rootGetters['level/getGrid'][y][x];
+                tags.push(...cell.tags);
+            }
+        }
+        commit(MUTATION.SET_HIGHLIGHTED_TAGS, {tags});
     },
 
     [ACTION.POP_UNDO]: function({commit}) {

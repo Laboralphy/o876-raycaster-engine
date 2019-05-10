@@ -9,15 +9,16 @@ import './styles/base.css';
 import './styles/o876structure/o876structure.css';
 import 'vue-material-design-icons/styles.css';
 
-import './'
-
 import LevelGrid from "./components/LevelGrid.vue";
 import TileLoader from "./components/TileLoader.vue";
 import TileBrowser from "./components/TileBrowser.vue";
+import TagManager from "./components/TagManager.vue";
 import AnimationBuilder from "./components/AnimationBuilder.vue";
 import BlockBuilder from "./components/BlockBuilder.vue";
 import BlockBrowser from "./components/BlockBrowser.vue";
 import LevelList from "./components/LevelList.vue";
+import MainSplash from "./components/MainSplash.vue";
+import MainSide from "./components/MainSide.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -27,6 +28,34 @@ function createApplication() {
     const routes = [
         {
             path: "/",
+            components: {
+                default: MainSplash,
+                side: MainSide
+            }
+        },
+        {
+            path: "/level/blocks",
+            components: {
+                default: LevelGrid,
+                side: BlockBrowser
+            }
+        },
+        {
+            path: "/level/things",
+            components: {
+                default: LevelGrid,
+                side: BlockBrowser
+            }
+        },
+        {
+            path: "/level/tags",
+            components: {
+                default: LevelGrid,
+                side: TagManager
+            }
+        },
+        {
+            path: "/level/marks",
             components: {
                 default: LevelGrid,
                 side: BlockBrowser

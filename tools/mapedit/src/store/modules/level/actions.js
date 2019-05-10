@@ -119,8 +119,8 @@ export default {
                     commit(MUTATION.SET_CELL_UPPER_BLOCK, {x, y, value});
                     break;
 
-                case 'tag':
-                    commit(MUTATION.SET_CELL_TAG, {x, y, value});
+                case 'tags':
+                    commit(MUTATION.SET_CELL_TAGS, {x, y, value});
                     break;
 
                 case 'mark': {
@@ -134,6 +134,14 @@ export default {
                     break;
             }
         }
+    },
+
+    [ACTION.ADD_CELL_TAG]: ({commit}, {x, y, value}) => {
+        commit(MUTATION.ADD_CELL_TAG, {x, y, value});
+    },
+
+    [ACTION.REMOVE_CELL_TAG]: ({commit}, {x, y, value}) => {
+        commit(MUTATION.REMOVE_CELL_TAG, {x, y, value});
     },
 
     [ACTION.SAVE_LEVEL]: async ({commit, getters}, {name}) => {

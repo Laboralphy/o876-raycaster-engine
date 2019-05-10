@@ -52,4 +52,6 @@ export default {
     },
 
     [MUTATION.SET_LEVEL_NAME]: (state, {name}) => state.levelName = name,
+
+    [MUTATION.SET_HIGHLIGHTED_TAGS]: (state, {tags}) => state.models.levelGrid.hltags = tags
 }

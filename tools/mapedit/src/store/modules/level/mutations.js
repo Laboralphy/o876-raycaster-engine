@@ -136,7 +136,7 @@ export default {
                     row.push({
                         block: 0,
                         upperblock: 0,
-                        tag: '',
+                        tags: [],
                         mark: {
                             color: 0,
                             shape: 0
@@ -158,11 +158,26 @@ export default {
         }
     },
 
-    [MUTATION.SET_CELL_TAG]: (state, {x, y, value}) => {
+    [MUTATION.SET_CELL_TAGS]: (state, {x, y, value}) => {
         const cell = state.grid[y][x];
-        if (cell.tag !== value) {
+        cell.modified = true;
+        cell.tags = value;
+    },
+
+    [MUTATION.ADD_CELL_TAG]: (state, {x, y, value}) => {
+        const cell = state.grid[y][x];
+        if (cell.tags.indexOf(value) < 0) {
             cell.modified = true;
-            cell.tag = value;
+            cell.tags.push(value);
+        }
+    },
+
+    [MUTATION.REMOVE_CELL_TAG]: (state, {x, y, value}) => {
+        const cell = state.grid[y][x];
+        const iTag = cell.tags.indexOf(value);
+        if (iTag >= 0) {
+            cell.modified = true;
+            cell.tags.splice(iTag, 1);
         }
     },
 

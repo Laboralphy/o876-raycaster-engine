@@ -161,6 +161,7 @@ export default {
                 y2: -1
             },
             undo: [],
+            hltags: [],
         }
     },
 
