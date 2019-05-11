@@ -67,7 +67,7 @@
                 await this.loadLevel({name: this.selectedLevel});
                 await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
                 await this.setLevelName({name: this.selectedLevel});
-                this.$router.push('/');
+                this.$router.push('/level/blocks');
             },
 
             onClick: function(name) {

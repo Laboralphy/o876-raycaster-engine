@@ -25,7 +25,10 @@ export default {
 
     getBlockBrowserSelected: state => state.models.blockBrowser.selected,
 
+    getSomethingHasChanged: state => state.somethingHasChanged,
+
     getLevelGridSelectedRegion: state => state.models.levelGrid.selectedRegion,
+    isLevelGridRegionSelected: state => !!state.models.levelGrid.selectedRegion && state.models.levelGrid.selectedRegion.x1 >= 0,
     getLevelGridTopMostUndo: state => state.models.levelGrid.undo.length > 0 ? state.models.levelGrid.undo[state.models.levelGrid.undo.length - 1] : [],
     getHighLightedTags: state => state.models.levelGrid.hltags,
     getLevelList: state => state.levelList,

@@ -6,6 +6,7 @@
             <Siblings @input="({index}) => selectTileFamily(index)">
                 <SiblingButton title="Display project wall tiles" :default="true"><WallIcon title="Display project wall tiles" decorative></WallIcon></SiblingButton>
                 <SiblingButton title="Display project flat tiles"><ViewGridIcon title="Display project flat tiles" decorative></ViewGridIcon></SiblingButton>
+                <SiblingButton title="Display project sprite tiles"><ChessRookIcon title="Display project sprite tiles" decorative></ChessRookIcon></SiblingButton>
             </Siblings>
             <MyButton title="Delete the selected tiles" @click="deleteClick"><DeleteIcon title="Delete the selected tiles" decorative></DeleteIcon></MyButton>
         </template>
@@ -39,6 +40,21 @@
                     @selected="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
+        <div v-if="selectedFamily === CONSTS.TILE_TYPE_SPRITE">
+            <Tile
+                    v-for="image in getSpriteTiles"
+                    :content="image.content"
+                    :width="96"
+                    :height="96"
+                    :key="image.id"
+                    :tile="image.id"
+                    :anim="!!image.animation"
+                    :draggable="true"
+                    :dropzone="true"
+                    @drop="({incoming}) => handleDrop(image.id, incoming)"
+                    @selected="({value}) => setTileSelection(image.id, value)"
+            ></Tile>
+        </div>
     </Window>
 </template>
 
@@ -56,12 +72,14 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import ContentDuplicateIcon from "vue-material-design-icons/ContentDuplicate.vue";
     import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
+    import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "TileBrowser",
         components: {
+            ChessRookIcon,
             AnimationPlayIcon,
             ContentDuplicateIcon,
             DeleteIcon,
@@ -81,6 +99,9 @@
                 }, {
                     id: CONSTS.TILE_TYPE_FLAT,
                     caption: 'Flats'
+                }, {
+                    id: CONSTS.TILE_TYPE_SPRITE,
+                    caption: 'Sprites'
                 }],
 
                 selectedFamily: CONSTS.TILE_TYPE_WALL,
@@ -93,15 +114,23 @@
             ...levelMapGetters([
                 'getWallTiles',
                 'getFlatTiles',
+                'getSpriteTiles',
                 'getTileWidth',
                 'getTileHeight',
                 'getTile'
             ]),
 
             getTitle: function() {
-                return this.selectedFamily === CONSTS.TILE_TYPE_WALL
-                    ? 'Wall Tile browser - ' + this.getWallTiles.length + ' tile' + this.pluralWallTiles
-                    : 'Flat Tile browser - ' + this.getFlatTiles.length + ' tile' + this.pluralFlatTiles
+                switch (this.selectedFamily) {
+                    case CONSTS.TILE_TYPE_WALL:
+                        return 'Wall Tile browser - ' + this.getWallTiles.length + ' tile' + this.pluralWallTiles;
+
+                    case CONSTS.TILE_TYPE_FLAT:
+                        return 'Flat Tile browser - ' + this.getFlatTiles.length + ' tile' + this.pluralFlatTiles;
+
+                    case CONSTS.TILE_TYPE_SPRITE:
+                        return 'Sprite Tile browser - ' + this.getSpriteTiles.length + ' tile' + this.pluralSpriteTiles;
+                }
             },
 
             pluralWallTiles: function() {
@@ -110,6 +139,10 @@
 
             pluralFlatTiles: function() {
                 return this.getFlatTiles.length > 1 ? 's' : '';
+            },
+
+            pluralSpriteTiles: function() {
+                return this.getSpriteTiles.length > 1 ? 's' : '';
             },
 
             areSomeTileSelected: function() {
@@ -148,6 +181,10 @@
 
                     case 1:
                         this.selectedFamily = CONSTS.TILE_TYPE_FLAT;
+                        break;
+
+                    case 2:
+                        this.selectedFamily = CONSTS.TILE_TYPE_SPRITE;
                         break;
                 }
             },

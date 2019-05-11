@@ -162,9 +162,12 @@ export default {
             },
             undo: [],
             hltags: [],
-        }
+        },
+
+        tagManager: {}
     },
 
+    somethingHasChanged: false,
 
     levelName: '',
 

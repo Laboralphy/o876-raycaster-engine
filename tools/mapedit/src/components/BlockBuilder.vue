@@ -284,7 +284,7 @@
                     c: this.getBlockBuilderFaceCeiling
                 };
                 this.createBlock(data);
-                this.$router.push('/');
+                this.$router.push('/level/blocks');
             },
 
             /**
@@ -302,7 +302,7 @@
                     c: this.getBlockBuilderFaceCeiling
                 };
                 this.modifyBlock(data);
-                this.$router.push('/');
+                this.$router.push('/level/blocks');
                 this[MUTATION.BLOCKBUILDER_SET_ID]({value: null});
             },
 

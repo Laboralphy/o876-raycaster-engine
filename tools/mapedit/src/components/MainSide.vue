@@ -1,11 +1,12 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <Window
-            caption="Main Side"
+            caption="Aubout..."
     >
         <template v-slot:toolbar>
         </template>
         <div>
-            Main side
+            This editor is used to design levels for the <br/>
+            <code><b>L a b o r a l p h y</b></code> Raycasting Game Engine Framework.
         </div>
     </Window>
 </template>

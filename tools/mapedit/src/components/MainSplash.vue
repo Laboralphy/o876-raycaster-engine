@@ -5,7 +5,12 @@
         <template v-slot:toolbar>
         </template>
         <div>
-            RC MAP EDITOR
+            <div align="center">
+                <p class="main-tile">RAYCASTER MAP EDITOR</p>
+            </div>
+            <div align="center">
+                <img class="splash-image" src="../../assets/images/rc-anim-splash.gif" />
+            </div>
         </div>
     </Window>
 </template>
@@ -19,5 +24,14 @@
 </script>
 
 <style scoped>
+    img.splash-image {
+        box-shadow: 0 0 3em rgb(0, 0, 0);
+    }
 
+    p.main-tile {
+        font-size: 5em;
+        font-family: Arial, sans-serif;
+        font-style: italic;
+        font-weight: bold;
+    }
 </style>

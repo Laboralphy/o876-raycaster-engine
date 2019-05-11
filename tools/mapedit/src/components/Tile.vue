@@ -171,6 +171,8 @@
         cursor: pointer;
         user-select: none;
         display: inline-block;
+        background-repeat: no-repeat;
+        background-position: center;
     }
 
     div.tile:hover {

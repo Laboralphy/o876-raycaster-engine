@@ -136,6 +136,10 @@ export default {
         }
     },
 
+    [ACTION.SET_CELL_MARK]: ({commit}, {x, y, shape, color}) => {
+        commit(MUTATION.SET_CELL_MARK, {x, y, shape, color})
+    },
+
     [ACTION.ADD_CELL_TAG]: ({commit}, {x, y, value}) => {
         commit(MUTATION.ADD_CELL_TAG, {x, y, value});
     },

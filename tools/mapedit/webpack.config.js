@@ -9,7 +9,8 @@ const rcmapeditConfig = {
     output: {
         path: path.resolve(__dirname, 'app'),
         libraryTarget: 'umd',
-        filename: '[name].js'
+        filename: '[name].js',
+        publicPath: './app/'
     },
     devtool: 'source-map',
     module: {
@@ -24,7 +25,7 @@ const rcmapeditConfig = {
             },
             {
                 test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-                loader: 'url-loader',
+                loader: 'file-loader',
                 options: {
                     limit: 10000
                 }

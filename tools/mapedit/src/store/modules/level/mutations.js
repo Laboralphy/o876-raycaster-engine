@@ -1,9 +1,28 @@
 import * as MUTATION from './mutation-types';
 import * as CONSTS from '../../../consts'
 
+/**
+ * Renvoie une partie du state, celle qui correspond au type de tile spécifié
+ * @param type {string} wall, flat ou sprite (voir la constante)
+ * @param state {*} state
+ * @return {Array} colleciton de tiles
+ */
+function getTileStructure(type, state) {
+    switch (type) {
+        case CONSTS.TILE_TYPE_WALL:
+            return state.tiles.walls;
+
+        case CONSTS.TILE_TYPE_FLAT:
+            return state.tiles.flats;
+
+        case CONSTS.TILE_TYPE_SPRITE:
+            return state.tiles.sprites;
+    }
+}
+
 export default {
     [MUTATION.ADD_TILE]: (state, {id, type, content}) => {
-        const tiles = type === CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const tiles = getTileStructure(type, state);
         if (tiles.find(t => t.id === id)) {
             throw new Error('this id is already present in store');
         }
@@ -25,7 +44,7 @@ export default {
      * @param idTarget
      */
     [MUTATION.MOVE_TILE]: (state, {type, idSource, idTarget}) => {
-        const tiles = type === CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const tiles = getTileStructure(type, state);
         const iSrc = tiles.findIndex(t => t.id === idSource);
         if (iSrc < 0) {
             throw new Error('could not get source tile : ' + idSource);
@@ -41,7 +60,7 @@ export default {
     },
 
     [MUTATION.SET_TILE_ANIMATION]: (state, {type, start, duration, frames, loop}) => {
-        const tiles = type === CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const tiles = getTileStructure(type, state);
         const oTile = tiles.find(t => t.id === start);
         if (oTile) {
             oTile.animation = {
@@ -53,7 +72,7 @@ export default {
     },
 
     [MUTATION.CLEAR_TILE_ANIMATION]: (state, {type, idTile}) => {
-        const tiles = type === CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const tiles = getTileStructure(type, state);
         const oTile = tiles.find(t => t.id === idTile);
         if (oTile) {
             oTile.animation = null;
@@ -63,7 +82,7 @@ export default {
     },
 
     [MUTATION.DELETE_TILE]: (state, {type, id}) => {
-        const tiles = type === CONSTS.TILE_TYPE_WALL ? state.tiles.walls : state.tiles.flats;
+        const tiles = getTileStructure(type, state);
         const tileIndex = tiles.findIndex(t => t.id === id);
         if (tileIndex >= 0) {
             tiles.splice(tileIndex, 1);
@@ -109,8 +128,6 @@ export default {
         const iBlock = state.blocks.findIndex(b => b.id === id);
         if (iBlock >= 0) {
             state.blocks.splice(iBlock, 1);
-        } else {
-            console.log('could not delete block', id);
         }
     },
 
@@ -183,11 +200,11 @@ export default {
 
     [MUTATION.SET_CELL_MARK]: (state, {x, y, shape, color}) => {
         const cell = state.grid[y][x];
-        if (cell.mark.color !== color) {
+        if (cell.mark.color !== color && color !== null) {
             cell.modified = true;
             cell.mark.color = color;
         }
-        if (cell.mark.shape !== shape) {
+        if (cell.mark.shape !== shape && shape !== null) {
             cell.modified = true;
             cell.mark.shape = shape;
         }
@@ -220,5 +237,4 @@ export default {
             state[sKey] = content[sKey];
         }
     }
-
 }

@@ -1,7 +1,8 @@
 export default {
     tiles: {
         walls: [],
-        flats: []
+        flats: [],
+        sprites: [],
     },
     blocks: [
     ],

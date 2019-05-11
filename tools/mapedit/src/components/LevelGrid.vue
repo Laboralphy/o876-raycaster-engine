@@ -126,7 +126,7 @@
             <MyButton
                     title="Copy"
                     @click="copyClick"
-                    :disabled="!isRegionSelected"
+                    :disabled="!isLevelGridRegionSelected"
             >
                 <ContentCopyIcon
                         title="Copy"
@@ -137,7 +137,7 @@
             <MyButton
                     title="Paste"
                     @click="pasteClick"
-                    :disabled="clipboard === null && !isRegionSelected"
+                    :disabled="clipboard === null && !isLevelGridRegionSelected"
             >
                 <ContentPasteIcon
                         title="Paste"
@@ -148,7 +148,7 @@
             <MyButton
                     title="Clear"
                     @click="clearClick"
-                    :disabled="!isRegionSelected"
+                    :disabled="!isLevelGridRegionSelected"
             >
                 <CloseIcon
                         title="Clear"
@@ -205,9 +205,12 @@
     import ContentPasteIcon from "vue-material-design-icons/ContentPaste.vue";
     import CloseIcon from "vue-material-design-icons/Close.vue";
 
+    import CanvasTextFactory from "../libraries/silly-canvas-factory";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+
+    const CTF = new CanvasTextFactory();
 
     export default {
         name: "LevelGrid",
@@ -244,17 +247,15 @@
 
             ...editorMapGetters([
                 'getLevelGridSelectedRegion',
+                'isLevelGridRegionSelected',
                 'getBlockBrowserSelected',
                 'getLevelGridTopMostUndo',
-                'getLevelName'
+                'getLevelName',
+                'getSomethingHasChanged',
             ]),
 
             getCellSize: function () {
                 return this.gridRenderer.cellWidth;
-            },
-
-            isRegionSelected: function() {
-                return this.getLevelGridSelectedRegion.x1 >= 0
             }
         },
 
@@ -277,6 +278,12 @@
         watch: {
             getGrid: function (value) {
                 this.redraw();
+            },
+
+            getSomethingHasChanged: function(newValue, oldValue) {
+                if (newValue && !oldValue) {
+                    this.redraw();
+                }
             }
         },
 
@@ -302,7 +309,8 @@
 
             ...editorMapMutations({
                 selectBlock: EDITOR_MUTATION.BLOCKBROWSER_SET_SELECTED,
-                pushUndo: EDITOR_MUTATION.PUSH_UNDO
+                pushUndo: EDITOR_MUTATION.PUSH_UNDO,
+                setHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
             }),
 
             selectTool: function ({index}) {
@@ -532,6 +540,17 @@
                         break;
                 }
 
+
+                // tag
+                const oTagCanvas = CTF.getCanvas(cell.tags, cell.mark);
+                if (!!oTagCanvas) {
+                    ctx.drawImage(
+                        oTagCanvas,
+                        0,
+                        0,
+                    );
+                }
+
                 // peinture selection
                 const {x1, y1, x2, y2} = this.getLevelGridSelectedRegion;
                 const bSelected = x >= x1 && x <= x2 && y >= y1 && y <= y2;
@@ -543,9 +562,11 @@
 
             redraw: function () {
                 const a = this.modifications.toArray();
+                CTF.setSize(this.gridRenderer.cellWidth, this.gridRenderer.cellHeight);
                 this.modifications.clear();
                 this.$nextTick(() => {
                     this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
+                    this.setHasChanged({value: false});
                 });
             },
 
@@ -786,12 +807,13 @@
                 }
                 switch (event.key) {
                     case 'F5':
+                    case 'F11':
+                    case 'F12':
                         return;
                 }
                 event.preventDefault();
                 event.stopPropagation();
 
-                console.log(event.ctrlKey);
                 const key = (event.ctrlKey ? 'ctrl-' : '') + event.key;
 
                 switch (key) {

@@ -4,6 +4,8 @@
                 ref="image"
                 type="file"
                 @change="onFileInputChange"
+                accept="image/png, image/jpeg, image/gif"
+                :multiple="multiple"
         />
         <MyButton
                 title="title"
@@ -18,7 +20,12 @@
         name: "ImageLoader",
         components: {MyButton},
         props: {
-            title: String
+            title: String,
+            multiple: {
+                type: Boolean,
+                default: false,
+                required: false
+            }
         },
 
         data: function() {
@@ -39,11 +46,9 @@
                 for (let i = 0, l = oFiles.length; i < l; ++i) {
                     const f = oFiles[i];
                     // Only process image files.
-                    if (f.type.match('image.*')) {
-                        const oReader = new FileReader();
-                        oReader.onload = oILEvent => this.$emit('load', {data: oILEvent.target.result});
-                        oReader.readAsDataURL(f);
-                    }
+                    const oReader = new FileReader();
+                    oReader.addEventListener('load', oILEvent => this.$emit('load', {data: oILEvent.target.result}));
+                    oReader.readAsDataURL(f);
                 }
             }
         }

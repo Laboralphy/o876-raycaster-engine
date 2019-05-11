@@ -11,18 +11,16 @@
     import GridIcon from "vue-material-design-icons/Grid.vue";
     import FolderMultipleImageIcon from "vue-material-design-icons/FolderMultipleImage.vue";
     import AnimationIcon from "vue-material-design-icons/Animation.vue";
-    import ToolMenu from "./ToolMenu.vue";
     import SimpleMenu from "./SimpleMenu.vue";
     import TextureIcon from "vue-material-design-icons/Texture.vue";
     import TagIcon from "vue-material-design-icons/Tag.vue";
-    import BookmarkIcon from "vue-material-design-icons/Bookmark.vue";
+    import ShapeIcon from "vue-material-design-icons/Shape.vue";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
 
     export default {
         name: "MainMenu",
         components: {
             SimpleMenu,
-            ToolMenu,
             AnimationIcon,
             FolderMultipleImageIcon,
             GridIcon,
@@ -30,8 +28,8 @@
             StatusBar,
             TextureIcon,
             TagIcon,
-            BookmarkIcon,
-            ChessRookIcon
+            ChessRookIcon,
+            ShapeIcon
         },
         data: function() {
             return {
@@ -71,7 +69,7 @@
                             title: 'Put tags on the map to add some in-game behavior'
                         },
                         {
-                            icon: BookmarkIcon,
+                            icon: ShapeIcon,
                             route: '/level/marks',
                             caption: 'Marks',
                             title: 'Put visual marks on the map'

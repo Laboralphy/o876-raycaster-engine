@@ -19,6 +19,7 @@ import BlockBrowser from "./components/BlockBrowser.vue";
 import LevelList from "./components/LevelList.vue";
 import MainSplash from "./components/MainSplash.vue";
 import MainSide from "./components/MainSide.vue";
+import MarkerManager from "./components/MarkerManager.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -58,7 +59,7 @@ function createApplication() {
             path: "/level/marks",
             components: {
                 default: LevelGrid,
-                side: BlockBrowser
+                side: MarkerManager
             }
         },
         {

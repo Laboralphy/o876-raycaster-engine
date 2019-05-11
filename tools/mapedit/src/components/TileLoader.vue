@@ -11,13 +11,18 @@
                     hint="Import a flat tileset from an image"
                     @load="onFlatImageLoaded"
             ><ViewGridIcon title="Import a flat tileset from an image"></ViewGridIcon> Load flats</ImageLoader>
+            <ImageLoader
+                    hint="Import a single tile from an image to make a sprite"
+                    @load="onSpriteImageLoaded"
+                    :multiple="true"
+            ><ChessRookIcon title="Import a single tile from an image to make a sprite"></ChessRookIcon> Load sprites</ImageLoader>
             <MyButton
-                    :disabled="wallImages.length === 0 && flatImages.length === 0"
+                    :disabled="!isThereImageToDisplay"
                     title="Import all selected tiles into current project"
                     @click="doImport"
             ><ImportIcon title="Import all selected tiles into current project"></ImportIcon> Import</MyButton>
         </template>
-        <div v-if="wallImages.length === 0 && flatImages.length === 0">
+        <div v-if="!isThereImageToDisplay">
             <h3>Tileset importation</h3>
             <ul>
                 <li>Click on "<WallIcon></WallIcon>" or "<ViewGridIcon></ViewGridIcon>" to load tilesets.</li>
@@ -49,6 +54,18 @@
                     @selected="({value}) => setTileSelection(image, value)"
             />
         </div>
+        <div v-else-if="spriteImages.length > 0">
+            <h3>Sprite tile</h3>
+            <Tile
+                    v-for="image in spriteImages"
+                    :tile="image.id"
+                    :key="image.id"
+                    :content="image.src"
+                    :width="image.width"
+                    :height="image.height"
+                    @selected="({value}) => setTileSelection(image, value)"
+            />
+        </div>
     </Window>
 </template>
 
@@ -70,6 +87,11 @@
     import ViewGridIcon from "vue-material-design-icons/ViewGrid.vue";
     import Tile from "./Tile.vue";
     import * as CONSTS from "../consts";
+    import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
+    import CanvasHelper from "../../../../src/canvas-helper";
+    import DeleteIcon from "vue-material-design-icons/Delete.vue";
+    import SelectAllIcon from "vue-material-design-icons/SelectAll.vue";
+    import SelectOffIcon from "vue-material-design-icons/SelectOff.vue";
 
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
@@ -81,6 +103,10 @@
     export default {
         name: "WallTileLoader",
         components: {
+            SelectOffIcon,
+            SelectAllIcon,
+            DeleteIcon,
+            ChessRookIcon,
             Tile,
             ViewGridIcon,
             WallIcon,
@@ -94,12 +120,17 @@
             ...levelMapGetter([
                 'getTileHeight',
                 'getTileWidth',
-            ])
+            ]),
+
+            isThereImageToDisplay: function() {
+                return this.wallImages.length > 0 || this.flatImages.length > 0 || this.spriteImages.length > 0;
+            }
         },
         data: function() {
             return {
                 wallImages: [],
                 flatImages: [],
+                spriteImages: [],
                 loadedTypeTiles: '',
                 commands: [{
                     // return to main view
@@ -122,6 +153,7 @@
             clearTiles: function() {
                 this.flatImages.splice(0, this.flatImages.length);
                 this.wallImages.splice(0, this.wallImages.length);
+                this.spriteImages.splice(0, this.spriteImages.length);
             },
 
             onWallImageLoaded: async function(event) {
@@ -138,6 +170,13 @@
                 const aImages = await tss.split(event.data, this.getTileWidth, this.getTileWidth);
                 aImages.forEach(img => this.flatImages.push({id: ++IMAGE_LAST_ID, src: img}));
                 this.loadedTypeTiles = CONSTS.TILE_TYPE_FLAT;
+            },
+
+            onSpriteImageLoaded: async function(event) {
+                this.clearTiles();
+                const oImage = await CanvasHelper.loadCanvas(event.data);
+                this.spriteImages.push({id: ++IMAGE_LAST_ID, src: oImage.toDataURL('image/png'), width: oImage.width, height: oImage.height});
+                this.loadedTypeTiles = CONSTS.TILE_TYPE_SPRITE;
             },
 
             /**
@@ -166,6 +205,11 @@
                     case CONSTS.TILE_TYPE_FLAT:
                         this.doImportType(CONSTS.TILE_TYPE_FLAT, this.flatImages);
                         break;
+
+                    case CONSTS.TILE_TYPE_SPRITE:
+                        this.doImportType(CONSTS.TILE_TYPE_SPRITE, this.spriteImages);
+                        break;
+
                 }
             }
         }

@@ -26,7 +26,7 @@
                         </form>
                     </td>
                     <td>
-                        <h3>Drag and drop a wall or flat texture here</h3>
+                        <h3>Drag and drop a wall, flat or sprite texture here</h3>
                         <Tile
                                 :tile="tile"
                                 :content="getAnimationContent"
@@ -92,6 +92,7 @@
                 'getTile',
                 'getWallTiles',
                 'getFlatTiles',
+                'getSpriteTiles',
                 'getTimeInterval'
             ]),
 
@@ -158,8 +159,22 @@
                 if (this.isValidAnimation) {
                     const oFirstTile = this.getTile(this.tile);
                     const sType = oFirstTile.type;
-                    const bWall = sType === CONSTS.TILE_TYPE_WALL;
-                    const aTiles = bWall ? this.getWallTiles : this.getFlatTiles;
+                    let bWall = false;
+                    let aTiles;
+                    switch (sType) {
+                        case CONSTS.TILE_TYPE_WALL:
+                            aTiles = this.getWallTiles;
+                            bWall = true;
+                            break;
+
+                        case CONSTS.TILE_TYPE_FLAT:
+                            aTiles = this.getFlatTiles;
+                            break;
+
+                        case CONSTS.TILE_TYPE_SPRITE:
+                            aTiles = this.getSpriteTiles;
+                            break;
+                    }
                     const iFirstFrame = aTiles.findIndex(t => t.id === this.tile);
                     const iFrame = this.frameIndex + iFirstFrame;
                     const oTile = iFrame < aTiles.length ? aTiles[iFrame] : aTiles[aTiles.length - 1];
@@ -218,6 +233,8 @@
                         this.loop = 0;
                         this.frames = 2;
                     }
+                } else {
+                    console.error('this tile is undefined : ' + id)
                 }
             },
 
