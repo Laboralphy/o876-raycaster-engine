@@ -69,6 +69,25 @@ export default {
         if (iTag < 0) {
             tags.push(tag);
         }
-    }
+    },
 
+    [MUTATION.THINGBUILDER_SET_GHOST]: (state, {value}) => {
+        state.models.thingBuilder.ghost = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_ID]: (state, {value}) => {
+        state.models.thingBuilder.id = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_LIGHT]: (state, {value}) => {
+        state.models.thingBuilder.light = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_OPACITY]: (state, {value}) => {
+        state.models.thingBuilder.opacity = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_REF]: (state, {value}) => {
+        state.models.thingBuilder.ref = value;
+    },
 }

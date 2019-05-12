@@ -4,10 +4,9 @@ export default {
         flats: [],
         sprites: [],
     },
-    blocks: [
-    ],
-    grid: [
-    ],
+    blocks: [],
+    things: [],
+    grid: [],
     metrics: {
         tileHeight: 96,
         tileWidth: 64

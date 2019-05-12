@@ -88,7 +88,7 @@
                 }
             },
 
-            onCreateClicked() {
+            createClicked() {
                 this[MUTATION.BLOCKBUILDER_SET_ID]({value: null});
                 this[MUTATION.BLOCKBUILDER_SET_REF]({value: ''});
                 this[MUTATION.BLOCKBUILDER_SET_PHYS]({value: 0});
@@ -106,12 +106,12 @@
                 this.$router.push('/build-block');
             },
 
-            onDeleteClicked() {
+            deleteClicked() {
                 this.deleteBlock({id: this.selected});
             },
 
 
-            onModifyClicked() {
+            modifyClicked() {
                 const oBlock = this.getBlocks.find(b => b.id === this.selected);
                 if (oBlock) {
                     // muter tout le bloc ?

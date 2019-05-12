@@ -16,6 +16,7 @@
                             ></FormBlockProps>
                         </td>
                         <td class="tiles">
+                            <h3>Drag tiles here...</h3>
                             <table class="block-def">
                                 <tbody>
                                     <tr>

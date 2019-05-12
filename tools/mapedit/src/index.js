@@ -20,6 +20,8 @@ import LevelList from "./components/LevelList.vue";
 import MainSplash from "./components/MainSplash.vue";
 import MainSide from "./components/MainSide.vue";
 import MarkerManager from "./components/MarkerManager.vue";
+import ThingBrowser from "./components/ThingBrowser.vue";
+import ThingBuilder from "./components/ThingBuilder.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -45,7 +47,7 @@ function createApplication() {
             path: "/level/things",
             components: {
                 default: LevelGrid,
-                side: BlockBrowser
+                side: ThingBrowser
             }
         },
         {
@@ -80,6 +82,13 @@ function createApplication() {
             path: "/build-block",
             components: {
                 default: BlockBuilder,
+                side: TileBrowser
+            }
+        },
+        {
+            path: "/build-thing",
+            components: {
+                default: ThingBuilder,
                 side: TileBrowser
             }
         },

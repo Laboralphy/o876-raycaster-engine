@@ -8,6 +8,9 @@ export const DEFINE_BLOCK = 'DEFINE_BLOCK';
 export const SET_BLOCK_PREVIEW = 'SET_BLOCK_PREVIEW';
 export const DESTROY_BLOCK = 'DESTROY_BLOCK';
 
+export const DEFINE_THING = 'DEFINE_THING';
+export const DESTROY_THING = 'DESTROY_THING';
+
 export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 export const SET_CELL_BLOCK = 'SET_CELL_BLOCK';
 export const SET_CELL_TAGS = 'SET_CELL_TAGS';

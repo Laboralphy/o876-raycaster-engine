@@ -1,5 +1,6 @@
 <template>
     <form>
+        <h3>Physic properties</h3>
         <div>
             <label>Phys:
                 <select v-model="mPhys" class="w13em">

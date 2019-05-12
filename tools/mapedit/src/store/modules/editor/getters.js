@@ -23,6 +23,36 @@ export default {
     getAnimBuilderDuration: state => state.models.animationBuilder.duration,
     getAnimBuilderLoop: state => state.models.animationBuilder.loop,
 
+    getThingBuilderGhost: state => state.models.thingBuilder.ghost,
+    getThingBuilderId: state => state.models.thingBuilder.id,
+    getThingBuilderLight: state => state.models.thingBuilder.light,
+    getThingBuilderOpacity: state => state.models.thingBuilder.opacity,
+    getThingBuilderRef: state => state.models.thingBuilder.ref,
+    getThingBuilderScale: state => state.models.thingBuilder.scale,
+
+    /*
+        [MUTATION.THINGBUILDER_SET_GHOST]: (state, {value}) => {
+        state.models.thingBuilder.ghost = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_ID]: (state, {value}) => {
+        state.models.thingBuilder.id = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_LIGHT]: (state, {value}) => {
+        state.models.thingBuilder.light = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_OPACITY]: (state, {value}) => {
+        state.models.thingBuilder.opacity = value;
+    },
+
+    [MUTATION.THINGBUILDER_SET_REF]: (state, {value}) => {
+        state.models.thingBuilder.ref = value;
+    },
+
+     */
+
     getBlockBrowserSelected: state => state.models.blockBrowser.selected,
 
     getSomethingHasChanged: state => state.somethingHasChanged,

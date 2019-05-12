@@ -142,6 +142,15 @@ export default {
             }
         },
 
+        thingBuilder: {
+            id: null,
+            ref: '',
+            scale: 100,
+            opacity: 0,
+            light: false,
+            ghost: false
+        },
+
         animationBuilder: {
             start: 0,
             frames: 2,

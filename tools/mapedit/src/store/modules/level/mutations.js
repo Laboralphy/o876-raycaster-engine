@@ -236,5 +236,35 @@ export default {
         for (let sKey in content) {
             state[sKey] = content[sKey];
         }
+    },
+
+    [MUTATION.DEFINE_THING]: (state, data) => {
+        const index = state.things.findIndex(b => b.id === data.id);
+        const oThings = {
+            id: data.id,
+            ref: data.ref,
+            phys: data.phys,
+            offs: data.offs,
+            preview: '',
+            light: {
+                enabled: data.light.enabled,
+                value: data.light.value,
+                inner: data.light.inner,
+                outer: data.light.outer
+            },
+            faces: {
+                n: data.faces.n,
+                e: data.faces.e,
+                w: data.faces.w,
+                s: data.faces.s,
+                f: data.faces.f,
+                c: data.faces.c,
+            }
+        };
+        if (index >= 0) {
+            state.blocks.splice(index, 1, oBlock);
+        } else {
+            state.blocks.push(oBlock);
+        }
     }
 }
