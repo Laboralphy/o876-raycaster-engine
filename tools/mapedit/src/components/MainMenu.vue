@@ -59,6 +59,7 @@
                         {
                             icon: TextureIcon,
                             route: '/level/blocks',
+                            highlight: /^\/level\/block/,
                             caption: 'Blocks',
                             title: 'Display the block browser'
                         },
@@ -77,6 +78,7 @@
                         {
                             icon: ChessRookIcon,
                             route: '/level/things',
+                            highlight: /^\/level\/things/,
                             caption: 'Things',
                             title: 'Place sprites on the map'
                         }

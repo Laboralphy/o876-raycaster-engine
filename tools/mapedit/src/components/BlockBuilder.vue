@@ -9,11 +9,48 @@
                 <tbody>
                     <tr>
                         <td class="form">
-                            <FormBlockProps
-                                    ref="blockProps"
-                                    @submitCreate="onFormSubmitCreate"
-                                    @submitUpdate="onFormSubmitUpdate"
-                            ></FormBlockProps>
+                            <form>
+                                <h3>Physic properties</h3>
+                                <div>
+                                    <label>Phys:
+                                        <select v-model="value.phys" class="w13em">
+                                            <option v-for="p in getBlockBuilderPhysicalData" :key="p.id" :value="p.id">{{ p.label }}</option>
+                                        </select>
+                                    </label>
+                                    <div class="hint">Block physical property</div>
+                                </div>
+                                <div>
+                                    <label>Offs: <input v-model="value.offs" type="number" min="0" :max="getTileWidth"/></label>
+                                    <div class="hint">Increasing this value creates an alcove, the higher value, the deeper.</div>
+                                </div>
+                                <div>
+                                    <label>Light: <input v-model="value.light.enabled" type="checkbox"/></label>
+                                </div>
+                                <div>
+                                    <div class="hint" v-show="!value.light.enabled">Check this kon to open light properties panel</div>
+                                    <fieldset v-show="value.light.enabled">
+                                        <legend>Light source properties</legend>
+                                        <div>
+                                            <label>Intensity: <input v-model="value.light.value" type="number" min="0" max="1" step="0.01"/></label>
+                                        </div>
+                                        <div>
+                                            <label>In.rad.: <input v-model="value.light.inner" type="number" min="0"/></label>
+                                        </div>
+                                        <div>
+                                            <label>Out.rad.: <input v-model="value.light.outer" type="number" min="0"/></label>
+                                        </div>
+                                    </fieldset>
+                                </div>
+                                <div>
+                                    <label>Ref: <input style="width: 8em" v-model="value.ref" type="text"/></label>
+                                    <div class="hint">Optional symbolic identifier used during dev time</div>
+                                </div>
+                                <hr/>
+                                <div>
+                                    <MyButton v-if="!id" @click="createClick">Create</MyButton>
+                                    <MyButton v-else @click="modifyClick">Update</MyButton>
+                                </div>
+                            </form>
                         </td>
                         <td class="tiles">
                             <h3>Drag tiles here...</h3>
@@ -157,10 +194,8 @@
 
 <script>
     import * as ACTION from '../store/modules/level/action-types';
-    import * as MUTATION from '../store/modules/editor/mutation-types';
     // vuex
-    import {createNamespacedHelpers} from'vuex';
-
+    import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import HomeButton from "./HomeButton.vue";
     import MyButton from "./MyButton.vue";
@@ -170,7 +205,7 @@
     import ContentDuplicateIcon from "vue-material-design-icons/ContentDuplicate.vue";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: editorMapGetter} = createNamespacedHelpers('editor');
 
     export default {
         name: "BlockBuilder",
@@ -178,8 +213,45 @@
 
         data: function() {
             return {
+                value: {
+                    ref: 0,
+                    phys: 0,
+                    offs: 0,
+                    light: {
+                        enabled: false,
+                        value: 0,
+                        inner: 0,
+                        outer: 0
+                    },
+                    faces: {
+                        n: 0,
+                        e: 0,
+                        w: 0,
+                        s: 0,
+                        f: 0,
+                        c: 0
+                    }
+                }
             }
         },
+
+        props: {
+            id: {
+                required: true,
+                type: String
+            }
+        },
+
+        watch: {
+            id: {
+                immediate: true,
+                handler: function(newValue) {
+                    this.importBlock(newValue);
+                }
+            }
+        },
+
+
 
         computed: {
             ...levelMapGetter([
@@ -187,20 +259,15 @@
                 'getTileWidth',
                 'getWallTile',
                 'getFlatTile',
+                'getBlocks'
             ]),
 
             ...editorMapGetter([
-                'getBlockBuilderId',
-                'getBlockBuilderFaceNorth',
-                'getBlockBuilderFaceEast',
-                'getBlockBuilderFaceWest',
-                'getBlockBuilderFaceSouth',
-                'getBlockBuilderFaceFloor',
-                'getBlockBuilderFaceCeiling'
+                'getBlockBuilderPhysicalData'
             ]),
 
             getFaceNorthContent: function() {
-                const idTile = this.getBlockBuilderFaceNorth;
+                const idTile = this.value.faces.n;
                 const oTile = this.getWallTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -210,7 +277,7 @@
             },
 
             getFaceWestContent: function() {
-                const idTile = this.getBlockBuilderFaceWest;
+                const idTile = this.value.faces.w;
                 const oTile = this.getWallTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -220,7 +287,7 @@
             },
 
             getFaceEastContent: function() {
-                const idTile = this.getBlockBuilderFaceEast;
+                const idTile = this.value.faces.e;
                 const oTile = this.getWallTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -230,7 +297,7 @@
             },
 
             getFaceSouthContent: function() {
-                const idTile = this.getBlockBuilderFaceSouth;
+                const idTile = this.value.faces.s;
                 const oTile = this.getWallTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -240,7 +307,7 @@
             },
 
             getFaceFloorContent: function() {
-                const idTile = this.getBlockBuilderFaceFloor;
+                const idTile = this.value.faces.f;
                 const oTile = this.getFlatTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -250,7 +317,7 @@
             },
 
             getFaceCeilingContent: function() {
-                const idTile = this.getBlockBuilderFaceCeiling;
+                const idTile = this.value.faces.c;
                 const oTile = this.getFlatTile(idTile);
                 if (!!oTile) {
                     return oTile.content;
@@ -266,78 +333,82 @@
                 modifyBlock: ACTION.MODIFY_BLOCK
             }),
 
-            ...editorMapMutations([
-                MUTATION.BLOCKBUILDER_SET_FACE,
-                MUTATION.BLOCKBUILDER_SET_ID
-            ]),
-
-            /**
-             * Création d'un nouveau block
-             * @param data
-             */
-            onFormSubmitCreate: function(data) {
-                data.faces = {
-                    n: this.getBlockBuilderFaceNorth,
-                    e: this.getBlockBuilderFaceEast,
-                    w: this.getBlockBuilderFaceWest,
-                    s: this.getBlockBuilderFaceSouth,
-                    f: this.getBlockBuilderFaceFloor,
-                    c: this.getBlockBuilderFaceCeiling
-                };
-                this.createBlock(data);
-                this.$router.push('/level/blocks');
+            importBlock: function(id) {
+                id = id | 0;
+                const oBlock = this.getBlocks.find(b => b.id === id);
+                if (!!oBlock) {
+                    this.value.ref = oBlock.ref;
+                    this.value.phys = oBlock.phys;
+                    this.value.offs = oBlock.offs;
+                    this.value.light.enabled = oBlock.light.enabled;
+                    this.value.light.value = oBlock.light.value;
+                    this.value.light.inner = oBlock.light.inner;
+                    this.value.light.outer = oBlock.light.outer;
+                    this.value.faces.n = oBlock.faces.n;
+                    this.value.faces.e = oBlock.faces.e;
+                    this.value.faces.w = oBlock.faces.w;
+                    this.value.faces.s = oBlock.faces.s;
+                    this.value.faces.f = oBlock.faces.f;
+                    this.value.faces.c = oBlock.faces.c;
+                } else {
+                    this.value.ref = '';
+                    this.value.phys = 0;
+                    this.value.offs = 0;
+                    this.value.light.enabled = false;
+                    this.value.light.value = 0;
+                    this.value.light.inner = 0;
+                    this.value.light.outer = 0;
+                    this.value.faces.n = null;
+                    this.value.faces.e = null;
+                    this.value.faces.w = null;
+                    this.value.faces.s = null;
+                    this.value.faces.f = null;
+                    this.value.faces.c = null;
+                }
             },
 
-            /**
-             * Mise à jour d'un block existant
-             * @param data
-             */
-            onFormSubmitUpdate: function(data) {
-                data.id = this.getBlockBuilderId;
-                data.faces = {
-                    n: this.getBlockBuilderFaceNorth,
-                    e: this.getBlockBuilderFaceEast,
-                    w: this.getBlockBuilderFaceWest,
-                    s: this.getBlockBuilderFaceSouth,
-                    f: this.getBlockBuilderFaceFloor,
-                    c: this.getBlockBuilderFaceCeiling
-                };
-                this.modifyBlock(data);
-                this.$router.push('/level/blocks');
-                this[MUTATION.BLOCKBUILDER_SET_ID]({value: null});
+            handleDrop: function(face, id) {
+                this.value.faces[face] = id | 0;
             },
 
-            handleDrop(face, id) {
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face, value: id});
+            clearTile: function(face) {
+                this.value.faces[face] = null;
             },
 
-            clearTile(face) {
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face, value: null});
-            },
-
-            dupTile(face) {
+            dupTile: function(face) {
                 let c;
                 switch (face) {
                     case 'n':
-                        c = this.getBlockBuilderFaceNorth;
+                        c = this.value.faces.n;
                         break;
 
                     case 'e':
-                        c = this.getBlockBuilderFaceEast;
+                        c = this.value.faces.e;
                         break;
 
                     case 'w':
-                        c = this.getBlockBuilderFaceWest;
+                        c = this.value.faces.w;
                         break;
 
                     case 's':
-                        c = this.getBlockBuilderFaceSouth;
+                        c = this.value.faces.s;
                         break;
                 }
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face: 'n', value: c});
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face: 'e', value: c});
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face: 'w', value: c});
-                this[MUTATION.BLOCKBUILDER_SET_FACE]({face: 's', value: c});
+                this.value.faces.n = c;
+                this.value.faces.e = c;
+                this.value.faces.w = c;
+                this.value.faces.s = c;
+            },
+
+            createClick: function() {
+                this.createBlock(this.value).then(() => this.$router.push('/level/blocks'));
+            },
+
+            modifyClick: function() {
+                const id = this.id | 0;
+                this.modifyBlock({id, ...this.value}).then(() => {
+                    this.$router.push('/level/blocks');
+                });
             }
         }
     }
@@ -374,5 +445,31 @@
 
     figure span.dup-button:hover {
         color: #06F;
+    }
+
+    input[type="number"] {
+        width: 5em;
+    }
+
+    select.w13em {
+        width: 13em;
+    }
+
+    select.w8em {
+        width: 8em;
+    }
+
+    .hint {
+        font-family: Arial,sans-serif;
+        font-style: italic;
+        color: rgb(64, 64, 64);
+    }
+
+    .hint:before {
+        content: "(";
+    }
+
+    .hint:after {
+        content: ")";
     }
 </style>

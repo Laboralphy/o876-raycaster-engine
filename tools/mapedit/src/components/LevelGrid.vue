@@ -567,6 +567,7 @@
                 this.$nextTick(() => {
                     this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
                     this.setHasChanged({value: false});
+                    console.log('redraw done');
                 });
             },
 

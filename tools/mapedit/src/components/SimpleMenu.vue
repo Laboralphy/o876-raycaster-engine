@@ -5,7 +5,7 @@
                 :key="r.route"
                 :title="r.title"
                 :class="(currentRoute === r.route) || ('highlight' in r && !!currentRoute.match(r.highlight)) ? 'selected' : ''"
-                @click="$router.push(r.route)"
+                @click="go(r.route)"
                 style="margin-right: 0.25em; margin-left: 0.25em"
         ><component :is="r.icon" decorative :title="r.title"></component> {{ r.caption }}</MyButton>
     </div>
@@ -35,6 +35,12 @@
                 }
             }
         },
+
+        methods: {
+            go: function(sRoute) {
+                this.$router.push(sRoute);
+            }
+        }
     }
 </script>
 

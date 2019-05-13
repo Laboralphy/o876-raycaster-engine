@@ -3,9 +3,9 @@
             caption="Block browser"
     >
         <template v-slot:toolbar>
-            <MyButton title="Create a new block" @click="onCreateClicked"><PlusIcon title="Create a new block" decorative></PlusIcon></MyButton>
-            <MyButton :disabled="!selected" title="Modify the selected block" @click="onModifyClicked"><PencilIcon title="Modify the selected block" decorative></PencilIcon></MyButton>
-            <MyButton :disabled="!selected" title="Delete the selected block" @click="onDeleteClicked"><DeleteIcon title="Delete the selected block" decorative></DeleteIcon></MyButton>
+            <MyButton title="Create a new block" @click="createClicked"><PlusIcon title="Create a new block" decorative></PlusIcon></MyButton>
+            <MyButton :disabled="!selected" title="Modify the selected block" @click="modifyClicked"><PencilIcon title="Modify the selected block" decorative></PencilIcon></MyButton>
+            <MyButton :disabled="!selected" title="Delete the selected block" @click="deleteClicked"><DeleteIcon title="Delete the selected block" decorative></DeleteIcon></MyButton>
         </template>
         <Block
                 v-for="b in getBlocks"
@@ -89,21 +89,7 @@
             },
 
             createClicked() {
-                this[MUTATION.BLOCKBUILDER_SET_ID]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_REF]({value: ''});
-                this[MUTATION.BLOCKBUILDER_SET_PHYS]({value: 0});
-                this[MUTATION.BLOCKBUILDER_SET_OFFS]({value: 0});
-                this[MUTATION.BLOCKBUILDER_SET_LIGHT]({value: false});
-                this[MUTATION.BLOCKBUILDER_SET_LIGHT_VALUE]({value: 0});
-                this[MUTATION.BLOCKBUILDER_SET_LIGHT_INNER_RADIUS]({value: 0});
-                this[MUTATION.BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS]({value: 0});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_NORTH]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_EAST]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_WEST]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_SOUTH]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_FLOOR]({value: null});
-                this[MUTATION.BLOCKBUILDER_SET_FACE_CEILING]({value: null});
-                this.$router.push('/build-block');
+                this.$router.push('/build-block/0');
             },
 
             deleteClicked() {
@@ -112,26 +98,7 @@
 
 
             modifyClicked() {
-                const oBlock = this.getBlocks.find(b => b.id === this.selected);
-                if (oBlock) {
-                    // muter tout le bloc ?
-                    const {id, ref, phys, offs, light, faces} = oBlock;
-                    this[MUTATION.BLOCKBUILDER_SET_ID]({value: id});
-                    this[MUTATION.BLOCKBUILDER_SET_REF]({value: ref});
-                    this[MUTATION.BLOCKBUILDER_SET_PHYS]({value: phys});
-                    this[MUTATION.BLOCKBUILDER_SET_OFFS]({value: offs});
-                    this[MUTATION.BLOCKBUILDER_SET_LIGHT]({value: light.enabled});
-                    this[MUTATION.BLOCKBUILDER_SET_LIGHT_VALUE]({value: light.value});
-                    this[MUTATION.BLOCKBUILDER_SET_LIGHT_INNER_RADIUS]({value: light.inner});
-                    this[MUTATION.BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS]({value: light.outer});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_NORTH]({value: faces.n});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_EAST]({value: faces.e});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_WEST]({value: faces.w});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_SOUTH]({value: faces.s});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_FLOOR]({value: faces.f});
-                    this[MUTATION.BLOCKBUILDER_SET_FACE_CEILING]({value: faces.c});
-                    this.$router.push('/build-block');
-                }
+                this.$router.push('/build-block/' + this.selected);
             }
         }
     }

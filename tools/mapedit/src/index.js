@@ -79,18 +79,26 @@ function createApplication() {
             }
         },
         {
-            path: "/build-block",
+            path: "/build-block/:id",
             components: {
                 default: BlockBuilder,
                 side: TileBrowser
-            }
+            },
+            params: {
+                id: Number
+            },
+            props: {default: true, side: false}
         },
         {
-            path: "/build-thing",
+            path: "/build-thing/:id",
             components: {
                 default: ThingBuilder,
                 side: TileBrowser
-            }
+            },
+            params: {
+                id: Number
+            },
+            props: {default: true, side: false}
         },
         {
             path: "/list-levels",

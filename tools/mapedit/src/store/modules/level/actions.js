@@ -3,6 +3,38 @@ import * as MUTATION from './mutation-types';
 import CanvasHelper from "../../../../../../src/canvas-helper";
 import CACHE from "../../../libraries/block-cache";
 import {loadLevel, saveLevel} from '../../../libraries/fetch-helper';
+import * as CONSTS from "../../../consts";
+import {render} from "../../../libraries/block-renderer";
+
+
+
+function getTile(tiles, type, id) {
+    const oTile = tiles[type + 's'].find(t => t.id === id);
+    return !!oTile ? oTile.content : '';
+}
+
+function renderAndStoreBlock(tiles, data) {
+    return new Promise(resolve => {
+        // transformer les face en tile-src
+        const inFaces = data.faces;
+        const oFaces = {
+            n: getTile(tiles, CONSTS.TILE_TYPE_WALL, inFaces.n),
+            e: getTile(tiles, CONSTS.TILE_TYPE_WALL, inFaces.e),
+            w: getTile(tiles, CONSTS.TILE_TYPE_WALL, inFaces.w),
+            s: getTile(tiles, CONSTS.TILE_TYPE_WALL, inFaces.s),
+            f: getTile(tiles, CONSTS.TILE_TYPE_FLAT, inFaces.f),
+            c: getTile(tiles, CONSTS.TILE_TYPE_FLAT, inFaces.c)
+        };
+        // calculer le block rendu
+        render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces).then(oCanvas => {
+            const sSrc = CanvasHelper.getData(oCanvas);
+            CACHE.store(data.id, oCanvas);
+            console.log('cache store', data.id, typeof data.id);
+            resolve({id: data.id, content: sSrc});
+        });
+    });
+}
+
 
 export default {
 
@@ -80,16 +112,23 @@ export default {
     /**
      * creation d'un block
      */
-    [ACTION.CREATE_BLOCK]: ({commit, getters}, data) => {
+    [ACTION.CREATE_BLOCK]: async ({commit, getters}, data) => {
+        const id = getters.getMaxBlockId + 1;
         const oBlock = {
-            id: getters.getMaxBlockId + 1,
+            id,
             ...data
         };
         commit(MUTATION.DEFINE_BLOCK, oBlock);
+        const {content} = await renderAndStoreBlock(getters.getTiles, data);
+        commit(MUTATION.SET_BLOCK_PREVIEW, {id, content});
+        console.log('CREATE BLOCK mutation done', id);
     },
 
-    [ACTION.MODIFY_BLOCK]: ({commit}, data) => {
+    [ACTION.MODIFY_BLOCK]: async ({commit, getters}, data) => {
+        const id = data.id | 0;
         commit(MUTATION.DEFINE_BLOCK, data);
+        const {content} = await renderAndStoreBlock(getters.getTiles, data);
+        commit(MUTATION.SET_BLOCK_PREVIEW, {id, content});
     },
 
     /**

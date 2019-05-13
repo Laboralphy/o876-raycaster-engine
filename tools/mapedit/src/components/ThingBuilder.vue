@@ -13,7 +13,7 @@
                             <form>
                                 <div>
                                     <label>Scale: <input v-model="mScale" type="number" />%</label>
-                                    <div class="hint">Scale is a size factor. 200% means the thing will appear twice bigger.</div>
+                                    <div class="hint">Scale is a size factor. 200% means the thing will appear twice bigger</div>
                                 </div>
                                 <div>
                                     <label>Opacity:
@@ -24,19 +24,19 @@
                                             <option value="3">25%</option>
                                         </select>
                                     </label>
-                                    <div class="hint">Opacity 100% : the thing has full opacity. Opacity 25% : the thing is nearly transparent.</div>
+                                    <div class="hint">Opacity 100% : the thing has full opacity. Opacity 25% : the thing is nearly transparent</div>
                                 </div>
                                 <div>
                                     <label>Light emitter: <input v-model="mLight" type="checkbox" /></label>
-                                    <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view.</div>
+                                    <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view</div>
                                 </div>
                                 <div>
                                     <label>Ghost filter: <input v-model="mGhost" type="checkbox" /></label>
-                                    <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas.</div>
+                                    <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas</div>
                                 </div>
                                 <div>
                                     <label>Ref: <input v-model="mRef" style="width: 8em" type="text"/></label>
-                                    <div class="hint">Optional symbolic identifier used during dev time.</div>
+                                    <div class="hint">Optional symbolic identifier used during dev time</div>
                                 </div>
                                 <hr/>
                                 <div>
@@ -85,6 +85,22 @@
                 height: 0,
                 saved: false
             };
+        },
+
+        props: {
+            id: {
+                type: String,
+                required: true
+            }
+        },
+
+        watch: {
+            id: {
+                immediate: true,
+                handler: function(newValue, oldValue) {
+                    //....
+                }
+            }
         },
 
         computed: {
