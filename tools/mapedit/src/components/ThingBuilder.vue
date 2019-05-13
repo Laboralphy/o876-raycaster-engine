@@ -12,12 +12,12 @@
                             <h3>Thing properties</h3>
                             <form>
                                 <div>
-                                    <label>Scale: <input v-model="mScale" type="number" />%</label>
+                                    <label>Scale: <input v-model="value.scale" type="number" />%</label>
                                     <div class="hint">Scale is a size factor. 200% means the thing will appear twice bigger.</div>
                                 </div>
                                 <div>
                                     <label>Opacity:
-                                        <select v-model="mOpacity">
+                                        <select v-model="value.opacity">
                                             <option value="0">100%</option>
                                             <option value="1">75%</option>
                                             <option value="2">50%</option>
@@ -27,15 +27,15 @@
                                     <div class="hint">Opacity 100% : the thing has full opacity. Opacity 25% : the thing is nearly transparent.</div>
                                 </div>
                                 <div>
-                                    <label>Light emitter: <input v-model="mLight" type="checkbox" /></label>
+                                    <label>Light emitter: <input v-model="value.light" type="checkbox" /></label>
                                     <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view.</div>
                                 </div>
                                 <div>
-                                    <label>Ghost filter: <input v-model="mGhost" type="checkbox" /></label>
+                                    <label>Ghost filter: <input v-model="value.ghost" type="checkbox" /></label>
                                     <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas.</div>
                                 </div>
                                 <div>
-                                    <label>Ref: <input v-model="mRef" style="width: 8em" type="text"/></label>
+                                    <label>Ref: <input v-model="value.ref" style="width: 8em" type="text"/></label>
                                     <div class="hint">Optional symbolic identifier used during dev time.</div>
                                 </div>
                                 <hr/>
@@ -65,7 +65,6 @@
 </template>
 
 <script>
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
 
     import Window from "./Window.vue";
@@ -73,82 +72,63 @@
 
 
     const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
 
     export default {
         name: "ThingBuilder",
         components: {MyButton, Window},
+
+        props: {
+            id: {
+                type: String,
+                required: true
+            }
+        },
+
+        watch: {
+            id: {
+                immediate: true,
+                handler: function(newValue, oldValue) {
+                    this.importThing(newValue);
+                }
+            }
+        },
 
         data: function() {
             return {
                 content: '',
                 width: 0,
                 height: 0,
-                saved: false
+                saved: false,
+
+                value: {
+                    scale: 100,
+                    opacity: 0,
+                    light: false,
+                    ghost: false,
+                    ref: ''
+                }
             };
         },
 
         computed: {
-            ...editorMapGetters([
-                'getThingBuilderId',
-                'getThingBuilderScale',
-                'getThingBuilderOpacity',
-                'getThingBuilderLight',
-                'getThingBuilderGhost',
-                'getThingBuilderRef'
-            ]),
-
-            mScale: {
-                get() {
-                    return this.getThingBuilderScale;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_SCALE]({value});
-                }
-            },
-            mOpacity: {
-                get() {
-                    return this.getThingBuilderOpacity;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_OPACITY]({value});
-                }
-            },
-            mLight: {
-                get() {
-                    return this.getThingBuilderLight;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_LIGHT]({value});
-                }
-            },
-            mGhost: {
-                get() {
-                    return this.getThingBuilderGhost;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_GHOST]({value});
-                }
-            },
-            mRef: {
-                get() {
-                    return this.getThingBuilderRef;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_REF]({value});
-                }
-            },
-
+            ...levelMapGetters([
+                'getThings'
+            ])
         },
 
         methods: {
-            ...editorMapMutations([
-                EDITOR_MUTATION.THINGBUILDER_SET_ID,
-                EDITOR_MUTATION.THINGBUILDER_SET_SCALE,
-                EDITOR_MUTATION.THINGBUILDER_SET_OPACITY,
-                EDITOR_MUTATION.THINGBUILDER_SET_LIGHT,
-                EDITOR_MUTATION.THINGBUILDER_SET_GHOST,
-                EDITOR_MUTATION.THINGBUILDER_SET_REF
-            ]),
+            importThing: function(id) {
+                id = id | 0;
+                const oThing = this.getThings.find(t => t.id === id);
+                if (oThing) {
+                    this.value.scale = oThing.scale;
+                    this.value.ghost = oThing.ghost;
+                    this.value.light = oThing.light;
+                    this.value.opacity = oThing.opacity;
+                    this.value.ref = oThing.ref;
+                }
+            }
         }
     };
 

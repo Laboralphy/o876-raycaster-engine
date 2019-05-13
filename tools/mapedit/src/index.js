@@ -86,10 +86,14 @@ function createApplication() {
             }
         },
         {
-            path: "/build-thing",
+            path: "/build-thing/:id",
             components: {
                 default: ThingBuilder,
                 side: TileBrowser
+            },
+            props: {
+                default: true,
+                side: false
             }
         },
         {

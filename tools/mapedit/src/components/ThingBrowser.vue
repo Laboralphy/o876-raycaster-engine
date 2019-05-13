@@ -12,6 +12,9 @@
 </template>
 
 <script>
+    import * as ACTION from '../store/modules/level/action-types';
+    import * as MUTATION from '../store/modules/editor/mutation-types';
+    import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -29,11 +32,11 @@
 
         methods: {
             createClicked: function() {
-                this.$router.push('/build-thing');
+                this.$router.push('/build-thing/0');
             },
 
             modifyClicked: function() {
-
+                this.$router.push('/build-thing/' + this.selected);
             },
 
             deleteClicked: function() {

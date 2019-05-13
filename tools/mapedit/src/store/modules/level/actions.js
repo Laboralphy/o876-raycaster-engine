@@ -196,6 +196,15 @@ export default {
             default:
                 throw new Error('setting cell block : this floor is invalid ' + floor);
         }
+    },
+
+    [ACTION.CREATE_THING]: ({commit, getters}, data) => {
+        const id = getters.getMaxThingId;
+        commit(MUTATION.DEFINE_THING, {id, ...data});
+    },
+
+    [ACTION.DELETE_THING]: ({commit}, {id}) => {
+        commit(MUTATION.DESTROY_THING, {id});
     }
 
 }
