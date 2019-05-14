@@ -69,6 +69,7 @@
                     this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
                 } else {
                     this.selected = id;
+                    console.log('block selected ' + this.selected);
                     this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: id});
                 }
             },

@@ -263,7 +263,8 @@ export default {
             scale: data.scale,
             opacity: data.opacity,
             ghost: data.ghost,
-            light: data.light
+            light: data.light,
+            tile: data.tile
         };
         console.log('storing', oThing, 'because', data);
         if (index >= 0) {

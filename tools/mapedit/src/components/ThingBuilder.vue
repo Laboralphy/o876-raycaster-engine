@@ -40,7 +40,7 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <MyButton @click="doCreate">{{ !(id | 0) ? 'Create' : 'Update' }}</MyButton>
+                                    <MyButton @click="doCreate">{{ !getId ? 'Create' : 'Update' }}</MyButton>
                                 </div>
                             </form>
                         </td>
@@ -117,6 +117,11 @@
                 'getThings',
                 'getTile'
             ]),
+
+
+            getId: function() {
+                return this.id | 0
+            }
         },
 
         methods: {
@@ -135,6 +140,7 @@
                     this.value.light = oThing.light;
                     this.value.opacity = oThing.opacity;
                     this.value.ref = oThing.ref;
+                    this.value.tile = oThing.tile;
                 }
             },
 
@@ -157,11 +163,11 @@
                 const oTile = this.getTile(this.value.tile);
                 if (!!oTile) {
                     this.saved = true;
-                    const id = this.id | 0;
+                    const id = this.getId | 0;
                     if (!id) {
-                        this.createThing(this.value);
+                        this.createThing(this.value).then(() => this.$router.push('/level/things'));
                     } else {
-                        this.modifyThing({id, ...this.value});
+                        this.modifyThing({id, ...this.value}).then(() => this.$router.push('/level/things'));
                     }
                 }
             },

@@ -55,7 +55,10 @@
             ]),
 
             getThingTiles: function() {
+                this.getThingTiles.map(t => ({
+                    content: this.getTiles[this.tile],
 
+                }));
             }
         },
 

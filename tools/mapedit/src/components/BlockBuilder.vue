@@ -47,7 +47,7 @@
                                 </div>
                                 <hr/>
                                 <div>
-                                    <MyButton v-if="!id" @click="createClick">Create</MyButton>
+                                    <MyButton v-if="!getId" @click="createClick">Create</MyButton>
                                     <MyButton v-else @click="modifyClick">Update</MyButton>
                                 </div>
                             </form>
@@ -265,6 +265,11 @@
                 'getBlockBuilderPhysicalData'
             ]),
 
+
+            getId: function() {
+                return this.id | 0;
+            },
+
             getFaceNorthContent: function() {
                 const idTile = this.value.faces.n;
                 const oTile = this.getWallTile(idTile);
@@ -404,7 +409,7 @@
             },
 
             modifyClick: function() {
-                const id = this.id | 0;
+                const id = this.getId;
                 this.modifyBlock({id, ...this.value}).then(() => {
                     this.$router.push('/level/blocks');
                 });
