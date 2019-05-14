@@ -59,21 +59,6 @@
             }),
 
             ...editorMapMutations([
-                MUTATION.BLOCKBUILDER_SET_ID,
-                MUTATION.BLOCKBUILDER_SET_REF,
-                MUTATION.BLOCKBUILDER_SET_PHYS,
-                MUTATION.BLOCKBUILDER_SET_OFFS,
-                MUTATION.BLOCKBUILDER_SET_LIGHT,
-                MUTATION.BLOCKBUILDER_SET_LIGHT_VALUE,
-                MUTATION.BLOCKBUILDER_SET_LIGHT_INNER_RADIUS,
-                MUTATION.BLOCKBUILDER_SET_LIGHT_OUTER_RADIUS,
-                MUTATION.BLOCKBUILDER_SET_FACE_NORTH,
-                MUTATION.BLOCKBUILDER_SET_FACE_EAST,
-                MUTATION.BLOCKBUILDER_SET_FACE_WEST,
-                MUTATION.BLOCKBUILDER_SET_FACE_SOUTH,
-                MUTATION.BLOCKBUILDER_SET_FACE_FLOOR,
-                MUTATION.BLOCKBUILDER_SET_FACE_CEILING,
-
                 MUTATION.BLOCKBROWSER_SET_SELECTED
             ]),
 
@@ -93,7 +78,11 @@
             },
 
             deleteClicked() {
-                this.deleteBlock({id: this.selected});
+                if (confirm('Delete this block ?')) {
+                    this.selected = null;
+                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
+                    this.deleteBlock({id: this.selected});
+                }
             },
 
 

@@ -8,7 +8,11 @@
                 <SiblingButton title="Display project flat tiles"><ViewGridIcon title="Display project flat tiles" decorative></ViewGridIcon></SiblingButton>
                 <SiblingButton title="Display project sprite tiles"><ChessRookIcon title="Display project sprite tiles" decorative></ChessRookIcon></SiblingButton>
             </Siblings>
-            <MyButton title="Delete the selected tiles" @click="deleteClick"><DeleteIcon title="Delete the selected tiles" decorative></DeleteIcon></MyButton>
+            <MyButton
+                    title="Delete the selected tiles"
+                    @click="deleteClick"
+                    :disabled="getSelectedTileCount === 0"
+            ><DeleteIcon title="Delete the selected tiles" decorative></DeleteIcon></MyButton>
         </template>
         <div v-if="selectedFamily === CONSTS.TILE_TYPE_WALL">
             <Tile
@@ -120,6 +124,17 @@
                 'getTile'
             ]),
 
+
+            getSelectedTileCount: function() {
+                let c = 0;
+                for (let i in this.selectedTiles) {
+                    if (this.selectedTiles[i]) {
+                        ++c;
+                    }
+                }
+                return c;
+            },
+
             getTitle: function() {
                 switch (this.selectedFamily) {
                     case CONSTS.TILE_TYPE_WALL:
@@ -143,15 +158,6 @@
 
             pluralSpriteTiles: function() {
                 return this.getSpriteTiles.length > 1 ? 's' : '';
-            },
-
-            areSomeTileSelected: function() {
-                for (let id in this.selectedTiles) {
-                    if (this.selectedTiles[id]) {
-                        return true;
-                    }
-                }
-                return false;
             }
         },
 
@@ -163,12 +169,16 @@
             }),
 
             setTileSelection: function(idTile, value) {
-                this.selectedTiles[idTile] = value;
+                if (idTile in this.selectedTiles) {
+                    this.selectedTiles[idTile] = value;
+                } else {
+                    this.$set(this.selectedTiles, idTile, value);
+                }
             },
 
             clearTileSelection: function() {
                 for (let id in this.selectedTiles) {
-                    this.selectedTiles[id] = false;
+                    this.setTileSelection(id, false);
                 }
             },
 
@@ -212,9 +222,20 @@
             },
 
             deleteClick: function() {
+                const l = this.getSelectedTileCount;
+                if (l <= 0) {
+                    return;
+                }
+                const sPrompt = l > 1
+                    ? 'Delete these ' + l + ' tiles ?'
+                    : 'Delete this tile ?';
+
+                if (!confirm(sPrompt)) {
+                    return;
+                }
                 for (let id in this.selectedTiles) {
                     if (this.selectedTiles[id]) {
-                        this.selectedTiles[id] = false;
+                        this.setTileSelection(id, false);
                         this.deleteTile({id: parseInt(id)});
                     }
                 }

@@ -12,12 +12,12 @@
                             <h3>Thing properties</h3>
                             <form>
                                 <div>
-                                    <label>Scale: <input v-model="mScale" type="number" />%</label>
+                                    <label>Scale: <input v-model="value.scale" type="number" />%</label>
                                     <div class="hint">Scale is a size factor. 200% means the thing will appear twice bigger</div>
                                 </div>
                                 <div>
                                     <label>Opacity:
-                                        <select v-model="mOpacity">
+                                        <select v-model="value.opacity">
                                             <option value="0">100%</option>
                                             <option value="1">75%</option>
                                             <option value="2">50%</option>
@@ -27,31 +27,30 @@
                                     <div class="hint">Opacity 100% : the thing has full opacity. Opacity 25% : the thing is nearly transparent</div>
                                 </div>
                                 <div>
-                                    <label>Light emitter: <input v-model="mLight" type="checkbox" /></label>
-                                    <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view</div>
+                                    <label>Light emitter: <input v-model="value.light" type="checkbox" /></label>
+                                    <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view.</div>
                                 </div>
                                 <div>
-                                    <label>Ghost filter: <input v-model="mGhost" type="checkbox" /></label>
-                                    <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas</div>
+                                    <label>Ghost filter: <input v-model="value.ghost" type="checkbox" /></label>
+                                    <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas.</div>
                                 </div>
                                 <div>
-                                    <label>Ref: <input v-model="mRef" style="width: 8em" type="text"/></label>
-                                    <div class="hint">Optional symbolic identifier used during dev time</div>
+                                    <label>Ref: <input v-model="value.ref" style="width: 8em" type="text"/></label>
+                                    <div class="hint">Optional symbolic identifier used during dev time.</div>
                                 </div>
                                 <hr/>
                                 <div>
-                                    <MyButton v-if="!getThingBuilderId" @click="$emit('submitCreate', getData)">Create</MyButton>
-                                    <MyButton v-else @click="$emit('submitUpdate', getData)">Update</MyButton>
+                                    <MyButton @click="doCreate">{{ !(id | 0) ? 'Create' : 'Update' }}</MyButton>
                                 </div>
                             </form>
                         </td>
                         <td>
                             <h3>Drag a tile here...</h3>
                             <Tile
-                                    :tile="tile"
-                                    :content="getAnimationContent"
-                                    :width="width || Math.max(getTileWidth, getTileHeight)"
-                                    :height="height || Math.max(getTileWidth, getTileHeight)"
+                                    :tile="value.tile"
+                                    :content="content"
+                                    :width="96"
+                                    :height="96"
                                     :selectable="false"
                                     :dropzone="true"
                                     @drop="({incoming}) => handleDrop(incoming)"
@@ -65,27 +64,20 @@
 </template>
 
 <script>
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
+    import * as CONSTS from '../consts';
+
+    import * as LEVEL_ACTION from '../store/modules/level/action-types';
 
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
+    import Tile from "./Tile.vue";
 
-
-    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "ThingBuilder",
-        components: {MyButton, Window},
-
-        data: function() {
-            return {
-                content: '',
-                width: 0,
-                height: 0,
-                saved: false
-            };
-        },
+        components: {MyButton, Window, Tile},
 
         props: {
             id: {
@@ -98,73 +90,81 @@
             id: {
                 immediate: true,
                 handler: function(newValue, oldValue) {
-                    //....
+                    this.importThing(newValue);
                 }
             }
         },
 
+        data: function() {
+            return {
+                content: '',
+                saved: false,
+
+                value: {
+                    tile: 0,
+                    scale: 100,
+                    opacity: 0,
+                    light: false,
+                    ghost: false,
+                    ref: ''
+                }
+            };
+        },
+
+
         computed: {
-            ...editorMapGetters([
-                'getThingBuilderId',
-                'getThingBuilderScale',
-                'getThingBuilderOpacity',
-                'getThingBuilderLight',
-                'getThingBuilderGhost',
-                'getThingBuilderRef'
+            ...levelMapGetters([
+                'getThings',
+                'getTile'
             ]),
-
-            mScale: {
-                get() {
-                    return this.getThingBuilderScale;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_SCALE]({value});
-                }
-            },
-            mOpacity: {
-                get() {
-                    return this.getThingBuilderOpacity;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_OPACITY]({value});
-                }
-            },
-            mLight: {
-                get() {
-                    return this.getThingBuilderLight;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_LIGHT]({value});
-                }
-            },
-            mGhost: {
-                get() {
-                    return this.getThingBuilderGhost;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_GHOST]({value});
-                }
-            },
-            mRef: {
-                get() {
-                    return this.getThingBuilderRef;
-                },
-                set(value) {
-                    this[EDITOR_MUTATION.THINGBUILDER_SET_REF]({value});
-                }
-            },
-
         },
 
         methods: {
-            ...editorMapMutations([
-                EDITOR_MUTATION.THINGBUILDER_SET_ID,
-                EDITOR_MUTATION.THINGBUILDER_SET_SCALE,
-                EDITOR_MUTATION.THINGBUILDER_SET_OPACITY,
-                EDITOR_MUTATION.THINGBUILDER_SET_LIGHT,
-                EDITOR_MUTATION.THINGBUILDER_SET_GHOST,
-                EDITOR_MUTATION.THINGBUILDER_SET_REF
-            ]),
+
+            ...levelMapActions({
+                createThing: LEVEL_ACTION.CREATE_THING,
+                modifyThing: LEVEL_ACTION.MODIFY_THING
+            }),
+
+            importThing: function(id) {
+                id = id | 0;
+                const oThing = this.getThings.find(t => t.id === id);
+                if (oThing) {
+                    this.value.scale = oThing.scale;
+                    this.value.ghost = oThing.ghost;
+                    this.value.light = oThing.light;
+                    this.value.opacity = oThing.opacity;
+                    this.value.ref = oThing.ref;
+                }
+            },
+
+            handleDrop: function(id) {
+                const oTile = this.getTile(id);
+                if (oTile) {
+                    if (oTile.type !== CONSTS.TILE_TYPE_SPRITE) {
+                        alert('Only sprite tiles are allowed here !');
+                        return;
+                    }
+                    this.value.tile = id;
+                    this.content = oTile.content;
+                } else {
+                    console.error('this tile is undefined : ' + id);
+                }
+            },
+
+
+            doCreate: function() {
+                const oTile = this.getTile(this.value.tile);
+                if (!!oTile) {
+                    this.saved = true;
+                    const id = this.id | 0;
+                    if (!id) {
+                        this.createThing(this.value);
+                    } else {
+                        this.modifyThing({id, ...this.value});
+                    }
+                }
+            },
         }
     };
 

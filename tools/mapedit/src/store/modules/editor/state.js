@@ -121,42 +121,6 @@ export default {
 
 
     models: {
-        blockBuilder: {
-            id: null,
-            ref: '',
-            phys: 0,
-            offs: 0,
-            light: {
-                enabled: false,
-                value: 0.6,
-                inner: 0,
-                outer: 150
-            },
-            faces: {
-                n: null,
-                e: null,
-                w: null,
-                s: null,
-                f: null,
-                c: null
-            }
-        },
-
-        thingBuilder: {
-            id: null,
-            ref: '',
-            scale: 100,
-            opacity: 0,
-            light: false,
-            ghost: false
-        },
-
-        animationBuilder: {
-            start: 0,
-            frames: 2,
-            duration: 80,
-            loop: 0
-        },
 
         blockBrowser: {
             selected: null

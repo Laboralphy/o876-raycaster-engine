@@ -18,6 +18,11 @@ class TileAnimation {
         this._frozen = false;   // if true the animation is suspended
     }
 
+    reset() {
+        this._index = 0;
+        this._time = 0;
+    }
+
     get base() {
         return this._base;
     }

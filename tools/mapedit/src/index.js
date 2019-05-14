@@ -98,7 +98,10 @@ function createApplication() {
             params: {
                 id: Number
             },
-            props: {default: true, side: false}
+            props: {
+                default: true,
+                side: false
+            }
         },
         {
             path: "/list-levels",

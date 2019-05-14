@@ -199,7 +199,6 @@
     import Window from "./Window.vue";
     import HomeButton from "./HomeButton.vue";
     import MyButton from "./MyButton.vue";
-    import FormBlockProps from "./FormBlockProps.vue";
     import Tile from "./Tile.vue";
     import CloseCircleIcon from "vue-material-design-icons/CloseCircle.vue";
     import ContentDuplicateIcon from "vue-material-design-icons/ContentDuplicate.vue";
@@ -209,7 +208,7 @@
 
     export default {
         name: "BlockBuilder",
-        components: {ContentDuplicateIcon, CloseCircleIcon, Tile, FormBlockProps, MyButton, HomeButton, Window},
+        components: {ContentDuplicateIcon, CloseCircleIcon, Tile, MyButton, HomeButton, Window},
 
         data: function() {
             return {

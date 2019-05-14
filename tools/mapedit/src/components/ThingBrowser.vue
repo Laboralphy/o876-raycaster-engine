@@ -8,15 +8,35 @@
             <MyButton :disabled="!selected" title="Delete the selected thing template" @click="deleteClicked"><DeleteIcon title="Delete the selected thing template" decorative></DeleteIcon></MyButton>
         </template>
 
+        <Tile
+                v-for="image in getThingTiles"
+                :content="image.content"
+                :width="96"
+                :height="96"
+                :key="image.id"
+                :tile="image.id"
+                :anim="!!image.animation"
+                :draggable="true"
+                :dropzone="true"
+                @drop="({incoming}) => handleDrop(image.id, incoming)"
+                @selected="({value}) => setTileSelection(image.id, value)"
+        ></Tile>
+
     </Window>
 </template>
 
 <script>
+    import * as ACTION from '../store/modules/level/action-types';
+    import * as MUTATION from '../store/modules/editor/mutation-types';
+    import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
     import PencilIcon from "vue-material-design-icons/Pencil.vue";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
+
+    const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
+
     export default {
         name: "ThingBrowser",
         components: {DeleteIcon, PencilIcon, PlusIcon, MyButton, Window},
@@ -27,13 +47,25 @@
             };
         },
 
+        computed: {
+
+            ...levelMapGetters([
+                'getThings',
+                'getTiles'
+            ]),
+
+            getThingTiles: function() {
+
+            }
+        },
+
         methods: {
             createClicked: function() {
-                this.$router.push('/build-thing');
+                this.$router.push('/build-thing/0');
             },
 
             modifyClicked: function() {
-
+                this.$router.push('/build-thing/' + this.selected);
             },
 
             deleteClicked: function() {

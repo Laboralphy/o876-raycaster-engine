@@ -1,3 +1,7 @@
+function redMaxId(prev, curr) {
+    return Math.max(prev, curr.id);
+}
+
 export default {
     getMaxTileId: state =>
         Math.max(
@@ -14,7 +18,8 @@ export default {
                 .sprites
                 .reduce((prev, curr) => Math.max(prev, curr.id), 0)
         ),
-    getMaxBlockId: state => state.blocks.reduce((prev, curr) => Math.max(prev, curr.id), 0),
+    getMaxBlockId: state => state.blocks.reduce(redMaxId, 0),
+    getMaxThingId: state => state.things.reduce(redMaxId, 0),
     getTimeInterval: state => state.time.interval,
     getWallTiles: state => state.tiles.walls,
     getFlatTiles: state => state.tiles.flats,
@@ -32,4 +37,6 @@ export default {
     getGrid: state => state.grid,
     getGridSize: state => state.grid.length,
     getLevel: state => state,
+
+    getThings: state => state.things
 }

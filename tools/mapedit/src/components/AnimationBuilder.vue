@@ -11,15 +11,15 @@
                         <h3>Animation properties</h3>
                         <form>
                             <div>
-                                <label>Frames: <input v-model="frames" type="number" min="2"/></label>
+                                <label>Frames: <input v-model="value.frames" type="number" min="2"/></label>
                             </div>
                             <div>
-                                <label>Duration: <input v-model="duration" type="number" :min="getTimeInterval" :step="getTimeInterval"/></label>
+                                <label>Duration: <input v-model="value.duration" type="number" :min="getTimeInterval" :step="getTimeInterval"/></label>
                             </div>
                             <div>
                                 <ul>
                                     <li v-for="p in getBlockBuilderAnimLoopData" :key="p.id">
-                                        <label><input :value="p.id" v-model="loop" type="radio"/> {{ p.label }}</label>
+                                        <label><input :value="p.id" v-model="value.loop" type="radio"/> {{ p.label }}</label>
                                     </li>
                                 </ul>
                             </div>
@@ -28,7 +28,7 @@
                     <td>
                         <h3>Drag and drop a wall, flat or sprite texture here</h3>
                         <Tile
-                                :tile="tile"
+                                :tile="value.tile"
                                 :content="getAnimationContent"
                                 :width="width || Math.max(getTileWidth, getTileHeight)"
                                 :height="height || Math.max(getTileWidth, getTileHeight)"
@@ -81,8 +81,35 @@
                 timer: 0,
                 frameIndex: 0,
                 oTileAnimation: new TileAnimation(),
-                saved: false
+                saved: false,
+                value: {
+                    frames: 2,
+                    duration: 120,
+                    loop: 1,
+                    tile: 0
+                }
             };
+        },
+
+        watch: {
+            'value.frames': {
+                handler: function(newValue, oldValue) {
+                    this.oTileAnimation.count = newValue;
+                    this.oTileAnimation.reset();
+                }
+            },
+            'value.duration': {
+                handler: function(newValue, oldValue) {
+                    this.oTileAnimation.duration = newValue;
+                    this.oTileAnimation.reset();
+                }
+            },
+            'value.loop': {
+                handler: function(newValue, oldValue) {
+                    this.oTileAnimation.loop = newValue;
+                    this.oTileAnimation.reset();
+                }
+            }
         },
 
         computed: {
@@ -97,67 +124,16 @@
             ]),
 
             ...editorMapGetter([
-                'getBlockBuilderAnimLoopData',
-                'getAnimBuilderFrames',
-                'getAnimBuilderDuration',
-                'getAnimBuilderLoop',
-                'getAnimBuilderStart'
+                'getBlockBuilderAnimLoopData'
             ]),
 
-            tile: {
-                get () {
-                    return this.getAnimBuilderStart;
-                },
-
-                set (value) {
-                    this.saved = false;
-                    this.setStart({value});
-                }
-            },
-
-            frames: {
-                get () {
-                    return this.getAnimBuilderFrames;
-                },
-
-                set (value) {
-                    this.saved = false;
-                    this.setFrames({value});
-                    this.oTileAnimation.count = parseInt(value);
-                }
-            },
-
-            duration: {
-                get () {
-                    return this.getAnimBuilderDuration;
-                },
-
-                set (value) {
-                    this.saved = false;
-                    this.setDuration({value});
-                    this.oTileAnimation.duration = parseInt(value);
-                }
-            },
-
-            loop: {
-                get () {
-                    return this.getAnimBuilderLoop;
-                },
-
-                set (value) {
-                    this.saved = false;
-                    this.setLoop({value});
-                    this.oTileAnimation.loop = parseInt(value);
-                }
-            },
-
             isValidAnimation: function() {
-                return !!this.tile && this.duration > 0 && this.frames > 1;
+                return !!this.value.tile && this.value.duration > 0 && this.value.frames > 1;
             },
 
             getAnimationContent: function() {
                 if (this.isValidAnimation) {
-                    const oFirstTile = this.getTile(this.tile);
+                    const oFirstTile = this.getTile(this.value.tile);
                     const sType = oFirstTile.type;
                     let bWall = false;
                     let aTiles;
@@ -175,7 +151,7 @@
                             aTiles = this.getSpriteTiles;
                             break;
                     }
-                    const iFirstFrame = aTiles.findIndex(t => t.id === this.tile);
+                    const iFirstFrame = aTiles.findIndex(t => t.id === this.value.tile);
                     const iFrame = this.frameIndex + iFirstFrame;
                     const oTile = iFrame < aTiles.length ? aTiles[iFrame] : aTiles[aTiles.length - 1];
                     const w = this.getTileWidth;
@@ -193,7 +169,7 @@
              * défini comme image initiale d'animation.
              */
             showUpdate: function() {
-                const id = this.tile;
+                const id = this.value.tile;
                 const oTile = this.getTile(id);
                 if (oTile) {
                     return !!oTile.animation;
@@ -210,28 +186,21 @@
                 clearTileAnimation: ACTION.CLEAR_TILE_ANIMATION
             }),
 
-            ...editorMapMutations({
-                setStart: MUTATION.ANIMBUILDER_SET_START,
-                setFrames: MUTATION.ANIMBUILDER_SET_FRAMES,
-                setDuration: MUTATION.ANIMBUILDER_SET_DURATION,
-                setLoop: MUTATION.ANIMBUILDER_SET_LOOP
-            }),
-
             handleDrop: function(id) {
                 const oTile = this.getTile(id);
                 if (oTile) {
-                    this.tile = id;
+                    this.value.tile = id;
                     this.content = oTile.content;
                     this.width = this.getTileWidth;
                     this.height = oTile.type === CONSTS.TILE_TYPE_WALL ? this.getTileHeight : this.getTileWidth;
                     if (oTile.animation) {
-                        this.duration = oTile.animation.duration;
-                        this.loop = oTile.animation.loop;
-                        this.frames = oTile.animation.frames;
+                        this.value.duration = oTile.animation.duration;
+                        this.value.loop = oTile.animation.loop;
+                        this.value.frames = oTile.animation.frames;
                     } else {
-                        this.duration = this.getTimeInterval * 2;
-                        this.loop = 0;
-                        this.frames = 2;
+                        this.value.duration = this.getTimeInterval * 2;
+                        this.value.loop = 0;
+                        this.value.frames = 2;
                     }
                 } else {
                     console.error('this tile is undefined : ' + id)
@@ -252,9 +221,10 @@
                 this.stopTimer();
                 this.interval = setInterval(() => this.doomloop(), 40);
                 const ta = this.oTileAnimation;
-                ta.count = this.frames;
-                ta.duration = this.duration;
-                ta.loop = this.loop;
+                ta.count = this.value.frames;
+                ta.duration = this.value.duration;
+                ta.loop = this.value.loop;
+                ta.reset();
             },
 
             /**
@@ -269,21 +239,20 @@
 
             doCreate: function() {
                 // ajouter les donnée d'animation à la frame
-                const animation = {
-                    start: this.tile,
-                    frames: this.frames,
-                    duration: this.duration,
-                    loop: this.loop
-                };
-                const oTile = this.getTile(this.tile);
+                const oTile = this.getTile(this.value.tile);
                 if (!!oTile) {
                     this.saved = true;
-                    this.setTileAnimation(animation);
+                    this.setTileAnimation({
+                        start: this.value.tile,
+                        duration: this.value.duration,
+                        frames: this.value.frames,
+                        loop: this.value.loop
+                    });
                 }
             },
 
             doDelete: function() {
-                this.clearTileAnimation({idTile: this.tile});
+                this.clearTileAnimation({idTile: this.value.tile});
             }
         },
 

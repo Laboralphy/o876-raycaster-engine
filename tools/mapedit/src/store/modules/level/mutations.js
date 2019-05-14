@@ -218,6 +218,13 @@ export default {
         }
     },
 
+    /**
+     * Placement d'un thing dan sune cellule
+     * @param state
+     * @param x
+     * @param y
+     * @param id
+     */
     [MUTATION.SET_CELL_THING]: (state, {x, y, id}) => {
         const cell = state.grid[y][x];
         const oThing = cell.things.find(t => t.x === x && t.y === y);
@@ -232,39 +239,49 @@ export default {
         }
     },
 
+    /**
+     * Chargement d'un nouveau state
+     * @param state
+     * @param content {*}
+     */
     [MUTATION.SET_STATE_CONTENT]: (state, {content}) => {
         for (let sKey in content) {
             state[sKey] = content[sKey];
         }
     },
 
+    /**
+     * Création/mise à jour d'un thing
+     * @param state
+     * @param data {*}
+     */
     [MUTATION.DEFINE_THING]: (state, data) => {
-        const index = state.things.findIndex(b => b.id === data.id);
-        const oThings = {
+        const index = state.things.findIndex(t => t.id === data.id);
+        const oThing = {
             id: data.id,
             ref: data.ref,
-            phys: data.phys,
-            offs: data.offs,
-            preview: '',
-            light: {
-                enabled: data.light.enabled,
-                value: data.light.value,
-                inner: data.light.inner,
-                outer: data.light.outer
-            },
-            faces: {
-                n: data.faces.n,
-                e: data.faces.e,
-                w: data.faces.w,
-                s: data.faces.s,
-                f: data.faces.f,
-                c: data.faces.c,
-            }
+            scale: data.scale,
+            opacity: data.opacity,
+            ghost: data.ghost,
+            light: data.light
         };
+        console.log('storing', oThing, 'because', data);
         if (index >= 0) {
-            state.blocks.splice(index, 1, oBlock);
+            state.things.splice(index, 1, oThing);
         } else {
-            state.blocks.push(oBlock);
+            state.things.push(oThing);
+        }
+    },
+
+    /**
+     * Destruction d'un thing créé par DEFINE_THING
+     * @param state
+     * @param id {number} identifiant du thing à détruire
+     */
+    [MUTATION.DESTROY_THING]: (state, {id}) => {
+        const iThing = state.things.findIndex(t => t.id === id);
+        if (iThing >= 0) {
+            state.things.splice(iThing, 1);
         }
     }
 }
