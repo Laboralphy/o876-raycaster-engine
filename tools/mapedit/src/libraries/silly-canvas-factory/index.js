@@ -4,7 +4,7 @@
 import CanvasHelper from "../../../../../src/canvas-helper";
 import * as CONSTS from "../../consts";
 
-class CanvasTextFactory {
+class SillyCanvasFactory {
     constructor () {
         this._canvases = {};
         this._width = CONSTS.BLOCK_WIDTH;
@@ -51,6 +51,9 @@ class CanvasTextFactory {
         const h4 = h >> 2;
 
         switch (shape) {
+            case CONSTS.SHAPE_NONE:
+                break;
+
             case CONSTS.SHAPE_CIRCLE:
                 ctx.arc(w2, h2, w4, 0, Math.PI * 2);
                 ctx.fill();
@@ -113,4 +116,4 @@ class CanvasTextFactory {
     }
 }
 
-export default CanvasTextFactory;
+export default SillyCanvasFactory;

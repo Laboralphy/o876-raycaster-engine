@@ -205,12 +205,12 @@
     import ContentPasteIcon from "vue-material-design-icons/ContentPaste.vue";
     import CloseIcon from "vue-material-design-icons/Close.vue";
 
-    import CanvasTextFactory from "../libraries/silly-canvas-factory";
+    import SillyCanvasFactory from "../libraries/silly-canvas-factory";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
-    const CTF = new CanvasTextFactory();
+    const SCF = new SillyCanvasFactory();
 
     export default {
         name: "LevelGrid",
@@ -368,6 +368,7 @@
                 let oLowerCvs = null;
                 let oUpperCvs = null;
 
+                window.BC = BlockCache;
                 if (!!cell.block) {
                     oLowerCvs = BlockCache.load(cell.block);
                 }
@@ -542,7 +543,7 @@
 
 
                 // tag
-                const oTagCanvas = CTF.getCanvas(cell.tags, cell.mark);
+                const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark);
                 if (!!oTagCanvas) {
                     ctx.drawImage(
                         oTagCanvas,
@@ -562,7 +563,7 @@
 
             redraw: function () {
                 const a = this.modifications.toArray();
-                CTF.setSize(this.gridRenderer.cellWidth, this.gridRenderer.cellHeight);
+                SCF.setSize(this.gridRenderer.cellWidth, this.gridRenderer.cellHeight);
                 this.modifications.clear();
                 this.$nextTick(() => {
                     this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
@@ -635,6 +636,7 @@
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
+                console.log(this.selectedTool, this.getBlockBrowserSelected);
                 if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
                     const oPrevRegion = this.getLevelGridSelectedRegion;
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
