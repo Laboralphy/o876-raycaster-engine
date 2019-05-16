@@ -266,7 +266,6 @@ export default {
             light: data.light,
             tile: data.tile
         };
-        console.log('storing', oThing, 'because', data);
         if (index >= 0) {
             state.things.splice(index, 1, oThing);
         } else {

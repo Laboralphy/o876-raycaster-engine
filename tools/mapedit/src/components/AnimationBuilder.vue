@@ -41,7 +41,7 @@
                 <tr>
                     <td colspan="2">
                         <MyButton :disabled="saved" @click="doCreate"><AnimationIcon></AnimationIcon> Apply</MyButton>
-                        <MyButton @click="doDelete" :disabled="!showUpdate"><DeleteIcon></DeleteIcon> Delete</MyButton>
+                        <MyButton :disabled="!showUpdate" @click="doDelete"><DeleteIcon></DeleteIcon> Delete</MyButton>
                     </td>
                 </tr>
             </tbody>
@@ -94,20 +94,28 @@
         watch: {
             'value.frames': {
                 handler: function(newValue, oldValue) {
+                    this.saved = false;
                     this.oTileAnimation.count = newValue;
                     this.oTileAnimation.reset();
                 }
             },
             'value.duration': {
                 handler: function(newValue, oldValue) {
+                    this.saved = false;
                     this.oTileAnimation.duration = newValue;
                     this.oTileAnimation.reset();
                 }
             },
             'value.loop': {
                 handler: function(newValue, oldValue) {
+                    this.saved = false;
                     this.oTileAnimation.loop = newValue;
                     this.oTileAnimation.reset();
+                }
+            },
+            'value.tile': {
+                handler: function(newValue, oldValue) {
+                    this.saved = false;
                 }
             }
         },

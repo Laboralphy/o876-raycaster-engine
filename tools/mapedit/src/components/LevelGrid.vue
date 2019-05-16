@@ -568,7 +568,6 @@
                 this.$nextTick(() => {
                     this.gridRenderer.render(this.$refs.levelgrid, this.getGrid, a.length > 0 ? a : undefined);
                     this.setHasChanged({value: false});
-                    console.log('redraw done');
                 });
             },
 
@@ -636,7 +635,6 @@
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
-                console.log(this.selectedTool, this.getBlockBrowserSelected);
                 if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
                     const oPrevRegion = this.getLevelGridSelectedRegion;
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);

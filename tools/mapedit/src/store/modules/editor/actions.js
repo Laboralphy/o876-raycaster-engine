@@ -8,7 +8,6 @@ function getHighlightedTags(sr, grid) {
     for (let y = sr.y1; y <= sr.y2; ++y) {
         for (let x = sr.x1; x <= sr.x2; ++x) {
             if (!grid[y]) {
-                console.log(grid);
                 return;
             }
             const cell = grid[y][x];

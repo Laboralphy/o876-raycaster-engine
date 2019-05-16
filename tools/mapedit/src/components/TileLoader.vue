@@ -39,7 +39,7 @@
                     :content="image.src"
                     :width="getTileWidth"
                     :height="getTileHeight"
-                    @selected="({value}) => setTileSelection(image, value)"
+                    @select="({value}) => setTileSelection(image, value)"
             />
         </div>
         <div v-else-if="flatImages.length > 0">
@@ -51,7 +51,7 @@
                     :content="image.src"
                     :width="getTileWidth"
                     :height="getTileWidth"
-                    @selected="({value}) => setTileSelection(image, value)"
+                    @select="({value}) => setTileSelection(image, value)"
             />
         </div>
         <div v-else-if="spriteImages.length > 0">
@@ -63,7 +63,7 @@
                     :content="image.src"
                     :width="image.width"
                     :height="image.height"
-                    @selected="({value}) => setTileSelection(image, value)"
+                    @select="({value}) => setTileSelection(image, value)"
             />
         </div>
     </Window>

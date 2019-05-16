@@ -26,7 +26,7 @@
                     :draggable="true"
                     :dropzone="true"
                     @drop="({incoming}) => handleDrop(image.id, incoming)"
-                    @selected="({value}) => setTileSelection(image.id, value)"
+                    @select="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
         <div v-if="selectedFamily === CONSTS.TILE_TYPE_FLAT">
@@ -41,7 +41,7 @@
                     :draggable="true"
                     :dropzone="true"
                     @drop="({incoming}) => handleDrop(image.id, incoming)"
-                    @selected="({value}) => setTileSelection(image.id, value)"
+                    @select="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
         <div v-if="selectedFamily === CONSTS.TILE_TYPE_SPRITE">
@@ -56,7 +56,7 @@
                     :draggable="true"
                     :dropzone="true"
                     @drop="({incoming}) => handleDrop(image.id, incoming)"
-                    @selected="({value}) => setTileSelection(image.id, value)"
+                    @select="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
     </Window>

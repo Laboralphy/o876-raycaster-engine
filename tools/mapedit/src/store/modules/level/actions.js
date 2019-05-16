@@ -29,7 +29,6 @@ function renderAndStoreBlock(tiles, data) {
         render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces).then(oCanvas => {
             const sSrc = CanvasHelper.getData(oCanvas);
             CACHE.store(data.id, oCanvas);
-            console.log('cache store', data.id, typeof data.id);
             resolve({id: data.id, content: sSrc});
         });
     });
@@ -114,14 +113,16 @@ export default {
      */
     [ACTION.CREATE_BLOCK]: async ({commit, getters}, data) => {
         const id = getters.getMaxBlockId + 1;
+        if (!id) {
+            throw new Error('the computed id is invalid');
+        }
         const oBlock = {
             id,
             ...data
         };
         commit(MUTATION.DEFINE_BLOCK, oBlock);
-        const {content} = await renderAndStoreBlock(getters.getTiles, data);
+        const {content} = await renderAndStoreBlock(getters.getTiles, oBlock);
         commit(MUTATION.SET_BLOCK_PREVIEW, {id, content});
-        console.log('CREATE BLOCK mutation done', id);
     },
 
     [ACTION.MODIFY_BLOCK]: async ({commit, getters}, data) => {

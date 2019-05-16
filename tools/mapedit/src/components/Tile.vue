@@ -92,7 +92,7 @@
              */
             toggleSelect: function() {
                 this.selected = this.selectable && !this.selected;
-                this.$emit('selected', {value: this.selected});
+                this.$emit('select', {value: this.selected});
             },
 
             /**

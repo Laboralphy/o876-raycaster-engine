@@ -17,6 +17,10 @@ function clear() {
     CACHE = {};
 }
 
+function getCacheContent() {
+    return CACHE;
+}
+
 export default {
-    store, load, remove, clear
+    store, load, remove, clear, getCacheContent
 }

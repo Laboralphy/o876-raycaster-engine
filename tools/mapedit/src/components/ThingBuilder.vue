@@ -99,7 +99,7 @@
             return {
                 content: '',
                 saved: false,
-
+                CONSTS,
                 value: {
                     tile: 0,
                     scale: 100,
