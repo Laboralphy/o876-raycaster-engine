@@ -12,6 +12,7 @@ export const DELETE_BLOCK = 'DELETE_BLOCK';
 export const CREATE_THING = 'CREATE_THING';
 export const MODIFY_THING = 'MODIFY_THING';
 export const DELETE_THING = 'DELETE_THING';
+export const REORDER_THING = 'REORDER_THING';
 
 export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 

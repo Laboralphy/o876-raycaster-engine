@@ -21,6 +21,7 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
+    import * as LEVEL_ACTION from '../store/modules/level/action-types';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -28,7 +29,7 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import Thing from "./Thing.vue";
 
-    const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
+    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "ThingBrowser",
@@ -46,6 +47,7 @@
             ...levelMapGetters([
                 'getThings',
                 'getTiles',
+                'getThing',
                 'getSpriteTile'
             ]),
 
@@ -69,6 +71,12 @@
         },
 
         methods: {
+
+            ...levelMapActions({
+                deleteThing: LEVEL_ACTION.DELETE_THING,
+                reorderThing: LEVEL_ACTION.REORDER_THING
+            }),
+
             createClicked: function() {
                 this.$router.push('/build-thing/0');
             },
@@ -78,10 +86,29 @@
             },
 
             deleteClicked: function() {
-
+                // effacer le thing
+                const id = this.selected;
+                if (!!id && confirm('Delete this block ?')) {
+                    this.deleteThing({id});
+                    this.selected = null;
+                }
             },
 
             handleDrop: function(id, idIncoming) {
+                const oMovingThing = this.getThing(incoming);
+                const oTargetThing = this.getThing(id);
+                if (!oMovingThing || !oTargetThing) {
+                    // l'une des tile ne fait pas partie du store
+                    return;
+                }
+                if (oMovingThing.type !== oTargetThing.type) {
+                    // les tiles ne sont pas du même type
+                    return;
+                }
+                this.reorderThing({
+                    idSource: oMovingThing.id,
+                    idTarget: oTargetThing.id
+                });
 
             },
 
@@ -96,7 +123,6 @@
             },
 
             setTileSelection: function(id, value) {
-                console.log(this.$refs.tiles.$children);
                 this.$refs.tiles.$children.forEach(t => {
                     tile.selected = id === t.$props.tile;
                 });

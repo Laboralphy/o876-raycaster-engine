@@ -10,6 +10,7 @@ export const DESTROY_BLOCK = 'DESTROY_BLOCK';
 
 export const DEFINE_THING = 'DEFINE_THING';
 export const DESTROY_THING = 'DESTROY_THING';
+export const MOVE_THING = 'MOVE_THING';
 
 export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 export const SET_CELL_BLOCK = 'SET_CELL_BLOCK';

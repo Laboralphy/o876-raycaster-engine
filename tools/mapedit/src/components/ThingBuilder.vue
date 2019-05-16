@@ -114,7 +114,7 @@
 
         computed: {
             ...levelMapGetters([
-                'getThings',
+                'getThing',
                 'getTile'
             ]),
 
@@ -133,7 +133,7 @@
 
             importThing: function(id) {
                 id = id | 0;
-                const oThing = this.getThings.find(t => t.id === id);
+                const oThing = this.getThing(id);
                 if (oThing) {
                     this.value.scale = oThing.scale;
                     this.value.ghost = oThing.ghost;

@@ -29,6 +29,7 @@ export default {
     getSpriteTile: state => tid => state.tiles.sprites.find(t => t.id === tid),
     getTiles: state => state.tiles,
     getTile: state => tid => state.tiles.walls.find(t => t.id === tid) || state.tiles.flats.find(t => t.id === tid) || state.tiles.sprites.find(t => t.id === tid),
+    getThing: state => tid => state.things.find(t => t.id === tid),
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
 

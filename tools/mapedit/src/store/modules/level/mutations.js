@@ -279,9 +279,29 @@ export default {
      * @param id {number} identifiant du thing à détruire
      */
     [MUTATION.DESTROY_THING]: (state, {id}) => {
+        id = id | 0;
         const iThing = state.things.findIndex(t => t.id === id);
         if (iThing >= 0) {
             state.things.splice(iThing, 1);
+        } else {
+            console.log('could not find', id);
         }
-    }
+    },
+
+    [MUTATION.MOVE_THING]: (state, {idSource, idTarget}) => {
+        const things = state.things;
+        const iSrc = things.findIndex(t => t.id === idSource);
+        if (iSrc < 0) {
+            throw new Error('could not get source thing : ' + idSource);
+        }
+        const oTile = things[iSrc];
+        const iTrg = things.findIndex(t => t.id === idTarget);
+        if (iTrg >= 0) {
+            things.splice(iSrc, 1);
+            things.splice(iTrg, 0, oTile);
+        } else {
+            throw new Error('could not get target things : ' + idTarget);
+        }
+    },
+
 }

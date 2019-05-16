@@ -249,6 +249,18 @@ export default {
 
     [ACTION.DELETE_THING]: ({commit}, {id}) => {
         commit(MUTATION.DESTROY_THING, {id});
-    }
+    },
+
+
+    /**
+     * reorder tiles : move a tile from its position to another tile's position
+     * @param commit
+     * @param idSource
+     * @param idTarget
+     */
+    [ACTION.REORDER_THING]: ({commit, getters}, {idSource, idTarget}) => {
+        console.log('X0')
+        commit(MUTATION.MOVE_THING, {idSource, idTarget});
+    },
 
 }
