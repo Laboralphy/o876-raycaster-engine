@@ -3,6 +3,7 @@
             @click="onClick"
             :class="selected ? 'selected' : ''"
             :title="title"
+            :disabled="disabled"
     >
         <slot></slot>
     </MyButton>
@@ -21,7 +22,8 @@
                     return false;
                 },
                 required: false
-            }
+            },
+            disabled: Boolean
         },
         data: function() {
             return {

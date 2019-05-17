@@ -70,20 +70,22 @@
 
             <Siblings @input="selectTool">
                 <SiblingButton
-                        title="Select region"
+                        title="Select tool"
                         :default="true"
+                        :disabled="!isSelectToolAvailable"
                 >
                     <SelectIcon
-                            title="Select region"
+                            title="Select tool"
                             decorative
                     ></SelectIcon>
                 </SiblingButton>
 
                 <SiblingButton
-                        title="Draw blocks"
+                        title="Draw tool"
+                        :disabled="!isDrawToolAvailable"
                 >
                     <PencilIcon
-                            title="Draw blocks"
+                            title="Draw tool"
                             decorative
                     ></PencilIcon>
                 </SiblingButton>
@@ -285,7 +287,23 @@
                     default:
                         return '';
                 }
-            }
+            },
+
+            /**
+             * renvoie true si l'outil de selection peut etre utilisé dans ce mode
+             */
+            isSelectToolAvailable: function() {
+                const s = this.getSelectedObjectType;
+                return s === OBJECT_TYPE_BLOCK || s === OBJECT_TYPE_MARK || s === OBJECT_TYPE_TAG;
+            },
+
+            /**
+             * renvoie true si l'outil de dessin peut etre utilisé dans ce mode
+             */
+            isDrawToolAvailable: function() {
+                const s = this.getSelectedObjectType;
+                return s === OBJECT_TYPE_BLOCK || s === OBJECT_TYPE_THING;
+            },
         },
 
         data: function () {

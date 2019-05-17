@@ -40,16 +40,22 @@
                 this.$refs.image.click();
             },
 
-            onFileInputChange: function(oEvent) {
+            onFileInputChange: async function(oEvent) {
                 const oFiles = oEvent.target.files; // FileList object
+                const aProms = [];
                 // Loop through the FileList and render image files as thumbnails.
                 for (let i = 0, l = oFiles.length; i < l; ++i) {
                     const f = oFiles[i];
-                    // Only process image files.
-                    const oReader = new FileReader();
-                    oReader.addEventListener('load', oILEvent => this.$emit('load', {data: oILEvent.target.result}));
-                    oReader.readAsDataURL(f);
+                    const p = new Promise(resolve => {
+                        // Only process image files.
+                        const oReader = new FileReader();
+                        oReader.addEventListener('load', oILEvent => resolve({data: oILEvent.target.result}));
+                        oReader.readAsDataURL(f);
+                    });
+                    aProms.push(p);
                 }
+                const aResult = await Promise.all(aProms);
+                aResult.forEach(r => this.$emit('load', r));
             }
         }
     }

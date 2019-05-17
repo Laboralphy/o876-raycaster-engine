@@ -235,7 +235,7 @@ export default {
                 oThing.id = id;
             }
         } else {
-            cell.things.push({xt, yt, id});
+            cell.things.push({xt, yt, id, selected: false});
             cell.things = cell.things.sort((a, b) => {
                 const ax = a.x * 10 + a.y;
                 const bx = b.x * 10 + b.y;

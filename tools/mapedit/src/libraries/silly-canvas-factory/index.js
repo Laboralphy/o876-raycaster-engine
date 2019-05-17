@@ -100,8 +100,26 @@ class SillyCanvasFactory {
 
     }
 
+    drawThings(canvas, things) {
+        const ctx = canvas.getContext('2d');
+        ctx.strokeStyle = '#000';
+        const w = this._width;
+        const h = this._height;
+        const pad = 2;
+        const w3 = Math.floor(w / 3);
+        const h3 = Math.floor(h / 3);
+        const w3_pad = w3 - pad - pad;
+        const h3_pad = h3 - pad - pad;
+        things.forEach(({xt, yt, selected}) => {
+            ctx.fillStyle = selected ? 'white' : '#DD6';
+            console.log(xt, yt, xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
+            ctx.strokeRect(xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
+            ctx.fillRect(xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
+        });
+    }
+
     getCanvas(tags, mark, things) {
-        if (tags.length === 0 && mark.shape === 0) {
+        if (tags.length === 0 && mark.shape === 0 && things.length === 0) {
             return null;
         }
         const sKey = JSON.stringify({tags, mark, things});
@@ -111,6 +129,7 @@ class SillyCanvasFactory {
             const canvas = CanvasHelper.createCanvas(this._width, this._height);
             this.drawTags(canvas, tags);
             this.drawMark(canvas, mark);
+            this.drawThings(canvas, things);
             return this._canvases[sKey] = canvas;
         }
     }
