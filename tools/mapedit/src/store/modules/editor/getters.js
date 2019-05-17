@@ -4,6 +4,7 @@ export default {
     getBlockBuilderAnimLoopData: state => state.data.loops,
 
     getBlockBrowserSelected: state => state.models.blockBrowser.selected,
+    getThingBrowserSelected: state => state.models.thingBrowser.selected,
 
     getSomethingHasChanged: state => state.somethingHasChanged,
 

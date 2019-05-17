@@ -170,7 +170,7 @@ export default {
                 }
 
                 case 'thing':
-                    commit(MUTATION.SET_CELL_THING, {x, y, id: value});
+                    commit(MUTATION.SET_CELL_THING, {x, y, xt: value.x, yt: value.y, id: value.id});
                     break;
             }
         }

@@ -22,6 +22,7 @@
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -30,6 +31,7 @@
     import Thing from "./Thing.vue";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "ThingBrowser",
@@ -74,7 +76,11 @@
 
             ...levelMapActions({
                 deleteThing: LEVEL_ACTION.DELETE_THING,
-                reorderThing: LEVEL_ACTION.REORDER_THING
+                reorderThing: LEVEL_ACTION.REORDER_THING,
+            }),
+
+            ...editorMapMutations({
+                selectThing: EDITOR_MUTATION.THINGBROWSER_SET_SELECTED
             }),
 
             createClicked: function() {
@@ -95,7 +101,7 @@
             },
 
             handleDrop: function(id, idIncoming) {
-                const oMovingThing = this.getThing(incoming);
+                const oMovingThing = this.getThing(idIncoming);
                 const oTargetThing = this.getThing(id);
                 if (!oMovingThing || !oTargetThing) {
                     // l'une des tile ne fait pas partie du store
@@ -109,16 +115,15 @@
                     idSource: oMovingThing.id,
                     idTarget: oTargetThing.id
                 });
-
             },
 
             onClicked: function(id) {
                 if (this.selected === id) {
                     this.selected = null;
-                    //this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
+                    this.selectThing({value: null})
                 } else {
                     this.selected = id;
-                    //this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: id});
+                    this.selectThing({value: id})
                 }
             },
 

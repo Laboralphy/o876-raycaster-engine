@@ -100,11 +100,11 @@ class SillyCanvasFactory {
 
     }
 
-    getCanvas(tags, mark) {
+    getCanvas(tags, mark, things) {
         if (tags.length === 0 && mark.shape === 0) {
             return null;
         }
-        const sKey = JSON.stringify({tags, mark});
+        const sKey = JSON.stringify({tags, mark, things});
         if (sKey in this._canvases) {
             return this._canvases[sKey];
         } else {

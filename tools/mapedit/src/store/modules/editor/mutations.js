@@ -3,6 +3,7 @@ import * as MUTATION from './mutation-types';
 export default {
 
     [MUTATION.BLOCKBROWSER_SET_SELECTED]: (state, {value}) => state.models.blockBrowser.selected = value,
+    [MUTATION.THINGBROWSER_SET_SELECTED]: (state, {value}) => state.models.thingBrowser.selected = value,
 
     [MUTATION.SOMETHING_HAS_CHANGED]: (state, {value}) => state.somethingHasChanged = value,
 

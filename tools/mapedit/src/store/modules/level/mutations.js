@@ -225,16 +225,22 @@ export default {
      * @param y
      * @param id
      */
-    [MUTATION.SET_CELL_THING]: (state, {x, y, id}) => {
+    [MUTATION.SET_CELL_THING]: (state, {x, y, xt, yt, id}) => {
         const cell = state.grid[y][x];
-        const oThing = cell.things.find(t => t.x === x && t.y === y);
-        if (oThing) {
+        const iThing = cell.things.findIndex(t => t.x === xt && t.y === yt);
+        if (iThing >= 0) {
+            const oThing = cell.things[iThing];
             if (oThing.id != id) {
                 cell.modified = true;
                 oThing.id = id;
             }
         } else {
-            cell.things.push({x, y, id});
+            cell.things.push({xt, yt, id});
+            cell.things = cell.things.sort((a, b) => {
+                const ax = a.x * 10 + a.y;
+                const bx = b.x * 10 + b.y;
+                return ax - bx;
+            });
             cell.modified = true;
         }
     },

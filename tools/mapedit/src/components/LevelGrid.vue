@@ -212,6 +212,12 @@
 
     const SCF = new SillyCanvasFactory();
 
+
+    const OBJECT_TYPE_BLOCK = 'OBJECT_TYPE_BLOCK';
+    const OBJECT_TYPE_TAG = 'OBJECT_TYPE_TAG';
+    const OBJECT_TYPE_MARK = 'OBJECT_TYPE_MARK';
+    const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
+
     export default {
         name: "LevelGrid",
         components: {
@@ -249,6 +255,7 @@
                 'getLevelGridSelectedRegion',
                 'isLevelGridRegionSelected',
                 'getBlockBrowserSelected',
+                'getThingBrowserSelected',
                 'getLevelGridTopMostUndo',
                 'getLevelName',
                 'getSomethingHasChanged',
@@ -256,6 +263,28 @@
 
             getCellSize: function () {
                 return this.gridRenderer.cellWidth;
+            },
+
+            /**
+             * Renvoie le type d'objet qu'il est possible d'éditer actuellement
+             */
+            getSelectedObjectType: function() {
+                switch (this.currentRoute) {
+                    case '/level/blocks':
+                        return OBJECT_TYPE_BLOCK;
+
+                    case '/level/tags':
+                        return OBJECT_TYPE_TAG;
+
+                    case '/level/marks':
+                        return OBJECT_TYPE_MARK;
+
+                    case '/level/things':
+                        return OBJECT_TYPE_THING;
+
+                    default:
+                        return '';
+                }
             }
         },
 
@@ -268,6 +297,7 @@
                 selectedFloor: 0,
                 selectedTool: 0,
                 clipboard: null,
+                currentRoute: '',
                 select: {
                     x: -1,
                     y: -1
@@ -284,6 +314,16 @@
                 if (newValue && !oldValue) {
                     this.redraw();
                 }
+            },
+
+            $route: {
+                handler: function (to, from) {
+                    const s = to.fullPath;
+                    if (s !== this.currentRoute) {
+                        this.currentRoute = s;
+                    }
+                },
+                immediate: true
             }
         },
 
@@ -293,6 +333,7 @@
                 saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 setGridCell: LEVEL_ACTION.SET_GRID_CELL,
                 setGridCells: LEVEL_ACTION.SET_GRID_CELLS,
+                setCellProps: LEVEL_ACTION.SET_CELL_PROPS
             }),
 
 
@@ -543,7 +584,7 @@
 
 
                 // tag
-                const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark);
+                const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark, cell.things);
                 if (!!oTagCanvas) {
                     ctx.drawImage(
                         oTagCanvas,
@@ -632,20 +673,31 @@
             mouseupEvent(event) {
                 const x = event.layerX;
                 const y = event.layerY;
-                const {x: xc, y: yc} = this.pixelToCell(x, y);
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
-                if (this.selectedTool === 1 && !!this.getBlockBrowserSelected) {
-                    const oPrevRegion = this.getLevelGridSelectedRegion;
-                    this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
-                    const aUndoStruct = [];
-                    const aList = [];
-                    this.modifications.iterate((cx, cy) => {
-                        aList.push({x: cx, y: cy});
-                        aUndoStruct.push(this.getCellStruct(cx, cy));
-                    });
-                    this.pushUndo({undo: aUndoStruct});
-                    this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+                if (this.selectedTool === 1) {
+                    switch (this.getSelectedObjectType) {
+                        case OBJECT_TYPE_BLOCK:
+                            if (!!this.getBlockBrowserSelected) {
+                                this.drawBlock();
+                            }
+                            break;
+
+                        case OBJECT_TYPE_TAG:
+                            break;
+
+                        case OBJECT_TYPE_MARK:
+                            break;
+
+                        case OBJECT_TYPE_THING:
+                            if (!!this.getThingBrowserSelected) {
+                                this.drawThing(x, y);
+                            }
+                            break;
+
+                        default:
+                            throw new Error('unknown selected object type "' + this.getSelectedObjectType + '" (hint: current route is "' + this.currentRoute + '")')
+                    }
                     this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
                     this.redraw();
                 }
@@ -665,6 +717,50 @@
                     }
                 }
             },
+
+
+            drawBlock: function() {
+                const oPrevRegion = this.getLevelGridSelectedRegion;
+                this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
+                const aUndoStruct = [];
+                const aList = [];
+                this.modifications.iterate((cx, cy) => {
+                    aList.push({x: cx, y: cy});
+                    aUndoStruct.push(this.getCellStruct(cx, cy));
+                });
+                this.pushUndo({undo: aUndoStruct});
+                this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
+            },
+
+            drawThing: function(x, y) {
+                const {x: xc, y: yc} = this.pixelToCell(x, y);
+                const cs = this.getCellSize;
+                const xm = x % cs;
+                const ym = y % cs;
+                const cs3 = Math.floor(cs / 3);
+                const x78 = cs3;
+                const x89 = cs - cs3;
+                const x3 = xm > x78
+                    ? xm > x89
+                        ? 2
+                        : 1
+                    : 0;
+                const y3 = ym > x78
+                    ? ym > x89
+                        ? 2
+                        : 1
+                    : 0;
+                this.setCellProps({
+                    x: xc,
+                    y: yc,
+                    thing: {
+                        x: x3,
+                        y: y3,
+                        id: 1
+                    }
+                });
+            },
+
 
             /**
              * Save the level

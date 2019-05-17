@@ -9,7 +9,7 @@
                 <p class="main-tile">RAYCASTER MAP EDITOR</p>
             </div>
             <div align="center">
-                <img class="splash-image" src="../../assets/images/rc-anim-splash.gif" />
+<!--                <img class="splash-image" src="../../assets/images/rc-anim-splash.gif" />-->
             </div>
         </div>
     </Window>

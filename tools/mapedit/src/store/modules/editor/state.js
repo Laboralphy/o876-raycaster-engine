@@ -126,6 +126,10 @@ export default {
             selected: null
         },
 
+        thingBrowser: {
+            selected: null
+        },
+
         levelGrid: {
             selectedRegion: {
                 x1: -1,
