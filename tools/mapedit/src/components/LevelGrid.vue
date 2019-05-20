@@ -261,6 +261,7 @@
                 'getLevelGridTopMostUndo',
                 'getLevelName',
                 'getSomethingHasChanged',
+                'getLevelGridThingSelected'
             ]),
 
             getCellSize: function () {
@@ -369,7 +370,8 @@
             ...editorMapMutations({
                 selectBlock: EDITOR_MUTATION.BLOCKBROWSER_SET_SELECTED,
                 pushUndo: EDITOR_MUTATION.PUSH_UNDO,
-                setHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
+                setHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED,
+                selectThing: EDITOR_MUTATION.LEVELGRID_THING_SET_SELECTED
             }),
 
             selectTool: function ({index}) {
@@ -707,14 +709,32 @@
                         case OBJECT_TYPE_MARK:
                             break;
 
-                        case OBJECT_TYPE_THING:
-                            if (!!this.getThingBrowserSelected) {
+                        case OBJECT_TYPE_THING: {
+                            // determiner la présence d'un thing existant
+                            const oThing = this.getThingAt(x, y);
+                            if (!!oThing) {
+                                const {x: xc, y: yc} = this.pixelToCell(x, y);
+                                this.selectThing({xc, yc, xt: oThing.x, yt: oThing.y});
+                                this.$router.push('/view-thing');
+                            } else if (!!this.getThingBrowserSelected) {
                                 this.drawThing(x, y);
                             }
                             break;
+                        }
 
-                        default:
-                            throw new Error('unknown selected object type "' + this.getSelectedObjectType + '" (hint: current route is "' + this.currentRoute + '")')
+                        default: {
+                            if (this.currentRoute === '/view-thing') {
+                                // on est en train de visualiser un thing, et on veut en visualiser une autre
+                                const oThing = this.getThingAt(x, y);
+                                if (!!oThing) {
+                                    const {x: xc, y: yc} = this.pixelToCell(x, y);
+                                    this.selectThing({xc, yc, xt: oThing.x, yt: oThing.y});
+                                    this.$router.push('/view-thing');
+                                }
+                            }
+                            break;
+                        }
+                            //throw new Error('unknown selected object type "' + this.getSelectedObjectType + '" (hint: current route is "' + this.currentRoute + '")')
                     }
                     this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
                     this.redraw();
@@ -750,7 +770,7 @@
                 this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
             },
 
-            drawThing: function(x, y) {
+            getThingCoords(x, y) {
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 const cs = this.getCellSize;
                 const xm = x % cs;
@@ -768,13 +788,24 @@
                         ? 2
                         : 1
                     : 0;
+                return {xc, yc, x3, y3};
+            },
+
+            getThingAt: function(x, y) {
+                const {xc, yc, x3, y3} = this.getThingCoords(x, y);
+                return this.getGrid[yc][xc].things.find(t => t.x === x3 && t.y === y3);
+            },
+
+            drawThing: function(x, y) {
+                const {xc, yc, x3, y3} = this.getThingCoords(x, y);
+
                 this.setCellProps({
                     x: xc,
                     y: yc,
                     thing: {
                         x: x3,
                         y: y3,
-                        id: 1
+                        id: this.getThingBrowserSelected
                     }
                 });
             },

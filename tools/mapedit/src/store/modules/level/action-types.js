@@ -22,6 +22,7 @@ export const REMOVE_CELL_TAG = 'REMOVE_CELL_TAG';
 export const SET_CELL_MARK = 'SET_CELL_MARK';
 export const SET_GRID_CELL = 'SET_GRID_CELL';
 export const SET_GRID_CELLS = 'SET_GRID_CELLS';
+export const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 
 
 export const SAVE_LEVEL = 'SAVE_LEVEL';

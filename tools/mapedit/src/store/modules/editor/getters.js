@@ -5,6 +5,7 @@ export default {
 
     getBlockBrowserSelected: state => state.models.blockBrowser.selected,
     getThingBrowserSelected: state => state.models.thingBrowser.selected,
+    getLevelGridThingSelected: state => state.models.levelGrid.selectedThing,
 
     getSomethingHasChanged: state => state.somethingHasChanged,
 

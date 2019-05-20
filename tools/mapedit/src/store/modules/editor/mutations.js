@@ -51,4 +51,12 @@ export default {
             tags.push(tag);
         }
     },
+
+    [MUTATION.LEVELGRID_THING_SET_SELECTED]: (state, {xc, yc, xt, yt}) => {
+        const st = state.models.levelGrid.selectedThing;
+        st.xc = xc;
+        st.yc = yc;
+        st.xt = xt;
+        st.yt = yt;
+    }
 }

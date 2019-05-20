@@ -137,6 +137,12 @@ export default {
                 x2: -1,
                 y2: -1
             },
+            selectedThing: {
+                xc: -1,
+                yc: -1,
+                xt: -1,
+                yt: -1
+            },
             undo: [],
             hltags: [],
         },

@@ -35,6 +35,8 @@ function renderAndStoreBlock(tiles, data) {
 }
 
 
+
+
 export default {
 
     /**
@@ -259,8 +261,11 @@ export default {
      * @param idTarget
      */
     [ACTION.REORDER_THING]: ({commit, getters}, {idSource, idTarget}) => {
-        console.log('X0')
         commit(MUTATION.MOVE_THING, {idSource, idTarget});
     },
 
+
+    [ACTION.REMOVE_CELL_THING]: ({commit}, {xc, yc, xt, yt}) => {
+        commit(MUTATION.REMOVE_CELL_THING, {xc, yc, xt, yt});
+    }
 }

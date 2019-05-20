@@ -110,11 +110,10 @@ class SillyCanvasFactory {
         const h3 = Math.floor(h / 3);
         const w3_pad = w3 - pad - pad;
         const h3_pad = h3 - pad - pad;
-        things.forEach(({xt, yt, selected}) => {
+        things.forEach(({x, y, selected}) => {
             ctx.fillStyle = selected ? 'white' : '#DD6';
-            console.log(xt, yt, xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
-            ctx.strokeRect(xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
-            ctx.fillRect(xt * w3 + pad, yt * h3 + pad, w3_pad, h3_pad);
+            ctx.strokeRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
+            ctx.fillRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
         });
     }
 

@@ -235,7 +235,7 @@ export default {
                 oThing.id = id;
             }
         } else {
-            cell.things.push({xt, yt, id, selected: false});
+            cell.things.push({x: xt, y: yt, id, selected: false});
             cell.things = cell.things.sort((a, b) => {
                 const ax = a.x * 10 + a.y;
                 const bx = b.x * 10 + b.y;
@@ -290,7 +290,7 @@ export default {
         if (iThing >= 0) {
             state.things.splice(iThing, 1);
         } else {
-            console.log('could not find', id);
+            throw new Error('could not find thing #' + id);
         }
     },
 
@@ -310,4 +310,11 @@ export default {
         }
     },
 
+    [MUTATION.REMOVE_CELL_THING]: (state, {xc, yc, xt, yt}) => {
+        const aThings = state.grid[yc][xc].things;
+        const iThing = aThings.findIndex(t => t.x === xt && t.y === yt);
+        if (iThing >= 0) {
+            aThings.splice(iThing, 1);
+        }
+    }
 }

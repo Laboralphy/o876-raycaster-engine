@@ -22,6 +22,7 @@ import MainSide from "./components/MainSide.vue";
 import MarkerManager from "./components/MarkerManager.vue";
 import ThingBrowser from "./components/ThingBrowser.vue";
 import ThingBuilder from "./components/ThingBuilder.vue";
+import ThingView from "./components/ThingView.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -101,6 +102,13 @@ function createApplication() {
             props: {
                 default: true,
                 side: false
+            }
+        },
+        {
+            path: "/view-thing",
+            components: {
+                default: LevelGrid,
+                side: ThingView
             }
         },
         {
