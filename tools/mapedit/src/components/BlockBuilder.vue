@@ -27,7 +27,7 @@
                                     <label>Light: <input v-model="value.light.enabled" type="checkbox"/></label>
                                 </div>
                                 <div>
-                                    <div class="hint" v-show="!value.light.enabled">Check this kon to open light properties panel</div>
+                                    <div class="hint" v-show="!value.light.enabled">Check this on to open light properties panel</div>
                                     <fieldset v-show="value.light.enabled">
                                         <legend>Light source properties</legend>
                                         <div>

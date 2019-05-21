@@ -26,7 +26,7 @@
             <MyButton @click="() => setColor('white')"><SquareIcon style="color: white"></SquareIcon></MyButton>
         </div>
         <hr />
-        <h3>... or startpoint</h3>
+        <h3>Startpoint</h3>
         <div>
             <table>
                 <tbody>

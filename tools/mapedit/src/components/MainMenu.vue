@@ -15,6 +15,7 @@
     import TextureIcon from "vue-material-design-icons/Texture.vue";
     import TagIcon from "vue-material-design-icons/Tag.vue";
     import ShapeIcon from "vue-material-design-icons/Shape.vue";
+    import WeatherFogIcon from "vue-material-design-icons/WeatherFog.vue";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
 
     export default {
@@ -29,7 +30,8 @@
             TextureIcon,
             TagIcon,
             ChessRookIcon,
-            ShapeIcon
+            ShapeIcon,
+            WeatherFogIcon
         },
         data: function() {
             return {
@@ -53,6 +55,12 @@
                             route: '/build-anim',
                             caption: 'Anim.',
                             title: 'Make animated textures'
+                        },
+                        {
+                            icon: WeatherFogIcon,
+                            route: '/setup-ambiance',
+                            caption: 'Ambiance',
+                            title: 'Setup fog, brightness, and background image'
                         }
                     ],
                     tools: [

@@ -681,6 +681,50 @@ class Engine {
 //  _/ |___/\___/|_| |_| | .__/ \__,_|_|  |___/\___|
 // |__/                  |_|
 
+    /*
+
+JSON
+
+{
+    "tilesets": {
+        "((name-of-tileset))": {
+            "src": string, // image source of tileset
+            "width": number, // frame width
+            "height": number, // frame height
+            "animations": {
+                "((animation-name))": {
+                    "start": [number * 8],
+                    "length": number, // number of frame in this animation
+                    "loop": string, // type of loop @LOOP_NONE, @LOOP_FORWARD, @LOOP_YOYO
+                    "duration": number, // frame duration
+                    "iterations": number, // number of iterations (optional default Infinity)
+                }, ...
+            }
+        }, ...
+    },
+    "blueprints": {
+        "((name-of-blueprint": {
+            "tileset": string, // name of the tilset used
+            "thinker": string, // reference of the AI thinker
+            "size": number // physical size (for collision)
+        }, ...
+    },
+    "level": {
+        "metrics": {
+            "spacing": number, // size of the level cells
+            "height": number // height of ceiling
+        },
+        "flats": string, // image source of horizontal surfaces
+        "walls": string, // image source of vertical surfaces
+        "sky": string, // image source of sky
+
+
+
+}
+
+
+
+     */
 
     async buildLevel(data, monitor) {
         const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;

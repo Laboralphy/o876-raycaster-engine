@@ -28,6 +28,8 @@ export const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
 
+export const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
+
 
 
 

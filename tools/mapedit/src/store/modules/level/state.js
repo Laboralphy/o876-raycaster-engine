@@ -13,5 +13,17 @@ export default {
     },
     time: {
         interval: 40
+    },
+    ambiance: {
+        sky: '',
+        fog: {
+            distance: 50,
+            color: 'black'
+        },
+        filter: {
+            enabled: false,
+            color: ''
+        },
+        brightness: 0
     }
 };

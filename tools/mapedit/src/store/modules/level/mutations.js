@@ -315,5 +315,15 @@ export default {
         if (iThing >= 0) {
             aThings.splice(iThing, 1);
         }
+    },
+
+    [MUTATION.SETUP_AMBIANCE]: (state, value) => {
+        const a = state.ambiance;
+        a.sky = value.sky;
+        a.fog.color = value.fog.color;
+        a.fog.distance = value.fog.distance;
+        a.filter.enabled = value.filter.enabled;
+        a.filter.color = value.filter.color;
+        a.brightness = value.brightness;
     }
 }

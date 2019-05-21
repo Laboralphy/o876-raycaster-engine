@@ -55,5 +55,7 @@ export default {
     getGridSize: state => state.grid.length,
     getLevel: state => state,
 
-    getThings: state => state.things
+    getThings: state => state.things,
+
+    getAmbiance: state => state.ambiance
 }

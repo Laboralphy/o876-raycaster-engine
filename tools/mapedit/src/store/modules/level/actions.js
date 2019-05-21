@@ -267,5 +267,9 @@ export default {
 
     [ACTION.REMOVE_CELL_THING]: ({commit}, {xc, yc, xt, yt}) => {
         commit(MUTATION.REMOVE_CELL_THING, {xc, yc, xt, yt});
+    },
+
+    [ACTION.SETUP_AMBIANCE]: ({commit}, value) => {
+        commit(MUTATION.SETUP_AMBIANCE, value);
     }
 }

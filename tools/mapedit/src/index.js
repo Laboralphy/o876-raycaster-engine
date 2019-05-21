@@ -23,6 +23,8 @@ import MarkerManager from "./components/MarkerManager.vue";
 import ThingBrowser from "./components/ThingBrowser.vue";
 import ThingBuilder from "./components/ThingBuilder.vue";
 import ThingView from "./components/ThingView.vue";
+import AmbianceSetup from "./components/AmbianceSetup.vue";
+import RenderView from "./components/RenderView.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -117,8 +119,21 @@ function createApplication() {
                 default: LevelList,
                 side: BlockBrowser
             }
+        },
+        {
+            path: "/setup-ambiance",
+            components: {
+                default: AmbianceSetup,
+                side: MainSide
+            }
+        },
+        {
+            path: "/render",
+            components: {
+                default: RenderView,
+                side: MainSide
+            }
         }
-
     ];
 
     return new Vue({
