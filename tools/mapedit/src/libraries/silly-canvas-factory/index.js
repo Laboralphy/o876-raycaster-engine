@@ -42,7 +42,6 @@ class SillyCanvasFactory {
     drawMark(canvas, mark) {
         const {color, shape} = mark;
         const ctx = canvas.getContext('2d');
-        ctx.fillStyle = color;
         const w = this._width;
         const h = this._height;
         const w2 = w >> 1;
@@ -55,11 +54,16 @@ class SillyCanvasFactory {
                 break;
 
             case CONSTS.SHAPE_CIRCLE:
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = color;
                 ctx.arc(w2, h2, w4, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.stroke();
                 break;
 
             case CONSTS.SHAPE_HEXAGON:
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(w2, h4);
                 ctx.lineTo(w2 + w4, (h2 + h4) >> 1);
@@ -69,22 +73,31 @@ class SillyCanvasFactory {
                 ctx.lineTo(w4, (h2 + h4) >> 1);
                 ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
                 break;
 
             case CONSTS.SHAPE_SQUARE:
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = color;
                 ctx.fillRect(w4, h4, w2, h2);
+                ctx.strokeRect(w4, h4, w2, h2);
                 break;
 
             case CONSTS.SHAPE_TRIANGLE:
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(w2, h4);
                 ctx.lineTo(w2 + w4, h - ((h2 + h4) >> 1));
                 ctx.lineTo(w4, h - ((h2 + h4) >> 1));
                 ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
                 break;
 
             case CONSTS.SHAPE_RHOMBUS:
+                ctx.strokeStyle = 'black';
+                ctx.fillStyle = color;
                 ctx.beginPath();
                 ctx.moveTo(w2, h4);
                 ctx.lineTo(w2 + w4, h2);
@@ -92,6 +105,11 @@ class SillyCanvasFactory {
                 ctx.lineTo(w4, h2);
                 ctx.closePath();
                 ctx.fill();
+                ctx.stroke();
+                break;
+
+            case CONSTS.SHAPE_STARTPOINT:
+                this.drawStartPoint(canvas, parseFloat(color));
                 break;
 
             default:
@@ -110,18 +128,54 @@ class SillyCanvasFactory {
         const h3 = Math.floor(h / 3);
         const w3_pad = w3 - pad - pad;
         const h3_pad = h3 - pad - pad;
-        things.forEach(({x, y, selected}) => {
-            ctx.fillStyle = selected ? 'white' : '#DD6';
+        things.forEach(({x, y, s}) => {
+            if (s) console.log('onr selected', x, y);
+            ctx.fillStyle = s ? 'white' : '#FC0';
             ctx.strokeRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
             ctx.fillRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
         });
     }
 
-    getCanvas(tags, mark, things) {
+    drawStartPoint(canvas, angle) {
+        const ctx = canvas.getContext('2d');
+        const w = this._width;
+        const h = this._height;
+        const pad = 2;
+        const pad2 = pad << 1;
+        const w2 = w >> 1;
+        const h2 = h >> 1;
+        ctx.save();
+        ctx.lineWidth = 2;
+        ctx.translate(w2, h2);
+        ctx.rotate(angle * Math.PI);
+        ctx.translate(-w2, -h2);
+        ctx.beginPath();
+        ctx.strokeStyle = '#FFF';
+        ctx.arc(w2, h2, w2 - pad - pad,  0, Math.PI * 2);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+        ctx.strokeStyle = '#06F';
+        ctx.arc(w2, h2, w2 - pad,  0, Math.PI * 2);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.strokeStyle = '#F00';
+        ctx.beginPath();
+        ctx.moveTo(pad, h2);
+        ctx.lineTo(w - pad, h2);
+        ctx.lineTo(w - pad - pad2, h2 - pad2);
+        ctx.lineTo(w - pad - pad2, h2 + pad2);
+        ctx.lineTo(w - pad, h2);
+        ctx.closePath();
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    getCanvas(tags, mark, things, misc) {
         if (tags.length === 0 && mark.shape === 0 && things.length === 0) {
             return null;
         }
-        const sKey = JSON.stringify({tags, mark, things});
+        const sKey = JSON.stringify({tags, mark, things, misc});
         if (sKey in this._canvases) {
             return this._canvases[sKey];
         } else {

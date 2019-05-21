@@ -602,9 +602,18 @@
                         break;
                 }
 
-
                 // tag
-                const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark, cell.things);
+                const oThingSelected = this.getLevelGridThingSelected;
+                const aThings = cell.things.map(t => ({
+                    x: t.x,
+                    y: t.y,
+                    s: x === oThingSelected.xc && y === oThingSelected.yc && t.x === oThingSelected.xt && t.y === oThingSelected.yt,
+                }));
+                const misc = {};
+                if (x === 1 && y === 1) {
+                    misc.startpoint = { angle: 0 };
+                }
+                const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark, aThings, misc);
                 if (!!oTagCanvas) {
                     ctx.drawImage(
                         oTagCanvas,
@@ -740,6 +749,7 @@
                     this.redraw();
                 }
             },
+
 
             mousemoveEvent(event) {
                 if (this.selecting) {

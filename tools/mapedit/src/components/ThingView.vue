@@ -16,7 +16,6 @@
                 :content="getContent"
         ></Thing>
         <hr/>
-        <h3>Actions :</h3>
     </Window>
 </template>
 
@@ -94,14 +93,16 @@
 
             importThing: function(newValue) {
                 const {xc, yc, xt, yt} = newValue;
+                if (xc < 0 || yc < 0 || xt < 0 || yt < 0) {
+                    this.value.thing = null;
+                    this.value.tile = null;
+                    return;
+                }
                 const oThing = this.getGrid[yc][xc].things.find(t => t.x === xt && t.y === yt);
-                console.log(newValue, oThing);
                 if (!!oThing) {
-                    console.log('thing', oThing);
                     const oThingTemplate = this.getThing(oThing.id);
                     const idTile = oThingTemplate.tile;
                     const oTile = this.getSpriteTile(idTile);
-                    console.log('tile', idTile, oTile);
                     this.value.thing = oThing;
                     this.value.tile = oTile;
                 }

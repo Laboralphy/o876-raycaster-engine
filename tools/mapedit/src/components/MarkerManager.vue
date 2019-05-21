@@ -26,6 +26,47 @@
             <MyButton @click="() => setColor('white')"><SquareIcon style="color: white"></SquareIcon></MyButton>
         </div>
         <hr />
+        <h3>... or startpoint</h3>
+        <div>
+            <table>
+                <tbody>
+                    <tr>
+                        <td>
+                            <MyButton @click="() => setStartpoint(1.25)"><ArrowTopLeftThickIcon></ArrowTopLeftThickIcon></MyButton>
+                        </td>
+                        <td>
+                            <MyButton @click="() => setStartpoint(1.5)"><ArrowUpThickIcon></ArrowUpThickIcon></MyButton>
+                        </td>
+                        <td>
+                            <MyButton @click="() => setStartpoint(1.75)"><ArrowTopRightThickIcon></ArrowTopRightThickIcon></MyButton>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <MyButton @click="() => setStartpoint(1)"><ArrowLeftThickIcon></ArrowLeftThickIcon></MyButton>
+                        </td>
+                        <td>
+
+                        </td>
+                        <td>
+                            <MyButton @click="() => setStartpoint(0)"><ArrowRightThickIcon></ArrowRightThickIcon></MyButton>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <MyButton @click="() => setStartpoint(0.75)"><ArrowBottomLeftThickIcon></ArrowBottomLeftThickIcon></MyButton>
+                        </td>
+                        <td>
+                            <MyButton @click="() => setStartpoint(0.5)"><ArrowDownThickIcon></ArrowDownThickIcon></MyButton>
+                        </td>
+                        <td>
+                            <MyButton @click="() => setStartpoint(0.25)"><ArrowBottomRightThickIcon></ArrowBottomRightThickIcon></MyButton>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
     </Window>
 </template>
 
@@ -44,7 +85,16 @@
     import TriangleIcon from "vue-material-design-icons/Triangle.vue";
     import CloseCircleIcon from "vue-material-design-icons/CloseCircle.vue";
 
-    const {mapActions: levelMapActions} = createNamespacedHelpers('level');
+    import ArrowTopLeftThickIcon from "vue-material-design-icons/ArrowTopLeftThick.vue";
+    import ArrowUpThickIcon from "vue-material-design-icons/ArrowUpThick.vue";
+    import ArrowTopRightThickIcon from "vue-material-design-icons/ArrowTopRightThick.vue";
+    import ArrowLeftThickIcon from "vue-material-design-icons/ArrowLeftThick.vue";
+    import ArrowRightThickIcon from "vue-material-design-icons/ArrowRightThick.vue";
+    import ArrowBottomLeftThickIcon from "vue-material-design-icons/ArrowBottomLeftThick.vue";
+    import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
+    import ArrowBottomRightThickIcon from "vue-material-design-icons/ArrowBottomRightThick.vue";
+
+    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
 
@@ -52,6 +102,15 @@
     export default {
         name: "MarkerManager",
         components: {
+            ArrowBottomRightThickIcon,
+            ArrowDownThickIcon,
+            ArrowBottomLeftThickIcon,
+            ArrowRightThickIcon,
+            ArrowLeftThickIcon,
+            ArrowTopRightThickIcon,
+            ArrowUpThickIcon,
+            ArrowTopLeftThickIcon,
+
             CloseCircleIcon,
             MyButton,
             TriangleIcon, HexagonIcon, CircleIcon, RhombusIcon, SquareIcon, Window},
@@ -66,6 +125,10 @@
             ...editorMapGetters([
                 'getLevelGridSelectedRegion',
                 'isLevelGridRegionSelected'
+            ]),
+
+            ...levelMapGetters([
+                'getStartpoint'
             ])
         },
 
@@ -88,6 +151,21 @@
                         }
                     }
                     await Promise.all(proms);
+                    this.somethingHasChanged({value: true});
+                }
+            },
+
+            setStartpoint: async function(angle) {
+                if (this.isLevelGridRegionSelected) {
+                    const sr = this.getLevelGridSelectedRegion;
+                    const x = sr.x1;
+                    const y = sr.y1;
+                    const sp = this.getStartpoint;
+                    if (!!sp) {
+                        // virer l'ancien startpoint
+                        await this.setCellMark({x: sp.x, y: sp.y, shape: CONSTS.SHAPE_NONE, color: 0});
+                    }
+                    await this.setCellMark({x, y, shape: CONSTS.SHAPE_STARTPOINT, color: angle.toString()});
                     this.somethingHasChanged({value: true});
                 }
             },
