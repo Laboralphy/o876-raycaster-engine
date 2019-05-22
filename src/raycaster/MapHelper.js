@@ -87,7 +87,7 @@ class MapHelper {
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
-            if (m.light) {
+            if ('light' in m && !!m.light) {
                 renderer.addLightSource(
                     ps * x + (ps >> 1),
                     ps * y + (ps >> 1),
@@ -99,7 +99,7 @@ class MapHelper {
         }));
 
         // upper storey
-        if ('uppermap' in oMap && oMap) {
+        if ('uppermap' in oMap && !!oMap.uppermap) {
             const upperMap = oMap.uppermap;
             const storey = renderer.createStorey();
             const mapUpperData = upperMap.map(rowProcess);
@@ -110,7 +110,6 @@ class MapHelper {
                 storey.setCellOffset(x, y, m.offset);
             }));
         }
-
     }
 }
 

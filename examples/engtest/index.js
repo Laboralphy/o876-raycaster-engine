@@ -135,9 +135,12 @@ function getLevel() {
                 "spacing": 64,
                 "height": 96
             },
-            "flats": "gfx/textures/flats-1.png",
-            "walls": "gfx/textures/walls-2.png",
-            "sky": "gfx/textures/sky.png",
+            "textures": {
+                "flats": "gfx/textures/flats-1.png",
+                "walls": "gfx/textures/walls-2.png",
+                "sky": "gfx/textures/sky.png",
+                smooth: false
+            },
             "map": [
                 "####################",
                 "##   #            ##",

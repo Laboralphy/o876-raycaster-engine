@@ -80,7 +80,8 @@
             }),
 
             ...editorMapMutations({
-                selectThing: EDITOR_MUTATION.THINGBROWSER_SET_SELECTED
+                selectThing: EDITOR_MUTATION.THINGBROWSER_SET_SELECTED,
+                somethingHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
             }),
 
             createClicked: function() {
@@ -120,10 +121,12 @@
             onClicked: function(id) {
                 if (this.selected === id) {
                     this.selected = null;
-                    this.selectThing({value: null})
+                    this.selectThing({value: null});
+                    this.somethingHasChanged({value: true});
                 } else {
                     this.selected = id;
-                    this.selectThing({value: id})
+                    this.selectThing({value: id});
+                    this.somethingHasChanged({value: true});
                 }
             },
 

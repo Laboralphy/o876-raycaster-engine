@@ -22,9 +22,11 @@ const LEVEL = {
             "spacing": 64,  // each map cell is 64 texel-wide
             "height": 96    // ceilling height is 96 texels height
         },
-        "flats": "textures/flats.png",
-        "walls": "textures/walls.png",
-        "sky": "textures/sky-ls.png",
+        "textures": {
+            "flats": "textures/flats.png",
+            "walls": "textures/walls.png",
+            "sky": "textures/sky-ls.png"
+        },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "######################",
             "#         ############",

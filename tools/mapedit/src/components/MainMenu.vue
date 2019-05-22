@@ -17,6 +17,7 @@
     import ShapeIcon from "vue-material-design-icons/Shape.vue";
     import WeatherFogIcon from "vue-material-design-icons/WeatherFog.vue";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
+    import Video3DIcon from "vue-material-design-icons/Video3d.vue";
 
     export default {
         name: "MainMenu",
@@ -61,6 +62,12 @@
                             route: '/setup-ambiance',
                             caption: 'Ambiance',
                             title: 'Setup fog, brightness, and background image'
+                        },
+                        {
+                            icon: Video3DIcon,
+                            route: '/render',
+                            caption: 'Render',
+                            title: 'Load the level into the raycasting engine'
                         }
                     ],
                     tools: [

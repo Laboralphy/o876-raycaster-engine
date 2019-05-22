@@ -265,9 +265,10 @@ export default {
         const oThing = {
             id: data.id,
             ref: data.ref,
-            scale: data.scale,
+            size: data.size,
             opacity: data.opacity,
             ghost: data.ghost,
+            tangible: data.tangible,
             light: data.light,
             tile: data.tile
         };

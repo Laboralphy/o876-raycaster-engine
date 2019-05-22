@@ -707,6 +707,7 @@ JSON
             "tileset": string, // name of the tilset used
             "thinker": string, // reference of the AI thinker
             "size": number // physical size (for collision)
+            "fx": [] // array of FX amongst @FX_NONE, @FX_LIGHT_SOURCE, @FX_LIGHT_ADD, @FX_ALPHA_75, @FX_ALPHA_50, @FX_ALPHA_25,
         }, ...
     },
     "level": {
@@ -714,15 +715,39 @@ JSON
             "spacing": number, // size of the level cells
             "height": number // height of ceiling
         },
-        "flats": string, // image source of horizontal surfaces
-        "walls": string, // image source of vertical surfaces
-        "sky": string, // image source of sky
-
-
+        "textures": {
+            "flats": string, // image source of horizontal surfaces
+            "walls": string, // image source of vertical surfaces
+            "sky": string, // image source of sky
+            "smooth": boolean, // true : textures will be smoothen ; false : no interpolation will be applied on textures
+            "stretch": boolean, texture of upper level will be stretch to look like tall building o cliffs
+        },
+        "map": [
+            // array of array of number|char
+        ],
+        "uppermap": [
+        ],
+        "legend": [{
+            "code": number|char, // references the items inside the 2D "map"
+            "phys": string, // @PHYS_NONE, @PHYS_...
+            "offset": number, // optional offset value
+            "faces": {
+                "n": number|array, // if array then animation : [start, length, duration, loop]
+                "e": number|array,
+                "w": number|array,
+                "s": number|array,
+                "f": number|array,
+                "c": number|array
+            },
+            "light": {  // optional static light parameters
+                "r0": number,
+                "r1": number,
+                "v"
+            }
+        }, ...
+        ],
 
 }
-
-
 
      */
 
@@ -782,13 +807,24 @@ JSON
         this.initializeRenderer();
         const rc = this._rc;
         const cvs = this.getRenderingCanvas();
-        rc.defineOptions({
+
+        const oRCOptions = {
             metrics: data.level.metrics,
             screen: {
                 width: cvs.width,
                 height: cvs.height
+            },
+            textures: {
+                stretch: !!data.level.textures.stretch,
+                smooth: !!data.level.textures.smooth
             }
-        });
+        };
+
+        if ('shading' in data) {
+            oRCOptions.shading = data.shading;
+        }
+
+        rc.defineOptions(oRCOptions);
 
         let PROGRESS = 0;
         const showProgress = sLabel => {
@@ -797,13 +833,13 @@ JSON
 
         // defines sky, walls and flats
         showProgress('loading textures');
-        if ('sky' in data.level) {
-            rc.setBackground(await CanvasHelper.loadCanvas(data.level.sky));
+        if ('sky' in data.level.textures) {
+            rc.setBackground(await CanvasHelper.loadCanvas(data.level.textures.sky));
         }
         showProgress('loading textures');
-        rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.walls));
+        rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.textures.walls));
         showProgress('loading textures');
-        rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.flats));
+        rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.textures.flats));
 
 
         // creates blueprints

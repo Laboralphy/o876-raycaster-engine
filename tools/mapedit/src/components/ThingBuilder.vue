@@ -12,10 +12,6 @@
                             <h3>Thing properties</h3>
                             <form>
                                 <div>
-                                    <label>Scale: <input v-model="value.scale" type="number" />%</label>
-                                    <div class="hint">Scale is a size factor. 200% means the thing will appear twice bigger</div>
-                                </div>
-                                <div>
                                     <label>Opacity:
                                         <select v-model="value.opacity">
                                             <option value="0">100%</option>
@@ -33,6 +29,14 @@
                                 <div>
                                     <label>Ghost filter: <input v-model="value.ghost" type="checkbox" /></label>
                                     <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas.</div>
+                                </div>
+                                <div>
+                                    <label>Tangible flag: <input v-model="value.tangible" type="checkbox" /></label>
+                                    <div class="hint">If checked, the thing will be tangible and will affect any colliding things.</div>
+                                </div>
+                                <div v-if="value.tangible">
+                                    <label>Physical size: <input v-model="value.size" type="number" min="1" /></label>
+                                    <div class="hint">The physical size is used when the tangible flag is set to true.</div>
                                 </div>
                                 <div>
                                     <label>Ref: <input v-model="value.ref" style="width: 8em" type="text"/></label>
@@ -102,7 +106,8 @@
                 CONSTS,
                 value: {
                     tile: 0,
-                    scale: 100,
+                    tangible: false,
+                    size: 1,
                     opacity: 0,
                     light: false,
                     ghost: false,
@@ -135,12 +140,15 @@
                 id = id | 0;
                 const oThing = this.getThing(id);
                 if (oThing) {
-                    this.value.scale = oThing.scale;
+                    const oTile = this.getTile(oThing.tile);
                     this.value.ghost = oThing.ghost;
+                    this.value.tangible = oThing.tangible;
                     this.value.light = oThing.light;
+                    this.value.size = oThing.size;
                     this.value.opacity = oThing.opacity;
                     this.value.ref = oThing.ref;
                     this.value.tile = oThing.tile;
+                    this.content = oTile.content;
                 }
             },
 

@@ -11,6 +11,10 @@ export default {
         tileHeight: 96,
         tileWidth: 64
     },
+    flags: {
+        smooth: false,
+        stretch: false
+    },
     time: {
         interval: 40
     },

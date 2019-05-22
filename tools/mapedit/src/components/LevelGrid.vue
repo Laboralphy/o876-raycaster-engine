@@ -341,6 +341,8 @@
                     if (s !== this.currentRoute) {
                         this.currentRoute = s;
                     }
+                    this.selectRegion({x1: -1, y1: -1, x2: -1, y2: -1});
+                    this.redraw();
                 },
                 immediate: true
             }
@@ -603,12 +605,25 @@
                 }
 
                 // tag
-                const oThingSelected = this.getLevelGridThingSelected;
-                const aThings = cell.things.map(t => ({
-                    x: t.x,
-                    y: t.y,
-                    s: x === oThingSelected.xc && y === oThingSelected.yc && t.x === oThingSelected.xt && t.y === oThingSelected.yt,
-                }));
+                const oThingSelected = this.getLevelGridThingSelected; // thing selectionné sur la grille
+                const idThingSelected = this.getThingBrowserSelected; // thing template selectionné dans le thingBrowser
+                const aThings = cell.things.map(t => {
+                    const bThisThingIsSelected = x === oThingSelected.xc &&
+                        y === oThingSelected.yc &&
+                        t.x === oThingSelected.xt &&
+                        t.y === oThingSelected.yt;
+                    const bThisTemplateIsSelected = t.id === idThingSelected;
+
+                    return {
+                        x: t.x,
+                        y: t.y,
+                        s: bThisThingIsSelected
+                            ? 1
+                            : bThisTemplateIsSelected
+                                ? 2
+                                : 0
+                    };
+                });
                 const misc = {};
                 if (x === 1 && y === 1) {
                     misc.startpoint = { angle: 0 };

@@ -129,8 +129,11 @@ class SillyCanvasFactory {
         const w3_pad = w3 - pad - pad;
         const h3_pad = h3 - pad - pad;
         things.forEach(({x, y, s}) => {
-            if (s) console.log('onr selected', x, y);
-            ctx.fillStyle = s ? 'white' : '#FC0';
+            ctx.fillStyle = s === 0
+                ? 'rgba(240, 150, 0, 0.75)'
+                : s === 1
+                    ? 'white' // this this is specialy selected
+                    : '#FD0';
             ctx.strokeRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
             ctx.fillRect(x * w3 + pad, y * h3 + pad, w3_pad, h3_pad);
         });
