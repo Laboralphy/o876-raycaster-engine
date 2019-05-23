@@ -1,6 +1,6 @@
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControl;
+const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 const LEVEL = {
 

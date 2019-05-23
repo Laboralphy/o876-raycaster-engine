@@ -2,19 +2,19 @@
  * Gathers all thinkers
  */
 
-import Abstract from './Thinker';
-import KeyboardControl from './KeyboardControlThinker';
-import Missile from './MissileThinker';
-import Mover from './MoverThinker';
-import Static from './StaticThinker';
-import Tangible from './TangibleThinker';
+import Thinker from './Thinker';
+import KeyboardControlThinker from './KeyboardControlThinker';
+import MissileThinker from './MissileThinker';
+import MoverThinker from './MoverThinker';
+import StaticThinker from './StaticThinker';
+import TangibleThinker from './TangibleThinker';
 
 
 export default {
-    Abstract,
-    KeyboardControl,
-    Missile,
-    Mover,
-    Static,
-    Tangible
+    Thinker,
+    KeyboardControlThinker,
+    MissileThinker,
+    MoverThinker,
+    StaticThinker,
+    TangibleThinker
 };

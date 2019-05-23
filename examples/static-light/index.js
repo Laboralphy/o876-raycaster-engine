@@ -1,6 +1,6 @@
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControl;
+const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 /**
  * This program is one of the simplest example we can give to build a level, and control a camera view inside

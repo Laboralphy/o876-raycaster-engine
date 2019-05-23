@@ -14,12 +14,13 @@ import Translator from "../translator/Translator";
 import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
-import Thinker from "./thinkers/Thinker";
+import thinkers from "./thinkers";
 import {suggest} from "../levenshtein";
 
 import Events from "events";
 import Collider from "../collider/Collider";
 import TagManager from "./TagManager";
+
 
 class Engine {
     constructor() {
@@ -35,9 +36,8 @@ class Engine {
         this._interval = null;
 
         // instanciate at construct
-        this._thinkers = {
-            "default": Thinker
-        };
+        this._thinkers = {};
+        this.useThinkers(thinkers);
         this._collider = new Collider(); // this collider is freely used by certain thinkers
         this._collider.setCellWidth(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
         this._collider.setCellHeight(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
@@ -544,9 +544,12 @@ class Engine {
 
     createThinkerInstance(sThinker) {
         if (!sThinker) {
-            sThinker = 'default';
+            sThinker = 'Thinker';
         }
         const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
+        if (!pThinker) {
+            throw new Error('this thinker does not exists (has not been "used") : ' + sThinker);
+        }
         const oThinker = new pThinker();
         oThinker.engine = this;
         return oThinker;
@@ -681,75 +684,6 @@ class Engine {
 //  _/ |___/\___/|_| |_| | .__/ \__,_|_|  |___/\___|
 // |__/                  |_|
 
-    /*
-
-JSON
-
-{
-    "tilesets": {
-        "((name-of-tileset))": {
-            "src": string, // image source of tileset
-            "width": number, // frame width
-            "height": number, // frame height
-            "animations": {
-                "((animation-name))": {
-                    "start": [number * 8],
-                    "length": number, // number of frame in this animation
-                    "loop": string, // type of loop @LOOP_NONE, @LOOP_FORWARD, @LOOP_YOYO
-                    "duration": number, // frame duration
-                    "iterations": number, // number of iterations (optional default Infinity)
-                }, ...
-            }
-        }, ...
-    },
-    "blueprints": {
-        "((name-of-blueprint": {
-            "tileset": string, // name of the tilset used
-            "thinker": string, // reference of the AI thinker
-            "size": number // physical size (for collision)
-            "fx": [] // array of FX amongst @FX_NONE, @FX_LIGHT_SOURCE, @FX_LIGHT_ADD, @FX_ALPHA_75, @FX_ALPHA_50, @FX_ALPHA_25,
-        }, ...
-    },
-    "level": {
-        "metrics": {
-            "spacing": number, // size of the level cells
-            "height": number // height of ceiling
-        },
-        "textures": {
-            "flats": string, // image source of horizontal surfaces
-            "walls": string, // image source of vertical surfaces
-            "sky": string, // image source of sky
-            "smooth": boolean, // true : textures will be smoothen ; false : no interpolation will be applied on textures
-            "stretch": boolean, texture of upper level will be stretch to look like tall building o cliffs
-        },
-        "map": [
-            // array of array of number|char
-        ],
-        "uppermap": [
-        ],
-        "legend": [{
-            "code": number|char, // references the items inside the 2D "map"
-            "phys": string, // @PHYS_NONE, @PHYS_...
-            "offset": number, // optional offset value
-            "faces": {
-                "n": number|array, // if array then animation : [start, length, duration, loop]
-                "e": number|array,
-                "w": number|array,
-                "s": number|array,
-                "f": number|array,
-                "c": number|array
-            },
-            "light": {  // optional static light parameters
-                "r0": number,
-                "r1": number,
-                "v"
-            }
-        }, ...
-        ],
-
-}
-
-     */
 
     async buildLevel(data, monitor) {
         const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
@@ -866,7 +800,9 @@ JSON
         if ('objects' in data) {
             data.objects.forEach(o => {
                 const entity = this.createEntity(o.blueprint, o);
-                entity.sprite.setCurrentAnimation(o.animation, 0);
+                if ('animation' in o && o.animation !== false && o.animation !== null) {
+                    entity.sprite.setCurrentAnimation(o.animation, 0);
+                }
                 entity.visible = true;
             })
         }

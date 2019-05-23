@@ -121,6 +121,7 @@ class Sprite {
         const ca = this._currentAnim;
         const caRef = ca.ref;
         if (!(caRef in this._animations)) {
+            return;
             throw new Error('this reference : "' + caRef + '" is not in current animation');
         }
         // caRef is the last animation type set
