@@ -8,6 +8,7 @@ import MissileThinker from './MissileThinker';
 import MoverThinker from './MoverThinker';
 import StaticThinker from './StaticThinker';
 import TangibleThinker from './TangibleThinker';
+import StaticTangibleThinker from './StaticTangibleThinker';
 
 
 export default {
@@ -16,5 +17,6 @@ export default {
     MissileThinker,
     MoverThinker,
     StaticThinker,
-    TangibleThinker
+    TangibleThinker,
+    StaticTangibleThinker
 };

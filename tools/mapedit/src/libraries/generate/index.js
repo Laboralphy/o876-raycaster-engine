@@ -25,7 +25,7 @@ async function combineTiles(tilesets, iStart, count) {
     const cvsOutput = CanvasHelper.createCanvas(w * count, h);
     const ctxOutput = cvsOutput.getContext('2d');
     for (let i = 0; i < count; ++i) {
-        ctxOutput.drawImage(aCanvases[0], i * w, 0);
+        ctxOutput.drawImage(aCanvases[i], i * w, 0);
     }
     return {
         src: CanvasHelper.getData(cvsOutput),
@@ -128,7 +128,7 @@ function generateBlueprint(things, id) {
     const thing = things.find(t => t.id === id);
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
-    output.size = thing.size;
+    output.size = thing.size | 0;
     output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
@@ -169,8 +169,8 @@ function generateBlueprints(input) {
 
 function generateMetrics(input) {
     return {
-        spacing: input.metrics.tileWidth,
-        height: input.metrics.tileHeight
+        spacing: input.metrics.tileWidth | 0,
+        height: input.metrics.tileHeight | 0
     };
 }
 
@@ -181,8 +181,8 @@ async function generateTextures(input) {
         flats: flats.src,
         walls: walls.src,
         sky: input.ambiance.sky,
-        smooth: input.flags.smooth,
-        stretch: input.flags.stretch
+        smooth: !!input.flags.smooth,
+        stretch: !!input.flags.stretch
     };
 }
 
@@ -280,7 +280,7 @@ function generateLegend(input, block) {
     return {
         code: block.id,
         phys: block.phys,
-        offset: block.offs,
+        offset: block.offs | 0,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
             e: generateFace(input, block.faces.e, 'wall'),
@@ -290,9 +290,9 @@ function generateLegend(input, block) {
             c: generateFace(input, block.faces.c, 'flat'),
         },
         light: block.light.enabled ? {
-            r0: block.light.inner,
-            r1: block.light.outer,
-            v:  block.light.value
+            r0: block.light.inner | 0,
+            r1: block.light.outer | 0,
+            v:  block.light.value | 0
         } : null
     };
 }
@@ -313,17 +313,17 @@ async function generateLevel(input) {
 function generateShading(input) {
     const a = input.ambiance;
     return {
-        "color": a.fog.color,      // fog color
-        "factor": a.fog.distance,     // distance (texels) where the texture shading increase by one unit
-        "brightness": a.brightness, // base brightness
-        "filter": !!a.filter ? a.filter.color : false,    // color filter for sprites (ambient color)
+        color: a.fog.color,      // fog color
+        factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
+        brightness: a.brightness | 0, // base brightness
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
     };
 }
 
 function generateObjectsAndDecals(input) {
     const aObjects = [];
     const aDecals = [];
-    const ps = input.metrics.tileWidth;
+    const ps = input.metrics.tileWidth | 0;
     const grid = input.grid;
     const blocks = input.blocks;
     const tiles = input.tiles.sprites;
@@ -338,7 +338,7 @@ function generateObjectsAndDecals(input) {
             const oTT = thingTemplates.find(tt => tt.id === idThingTemplate);
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size;
+                const size = oTT.size | 0;
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -416,8 +416,8 @@ function generateCamera(input) {
             (cell, x) => {
                 if (cell.mark.shape === SHAPE_STARTPOINT) {
                     camera = {
-                        x,
-                        y,
+                        x: x | 0,
+                        y: y | 0,
                         z: 1,
                         angle: parseFloat(cell.mark.color) * Math.PI,
                         thinker: 'KeyboardControlThinker',

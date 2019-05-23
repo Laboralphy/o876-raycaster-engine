@@ -126,12 +126,12 @@ class Collider {
             let mPos = m.position;
             let mx = mPos.x;
             let my = mPos.y;
-            return oDummy.forceField.addForce(
-                vPos.sub(mPos)
-                    .normalize()
-                    .scale((m._radius + m._radius - dist(x, y, mx, my)) / 2),
-                0
-            )
+			return oDummy.forceField.addForce(
+			    vPos.sub(mPos)
+			        .normalize()
+					.scale((oDummy._radius + m._radius - dist(x, y, mx, my)) / 2),
+			    0
+			);
         });
     }
 

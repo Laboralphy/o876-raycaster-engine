@@ -63,6 +63,10 @@ class Vector {
 		return new Vector(this.x - v.x, this.y - v.y);
 	}
 
+	neg() {
+		return new Vector(-this.x, -this.y);
+	}
+
 	/**
 	 * Immutable !
 	 * returns a scalar product

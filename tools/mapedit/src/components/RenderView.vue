@@ -16,14 +16,14 @@
     import {generate} from '../libraries/generate';
     import Engine from "../../../../src/engine/Engine";
 
-    let engine, controlThinker;
+    let engine;
 
     function transmitKeyUpEvent(event) {
-        controlThinker.keyUp(event.key);
+        engine.camera.thinker.keyUp(event.key);
     }
 
     function transmitKeydownEvent(event) {
-        controlThinker.keyDown(event.key);
+        engine.camera.thinker.keyDown(event.key);
     }
 
 
@@ -63,7 +63,6 @@
 
         beforeDestroy: function () {
             engine.stopDoomLoop();
-            engine.
             window.removeEventListener('keydown', transmitKeydownEvent);
             window.removeEventListener('keyup', transmitKeyUpEvent);
         }

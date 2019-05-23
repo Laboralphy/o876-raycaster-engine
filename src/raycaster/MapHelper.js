@@ -8,6 +8,7 @@ import util from "util";
 class MapHelper {
 
     getAnimationKeyString(a) {
+        if (!a) console.trace();
         return a.join(';');
     }
 
@@ -16,13 +17,13 @@ class MapHelper {
         if (ks in this._animFactory) {
             return this._animFactory[ks];
         } else {
-            return this._animFactory[ks] = renderer.buildAnimation({start: a[0], length: a[1], duration: a[2], loop: a[3]});
+            return this._animFactory[ks] = renderer.buildSurfaceAnimation({start: a[0], length: a[1], duration: a[2], loop: a[3]});
         }
     }
 
     buildMaterialFace(renderer, f) {
         if (Array.isArray(f)) {
-            return this.getAnimation(f);
+            return this.getAnimation(renderer, f);
         } else {
             return f;
         }

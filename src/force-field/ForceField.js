@@ -39,14 +39,18 @@ class ForceField {
 	 * @return Vector
 	 */
 	computeForces() {
-	    return this._forces.reduce((prev, f) => prev.add(f.v), Vector.zero());
+	    const v = new Vector(0, 0);
+	    this._forces.forEach(v2 => {
+	        v.translate(v2.v);
+        });
+	    return v;
 	}
 
     /**
      * Reduces all forces. Forces that are too weak are discarded
      */
     reduceForces() {
-        this._forces = this._forces.filter(f => f.v.scale(f.f).normalize() < 0.01);
+        this._forces = this._forces.filter(f => f.v.scale(f.f).distance() > 0.01);
     }
 }
 

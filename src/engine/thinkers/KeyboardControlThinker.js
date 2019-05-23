@@ -27,8 +27,8 @@ class KeyboardControlThinker extends TangibleThinker {
         });
 
         this._lastTime = 0;
-        window.addEventListener('keydown', event => this.keyDown(event.key));
-        window.addEventListener('keyup', event => this.keyUp(event.key));
+        // window.addEventListener('keydown', event => this.keyDown(event.key));
+        // window.addEventListener('keyup', event => this.keyUp(event.key));
     }
 
     setupKeys(oKeys) {

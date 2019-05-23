@@ -176,6 +176,16 @@ class Renderer {
             .length > 0;
     }
 
+    buildSurfaceAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}) {
+        const a = new TileAnimation();
+        a.base = start;
+        a.count = length;
+        a.duration = duration;
+        a.loop = loop;
+        a.iterations = iterations === null ? Infinity : iterations;
+        return a;
+    }
+
 
     /**
      * Transmit an option value from _options to storey._options
@@ -454,6 +464,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     |_| |_| |_|\__,_| .__/  |___/\___|\__|\__\___|_|  |___/  \__,_|_| |_|\__,_|  \__, |\___|\__|\__\___|_|  |___/
                     |_|                                                          |___/
     */
+
     /**
      * changes the texture code of a cell
      * @param x {number}
@@ -1956,7 +1967,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         const sprites = this._sprites;
         for (let i = 0, l = sprites.length; i < l; ++i) {
-            sprites[i].animation.animate(nTimeInc);
+            const s = sprites[i];
+            if (!!s.animation) {
+                s.animation.animate(nTimeInc);
+            }
         }
     }
 }
