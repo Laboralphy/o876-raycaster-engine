@@ -41,13 +41,32 @@
             run: async function(level, canvas) {
                 const data = await generate(level);
                 engine = new Engine();
-                console.log(canvas);
-                console.log(data);
                 engine.setRenderingCanvas(canvas);
+                const context = canvas.getContext('2d');
+                context.fillStyle = 'black';
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                context.fillStyle = 'rgb(0, 33, 128)';
+                const w = canvas.width * 0.8 | 0;
+                const h = 16;
+                const x = (canvas.width - w) >> 1;
+                const y = (canvas.height - h) >> 1;
+                context.fillRect(x, y, w, h);
+                const grad = context.createLinearGradient(x, y, x, y + h);
+                grad.addColorStop(0, 'rgba(0, 66, 240)');
+                grad.addColorStop(0.5, 'rgba(20, 120, 250)');
+                grad.addColorStop(1, 'rgba(0, 66, 240)');
+                context.fillStyle = grad;
+                context.font = '16px monospace';
+                context.textBaseline = 'top';
                 await engine.buildLevel(data, (phase, progress) => {
-                    console.log(phase, progress);
+                    context.fillStyle = 'black';
+                    context.fillRect(x, y - h, w, h);
+                    context.fillStyle = 'white';
+                    context.fillText(phase, x, y - h);
+                    context.fillStyle = grad;
+                    context.fillRect(x, y, progress * w | 0, h);
                 });
-                engine.startDoomLoop();
+                setTimeout(() => engine.startDoomLoop(), 200);
             }
         },
 
@@ -70,6 +89,12 @@
 </script>
 
 <style scoped>
+    .progress {
+        padding-top: 12em;
+        padding-left: 20%;
+        width: 60%;
+    }
+
     canvas {
         margin-top: 2em;
         margin-left: 10%;

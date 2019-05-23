@@ -767,7 +767,7 @@ class Engine {
 
         // defines sky, walls and flats
         showProgress('loading textures');
-        if ('sky' in data.level.textures) {
+        if ('sky' in data.level.textures && !!data.level.textures.sky && data.level.textures.sky !== "") {
             rc.setBackground(await CanvasHelper.loadCanvas(data.level.textures.sky));
         }
         showProgress('loading textures');
