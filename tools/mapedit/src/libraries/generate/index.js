@@ -126,6 +126,9 @@ function generateBlueprint(things, id) {
      */
     const output = {};
     const thing = things.find(t => t.id === id);
+    if (!thing) {
+        throw new Error('');
+    }
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
@@ -331,11 +334,14 @@ function generateObjectsAndDecals(input) {
     grid.forEach((row, y) => row.forEach((cell, x) => {
         // déterminer si on est dans une cellule walkable (sinon c'est un decal
         const oBlock = blocks.find(b => b.id === cell.block);
-        const phys = oBlock.phys;
+        const phys = !!oBlock ? oBlock.phys : 0;
         const bWalkable = phys === 0;
         cell.things.forEach(thing => {
             const idThingTemplate = thing.id;
             const oTT = thingTemplates.find(tt => tt.id === idThingTemplate);
+            if (!oTT) {
+                throw new Error('cell x:' + x + ' y:' + y + ' references tile id:' + idTemplate + ' - but the tile template could not be found in store');
+            }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
                 const size = oTT.size | 0;

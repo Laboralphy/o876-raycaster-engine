@@ -117,7 +117,8 @@ class KeyboardControlThinker extends TangibleThinker {
             const vFront = entity.location.front(CONSTS.METRIC_PUSH_DISTANCE);
             vFront.x = vFront.x / ps | 0;
             vFront.y = vFront.y / ps | 0;
-            engine.pushBlock(entity, vFront.x, vFront.y);
+            //engine.pushBlock(entity, vFront.x, vFront.y);
+            engine.openDoor(vFront.x, vFront.y, true);
         }
     }
 

@@ -67,7 +67,7 @@ export default {
                 duration, frames, loop
             };
         } else {
-            throw new Error('could not find this tile : #' + start);
+            throw new Error('an animation references tile type: ' + type + ' - id:' + start + ' - but the tile could not be found in store');
         }
     },
 
