@@ -280,6 +280,8 @@ function generateLegend(input, block) {
 
      */
 
+
+    // ca ne marche pas
     return {
         code: block.id,
         phys: block.phys,
@@ -295,7 +297,7 @@ function generateLegend(input, block) {
         light: block.light.enabled ? {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
-            v:  block.light.value | 0
+            v:  parseFloat(block.light.value)
         } : null
     };
 }
@@ -455,6 +457,7 @@ function generateTags(input) {
 
 export async function generate(input) {
     return {
+        version: 'eng-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),

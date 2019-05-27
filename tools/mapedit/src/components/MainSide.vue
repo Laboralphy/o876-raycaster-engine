@@ -1,6 +1,6 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <Window
-            caption="Aubout..."
+            caption="About..."
     >
         <template v-slot:toolbar>
         </template>

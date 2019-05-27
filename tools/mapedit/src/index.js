@@ -25,6 +25,7 @@ import ThingBuilder from "./components/ThingBuilder.vue";
 import ThingView from "./components/ThingView.vue";
 import AmbianceSetup from "./components/AmbianceSetup.vue";
 import RenderView from "./components/RenderView.vue";
+import RenderSide from "./components/RenderSide.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -131,7 +132,7 @@ function createApplication() {
             path: "/render",
             components: {
                 default: RenderView,
-                side: MainSide
+                side: RenderSide
             }
         }
     ];

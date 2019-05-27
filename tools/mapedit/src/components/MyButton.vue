@@ -46,6 +46,11 @@
         text-shadow:0 0.1em 0 #7cacde;
     }
 
+    .myButton:focus {
+        outline: 0;
+        /*border-color: #EEE;*/
+    }
+
     .myButton.enabled:hover {
         /*background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #468ccf), color-stop(1, #63b8ee));*/
         /*background:-moz-linear-gradient(top, #468ccf 5%, #63b8ee 100%);*/

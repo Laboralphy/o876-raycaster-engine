@@ -30,6 +30,11 @@
                                     <div class="hint" v-show="!value.light.enabled">Check this on to open light properties panel</div>
                                     <fieldset v-show="value.light.enabled">
                                         <legend>Light source properties</legend>
+                                        <p class="warning" v-if="value.phys !== CONSTS.PHYS_NONE && value.phys !== CONSTS.PHYS_TRANSPARENT_BLOCK && value.phys !== CONSTS.PHYS_INVISIBLE_BLOCK">
+                                            The current "Phys" value is considered as "opaque". This block shall not let light pass throught it.<br />
+                                            Thus, light source properties will be ignored, and no light will be emitted from this present block.<br />
+                                            Choose Phys value among "Walkable", "Transparent" or "Invisible" to let light pass throught.
+                                        </p>
                                         <div>
                                             <label>Intensity: <input v-model="value.light.value" type="number" min="0" max="1" step="0.01"/></label>
                                         </div>
@@ -66,6 +71,7 @@
                                                         :height="getTileWidth"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceCeilingAnim"
                                                         @drop="({incoming}) => handleDrop('c', incoming)"
                                                 ></Tile>
                                                 <figcaption>Ceiling
@@ -85,6 +91,7 @@
                                                         :height="getTileHeight"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceWestAnim"
                                                         @drop="({incoming}) => handleDrop('w', incoming)"
                                                 ></Tile>
                                                 <figcaption>West
@@ -106,6 +113,7 @@
                                                         :height="getTileHeight"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceNorthAnim"
                                                         @drop="({incoming}) => handleDrop('n', incoming)"
                                                 ></Tile>
                                                 <figcaption>North
@@ -127,6 +135,7 @@
                                                         :height="getTileHeight"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceSouthAnim"
                                                         @drop="({incoming}) => handleDrop('s', incoming)"
                                                 ></Tile>
                                                 <figcaption>South
@@ -148,6 +157,7 @@
                                                         :height="getTileHeight"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceEastAnim"
                                                         @drop="({incoming}) => handleDrop('e', incoming)"
                                                 ></Tile>
                                                 <figcaption>East
@@ -171,6 +181,7 @@
                                                         :height="getTileWidth"
                                                         :selectable="false"
                                                         :dropzone="true"
+                                                        :anim="getFaceFloorAnim"
                                                         @drop="({incoming}) => handleDrop('f', incoming)"
                                                 ></Tile>
                                                 <figcaption>Floor
@@ -193,6 +204,7 @@
 </template>
 
 <script>
+    import * as CONSTS from '../../../../src/raycaster/consts';
     import * as ACTION from '../store/modules/level/action-types';
     // vuex
     import {createNamespacedHelpers} from 'vuex';
@@ -230,8 +242,9 @@
                         f: 0,
                         c: 0
                     }
-                }
-            }
+                },
+                CONSTS
+            };
         },
 
         props: {
@@ -268,6 +281,69 @@
 
             getId: function() {
                 return this.id | 0;
+            },
+
+            getFaceNorthAnim: function() {
+                const idTile = this.value.faces.n;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+            getFaceEastAnim: function() {
+                const idTile = this.value.faces.e;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+            getFaceWestAnim: function() {
+                const idTile = this.value.faces.w;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+
+            getFaceSouthAnim: function() {
+                const idTile = this.value.faces.s;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+
+            getFaceFloorAnim: function() {
+                const idTile = this.value.faces.f;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
+            },
+
+
+            getFaceCeilingAnim: function() {
+                const idTile = this.value.faces.c;
+                const oTile = this.getWallTile(idTile);
+                if (!!oTile) {
+                    return !!oTile.animation;
+                } else {
+                    return false;
+                }
             },
 
             getFaceNorthContent: function() {
@@ -475,5 +551,11 @@
 
     .hint:after {
         content: ")";
+    }
+
+    p.warning {
+        color: red;
+        font-weight: bold;
+        font-size: 0.95em;
     }
 </style>

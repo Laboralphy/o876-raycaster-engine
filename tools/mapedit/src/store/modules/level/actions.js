@@ -26,7 +26,7 @@ function renderAndStoreBlock(tiles, data) {
             c: getTile(tiles, CONSTS.TILE_TYPE_FLAT, inFaces.c)
         };
         // calculer le block rendu
-        render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces).then(oCanvas => {
+        render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces, !!data.light).then(oCanvas => {
             const sSrc = CanvasHelper.getData(oCanvas);
             CACHE.store(data.id, oCanvas);
             resolve({id: data.id, content: sSrc});

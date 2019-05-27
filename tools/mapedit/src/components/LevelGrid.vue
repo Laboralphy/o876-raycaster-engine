@@ -624,7 +624,8 @@
                                 : 0
                     };
                 });
-                const misc = {};
+                const misc = {
+                };
                 if (x === 1 && y === 1) {
                     misc.startpoint = { angle: 0 };
                 }

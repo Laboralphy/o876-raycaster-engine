@@ -51,6 +51,20 @@ class TagManager {
         engine.horde.entities.forEach(e => process(e));
     }
 
+    /**
+     * Si le secteur spécifié contient un tag : le déclencher
+     * @param entity
+     * @param xSector
+     * @param ySector
+     */
+    entityPushBlock(entity, xSector, ySector) {
+        const tg = this._tg;
+        const tags = tg.cell(xSector, ySector);
+        if (!!tags) {
+            tags.forEach(id => this.emitEvent(id, 'tagpush', tg.getTag(id), entity, xSector, ySector));
+        }
+    }
+
     tagParse(sTag) {
         const parameters = quoteSplit(sTag);
         const command = parameters.shift();

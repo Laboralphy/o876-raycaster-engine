@@ -40,6 +40,7 @@
 
             run: async function(level, canvas) {
                 const data = await generate(level);
+                //console.log(data);
                 engine = new Engine();
                 engine.setRenderingCanvas(canvas);
                 const context = canvas.getContext('2d');

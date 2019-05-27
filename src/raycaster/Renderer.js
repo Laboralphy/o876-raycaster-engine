@@ -176,17 +176,6 @@ class Renderer {
             .length > 0;
     }
 
-    buildSurfaceAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}) {
-        const a = new TileAnimation();
-        a.base = start;
-        a.count = length;
-        a.duration = duration;
-        a.loop = loop;
-        a.iterations = iterations === null ? Infinity : iterations;
-        return a;
-    }
-
-
     /**
      * Transmit an option value from _options to storey._options
      * @param sOption {string}
@@ -1947,14 +1936,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param loop
      * @returns {*}
      */
-    createAnimation(base, count, duration, loop = 1) {
-        const oAnimation = new TileAnimation();
-        oAnimation.base = base;
-        oAnimation.count = count;
-        oAnimation.duration = duration;
-        oAnimation.loop = loop;
-        return this.linkAnimation(oAnimation);
+    buildSurfaceAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}) {
+        const a = new TileAnimation();
+        a.base = start;
+        a.count = length;
+        a.duration = duration;
+        a.loop = loop;
+        a.iterations = iterations === null ? Infinity : iterations;
+        return this.linkAnimation(a);
     }
+
+
+
 
     /**
      * computes all tile animations

@@ -137,7 +137,7 @@ function getSimilarities({n, e, w, s}) {
  * render a flat view of the block
  * in order to be display in the grid
  */
-export async function render(oCanvas, phys, faces) {
+export async function render(oCanvas, phys, faces, light) {
     let w = oCanvas.width;
     let h = oCanvas.height;
     let c = oCanvas.getContext('2d');
@@ -293,6 +293,20 @@ export async function render(oCanvas, phys, faces) {
             c.lineTo(w - 2, h - 2);
             c.stroke();
             break;
+    }
+    if (light) {
+        c.lineWidth = 3;
+        c.strokeStyle = 'rgb(255, 255, 255)';
+        const pad = 2;
+        const x0 = pad, x1 = w >> 1, x2 = w - pad;
+        const y0 = pad, y1 = h >> 1, y2 = h - pad;
+
+        c.beginPath();
+        for (let a = 0; a < Math.PI * 2; a += Math.PI / 4) {
+            c.moveTo((w >> 4) * Math.cos(a) + x1, (w >> 4) * Math.sin(a) + y1);
+            c.lineTo((w >> 1) * Math.cos(a) + x1, (w >> 1) * Math.sin(a) + y1);
+        }
+        c.stroke();
     }
     return oCanvas;
 }
