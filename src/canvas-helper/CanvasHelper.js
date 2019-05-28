@@ -25,8 +25,8 @@ class CanvasHelper {
 		return bDefaultImageSmoothing;
 	}
 
-	static getData(oCanvas) {
-		return oCanvas.toDataURL('image/png');
+	static getData(oCanvas, sType = 'image/png') {
+		return oCanvas.toDataURL(sType);
 	}
 
     /**

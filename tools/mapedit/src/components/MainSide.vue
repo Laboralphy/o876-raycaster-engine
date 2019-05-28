@@ -5,8 +5,8 @@
         <template v-slot:toolbar>
         </template>
         <div>
-            This editor is used to design levels for the <br/>
-            <code><b>L a b o r a l p h y</b></code> Raycasting Game Engine Framework.
+            This editor is used to easily design levels for the <br/>
+            <code><b>O 8 7 6</b></code> Raycasting Game Engine Framework.
         </div>
     </Window>
 </template>

@@ -54,8 +54,8 @@ export default {
     getGrid: state => state.grid,
     getGridSize: state => state.grid.length,
     getLevel: state => state,
-
     getThings: state => state.things,
-
-    getAmbiance: state => state.ambiance
+    getAmbiance: state => state.ambiance,
+    getFlagSmooth: state => state.flags.smooth,
+    getFlagStretch: state => state.flags.stretch
 }

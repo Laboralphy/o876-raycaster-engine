@@ -9,14 +9,13 @@ const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 const LEVEL = {
 
-    "tilesets": {
-        // there is no tilset in this example
-        // we only have textures
-    },
+    "tilesets": [],
+    // there is no tilset in this example
+    // we only have textures
 
-    "blueprints": {
-        // there are no blueprint in this example, we don't have any sprites
-    },
+
+    "blueprints": [],
+    // there are no blueprint in this example, we don't have any sprites
 
     "level": {
         "metrics": {

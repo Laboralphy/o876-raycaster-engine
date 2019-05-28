@@ -89,7 +89,6 @@ export default {
         }
     },
 
-
     [MUTATION.DEFINE_BLOCK]: (state, data) => {
         const index = state.blocks.findIndex(b => b.id === data.id);
         const oBlock = {
@@ -326,5 +325,44 @@ export default {
         a.filter.enabled = value.filter.enabled;
         a.filter.color = value.filter.color;
         a.brightness = value.brightness;
+    },
+
+    [MUTATION.SET_FLAG_STRETCH]: (state, {value}) => {
+        state.flags.stretch = value;
+    },
+
+    [MUTATION.SET_FLAG_SMOOTH]: (state, {value}) => {
+        state.flags.smooth = value;
+    },
+
+    [MUTATION.SET_TILE_WIDTH]: (state, {value}) => {
+        const newWidth = value;
+        const prevWidth = state.metrics.tileWidth;
+        const f = x => Math.floor(x * newWidth / prevWidth);
+        state.blocks.forEach(b => {
+            b.offs = f(b.offs);
+            b.light.inner = f(b.light.inner);
+            b.light.outer = f(b.light.outer);
+        });
+        state.ambiance.fog.distance = f(state.ambiance.fog.distance);
+        state.things.forEach(s => {
+            s.size = f(s.size);
+        });
+        state.metrics.tileWidth = newWidth;
+    },
+
+    [MUTATION.SET_TILE_HEIGHT]: (state, {value}) => {
+        state.metrics.tileHeight = value;
+    },
+
+    [MUTATION.SET_PREVIEW]: (state, {value}) => {
+        state.preview = value;
+    },
+
+    [MUTATION.REPLACE_TILE_CONTENT]: (state, {type, id, content}) => {
+        const tile = state.tiles[type].find(t => t.id === id);
+        if (!!tile) {
+            tile.content = content;
+        }
     }
 }

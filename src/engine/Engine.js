@@ -577,12 +577,15 @@ class Engine {
     /**
      * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
      * @param resref {string} new blueprint reference
-     * @param data {*} the blueprint structure
-     * @returns {Promise<void>}
+     * @param bpDef {*}  the blueprint structure
+     * @param data {*} all the blueprints structure
+     * @returns {Promise<Blueprint>}
      */
-    async createBlueprint(resref, data) {
-        const bpDef = data.blueprints[resref];
-        const tsDef = data.tilesets[bpDef.tileset];
+    async createBlueprint(resref, bpDef, data) {
+        const tsDef = data.tilesets.find(tsi => tsi.id === bpDef.tileset);
+        if (!tsDef) {
+            throw new Error('blueprint "' + resref + '" references a tileset : "' + bpDef.tileset + '" which does not exist');
+        }
         const src = tsDef.src;
         const tileWidth = tsDef.width;
         const tileHeight = tsDef.height;
@@ -686,7 +689,7 @@ class Engine {
 
 
     async buildLevel(data, monitor) {
-        const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
+        const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
         const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
         const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
@@ -778,9 +781,10 @@ class Engine {
 
         // creates blueprints
         let nBp = TEXTURE_COUNT;
-        for (let resref in data.blueprints) {
+        for (let i = 0, l = data.blueprints.length; i < l; ++i) {
             showProgress('creating blueprints');
-            await this.createBlueprint(resref, data);
+            const resref = data.blueprints[i].id;
+            await this.createBlueprint(resref, data.blueprints[i], data);
             ++nBp;
         }
 
@@ -822,6 +826,8 @@ class Engine {
 
         const FACES = 'wsenfc';
 
+
+
         /**
          * auto loads a tileset
          * @param ref {string} reference name
@@ -830,7 +836,10 @@ class Engine {
          */
         const autoLoadTileSet = (ref, data) => {
             try {
-                const tsDef = this._getObjectItem(ref, data.tilesets, 'tileset');
+                const tsDef = data.tilesets.find(tsi => tsi.id === ref);
+                if (!tsDef) {
+                    throw new Error('could not auto load tileset : "' + ref + '"');
+                }
                 const {width, height, src} = tsDef;
                 return this.loadTileSet(ref, src, width, height);
             } catch(e) {

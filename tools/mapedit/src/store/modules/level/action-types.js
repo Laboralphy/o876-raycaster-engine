@@ -29,6 +29,12 @@ export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
 
 export const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
+export const SET_FLAG = 'SET_FLAG';
+export const SET_TILE_WIDTH = 'SET_TILE_WIDTH';
+export const SET_TILE_HEIGHT = 'SET_TILE_HEIGHT';
+export const SET_PREVIEW = 'SET_PREVIEW';
+export const REPLACE_TILE_CONTENT = 'REPLACE_TILE_CONTENT';
+export const FEEDBACK_TILE_WIDTH = 'FEEDBACK_TILE_WIDTH';
 
 
 

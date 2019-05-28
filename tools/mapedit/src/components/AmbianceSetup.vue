@@ -115,19 +115,4 @@
     img.bg-sky {
         border: solid 4px black;
     }
-
-
-    .hint {
-        font-family: Arial,sans-serif;
-        font-style: italic;
-        color: rgb(64, 64, 64);
-    }
-
-    .hint:before {
-        content: "(";
-    }
-
-    .hint:after {
-        content: ")";
-    }
 </style>

@@ -6,7 +6,7 @@
         <img
                 :src="getSource"
         />
-        <figcaption>{{ name }}</figcaption>
+        <figcaption><span class="filename">{{ name }}</span> - <span class="datestring">{{ getDateString }}</span></figcaption>
     </figure>
 </template>
 
@@ -20,7 +20,10 @@
                 required: true
             },
             preview: {
-                type: Boolean,
+                required: false,
+                default: false
+            },
+            date: {
                 required: false,
                 default: false
             },
@@ -40,8 +43,16 @@
                 return a.join(' ');
             },
 
+            getDateString: function() {
+                const d = new Date(parseInt(this.date.toString() + '000'));
+                //2019-05-28T16:35:04.231Z
+                const d2 = d.toJSON();
+                const r = d2.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2})/);
+                return r[1] + ' ' + r[2];
+            },
+
             getSource: function() {
-                return './assets/images/no-preview.png';
+                return !!this.preview ? this.preview : './assets/images/no-preview.png';
             }
         },
     }
@@ -62,8 +73,7 @@
         border: solid thin #000;
     }
 
-    figure.level-thumbnail figcaption {
-        font-style: italic;
+    figure.level-thumbnail figcaption span.filename {
     }
 
     figure.level-thumbnail:hover {
@@ -80,5 +90,10 @@
         filter: brightness(140%);
     }
 
+    figure.level-thumbnail figcaption span.datestring {
+        font-style: italic;
+        font-size: 0.8em;
+        color: #333;
+    }
 
 </style>

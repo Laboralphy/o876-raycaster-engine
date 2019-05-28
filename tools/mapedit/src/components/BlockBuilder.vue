@@ -539,20 +539,6 @@
         width: 8em;
     }
 
-    .hint {
-        font-family: Arial,sans-serif;
-        font-style: italic;
-        color: rgb(64, 64, 64);
-    }
-
-    .hint:before {
-        content: "(";
-    }
-
-    .hint:after {
-        content: ")";
-    }
-
     p.warning {
         color: red;
         font-weight: bold;

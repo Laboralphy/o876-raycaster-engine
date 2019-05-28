@@ -4,59 +4,68 @@ const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 const LEVEL = {
 
-    "tilesets": {
+    "tilesets": [
         // there is no tilset in this example
         // we only have textures
-        "d1": {
+        {
+            "id": "d1",
             "width": 32,
             "height": 32,
             "src": "textures/d1.png"
         },
-        "d2": {
+        {
+            "id": "d2",
             "width": 32,
             "height": 32,
             "src": "textures/d2.png"
         },
-        "d3": {
+        {
+            "id": "d3",
             "width": 32,
             "height": 32,
             "src": "textures/d3.png"
         },
-        "d4": {
+        {
+            "id": "d4",
             "width": 32,
             "height": 32,
             "src": "textures/d4.png"
         },
-        "d5": {
+        {
+            "id": "d5",
             "width": 32,
             "height": 32,
             "src": "textures/d5.png"
         },
-        "d6": {
+        {
+            "id": "d6",
             "width": 32,
             "height": 32,
             "src": "textures/d6.png"
         },
-        "d7": {
+        {
+            "id": "d7",
             "width": 32,
             "height": 32,
             "src": "textures/d7.png"
         },
-        "d8": {
+        {
+            "id": "d8",
             "width": 32,
             "height": 32,
             "src": "textures/d8.png"
         },
-        "d9": {
+        {
+            "id": "d9",
             "width": 32,
             "height": 32,
             "src": "textures/d9.png"
         },
-    },
+    ],
 
-    "blueprints": {
+    "blueprints": [
         // there are no blueprint in this example, we don't have any sprites
-    },
+    ],
 
     "level": {
         "metrics": {

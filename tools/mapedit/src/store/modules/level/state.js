@@ -29,5 +29,6 @@ export default {
             color: ''
         },
         brightness: 0
-    }
+    },
+    preview: ''
 };

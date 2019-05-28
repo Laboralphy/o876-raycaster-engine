@@ -16,8 +16,9 @@ const THINKERS = {
 function getLevel() {
     return {
 
-        "tilesets": {
-            "m-warlock-b": {
+        "tilesets": [
+            {
+                "id": "m-warlock-b",
                 "src": "gfx/sprites/m_warlock_b.png",
                 "width": 64,
                 "height": 96,
@@ -48,7 +49,8 @@ function getLevel() {
                     }
                 }
             },
-            "p-magbolt-0": {
+            {
+                "id": "p-magbolt-0",
                 "src": "gfx/sprites/p_magbolt.png",
                 "width": 48,
                 "height": 64,
@@ -68,7 +70,8 @@ function getLevel() {
                     }
                 }
             },
-            "o-bluedisc": {
+            {
+                "id": "o-bluedisc",
                 "src": "gfx/sprites/o_bluedisc.png",
                 "width": 32,
                 "height": 32,
@@ -81,7 +84,8 @@ function getLevel() {
                     }
                 }
             },
-            "o-bluereddisc": {
+            {
+                "id": "o-bluereddisc",
                 "src": "gfx/sprites/o_bluereddisc.png",
                 "width": 32,
                 "height": 32,
@@ -101,34 +105,38 @@ function getLevel() {
                     }
                 }
             }
-        },
+        ],
 
-        "blueprints": {
-            "m-warlock-b": {
+        "blueprints": [
+            {
+                "id": "m-warlock-b",
                 "tileset": "m-warlock-b",
                 "thinker": 'DevKbdMobThinker',
                 "size": 24
             },
 
-            "p-magbolt-0": {
+            {
+                "id": "p-magbolt-0",
                 "tileset": "p-magbolt-0",
                 "thinker": 'MagboltThinker',
                 "size": 16,
                 "fx": ["@FX_LIGHT_SOURCE"]
             },
 
-            "o-bluedisc": {
+            {
+                "id": "o-bluedisc",
                 "tileset": "o-bluedisc",
                 "thinker": null,
                 "size": 24
             },
 
-            "o-bluereddisc": {
+            {
+                "id": "o-bluereddisc",
                 "tileset": "o-bluereddisc",
                 "thinker": 'StaticThinker',
                 "size": 16
             },
-        },
+        ],
 
         "level": {
             "metrics": {

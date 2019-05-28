@@ -6,10 +6,7 @@
         </template>
         <div>
             <div align="center">
-                <p class="main-tile">RAYCASTER MAP EDITOR</p>
-            </div>
-            <div align="center">
-<!--                <img class="splash-image" src="../../assets/images/rc-anim-splash.gif" />-->
+                <img class="splash-image" src="../../assets/images/splash.png" />
             </div>
         </div>
     </Window>
@@ -25,7 +22,7 @@
 
 <style scoped>
     img.splash-image {
-        box-shadow: 0 0 3em rgb(0, 0, 0);
+        margin-top: 15vh;
     }
 
     p.main-tile {

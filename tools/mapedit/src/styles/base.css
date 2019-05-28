@@ -41,10 +41,17 @@ body {
     }
 }
 
-/*
-.floatingWidth > div:nth-child(1) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(3) > td:nth-child(1) > div:nth-child(1) {
-    background-image: url(../../assets/images/rc-anim-splash.gif);
-    background-size: cover;
-    background-repeat: no-repeat;
+.hint {
+    font-family: Arial,sans-serif;
+    font-style: italic;
+    color: rgb(64, 64, 64);
 }
-*/
+
+.hint:before {
+    content: "(";
+}
+
+.hint:after {
+    content: ")";
+}
+

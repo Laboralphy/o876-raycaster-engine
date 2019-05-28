@@ -18,6 +18,7 @@
     import WeatherFogIcon from "vue-material-design-icons/WeatherFog.vue";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
     import Video3DIcon from "vue-material-design-icons/Video3d.vue";
+    import SettingsIcon from "vue-material-design-icons/Settings.vue";
 
     export default {
         name: "MainMenu",
@@ -32,7 +33,8 @@
             TagIcon,
             ChessRookIcon,
             ShapeIcon,
-            WeatherFogIcon
+            WeatherFogIcon,
+            SettingsIcon
         },
         data: function() {
             return {
@@ -68,6 +70,12 @@
                             route: '/render',
                             caption: 'Render',
                             title: 'Load the level into the raycasting engine'
+                        },
+                        {
+                            icon: SettingsIcon,
+                            route: '/settings',
+                            caption: 'Settings',
+                            title: 'Go to settings panel. Configure tile size and rendering flags'
                         }
                     ],
                     tools: [

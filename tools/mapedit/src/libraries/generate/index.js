@@ -20,6 +20,9 @@ async function combineTiles(tilesets, iStart, count) {
     }
     const proms = aAllTiles.map(t => CanvasHelper.loadCanvas(t));
     const aCanvases = await Promise.all(proms);
+    if (aCanvases.length === 0) {
+        throw new Error('no tile defined');
+    }
     const w = aCanvases[0].width;
     const h = aCanvases[0].height;
     const cvsOutput = CanvasHelper.createCanvas(w * count, h);
@@ -48,6 +51,7 @@ async function generateTileset(tilesets, idTile) {
 
       on doit convertir en :
       {
+            "id": string, //
             "src": string, // image source of tileset
             "width": number, // frame width
             "height": number, // frame height
@@ -64,7 +68,7 @@ async function generateTileset(tilesets, idTile) {
 
       lorqu'il y a animation, il faut recombiner toutes les tiles en une seule.
      */
-    const output = {};
+    const output = {id: idTile};
     const iTileIndex = tilesets.findIndex(t => t.id === idTile);
     if (iTileIndex < 0) {
         throw new Error('this tileset does not exist : ' + idTile);
@@ -90,10 +94,10 @@ async function generateTileset(tilesets, idTile) {
 
 async function generateTilesets(input) {
     const tilesets = input.tiles.sprites;
-    const output = {};
+    const output = [];
     for (let i = 0; i < tilesets.length; ++i) {
         const ts = tilesets[i];
-        output[ts.id] = await generateTileset(tilesets, ts.id)
+        output.push(await generateTileset(tilesets, ts.id));
     }
     return output;
 }
@@ -116,7 +120,8 @@ function generateBlueprint(things, id) {
 
     format du RC
     {
-        "((name-of-blueprint": {
+        {
+            "id": string, // identifier blueprint
             "tileset": string, // name of the tilset used
             "thinker": string, // reference of the AI thinker
             "size": number // physical size (for collision)
@@ -124,10 +129,10 @@ function generateBlueprint(things, id) {
     }
 
      */
-    const output = {};
+    const output = {id};
     const thing = things.find(t => t.id === id);
     if (!thing) {
-        throw new Error('');
+        throw new Error('blueprint referenced thing "' + id + '" which could not be found');
     }
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
@@ -161,10 +166,10 @@ function generateBlueprint(things, id) {
 
 function generateBlueprints(input) {
     const things = input.things;
-    const output = {};
+    const output = [];
     for (let i = 0; i < things.length; ++i) {
         const th = things[i];
-        output[th.id] = generateBlueprint(things, th.id);
+        output.push(generateBlueprint(things, th.id));
     }
     return output;
 }

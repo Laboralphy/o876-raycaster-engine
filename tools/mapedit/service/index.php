@@ -17,6 +17,7 @@
  */
 require('config.php');
 
+
 /**
  * simple log manager
  */
@@ -76,7 +77,12 @@ function saveAction($name, $data) {
 	if (!file_exists($filename)) {
 		mkdir($filename, 0777, true);
 	}
-	file_put_contents($filename . '/level.json', json_encode($data));	
+	// get the preview
+	$preview = $data->preview;
+	if ($preview) {
+		file_put_contents($filename . '/preview.json', $preview);	
+	}
+	file_put_contents($filename . '/level.json', json_encode($data));
 	sendOutput('{"status":"OK"}');
 }
 
@@ -96,10 +102,10 @@ function listAction() {
 	$aList = array_map(function($s) {
 		// get level.json data
 		$filename = VAULT_DIR . '/' . $s . '/level.json';
-		$previewFilename = VAULT_DIR . '/' . $s . '/preview.png';
+		$previewFilename = VAULT_DIR . '/' . $s . '/preview.json';
 		$date = filemtime($filename);
 		$name = $s;
-		$preview = file_exists($previewFilename) ? false : false;
+		$preview = file_exists($previewFilename) ? file_get_contents($previewFilename) : false;
 		return array(
 			'name' => $name,
 			'date' => $date,

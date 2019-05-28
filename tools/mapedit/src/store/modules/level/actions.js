@@ -26,7 +26,7 @@ function renderAndStoreBlock(tiles, data) {
             c: getTile(tiles, CONSTS.TILE_TYPE_FLAT, inFaces.c)
         };
         // calculer le block rendu
-        render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces, !!data.light).then(oCanvas => {
+        render(CanvasHelper.createCanvas(CONSTS.BLOCK_WIDTH, CONSTS.BLOCK_HEIGHT), data.phys, oFaces, !!data.light.enabled).then(oCanvas => {
             const sSrc = CanvasHelper.getData(oCanvas);
             CACHE.store(data.id, oCanvas);
             resolve({id: data.id, content: sSrc});
@@ -271,5 +271,40 @@ export default {
 
     [ACTION.SETUP_AMBIANCE]: ({commit}, value) => {
         commit(MUTATION.SETUP_AMBIANCE, value);
+    },
+
+    [ACTION.SET_FLAG]: ({commit}, {flag, value}) => {
+        switch (flag) {
+            case 'smooth':
+                commit(MUTATION.SET_FLAG_SMOOTH, {value});
+                break;
+
+            case 'stretch':
+                commit(MUTATION.SET_FLAG_STRETCH, {value});
+                break;
+
+            default:
+                throw new Error('this flag is unknown : "' + flag + '"');
+        }
+    },
+
+    [ACTION.SET_TILE_WIDTH]: ({commit}, {value}) => {
+        commit(MUTATION.SET_TILE_WIDTH, {value});
+    },
+
+    [ACTION.SET_TILE_HEIGHT]: ({commit}, {value}) => {
+        commit(MUTATION.SET_TILE_HEIGHT, {value});
+    },
+
+    [ACTION.SET_PREVIEW]: ({commit}, {value}) => {
+        commit(MUTATION.SET_PREVIEW, {value});
+    },
+
+    [ACTION.REPLACE_TILE_CONTENT]: ({commit}, {id, type, content}) => {
+        commit(MUTATION.REPLACE_TILE_CONTENT, {id, type, content});
+    },
+
+    [ACTION.FEEDBACK_TILE_WIDTH]: ({commit}, {from, to}) => {
+        commit(MUTATION.REPLACE_BLOCK_OFFSET, {from, to});
     }
 }

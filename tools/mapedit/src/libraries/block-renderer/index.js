@@ -294,7 +294,7 @@ export async function render(oCanvas, phys, faces, light) {
             c.stroke();
             break;
     }
-    if (light) {
+    if (!!light) {
         c.lineWidth = 3;
         c.strokeStyle = 'rgb(255, 255, 255)';
         const pad = 2;

@@ -49,8 +49,12 @@
         },
 
         mounted: async function() {
-            const data = await generate(this.getLevel);
-            this.downloadData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            try {
+                const data = await generate(this.getLevel);
+                this.downloadData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+            } catch (e) {
+
+            }
         }
     }
 </script>

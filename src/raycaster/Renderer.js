@@ -77,6 +77,7 @@ class Renderer {
         this._renderVRCanvas = null;
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
+        this._firstFloor = true; // if false then this instance is second story
     }
 
 
@@ -267,6 +268,10 @@ class Renderer {
                         this.setBackground(bgImage);
                     }
                     break;
+
+                case 'textures.stretch':
+                    this.transmitOptionToStorey(opt);
+                    break;
             }
         }
     }
@@ -290,6 +295,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     createStorey() {
         const storey = new Renderer();
         this._storey = storey;
+        storey._firstFloor = false;
         storey.setMapSize(this.getMapSize());
         this.connectStoreyProperties();
         return storey;
@@ -1208,7 +1214,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (OPTIONS.textures.stretch) {
+        if (OPTIONS.textures.stretch && !this._firstFloor) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
@@ -1691,6 +1697,28 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
     flip(finalContext) {
         finalContext.drawImage(this._renderCanvas, 0, 0);
+    }
+
+    /**
+     * Returns a data image of the last rendered image
+     */
+    screenshot(width = null, height = null, sType = 'image/png') {
+        width = width || this._renderCanvas.width;
+        height = height || this._renderCanvas.height;
+        const oCanvas = CanvasHelper.createCanvas(width, height);
+        const oContext = oCanvas.getContext('2d');
+        oContext.drawImage(
+            this._renderCanvas,
+            0,
+            0,
+            this._renderCanvas.width,
+            this._renderCanvas.height,
+            0,
+            0,
+            width,
+            height
+        );
+        return CanvasHelper.getData(oCanvas, sType);
     }
 
 
