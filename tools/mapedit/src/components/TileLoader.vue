@@ -4,14 +4,17 @@
     >
         <template v-slot:toolbar>
             <ImageLoader
+                    v-if="getTileBrowserType === CONSTS.TILE_TYPE_WALL"
                     hint="Import a wall tileset from an image"
                     @load="onWallImageLoaded"
             ><WallIcon title="Import a wall tileset from an image"></WallIcon> Load walls</ImageLoader>
             <ImageLoader
+                    v-else-if="getTileBrowserType === CONSTS.TILE_TYPE_FLAT"
                     hint="Import a flat tileset from an image"
                     @load="onFlatImageLoaded"
             ><ViewGridIcon title="Import a flat tileset from an image"></ViewGridIcon> Load flats</ImageLoader>
             <ImageLoader
+                    v-else-if="getTileBrowserType === CONSTS.TILE_TYPE_SPRITE"
                     hint="Import a single tile from an image to make a sprite"
                     @load="onSpriteImageLoaded"
                     :multiple="true"
@@ -28,6 +31,7 @@
                 <li>Click on "<WallIcon></WallIcon>" or "<ViewGridIcon></ViewGridIcon>" to load tilesets.</li>
                 <li>Click on tiles to select them. Click again to toggle selection.</li>
                 <li>Click on "<ImportIcon></ImportIcon> Import" to copy the selected tiles into the current project, and make them available as wall, floor or ceiling textures.</li>
+                <li>You may also use <b>Ctrl-V</b> to <b>paste</b> an image content here.</li>
             </ul>
         </div>
         <div v-else-if="wallImages.length > 0">
@@ -66,6 +70,7 @@
                     @select="({value}) => setTileSelection(image, value)"
             />
         </div>
+        <ImagePasteBin @imagepaste="onImagePaste"></ImagePasteBin>
     </Window>
 </template>
 
@@ -92,9 +97,11 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import SelectAllIcon from "vue-material-design-icons/SelectAll.vue";
     import SelectOffIcon from "vue-material-design-icons/SelectOff.vue";
+    import ImagePasteBin from "./ImagePasteBin.vue";
 
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorMapGetter} = createNamespacedHelpers('editor');
 
 
     let IMAGE_LAST_ID = 0;
@@ -103,6 +110,7 @@
     export default {
         name: "WallTileLoader",
         components: {
+            ImagePasteBin,
             SelectOffIcon,
             SelectAllIcon,
             DeleteIcon,
@@ -116,16 +124,23 @@
             ImageLoader,
             Window
         },
+
         computed: {
             ...levelMapGetter([
                 'getTileHeight',
                 'getTileWidth',
             ]),
 
+
+            ...editorMapGetter([
+                'getTileBrowserType'
+            ]),
+
             isThereImageToDisplay: function() {
                 return this.wallImages.length > 0 || this.flatImages.length > 0 || this.spriteImages.length > 0;
             }
         },
+
         data: function() {
             return {
                 wallImages: [],
@@ -137,9 +152,11 @@
                     caption: '↩',
                     title: 'Close the tileset loader',
                     id: 'c_return'
-                }]
+                }],
+                CONSTS
             };
         },
+
         methods: {
             ...levelMapActions({
                 importTile: ACTION.LOAD_TILE,
@@ -156,27 +173,41 @@
                 this.spriteImages.splice(0, this.spriteImages.length);
             },
 
-            onWallImageLoaded: async function(event) {
+            onWallImageLoaded: async function({data}) {
                 this.clearTiles();
                 const tss = new TilesetSplitter();
-                const aImages = await tss.split(event.data, this.getTileWidth, this.getTileHeight);
+                const aImages = await tss.split(data, this.getTileWidth, this.getTileHeight);
                 aImages.forEach(img => this.wallImages.push({id: ++IMAGE_LAST_ID, src: img}));
                 this.loadedTypeTiles = CONSTS.TILE_TYPE_WALL;
             },
 
-            onFlatImageLoaded: async function(event) {
+            onFlatImageLoaded: async function({data}) {
                 this.clearTiles();
                 const tss = new TilesetSplitter();
-                const aImages = await tss.split(event.data, this.getTileWidth, this.getTileWidth);
+                const aImages = await tss.split(data, this.getTileWidth, this.getTileWidth);
                 aImages.forEach(img => this.flatImages.push({id: ++IMAGE_LAST_ID, src: img}));
                 this.loadedTypeTiles = CONSTS.TILE_TYPE_FLAT;
             },
 
-            onSpriteImageLoaded: async function(event) {
+            onSpriteImageLoaded: async function({data}) {
                 this.clearTiles();
-                const oImage = await CanvasHelper.loadCanvas(event.data);
+                const oImage = await CanvasHelper.loadCanvas(data);
                 this.spriteImages.push({id: ++IMAGE_LAST_ID, src: oImage.toDataURL('image/png'), width: oImage.width, height: oImage.height});
                 this.loadedTypeTiles = CONSTS.TILE_TYPE_SPRITE;
+            },
+
+            onImagePaste: function(img) {
+                switch (this.getTileBrowserType) {
+                    case CONSTS.TILE_TYPE_WALL:
+                        return this.onWallImageLoaded({data: img.src});
+
+                    case CONSTS.TILE_TYPE_FLAT:
+                        return this.onFlatImageLoaded({data: img.src});
+
+                    case CONSTS.TILE_TYPE_SPRITE:
+                        this.onSpriteImageLoaded({data: img.src});
+
+                }
             },
 
             /**
@@ -209,7 +240,6 @@
                     case CONSTS.TILE_TYPE_SPRITE:
                         this.doImportType(CONSTS.TILE_TYPE_SPRITE, this.spriteImages);
                         break;
-
                 }
             }
         }

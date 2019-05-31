@@ -63,6 +63,7 @@
     import UpdateIcon from "vue-material-design-icons/Update.vue";
     import AnimationIcon from "vue-material-design-icons/Animation.vue";
     import TileAnimation from "../../../../src/raycaster/TileAnimation";
+    import CanvasHelper from "../../../../src/canvas-helper";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
@@ -162,10 +163,6 @@
                     const iFirstFrame = aTiles.findIndex(t => t.id === this.value.tile);
                     const iFrame = this.frameIndex + iFirstFrame;
                     const oTile = iFrame < aTiles.length ? aTiles[iFrame] : aTiles[aTiles.length - 1];
-                    const w = this.getTileWidth;
-                    const h = bWall ? this.getTileHeight : this.getTileWidth;
-                    this.width = w;
-                    this.height = h;
                     return oTile.content;
                 } else {
                     return this.content;
@@ -194,13 +191,28 @@
                 clearTileAnimation: ACTION.CLEAR_TILE_ANIMATION
             }),
 
-            handleDrop: function(id) {
+            handleDrop: async function(id) {
                 const oTile = this.getTile(id);
                 if (oTile) {
                     this.value.tile = id;
                     this.content = oTile.content;
-                    this.width = this.getTileWidth;
-                    this.height = oTile.type === CONSTS.TILE_TYPE_WALL ? this.getTileHeight : this.getTileWidth;
+                    const oCvs = await CanvasHelper.loadCanvas(oTile.content);
+                    switch (oTile.type) {
+                        case CONSTS.TILE_TYPE_WALL:
+                            this.width = this.getTileWidth;
+                            this.height = this.getTileHeight;
+                            break;
+
+                        case CONSTS.TILE_TYPE_FLAT:
+                            this.width = this.getTileWidth;
+                            this.height = this.getTileWidth;
+                            break;
+
+                        case CONSTS.TILE_TYPE_SPRITE:
+                            this.width = Math.max(this.getTileWidth, oCvs.width);
+                            this.height = Math.max(this.getTileWidth, oCvs.height);
+                            break;
+                    }
                     if (oTile.animation) {
                         this.value.duration = oTile.animation.duration;
                         this.value.loop = oTile.animation.loop;

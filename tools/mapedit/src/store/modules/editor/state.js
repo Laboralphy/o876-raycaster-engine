@@ -130,6 +130,10 @@ export default {
             selected: null
         },
 
+        tileBrowser: {
+            type: 'wall'
+        },
+
         levelGrid: {
             selectedRegion: {
                 x1: -1,

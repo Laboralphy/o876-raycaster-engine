@@ -58,5 +58,10 @@ export default {
         st.yc = yc;
         st.xt = xt;
         st.yt = yt;
+    },
+
+    [MUTATION.TILEBROWSER_SET_TILE_TYPE]: (state, {value}) => {
+        state.models.tileBrowser.type = value;
     }
+
 }

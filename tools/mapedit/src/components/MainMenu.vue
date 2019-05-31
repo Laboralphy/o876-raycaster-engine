@@ -19,6 +19,7 @@
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
     import Video3DIcon from "vue-material-design-icons/Video3d.vue";
     import SettingsIcon from "vue-material-design-icons/Settings.vue";
+    import InformationIcon from "vue-material-design-icons/Information.vue"
 
     export default {
         name: "MainMenu",
@@ -76,6 +77,12 @@
                             route: '/settings',
                             caption: 'Settings',
                             title: 'Go to settings panel. Configure tile size and rendering flags'
+                        },
+                        {
+                            icon: InformationIcon,
+                            route: '/',
+                            caption: 'About',
+                            title: 'About this application (title only)'
                         }
                     ],
                     tools: [

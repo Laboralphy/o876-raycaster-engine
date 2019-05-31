@@ -54,9 +54,10 @@
     table.o876window h1 {
         font-size: 1.3em;
         font-family: monospace;
-        background-color: #00F;
+        text-shadow: 0.1em 0.1em 0.1em #0000CC;
+        background-color: #4488FF;
         color: white;
-        border: solid 0.15em #00A;
+        border: solid 0.15em #24A;
         padding: 0.15em 0.15em 0.15em 0.6em;
         margin-top: 0;
         margin-bottom: 0.15em;

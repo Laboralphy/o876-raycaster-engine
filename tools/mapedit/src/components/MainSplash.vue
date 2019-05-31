@@ -2,11 +2,11 @@
     <Window
             caption="Raycaster Map Editor"
     >
-        <template v-slot:toolbar>
+        <template v-slot:toolbar="">
         </template>
         <div>
-            <div align="center">
-                <img class="splash-image" src="../../assets/images/splash.png" />
+            <div class="center-text">
+                <img alt="O876 RC MAPEDIT - For the O876 Raycasting Engine" class="splash-image" src="../../assets/images/splash.png" />
             </div>
         </div>
     </Window>
@@ -23,12 +23,10 @@
 <style scoped>
     img.splash-image {
         margin-top: 15vh;
+        width: 60vw;
     }
 
-    p.main-tile {
-        font-size: 5em;
-        font-family: Arial, sans-serif;
-        font-style: italic;
-        font-weight: bold;
+    .center-text {
+        text-align: center;
     }
 </style>

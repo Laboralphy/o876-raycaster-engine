@@ -1,6 +1,7 @@
 {
-    "tilesets": {
-        "((name-of-tileset))": {
+    "tilesets": [
+        {
+            "id": string,                   // tileset identifier (used in "blueprints" or "decals")
             "src": string,                  // image source of tileset (data,base64)
             "width": number,                // frame width (pixels)
             "height": number,               // frame height (pixels)
@@ -14,10 +15,11 @@
                 }, ...
             }
         }, ...
-    },
-    "blueprints": {
-        "((name-of-blueprint": {
-            "tileset": string,              // name of the tilset used
+    ],
+    "blueprints": [
+        {
+            "id": string,                   // blueprint identifier (used in "objects")
+            "tileset": string,              // id of the tilset used
             "thinker": string,              // AI thinker reference (class name)
             "size": number,                 // physical size (for collision)
             "fx": []                        // array of FX. Possible values are
@@ -28,7 +30,7 @@
                                                 // @FX_ALPHA_50 : the sprite has 50% opacity
                                                 // @FX_ALPHA_25 : the sprite has 25% opacity
         }, ...
-    },
+    ],
     "level": {
         "metrics": {
             "spacing": number,              // size of the level cells

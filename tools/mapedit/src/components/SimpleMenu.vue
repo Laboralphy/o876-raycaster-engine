@@ -28,11 +28,14 @@
 
 
         watch:{
-            $route (to, from){
-                const s = to.fullPath;
-                if (s !== this.currentRoute) {
-                    this.currentRoute = s;
-                }
+            $route: {
+                handler: function (to, from) {
+                    const s = to.fullPath;
+                    if (s !== this.currentRoute) {
+                        this.currentRoute = s;
+                    }
+                },
+                immediate: true
             }
         },
 

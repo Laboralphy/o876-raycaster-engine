@@ -14,6 +14,7 @@
                 :src="value.sky"
                 alt="background image not loaded yet"
         /></div>
+        <p>You may press <b>Ctrl-V</b> to paste an image content here...</p>
         <hr/>
         <h3>Fog and light parameters :</h3>
         <form>
@@ -45,6 +46,7 @@
             <hr />
             <MyButton @click="applyClicked">Apply</MyButton>
         </form>
+        <ImagePasteBin @imagepaste="onImagePaste"></ImagePasteBin>
     </Window>
 </template>
 
@@ -56,12 +58,13 @@
     import ImageLoader from "./ImageLoader.vue";
     import FolderImageIcon from "vue-material-design-icons/FolderImage.vue";
     import MyButton from "./MyButton.vue";
+    import ImagePasteBin from "./ImagePasteBin.vue";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "AmbianceSetup",
-        components: {MyButton, FolderImageIcon, ImageLoader, Window},
+        components: {ImagePasteBin, MyButton, FolderImageIcon, ImageLoader, Window},
 
         data: function() {
             return {
@@ -98,6 +101,10 @@
             applyClicked: function() {
                 this.setupAmbiance(this.value);
                 this.$router.push('/level/blocks');
+            },
+
+            onImagePaste: function(img) {
+                this.value.sky = img.src;
             }
         },
 

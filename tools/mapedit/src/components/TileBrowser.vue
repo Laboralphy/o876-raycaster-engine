@@ -3,7 +3,7 @@
         :caption="getTitle"
     >
         <template v-slot:toolbar>
-            <Siblings @input="({index}) => selectTileFamily(index)">
+            <Siblings ref="tileType" @input="({index}) => selectTileTypeIndex(index)">
                 <SiblingButton title="Display project wall tiles" :default="true"><WallIcon title="Display project wall tiles" decorative></WallIcon></SiblingButton>
                 <SiblingButton title="Display project flat tiles"><ViewGridIcon title="Display project flat tiles" decorative></ViewGridIcon></SiblingButton>
                 <SiblingButton title="Display project sprite tiles"><ChessRookIcon title="Display project sprite tiles" decorative></ChessRookIcon></SiblingButton>
@@ -14,7 +14,7 @@
                     :disabled="getSelectedTileCount === 0"
             ><DeleteIcon title="Delete the selected tiles" decorative></DeleteIcon></MyButton>
         </template>
-        <div v-if="selectedFamily === CONSTS.TILE_TYPE_WALL">
+        <div v-if="selectedTileType === CONSTS.TILE_TYPE_WALL">
             <Tile
                     v-for="image in getWallTiles"
                     :content="image.content"
@@ -29,7 +29,7 @@
                     @select="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
-        <div v-if="selectedFamily === CONSTS.TILE_TYPE_FLAT">
+        <div v-if="selectedTileType === CONSTS.TILE_TYPE_FLAT">
             <Tile
                     v-for="image in getFlatTiles"
                     :content="image.content"
@@ -44,7 +44,7 @@
                     @select="({value}) => setTileSelection(image.id, value)"
             ></Tile>
         </div>
-        <div v-if="selectedFamily === CONSTS.TILE_TYPE_SPRITE">
+        <div v-if="selectedTileType === CONSTS.TILE_TYPE_SPRITE">
             <Tile
                     v-for="image in getSpriteTiles"
                     :content="image.content"
@@ -64,6 +64,7 @@
 
 <script>
     import * as ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import * as CONSTS from '../consts';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
@@ -79,6 +80,7 @@
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "TileBrowser",
@@ -108,12 +110,24 @@
                     caption: 'Sprites'
                 }],
 
-                selectedFamily: CONSTS.TILE_TYPE_WALL,
+                _selectedTileType: CONSTS.TILE_TYPE_WALL,
                 CONSTS,
 
                 selectedTiles: {},
             }
         },
+
+        watch: {
+            getTileBrowserType: {
+                handler: function(newValue, oldValue) {
+                    if (newValue !== oldValue) {
+                        this.selectedTileType = newValue;
+                        this.$refs.tileType.selectSiblingIndex(this.selectedTileTypeIndex);
+                    }
+                }
+            }
+        },
+
         computed: {
             ...levelMapGetters([
                 'getWallTiles',
@@ -124,6 +138,33 @@
                 'getTile'
             ]),
 
+
+            ...editorMapGetters([
+                'getTileBrowserType'
+            ]),
+
+            selectedTileType: {
+                get () {
+                    return this.getTileBrowserType;
+                },
+
+                set (value) {
+                    this.selectTileType({value});
+                }
+            },
+
+            selectedTileTypeIndex: function() {
+                switch (this.selectedTileType) {
+                    case CONSTS.TILE_TYPE_WALL:
+                        return 0;
+
+                    case CONSTS.TILE_TYPE_FLAT:
+                        return 1;
+
+                    case CONSTS.TILE_TYPE_SPRITE:
+                        return 2;
+                }
+            },
 
             getSelectedTileCount: function() {
                 let c = 0;
@@ -136,7 +177,7 @@
             },
 
             getTitle: function() {
-                switch (this.selectedFamily) {
+                switch (this.selectedTileType) {
                     case CONSTS.TILE_TYPE_WALL:
                         return 'Wall Tile browser - ' + this.getWallTiles.length + ' tile' + this.pluralWallTiles;
 
@@ -168,6 +209,11 @@
                 deleteTile: ACTION.DELETE_TILE
             }),
 
+
+            ...editorMapMutations({
+                selectTileType: EDITOR_MUTATION.TILEBROWSER_SET_TILE_TYPE
+            }),
+
             setTileSelection: function(idTile, value) {
                 if (idTile in this.selectedTiles) {
                     this.selectedTiles[idTile] = value;
@@ -182,19 +228,19 @@
                 }
             },
 
-            selectTileFamily: function(index) {
+            selectTileTypeIndex: function(index) {
                 this.clearTileSelection();
                 switch (index) {
                     case 0:
-                        this.selectedFamily = CONSTS.TILE_TYPE_WALL;
+                        this.selectedTileType = CONSTS.TILE_TYPE_WALL;
                         break;
 
                     case 1:
-                        this.selectedFamily = CONSTS.TILE_TYPE_FLAT;
+                        this.selectedTileType = CONSTS.TILE_TYPE_FLAT;
                         break;
 
                     case 2:
-                        this.selectedFamily = CONSTS.TILE_TYPE_SPRITE;
+                        this.selectedTileType = CONSTS.TILE_TYPE_SPRITE;
                         break;
                 }
             },
@@ -240,6 +286,10 @@
                     }
                 }
             },
+        },
+
+        mounted: function() {
+            this.$refs.tileType.selectSiblingIndex(this.selectedTileTypeIndex);
         }
     }
 </script>

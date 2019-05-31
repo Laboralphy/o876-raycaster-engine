@@ -6,6 +6,7 @@ export default {
     getBlockBrowserSelected: state => state.models.blockBrowser.selected,
     getThingBrowserSelected: state => state.models.thingBrowser.selected,
     getLevelGridThingSelected: state => state.models.levelGrid.selectedThing,
+    getTileBrowserType: state => state.models.tileBrowser.type,
 
     getSomethingHasChanged: state => state.somethingHasChanged,
 
