@@ -1,3 +1,8 @@
+import GeometryHelper from "../geometry/GeometryHelper";
+import * as CONSTS from "./consts";
+
+const {SPRITE_DIRECTION_COUNT} = CONSTS;
+
 class Horde {
     constructor() {
         this._entities = [];
@@ -38,12 +43,45 @@ class Horde {
         }
     }
 
+
+    /**
+     * This will change the animation according to the angle between entity.location.angle and camera.location.angle
+     */
+    updateLookingAngle(entity, camera) {
+        if (entity === camera) {
+            return;
+        }
+        const oEntityLoc = entity.location;
+        const oCameraLoc = camera.location;
+        const fTarget = GeometryHelper.angle(oCameraLoc.x, oCameraLoc.y, oEntityLoc.x, oEntityLoc.y);
+        // backup
+        let fAngle1 = oEntityLoc.angle + (Math.PI / SPRITE_DIRECTION_COUNT) - fTarget;
+        if (fAngle1 < 0) {
+            fAngle1 = 2 * Math.PI + fAngle1;
+        }
+        const nDirection = ((SPRITE_DIRECTION_COUNT * fAngle1 / (2 * Math.PI)) | 0)
+            & (SPRITE_DIRECTION_COUNT - 1);
+        if (nDirection !== entity.data.backupDirection) {
+            entity.data.backupDirection = nDirection;
+            entity.sprite.setDirection(nDirection);
+        }
+    }
+
+    getDeadEntities() {
+        return this._entities.filter(e => e.dead);
+    }
+
+    get entities() {
+        return this._entities;
+    }
+
     process(engine) {
         const entities = this._entities;
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
             const s = e.sprite;
             const eloc = e.location;
+            this.updateLookingAngle(e, engine.camera);
             e.think(engine);
             s.x = eloc.x;
             s.y = eloc.y;

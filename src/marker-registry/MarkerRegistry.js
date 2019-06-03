@@ -52,6 +52,17 @@ class MarkerRegistry {
             f(x, y);
         });
     }
+
+    /**
+     * Returns an array of {x, y} for each marked cell
+     */
+    toArray() {
+        const a = [];
+        this.iterate((x, y) => {
+            a.push({x, y});
+        });
+        return a;
+    }
 }
 
 

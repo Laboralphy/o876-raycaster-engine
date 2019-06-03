@@ -43,4 +43,43 @@ describe('#collider', function() {
             });
         });
     });
+
+
+    describe('force-field', function() {
+        describe('Mobile', function() {
+
+            it('should add a single force toward south', function() {
+                const collider = new Collider();
+
+                let m1 = new Dummy();
+                m1.radius = 10;
+                m1.position = new Vector(100, 100);
+
+                let m2 = new Dummy();
+                m2.radius = 10;
+                m2.position = new Vector(120, 100);
+
+                let m3 = new Dummy();
+                m3.radius = 10;
+                m3.position = new Vector(110, 102);
+
+                collider.track(m1);
+                collider.track(m2);
+                collider.track(m3);
+
+                collider.computeCollidingForces(m3, [m1, m2]);
+
+                expect(m3.forceField.forces[0].v.x).toBeCloseTo(4.806, 3);
+                expect(m3.forceField.forces[0].v.y).toBeCloseTo(0.961, 3);
+
+                expect(m3.forceField.forces.length).toBe(2);
+                const rf = m3.forceField.computeForces();
+                expect(rf.x).toBe(0);
+                expect(rf.y).toBeCloseTo(1.922, 3);
+
+                m3.forceField.reduceForces();
+                expect(m3.forceField.forces.length).toBe(0);
+            });
+        });
+    });
 });

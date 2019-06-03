@@ -14,9 +14,13 @@ import Translator from "../translator/Translator";
 import Renderer from "../raycaster/Renderer";
 import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
+import thinkers from "./thinkers";
+import {suggest} from "../levenshtein";
 
 import Events from "events";
 import Collider from "../collider/Collider";
+import TagManager from "./TagManager";
+
 
 class Engine {
     constructor() {
@@ -26,18 +30,23 @@ class Engine {
         this._scheduler = null;
         this._horde = null;
         this._camera = null;
+        this._tilesets = null;
         this._blueprints = null;
         this._time = 0;
         this._interval = null;
 
         // instanciate at construct
         this._thinkers = {};
+        this.useThinkers(thinkers);
+        this._collider = new Collider(); // this collider is freely used by certain thinkers
+        this._collider.setCellWidth(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
+        this._collider.setCellHeight(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
+
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
 
         this._events = new Events();
-        this._collider = new Collider();
     }
 
     get events() {
@@ -50,33 +59,38 @@ class Engine {
     initializeRenderer() {
         this._rc = new Renderer();
         this._dm = new DoorManager();
+        this._tm = new TagManager();
         this._scheduler = new Scheduler();
         this._horde = new Horde();
-        this._camera = new Camera();
+        this.initializeCamera();
         this._blueprints = {};
+        this._tilesets = {};
         this._timeMod = 0;
         this._time = 0;
         this._rc._optionsReactor.events.on('changed', ({key}) => {
             this.updateRaycasterOption(key);
         });
+        this._tm.events.on('tagenter', event => this._tagEnter(event));
+        this._tm.events.on('tagleave', event => this._tagLeave(event));
+        this._tm.events.on('tagpush', event => this._tagPush(event));
         this._events.emit('initialized');
     }
 
+    initializeCamera() {
+        const camera = new Camera();
+        camera.visible = false;
+        camera.size = CONSTS.METRIC_CAMERA_DEFAULT_SIZE;
+        this._camera = camera;
+    }
+
     /**
-     * The raycaster has new options, we should check them here
+     * One of the raycaster options has changed value, we should check it here
      */
     updateRaycasterOption(key) {
         switch (key) {
             case 'metrics.spacing':
-                const collider = this._collider;
-                const ps = this._rc._options.metrics.spacing;
-                if (collider) {
-                    collider.setCellWidth(ps);
-                    collider.setCellHeight(ps);
-                }
                 break;
         }
-
     }
 
     get horde() {
@@ -94,6 +108,15 @@ class Engine {
     getTime() {
         return this._time;
     }
+
+
+
+//      _                                                                                _
+//   __| | ___   ___  _ __   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//  / _` |/ _ \ / _ \| '__| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// | (_| | (_) | (_) | |    | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \__,_|\___/ \___/|_|    |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                                                       |___/
 
 
     /**
@@ -259,7 +282,7 @@ class Engine {
         dc.data.x = x;
         dc.data.y = y;
         dc.data.phys = nPhysCode;
-        dc.event.on('check', event => this._checkDoorClosability(event));
+        //dc.events.on('check', event => this._checkDoorClosability(event));
         const dm = this._dm;
         dm.linkDoorContext(dc);
     }
@@ -297,7 +320,12 @@ class Engine {
             // entity management
             this._camera.think(this);
             this._horde.process(this);
+            this
+                ._horde
+                .getDeadEntities()
+                .forEach(e => this.destroyEntity(e));
             // special effect management
+            this._tm.hordeProcess(this);
             bRender = true;
             this._events.emit('update');
         }
@@ -314,9 +342,8 @@ class Engine {
         const camera = this._camera;
         if (camera) {
             const loc = camera.location;
-            const scene = rend.computeScene(loc.x, loc.y, loc.angle, loc.z);
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
-            rend.render(scene);
+            rend.render(loc.x, loc.y, loc.angle, loc.z);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {
@@ -384,6 +411,16 @@ class Engine {
 
 
     /**
+     * resolves a block action, an action where an entity uses its "push" action on a wall
+     * @param entity {Entity}
+     * @param x {number}
+     * @param y {number}
+     */
+    pushBlock(entity, x, y) {
+        this._tm.entityPushBlock(this, entity, x, y);
+    }
+
+    /**
      * Opens a door at a specified position. The cell at x, y must have a PHYS_DOOR_*, PHYS_CURT_* or PHYS_SECRET_BLOCK physical code
      * @param x {number} position of cell x
      * @param y {number} position of cell y
@@ -434,6 +471,29 @@ class Engine {
         this._scheduler.cancelCommand(id);
     }
 
+//  _                                                                            _
+// | |_ __ _  __ _   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+// | __/ _` |/ _` | | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// | || (_| | (_| | | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \__\__,_|\__, | |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//           |___/                               |___/
+
+
+    _tagEnter({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.enter', {entity, parameters, remove});
+    }
+
+    _tagLeave({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.leave', {entity, parameters, remove});
+    }
+
+    _tagPush({entity, command, parameters, remove}) {
+        this._events.emit('tag.' + command + '.push', {entity, parameters, remove});
+    }
+
+    addTag(x, y, sTag) {
+        this._tm.addTag(x, y, sTag);
+    }
 
 //  _____ _     _       _                                                                           _
 // |_   _| |__ (_)_ __ | | _____ _ __   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
@@ -448,49 +508,88 @@ class Engine {
      * @param sThinker {string} reference of thinker
      * @param pThinker {prototype}
      */
-    declareThinker(sThinker, pThinker) {
+    useThinker(sThinker, pThinker) {
         this._thinkers[sThinker] = pThinker;
     }
 
-    declareThinkers(oThinkers) {
-        for (let sThinker in oThinker) {
-            this.declareThinker(sThinker, oThinker[sThinker]);
+    useThinkers(oThinkers) {
+        for (let sThinker in oThinkers) {
+            this.useThinker(sThinker, oThinkers[sThinker]);
+        }
+    }
+
+    /**
+     * this function will extract an item out of a collection
+     * @param sItem {string} item key
+     * @param oItems {object} collection of items
+     * @param sLabel {string} a label in case of error
+     * @returns {*}
+     * @private
+     */
+    _getObjectItem(sItem, oItems, sLabel) {
+        if (typeof oItems !== 'object') {
+            throw new Error(util.format('this is not a collection of "%s"', sLabel));
+        }
+        if (sItem in oItems) {
+            return oItems[sItem];
+        } else {
+            const aItems = Object.keys(oItems);
+            if (aItems.length > 0) {
+                throw new Error(util.format('There is no such %s : "%s". Did you mean "%s" ?', sLabel, sItem, suggest(sItem, aItems)));
+            } else {
+                throw new Error(util.format('No %s has been declared so far in the given collection', sLabel));
+            }
         }
     }
 
     createThinkerInstance(sThinker) {
         if (!sThinker) {
-            return null;
+            sThinker = 'Thinker';
         }
-        const thinkers = this._thinkers;
-        if (sThinker in thinkers) {
-            const pThinker = thinkers[sThinker];
-            return new pThinker();
-        } else {
-            const aThinkerNames = Object.keys(thinkers);
-            if (aThinkerNames.length > 0) {
-                throw new Error(util.format('There is no such thinker : "%s". Did you mean "%s" ?', sThinker, suggest(sThinker, aThinkerNames)));
-            } else {
-                throw new Error('No thinkers have been declared so far');
-            }
+        const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
+        if (!pThinker) {
+            throw new Error('this thinker does not exists (has not been "used") : ' + sThinker);
         }
+        const oThinker = new pThinker();
+        oThinker.engine = this;
+        return oThinker;
+    }
+
+
+    /**
+     * Loads a tileset
+     * @param ref {string} reference name
+     * @param src {string} url to image
+     * @param tileWidth {number} width
+     * @param tileHeight {number} height
+     * @returns {Promise<*>}
+     */
+    async loadTileSet(ref, src, tileWidth, tileHeight) {
+        if (ref in this._tilesets) {
+            return this._tilesets[ref];
+        }
+        const oImage = await CanvasHelper.loadCanvas(src);
+        const tileset = this._rc.buildTileSet(oImage, tileWidth, tileHeight);
+        this._tilesets[ref] = tileset;
+        return tileset;
     }
 
     /**
      * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
      * @param resref {string} new blueprint reference
-     * @param data {*} the blueprint structure
-     * @returns {Promise<void>}
+     * @param bpDef {*}  the blueprint structure
+     * @param data {*} all the blueprints structure
+     * @returns {Promise<Blueprint>}
      */
-    async createBlueprint(resref, data) {
-        const bpDef = data.blueprints[resref];
-        const rc = this._rc;
-        const tsDef = data.tilesets[bpDef.tileset];
+    async createBlueprint(resref, bpDef, data) {
+        const tsDef = data.tilesets.find(tsi => tsi.id === bpDef.tileset);
+        if (!tsDef) {
+            throw new Error('blueprint "' + resref + '" references a tileset : "' + bpDef.tileset + '" which does not exist');
+        }
         const src = tsDef.src;
         const tileWidth = tsDef.width;
         const tileHeight = tsDef.height;
-        const oImage = await CanvasHelper.loadCanvas(src);
-        const tileset = rc.buildTileSet(oImage, tileWidth, tileHeight);
+        const tileset = await this.loadTileSet(bpDef.tileset, src, tileWidth, tileHeight);
         const bp = new Blueprint();
         bp.tileset = tileset;
         if ('thinker' in bpDef) {
@@ -499,8 +598,9 @@ class Engine {
         if ('animations' in tsDef) {
             bp.animations = tsDef.animations
         }
-        this._blueprints[resref] = bp;
-        return bp;
+        bp.size = bpDef.size;
+        bp.fx = bpDef.fx || [];
+        return this._blueprints[resref] = bp;
     }
 
 
@@ -517,11 +617,13 @@ class Engine {
      * @param resref {string} resource reference of the blueprint, to create the entity
      * @returns {Entity}
      */
-    createEntity(resref) {
+    createEntity(resref, location) {
         const rc = this._rc;
         const bp = this._blueprints[resref];
         const entity = new Entity();
+        entity.location.set(location);
         const sprite = rc.buildSprite(bp.tileset);
+        bp.fx.forEach(fx => sprite.addFlag(fx));
         const animations = bp.animations;
         if (animations) {
             // instantiates animations
@@ -529,9 +631,11 @@ class Engine {
                 sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
-        entity._thinker = this.createThinkerInstance(bp.thinker);
-        entity._sprite = sprite;
+        entity.thinker = this.createThinkerInstance(bp.thinker);
+        entity.sprite = sprite;
+        entity.size = bp.size;
         this._horde.linkEntity(entity);
+        this.events.emit('entitycreated', {entity});
         return entity;
     }
 
@@ -539,6 +643,7 @@ class Engine {
         if (this._horde.isEntityLinked(e)) {
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
+            this.events.emit('entitydestroyed', {entity: e});
         }
     }
 
@@ -584,13 +689,16 @@ class Engine {
 
 
     async buildLevel(data, monitor) {
-        const BLUEPRINT_COUNT = Object.keys(data.blueprints).length;
+        const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
+        const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
+        const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
         const oTranslator = new Translator();
+        oTranslator.strict = false;
         oTranslator
 
             // LOOP constants
@@ -620,55 +728,219 @@ class Engine {
             .addRule('@PHYS_TRANSPARENT_BLOCK', RC_CONSTS.PHYS_TRANSPARENT_BLOCK)
             .addRule('@PHYS_INVISIBLE_BLOCK', RC_CONSTS.PHYS_INVISIBLE_BLOCK)
             .addRule('@PHYS_OFFSET_BLOCK', RC_CONSTS.PHYS_OFFSET_BLOCK)
+
+            .addRule('@DECAL_ALIGN_TOP_LEFT',     CONSTS.DECAL_ALIGN_TOP_LEFT)
+            .addRule('@DECAL_ALIGN_TOP_RIGHT',    CONSTS.DECAL_ALIGN_TOP_RIGHT)
+            .addRule('@DECAL_ALIGN_TOP',          CONSTS.DECAL_ALIGN_TOP)
+            .addRule('@DECAL_ALIGN_LEFT',         CONSTS.DECAL_ALIGN_LEFT)
+            .addRule('@DECAL_ALIGN_RIGHT',        CONSTS.DECAL_ALIGN_RIGHT)
+            .addRule('@DECAL_ALIGN_CENTER',       CONSTS.DECAL_ALIGN_CENTER)
+            .addRule('@DECAL_ALIGN_BOTTOM_LEFT',  CONSTS.DECAL_ALIGN_BOTTOM_LEFT)
+            .addRule('@DECAL_ALIGN_BOTTOM_RIGHT', CONSTS.DECAL_ALIGN_BOTTOM_RIGHT)
+            .addRule('@DECAL_ALIGN_BOTTOM',       CONSTS.DECAL_ALIGN_BOTTOM)
         ;
         data = oTranslator.translateStructure(data);
 
         this.initializeRenderer();
         const rc = this._rc;
         const cvs = this.getRenderingCanvas();
-        rc.defineOptions({
+
+        const oRCOptions = {
             metrics: data.level.metrics,
             screen: {
                 width: cvs.width,
                 height: cvs.height
+            },
+            textures: {
+                stretch: !!data.level.textures.stretch,
+                smooth: !!data.level.textures.smooth
             }
-        });
+        };
+
+        if ('shading' in data) {
+            oRCOptions.shading = data.shading;
+        }
+
+        rc.defineOptions(oRCOptions);
+
+        let PROGRESS = 0;
+        const showProgress = sLabel => {
+            feedback(sLabel, ++PROGRESS / ALL_COUNT);
+        };
+
         // defines sky, walls and flats
-        feedback('loading textures', 1 / ALL_COUNT);
-        rc.setBackground(await CanvasHelper.loadCanvas(data.level.sky));
-        feedback('loading textures', 2 / ALL_COUNT);
-        rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.walls));
-        feedback('loading textures', 3 / ALL_COUNT);
-        rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.flats));
+        showProgress('loading textures');
+        if ('sky' in data.level.textures && !!data.level.textures.sky && data.level.textures.sky !== "") {
+            rc.setBackground(await CanvasHelper.loadCanvas(data.level.textures.sky));
+        }
+        showProgress('loading textures');
+        rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.textures.walls));
+        showProgress('loading textures');
+        rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.textures.flats));
+
 
         // creates blueprints
         let nBp = TEXTURE_COUNT;
-        for (let resref in data.blueprints) {
-            feedback('creating blueprints',  nBp / ALL_COUNT);
-            await this.createBlueprint(resref, data);
+        for (let i = 0, l = data.blueprints.length; i < l; ++i) {
+            showProgress('creating blueprints');
+            const resref = data.blueprints[i].id;
+            await this.createBlueprint(resref, data.blueprints[i], data);
             ++nBp;
         }
 
         if (data.level.legend) {
             const mh = new MapHelper();
             mh.build(rc, data.level);
-        } else {
-
         }
 
-
+        const nMapSize = this._rc.getMapSize();
+        this._tm.setMapSize(nMapSize);
+        // sync with tag grid
+        const ps = this._rc.options.metrics.spacing;
+        this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
+        this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
         // static objects
         if ('objects' in data) {
-            const aObjects = data.objects;
-            aObjects.forEach(o => {
-                const entity = this.createEntity(o.blueprint);
-                entity.location.set(o);
+            data.objects.forEach(o => {
+                const entity = this.createEntity(o.blueprint, o);
+                if ('animation' in o && o.animation !== false && o.animation !== null) {
+                    entity.sprite.setCurrentAnimation(o.animation, 0);
+                }
                 entity.visible = true;
             })
         }
 
+        if ('camera' in data) {
+            // sets initial camera location, and orientation
+            const {x, y, z, angle} = data.camera;
+            this.camera.location.set({
+                x: x * ps + (ps >> 1), // camera coordinates (x-axis)
+                y: y * ps + (ps >> 1), // camera coordinates (y-axis)
+                angle, // looking angle
+                z: 1 // camera altitude (1 is the default object)
+            });
+            this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
+        }
+
+
+        const FACES = 'wsenfc';
+
+
+
+        /**
+         * auto loads a tileset
+         * @param ref {string} reference name
+         * @param data {object} this is a level definition
+         * @returns {Promise<void>}
+         */
+        const autoLoadTileSet = (ref, data) => {
+            try {
+                const tsDef = data.tilesets.find(tsi => tsi.id === ref);
+                if (!tsDef) {
+                    throw new Error('could not auto load tileset : "' + ref + '"');
+                }
+                const {width, height, src} = tsDef;
+                return this.loadTileSet(ref, src, width, height);
+            } catch(e) {
+                Promise.reject(e.message);
+            }
+        };
+
+
+        const installDecal = async (decal, face) => {
+            const xCell = decal.x;
+            const yCell = decal.y;
+            if (face in decal) {
+                const iFace = FACES.indexOf(face);
+                const {align, tileset} = decal[face];
+                const ts = await autoLoadTileSet(tileset, data);
+                this._rc.paintSurface(xCell, yCell, iFace, (xCell, yCell, iFace, oCanvas) => {
+                    const wCvs = oCanvas.width;
+                    const hCvs = oCanvas.height;
+                    const wTile = ts.tileWidth;
+                    const hTile = ts.tileHeight;
+                    const xLeft = 0;
+                    const xRight = wCvs - wTile;
+                    const xMid = xRight >> 1;
+                    const yTop = 0;
+                    const yBottom = hCvs - hTile;
+                    const yMid = yBottom >> 1;
+                    let xd, yd;
+                    switch (align) {
+                        case 7:
+                            xd = xLeft;
+                            yd = yTop;
+                            break;
+
+                        case 8:
+                            xd = xMid;
+                            yd = yTop;
+                            break;
+
+                        case 9:
+                            xd = xRight;
+                            yd = yTop;
+                            break;
+
+                        case 4:
+                            xd = xLeft;
+                            yd = yMid;
+                            break;
+
+                        case 5:
+                            xd = xMid;
+                            yd = yMid;
+                            break;
+
+                        case 6:
+                            xd = xRight;
+                            yd = yMid;
+                            break;
+
+                        case 1:
+                            xd = xLeft;
+                            yd = yBottom;
+                            break;
+
+                        case 2:
+                            xd = xMid;
+                            yd = yBottom;
+                            break;
+
+                        case 3:
+                            xd = xRight;
+                            yd = yBottom;
+                            break;
+                    }
+                    oCanvas.getContext('2d').drawImage(ts._originalImage, xd, yd);
+                })
+            }
+        };
+
+        if ('decals' in data) {
+            for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
+                const decal = data.decals[iDecal];
+                await installDecal(decal, 'n');
+                await installDecal(decal, 'e');
+                await installDecal(decal, 'w');
+                await installDecal(decal, 's');
+                await installDecal(decal, 'f');
+                await installDecal(decal, 'c');
+                showProgress('applying decals');
+            }
+        }
+
+        showProgress('analyzing tags');
+        if ('tags' in data) {
+            for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
+                const tagEntry = data.tags[iTag];
+                tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
+            }
+        }
+
         feedback('done', 1);
+        this.events.emit('levelbuilt');
     }
 
 }

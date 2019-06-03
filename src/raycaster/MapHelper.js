@@ -1,11 +1,14 @@
 import Translator from '../translator/Translator';
 import * as CONSTS from './consts';
+import util from "util";
+
 /**
  * Will transforme a text map into a serie of Renderer.setCellMaterial/Phys/offset calls
  */
 class MapHelper {
 
     getAnimationKeyString(a) {
+        if (!a) console.trace();
         return a.join(';');
     }
 
@@ -14,13 +17,13 @@ class MapHelper {
         if (ks in this._animFactory) {
             return this._animFactory[ks];
         } else {
-            return this._animFactory[ks] = renderer.buildAnimation({start: a[0], length: a[1], duration: a[2], loop: a[3]});
+            return this._animFactory[ks] = renderer.buildSurfaceAnimation({start: a[0], length: a[1], duration: a[2], loop: a[3]});
         }
     }
 
     buildMaterialFace(renderer, f) {
         if (Array.isArray(f)) {
-            return this.getAnimation(f);
+            return this.getAnimation(renderer, f);
         } else {
             return f;
         }
@@ -42,6 +45,14 @@ class MapHelper {
             offset: 'offset' in m ? m.offset : 0,
             light: 'light' in m ? m.light : null
         }
+    }
+
+    getMaterial(legend) {
+        const m = this._materials[legend];
+        if (!m) {
+            throw new Error(util.format('[MapHelper] this material code does not exist : "%s"', legend));
+        }
+        return m;
     }
 
     build(renderer, oMap) {
@@ -73,11 +84,11 @@ class MapHelper {
         const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
-            const m = this._materials[cell];
+            const m = this.getMaterial(cell);
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
-            if (m.light) {
+            if ('light' in m && !!m.light) {
                 renderer.addLightSource(
                     ps * x + (ps >> 1),
                     ps * y + (ps >> 1),
@@ -89,10 +100,10 @@ class MapHelper {
         }));
 
         // upper storey
-        if ('map-upper' in oMap) {
-            const mapUpper = oMap['map-upper'];
+        if ('uppermap' in oMap && !!oMap.uppermap) {
+            const upperMap = oMap.uppermap;
             const storey = renderer.createStorey();
-            const mapUpperData = mapUpper.map(rowProcess);
+            const mapUpperData = upperMap.map(rowProcess);
             mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
                 const m = this._materials[cell];
                 storey.setCellMaterial(x, y, cell);
@@ -100,7 +111,6 @@ class MapHelper {
                 storey.setCellOffset(x, y, m.offset);
             }));
         }
-
     }
 }
 

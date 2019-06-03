@@ -1,0 +1,128 @@
+{
+    "tilesets": [
+        {
+            "id": string,                   // tileset identifier (used in "blueprints" or "decals")
+            "src": string,                  // image source of tileset (data,base64)
+            "width": number,                // frame width (pixels)
+            "height": number,               // frame height (pixels)
+            "animations": {
+                "((animation-name))": {
+                    "start": [number * 8],  // starting frame in each direction
+                    "length": number,       // number of frame in this animation
+                    "loop": string,         // type of loop @LOOP_NONE, @LOOP_FORWARD, @LOOP_YOYO
+                    "duration": number,     // frame duration
+                    "iterations": number,   // number of iterations (optional, default Infinity)
+                }, ...
+            }
+        }, ...
+    ],
+    "blueprints": [
+        {
+            "id": string,                   // blueprint identifier (used in "objects")
+            "tileset": string,              // id of the tilset used
+            "thinker": string,              // AI thinker reference (class name)
+            "size": number,                 // physical size (for collision)
+            "fx": []                        // array of FX. Possible values are
+                                                // @FX_NONE : no fx
+                                                // @FX_LIGHT_SOURCE : the sprite emits light and will not be shaded
+                                                // @FX_LIGHT_ADD : the sprite is paint with the ADD global composite operation
+                                                // @FX_ALPHA_75 : the sprite has 75% opacity
+                                                // @FX_ALPHA_50 : the sprite has 50% opacity
+                                                // @FX_ALPHA_25 : the sprite has 25% opacity
+        }, ...
+    ],
+    "level": {
+        "metrics": {
+            "spacing": number,              // size of the level cells
+            "height": number                // height of ceiling
+        },
+        "textures": {
+            "flats": string,                // image source of horizontal surfaces
+            "walls": string,                // image source of vertical surfaces
+            "sky": string,                  // image source of sky
+            "smooth": boolean,              // true : textures will be interpolated ; false : no interpolation will be applied on textures
+            "stretch": boolean              // texture of upper level will be stretch to look like tall building o cliffs
+        },
+        "map": [
+            [], ... // array of array of number|char
+        ],
+        "uppermap": [
+            [], ... // array of array of number|char
+        ],
+        "legend": [{
+            "code": number|char,            // the cell code used inside "map" or "uppermap" arrays
+            "phys": string,                 // the physic code of the cell
+                                                // @PHYS_NONE : walkable cell
+                                                // @PHYS_WALL : solid wall
+                                                // @PHYS_DOOR_UP : a door opening up
+                                                // @PHYS_CURT_UP : a curtain opening up
+                                                // @PHYS_DOOR_DOWN : a door opening down
+                                                // @PHYS_CURT_DOWN : a curtain opening down
+                                                // @PHYS_DOOR_LEFT : a door opening left
+                                                // @PHYS_DOOR_RIGHT : a door opening right
+                                                // @PHYS_DOOR_DOUBLE : a double panel door
+                                                // @PHYS_SECRET_BLOCK : a secret block
+                                                // @PHYS_TRANSPARENT_BLOCK : a block useful for windows
+                                                // @PHYS_INVISIBLE_BLOCK : a block with no texture
+                                                // @PHYS_OFFSET_BLOCK : an alcove
+            "offset": number,               // optional offset value
+            "faces": {
+                "n": number|array,          // if value is an array then the texture is aniamted
+                "e": number|array,          // animation format : [start, length, duration, loop]
+                "w": number|array,
+                "s": number|array,
+                "f": number|array,
+                "c": number|array
+            },
+            "light": {                      // optional static light parameters
+                "r0": number,               // inner radius (texels)
+                "r1": number,               // outer radius (texels)
+                "v"                         // light intensity (withing the shading threshold
+            }
+        }, ... ],
+    },
+    "shading": {
+        "color": string,      // fog color
+        "factor": number,     // distance (texels) where the texture shading increase by one unit
+        "brightness": number, // base brightness
+        "filter": boolean,    // color filter for sprites (ambient color)
+        "shades": number,     // number of shading nuances
+    },
+    "objects": [{
+        "x": number,            // object coordinate (texel) x-axis
+        "y": number,            // object coordinate (texel) y-axis
+        "angle": 0,             // object angle (rad)
+        "blueprint": string,    // blueprint reference
+        "animation": string     // animation
+    }, ... ],
+    "decals": [{
+        "x": number,            // decal cell-coordinate (x-axis)
+        "y": number,            // decal cell-coordinate (y-axis)
+        "((face))": {           // face id (n, e, w, s, f, c)
+            "align": string,    // alignement code of the texture surface
+                                    // @DECAL_ALIGN_TOP_LEFT
+                                    // @DECAL_ALIGN_TOP_RIGHT
+                                    // @DECAL_ALIGN_TOP
+                                    // @DECAL_ALIGN_LEFT
+                                    // @DECAL_ALIGN_RIGHT
+                                    // @DECAL_ALIGN_CENTER
+                                    // @DECAL_ALIGN_BOTTOM_LEFT
+                                    // @DECAL_ALIGN_BOTTOM_RIGHT
+                                    // @DECAL_ALIGN_BOTTOM
+            "tileset": string   // tilseset reference
+        }, ...
+    }, ... ],
+    "camera": {
+        "thinker": string,                  // the control thinker (ex: KeyboardControlThinker)
+        "x": number,                        // camera cell-coordinates (x-axis)
+        "y": number,                        // camera cell-coordinates (y-axis)
+        "angle": number,                    // heading angle (rad)
+        "z": number                         // camera altitude (1 is the default object)
+    },
+    "tags": [{
+        "x": number,                        // tag cell-coordinates (x-axis)
+        "y": number,                        // tag cell-coordinates (y-axis)
+        "tags": [ string, ... ]             // list of tags
+    }, ... ]
+
+}

@@ -1,15 +1,24 @@
 import Vector from "../geometry/Vector";
+import GeometryHelper from "../geometry/GeometryHelper";
+
 
 class Location {
-    constructor({x = 0, y = 0, z = 0, angle = 0, area = null} = {}) {
+    constructor({x = 0, y = 0, z = 0, angle = 0} = {}) {
         this.x = x;
         this.y = y;
         this.z = z;
-        this.angle = angle;
-        this.area = area;
+        this._angle = angle;
     }
 
-    set({x = null, y = null, z = null, angle = null, area = null}) {
+    get angle() {
+        return this._angle;
+    }
+
+    set angle(value) {
+        this._angle = GeometryHelper.normalizeAngle(value);
+    }
+
+    set({x = null, y = null, z = null, angle = null}) {
         if (x !== null) {
             this.x = x;
         }
@@ -21,9 +30,6 @@ class Location {
         }
         if (angle !== null) {
             this.angle = angle;
-        }
-        if (area !== null) {
-            this.area = area;
         }
     }
 

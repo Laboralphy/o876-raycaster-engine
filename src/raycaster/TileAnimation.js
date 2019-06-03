@@ -18,6 +18,11 @@ class TileAnimation {
         this._frozen = false;   // if true the animation is suspended
     }
 
+    reset() {
+        this._index = 0;
+        this._time = 0;
+    }
+
     get base() {
         return this._base;
     }
@@ -82,6 +87,15 @@ class TileAnimation {
         this._iterations = value;
     }
 
+    get loopDir() {
+        return this._loopDir;
+    }
+
+    set loopDir(value) {
+        this._loopDir = value;
+    }
+
+
     animate(nTimeInc) {
         if (this._frozen) {
             return;
@@ -96,11 +110,11 @@ class TileAnimation {
                     break;
 
                 case 1:
-                    if (this._index < this._count) {
-                        this._index = (this._index + 1) % this._count;
-                    } else {
-                        this._index = 0;
-                        --this._iterations;
+                    ++this._index;
+                    if (this._index >= this._count) {
+                        if (--this._iterations > 0) {
+                            this._index = 0;
+                        }
                     }
                     break;
 

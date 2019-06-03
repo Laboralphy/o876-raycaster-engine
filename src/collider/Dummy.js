@@ -4,26 +4,24 @@
  */
 import GeometryHelper from '../geometry/GeometryHelper';
 import Vector from '../geometry/Vector';
+import ForceField from "../force-field/ForceField";
+
 
 class Dummy {
 	constructor() {
 		this._position = new Vector();
 		this._dead = false; // les mobile noté "dead" doivent être retiré du jeu
 		this._radius = 0;
-		this._mobile = null; // référence externe libre
 		this._tangibility = {
 			self: 1,
 			hitmask: 1
 		};
 		this.colliderSector = null;
+		this.forceField = new ForceField();
 	}
 
-    get mobile() {
-        return this._mobile;
-    }
-
-    set mobile(value) {
-        this._mobile = value;
+	get tangibility() {
+	    return this._tangibility;
     }
 
     get position() {
@@ -50,12 +48,13 @@ class Dummy {
         this._radius = value;
     }
 
+
     /**
 	 * Renvoie true si le masque-tangibilité de ce dummy correspond au type-tangibilité du dummy spécifié
 	 * @param dummy
 	 */
 	tangibleWith(dummy) {
-		return (dummy._tangibility.self & this._tangibility.hitmask) !== 0;
+        return (dummy._tangibility.self & this._tangibility.hitmask) !== 0;
 	}
 
     /**

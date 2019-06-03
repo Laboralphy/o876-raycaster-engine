@@ -8,6 +8,7 @@
 import Vector from '../geometry/Vector';
 import Grid from '../grid/Grid';
 import Sector from './Sector';
+import GeometryHelper from "../geometry/GeometryHelper";
 
 class Collider {
 	constructor() {
@@ -24,13 +25,21 @@ class Collider {
 	}
 
     setCellWidth(w) {
-		this._cellWidth = w;
+        this._cellWidth = w;
         return this;
     }
 
     setCellHeight(h) {
         this._cellHeight = h;
         return this;
+    }
+
+    getCellWidth() {
+        return this._cellWidth;
+    }
+
+    getCellHeight() {
+        return this._cellHeight;
     }
 
     get grid() {
@@ -60,8 +69,8 @@ class Collider {
 	 */
 	track(oDummy) {
 		let oOldSector = oDummy.colliderSector;
-		let v = oDummy.position().sub(this._origin);
-		let s = oDummy.dead() ? null : this.sector(v);
+		let v = oDummy.position.sub(this._origin);
+		let s = oDummy.dead ? null : this.sector(v);
 		if (s && oOldSector && s === oOldSector) {
 			return;
 		}
@@ -81,7 +90,7 @@ class Collider {
 	 * @param oDummy {Dummy}
 	 * @return {Dummy[]} liste d'objet collisionnant
 	 */
-	collides(oDummy) {
+	getCollidingDummies(oDummy) {
 		let a = [];
 		let oSector = this.sector(oDummy.position.sub(this._origin));
 		if (!oSector) {
@@ -101,6 +110,43 @@ class Collider {
 		}
 		return a;
 	}
+
+    /**
+	 * For each specified hitter, adds a force that is proportional to the distance between the hitter and the dummy subject
+     * @param oDummy {Dummy} the subject whose forces will be applied to
+     * @param aHitters {Dummy[]} a collection of dummy reputed to overlap the dummy subject
+     * @returns {Vector[]} a collection of resulting forces.
+     */
+    computeCollidingForces(oDummy, aHitters) {
+        let vPos = oDummy.position;
+        let x = vPos.x;
+        let y = vPos.y;
+        let dist = GeometryHelper.distance;
+        return aHitters.map(m => {
+            let mPos = m.position;
+            let mx = mPos.x;
+            let my = mPos.y;
+			return oDummy.forceField.addForce(
+			    vPos.sub(mPos)
+			        .normalize()
+					.scale((oDummy._radius + m._radius - dist(x, y, mx, my)) / 2),
+			    0
+			);
+        });
+    }
+
+    /**
+	 * computes a a collection of forces applied to a dummy subject, returns true if one or more hitter is detected
+     * @param oDummy {Dummy}
+     * @returns {boolean}
+     */
+    computeDummyCollisions(oDummy) {
+		// 1 - for each colliding dummies
+		const aHitters = this.getCollidingDummies(oDummy);
+		this.computeCollidingForces(oDummy, aHitters);
+		return !!aHitters;
+	}
+
 }
 
 export default Collider;

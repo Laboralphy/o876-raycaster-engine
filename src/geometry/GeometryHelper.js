@@ -1,6 +1,8 @@
 /**
  * Functions concerning angles and distances
  */
+const PI = Math.PI;
+const PI2 = 2 * PI;
 
 class GeometryHelper {
     /**
@@ -21,6 +23,22 @@ class GeometryHelper {
         let dx = x1 - x2;
         let dy = y1 - y2;
         return dx * dx + dy * dy;
+    }
+
+    /**
+     * If an angle value is greater than PI or lower than -PI, the value is set back to a [-PI, PI] range
+     * without altering it.
+     * @param value {number}
+     * @return {number}
+     */
+    static normalizeAngle(value) {
+        while (value > PI) {
+            value -= PI2;
+        }
+        while (value < -PI) {
+            value += PI2;
+        }
+        return value;
     }
 
     /**

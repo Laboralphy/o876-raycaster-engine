@@ -1,4 +1,8 @@
 import Location from "./Location";
+import Vector from "../geometry/Vector";
+
+
+let LAST_ID = 0;
 
 /**
  * Entities are things that move or stay static in the level.
@@ -11,17 +15,40 @@ import Location from "./Location";
 
 class Entity {
     constructor() {
+        this._id = ++LAST_ID;
         this._location = new Location();
-        this.visible = false;
+        this._visible = false;
         this._sprite = null;
         this._thinker = null;
+        this._size = 0;
+        this._inertia = new Vector();
+        this._dead = false;
+        this.data = {};
+    }
+
+    get id() {
+        return this._id;
     }
 
     think(engine) {
         const thinker = this._thinker;
-        if (thinker) {
-            thinker.think(this, engine);
-        }
+        thinker.think(this, engine);
+    }
+
+    get size() {
+        return this._size;
+    }
+
+    set size(value) {
+        this._size = value;
+    }
+
+    get visible() {
+        return this._visible;
+    }
+
+    set visible(value) {
+        this._visible = value;
     }
 
     get thinker() {
@@ -29,7 +56,12 @@ class Entity {
     }
 
     set thinker(value) {
+        value.entity = this;
         this._thinker = value;
+    }
+
+    set sprite(value) {
+        this._sprite = value;
     }
 
     get sprite() {
@@ -42,6 +74,22 @@ class Entity {
 
     set location(value) {
         this._location.set(value);
+    }
+
+    get inertia() {
+        return this._inertia;
+    }
+
+    set inertia(value) {
+        this._inertia = value;
+    }
+
+    get dead() {
+        return this._dead;
+    }
+
+    set dead(value) {
+        this._dead = value;
     }
 }
 

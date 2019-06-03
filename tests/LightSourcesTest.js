@@ -77,7 +77,7 @@ describe('#light-sources', function() {
             lm.removeSource(oSource);
             expect(lm._grid.cell(10, 12).length).toBe(1);
             expect(lm._grid.cell(10, 12)[0]).toEqual({v: 0, i: true, s: 0, id: 10});
-            expect(lm._sources.length).toBe(0);
+            expect(lm._sources.length).toBe(1);
         });
     });
 });

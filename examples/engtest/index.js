@@ -1,29 +1,41 @@
 import Engine from "../../src/engine/Engine";
-import DevKbd from "./DevKbd";
-import CanvasHelper from "../../src/canvas-helper/CanvasHelper";
+
+
+import StaticThinker from "../../src/engine/thinkers/StaticThinker";
+import DevKbdThinker from "./DevKbdThinker";
+import DevKbdMobThinker from "./DevKbdMobThinker";
+import MagboltThinker from "./MagboltThinker";
+
+const THINKERS = {
+    StaticThinker,
+    DevKbdMobThinker,
+    DevKbdThinker,
+    MagboltThinker
+};
 
 function getLevel() {
     return {
 
-        "tilesets": {
-            "m-warlock-b": {
+        "tilesets": [
+            {
+                "id": "m-warlock-b",
                 "src": "gfx/sprites/m_warlock_b.png",
                 "width": 64,
                 "height": 96,
                 "animations": {
                     "stand": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
                     "walk": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
-                        "duration": 400
+                        "duration": 133
                     },
                     "attack": {
-                        "start": [0, 2, 4, 6, 8, 10, 12, 14],
+                        "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
                         "duration": 40
@@ -37,14 +49,15 @@ function getLevel() {
                     }
                 }
             },
-            "p-magbolt-0": {
+            {
+                "id": "p-magbolt-0",
                 "src": "gfx/sprites/p_magbolt.png",
-                "width": 64,
+                "width": 48,
                 "height": 64,
                 "fx": "@FX_LIGHT_SOURCE",
                 "animations": {
                     "fly": {
-                        "start": [0, 1, 2, 3, 4, 5, 6, 7],
+                        "start": [4, 5, 6, 7, 0, 1, 2, 3],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
@@ -57,7 +70,8 @@ function getLevel() {
                     }
                 }
             },
-            "o-bluedisc": {
+            {
+                "id": "o-bluedisc",
                 "src": "gfx/sprites/o_bluedisc.png",
                 "width": 32,
                 "height": 32,
@@ -70,7 +84,8 @@ function getLevel() {
                     }
                 }
             },
-            "o-bluereddisc": {
+            {
+                "id": "o-bluereddisc",
                 "src": "gfx/sprites/o_bluereddisc.png",
                 "width": 32,
                 "height": 32,
@@ -90,42 +105,50 @@ function getLevel() {
                     }
                 }
             }
-        },
+        ],
 
-        "blueprints": {
-            "m-warlock-b": {
+        "blueprints": [
+            {
+                "id": "m-warlock-b",
                 "tileset": "m-warlock-b",
-                "thinker": null
+                "thinker": 'DevKbdMobThinker',
+                "size": 24
             },
 
-            "p-magbolt-0": {
+            {
+                "id": "p-magbolt-0",
                 "tileset": "p-magbolt-0",
-                "thinker": null
+                "thinker": 'MagboltThinker',
+                "size": 16,
+                "fx": ["@FX_LIGHT_SOURCE"]
             },
 
-            "o-bluedisc": {
+            {
+                "id": "o-bluedisc",
                 "tileset": "o-bluedisc",
-                "thinker": null
-            },
-
-            "o-bluereddisc": {
-                "tileset": "o-bluereddisc",
                 "thinker": null,
-                "hit-radius": 24
+                "size": 24
             },
 
-
-
-        },
+            {
+                "id": "o-bluereddisc",
+                "tileset": "o-bluereddisc",
+                "thinker": 'StaticThinker',
+                "size": 16
+            },
+        ],
 
         "level": {
             "metrics": {
                 "spacing": 64,
                 "height": 96
             },
-            "flats": "gfx/textures/flats-1.png",
-            "walls": "gfx/textures/walls-2.png",
-            "sky": "gfx/textures/sky.png",
+            "textures": {
+                "flats": "gfx/textures/flats-1.png",
+                "walls": "gfx/textures/walls-2.png",
+                "sky": "gfx/textures/sky.png",
+                smooth: false
+            },
             "map": [
                 "####################",
                 "##   #            ##",
@@ -195,9 +218,9 @@ function getLevel() {
                     "c": 1
                 },
                 "light": {
-                    r0: 512,
-                    r1: 768,
-                    v: 0.3
+                    "r0": 512,
+                    "r1": 768,
+                    "v": 0.3
                 }
             }
             ]
@@ -207,39 +230,56 @@ function getLevel() {
                 "x": 9 * 64 + 32,
                 "y": 13 * 64 + 32,
                 "angle": 0,
-                "blueprint": "o-bluereddisc"
+                "blueprint": "o-bluereddisc",
+                "animation": "blue"
+            },
+            {
+                "x": 14 * 64 + 32,
+                "y": 13 * 64 + 32,
+                "angle": 0,
+                "blueprint": "m-warlock-b",
+                "animation": "stand"
             }
-        ]
+        ],
+        "decals": [],
+        "camera": {
+            "thinker": "DevKbdThinker", // the control thinker
+            x: 9, // camera coordinates (x-axis)
+            y: 18, // camera coordinates (y-axis)
+            angle: -1 * Math.PI / 2, // looking angle
+            z: 1 // camera altitude (1 is the default object)
+        },
     };
 }
 // json de configuration
 async function main() {
     // creates engine
     const engine = new Engine();
+    // declare thinkers
+    engine.useThinkers(THINKERS);
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
     // builds level, display progress on console
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
-    //const w = engine.createEntity('m-warlock-b');
-    
-    // creates a thinker
-    const ct = new DevKbd();
 
-	// plug keyboards events
-    window.addEventListener('keydown', event => ct.keyDown(event.key));
-    window.addEventListener('keyup', event => ct.keyUp(event.key));
-    
-    // links this thinker to the camera
-    engine.camera.thinker = ct;
-    // sets initial location
-    engine.camera.location.set({
-        x: 9 * 64,
-        y: 18 * 64,
-        angle: -1 * Math.PI / 2,
-        z: 1
+    // retrieves the camera thinker. it's a DevKbdThinker
+    // which is a thinker of keyboard control, for controlling the camera
+    // we want to customize keyboard event
+    const ct = engine.camera.thinker;
+    const oWarlock = engine.horde.entities[1];
+
+	// plugs keyboard events
+    window.addEventListener('keydown', event => {
+        ct.keyDown(event.key);
+        oWarlock.thinker.keyDown(event.key);
     });
+    window.addEventListener('keyup', event => {
+        ct.keyUp(event.key);
+        oWarlock.thinker.keyUp(event.key);
+    });
+
 
     // starts engine doomloop
     engine.startDoomLoop();

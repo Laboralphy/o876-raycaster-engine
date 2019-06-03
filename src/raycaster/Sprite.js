@@ -15,6 +15,10 @@ class Sprite {
 
         this._animations = {};
         this._animation = null;
+        this._currentAnim = {
+            ref: '',
+            dir: 0
+        };
         this._tileset = null;
 
         this._children = []; // these sprites will be rendered above the current sprite
@@ -92,8 +96,45 @@ class Sprite {
      * @param ref {string} animation group
      * @param iAnim {number} index of the new current animation
      */
-    setCurrentAnimation(ref, iAnim) {
+    setCurrentAnimation(ref, iAnim = undefined) {
+        const ca = this._currentAnim;
+        const bSameRef = ca.ref === ref;
+        if (iAnim === undefined) {
+            if (bSameRef) {
+                return;
+            }
+            iAnim = Math.min(ca.dir, this._animations[ref].length);
+        }
+        ca.ref = ref;
         this._animation = this._animations[ref][iAnim];
+        this._animation.index = 0;
+    }
+
+    getCurrentAnimation() {
+        return this._animation;
+    }
+
+    /**
+     * For a directionnal sprite, sets a new direction
+     */
+    setDirection(nDirection) {
+        const ca = this._currentAnim;
+        const caRef = ca.ref;
+        if (!(caRef in this._animations)) {
+            return;
+            throw new Error('this reference : "' + caRef + '" is not in current animation');
+        }
+        // caRef is the last animation type set
+        if (this._animations[caRef].length > 1) {
+            // this animation is directional
+            const {index, time, loopDir} = this._animation;
+            this.setCurrentAnimation(caRef, nDirection);
+            const a = this._animation;
+            a.index = index;
+            a.time = time;
+            a.loopDir = loopDir;
+            ca.dir = nDirection;
+        }
     }
 
     /**

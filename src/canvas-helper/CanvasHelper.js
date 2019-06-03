@@ -25,8 +25,8 @@ class CanvasHelper {
 		return bDefaultImageSmoothing;
 	}
 
-	static getData(oCanvas) {
-		return oCanvas.toDataURL('image/png');
+	static getData(oCanvas, sType = 'image/png') {
+		return oCanvas.toDataURL(sType);
 	}
 
     /**
@@ -36,7 +36,7 @@ class CanvasHelper {
 	 * @return {string}
      */
 	static getHash(oCanvas, sType = 'md5') {
-		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).digest('hex');
+		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).hash('hex');
 	}
 	
 	/**

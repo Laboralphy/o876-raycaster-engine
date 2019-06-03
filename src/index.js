@@ -1,13 +1,12 @@
 import * as CONSTS from './raycaster/consts';
+import Thinkers from './engine/thinkers'
 import Renderer from './raycaster/Renderer';
-import CanvasHelper from './canvas-helper/CanvasHelper';
-import MapHelper from './raycaster/MapHelper';
+import Engine from './engine/Engine';
 
-export const Raycaster = {
-	Renderer,
-	CanvasHelper,
+
+export default {
 	CONSTS,
-	MapHelper
+	Engine,
+	Renderer,
+	Thinkers
 };
-
-export default Raycaster;

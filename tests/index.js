@@ -9,3 +9,6 @@ require('./ColliderTest');
 require('./GridTest');
 require('./LightSourcesTest');
 require('./LightSourcesTest');
+require('./AbbrTest');
+require('./TagGridTest');
+require('./PaintingTest');

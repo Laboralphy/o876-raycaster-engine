@@ -15,3 +15,23 @@ export const DOOR_SLIDING_DURATION = 24;
 export const DOOR_MAINTAIN_DURATION = 300;
 export const DOOR_SECURITY_INTERVAL = 10;   // interval of entity presence checking during "CLOSING" phase
 
+// these value are expressed in texels
+export const METRIC_CAMERA_DEFAULT_SIZE = 24; // default size for camera entity
+export const METRIC_COLLIDER_SECTOR_SIZE = 128; // default size for collider sector
+export const METRIC_PUSH_DISTANCE = 48; // distance of pushing action
+
+export const SPRITE_DIRECTION_COUNT = 8;
+
+export const COLLISION_CHANNEL_CREATURE = 1;  // collision channel for normal tangible creature
+export const COLLISION_CHANNEL_MISSILE = 2;   // collision channel for normal exploding missile of any type
+
+
+export const DECAL_ALIGN_TOP_LEFT = 7;
+export const DECAL_ALIGN_TOP = 8;
+export const DECAL_ALIGN_TOP_RIGHT = 9;
+export const DECAL_ALIGN_LEFT = 4;
+export const DECAL_ALIGN_CENTER = 5;
+export const DECAL_ALIGN_RIGHT = 6;
+export const DECAL_ALIGN_BOTTOM_LEFT = 1;
+export const DECAL_ALIGN_BOTTOM = 2;
+export const DECAL_ALIGN_BOTTOM_RIGHT = 3;

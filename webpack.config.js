@@ -1,4 +1,6 @@
 const path = require('path');
+const fs = require('fs');
+
 
 const devConfig = {
     mode: "development",
@@ -40,17 +42,24 @@ const testConfig = {
     target: 'node'
 };
 
+const mapeditConfig = require('./tools/mapedit/webpack.config');
+
+function getExampleList() {
+    const output = {};
+    fs
+        .readdirSync('./examples')
+        .forEach(f => output[f] = path.resolve(__dirname, 'examples', f, 'index.js'));
+    return output;
+
+}
 
 const exampleConfig = {
     mode: "development",
-    entry: {
-        devtest: path.resolve(__dirname, 'examples/devtest/index.js'),
-        engtest: path.resolve(__dirname, 'examples/engtest/index.js')
-    },
+    entry: getExampleList(),
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/examples'),
         libraryTarget: 'umd',
-        filename: 'example-[name].js',
+        filename: '[name].js',
     },
     devtool: 'source-map',
     module: {
@@ -62,4 +71,4 @@ const exampleConfig = {
     target: 'web'
 };
 
-module.exports = [devConfig, testConfig, exampleConfig];
+module.exports = [devConfig, testConfig, exampleConfig, mapeditConfig];

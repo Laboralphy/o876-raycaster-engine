@@ -84,7 +84,6 @@ class CellSurfaceManager {
         const xMod = xc % lmc;
         const xCell = xc / lmc | 0;
         const yCell = yc / lmc | 0;
-        let x0, y0, face, index;
         if (yMod === 0) {
             // NORTH ROW
             // = south of cell x, y-1

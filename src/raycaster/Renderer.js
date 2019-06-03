@@ -73,8 +73,11 @@ class Renderer {
         this._debugDisplay = new DebugDisplay();
         this._renderContext = null;
         this._renderCanvas = null;
+        this._renderVRContext = null;
+        this._renderVRCanvas = null;
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
+        this._firstFloor = true; // if false then this instance is second story
     }
 
 
@@ -174,7 +177,6 @@ class Renderer {
             .length > 0;
     }
 
-
     /**
      * Transmit an option value from _options to storey._options
      * @param sOption {string}
@@ -266,6 +268,10 @@ class Renderer {
                         this.setBackground(bgImage);
                     }
                     break;
+
+                case 'textures.stretch':
+                    this.transmitOptionToStorey(opt);
+                    break;
             }
         }
     }
@@ -289,6 +295,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     createStorey() {
         const storey = new Renderer();
         this._storey = storey;
+        storey._firstFloor = false;
         storey.setMapSize(this.getMapSize());
         this.connectStoreyProperties();
         return storey;
@@ -452,6 +459,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     |_| |_| |_|\__,_| .__/  |___/\___|\__|\__\___|_|  |___/  \__,_|_| |_|\__,_|  \__, |\___|\__|\__\___|_|  |___/
                     |_|                                                          |___/
     */
+
     /**
      * changes the texture code of a cell
      * @param x {number}
@@ -476,7 +484,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         if (myx !== nValue) {
             const lm = this._lightMap;
             const ms = CONSTS.METRIC_LIGHTMAP_SCALE;
-            lm.setLightBlocking(x * ms, y * ms, ms, ms, code !== CONSTS.PHYS_NONE && code !== CONSTS.PHYS_TRANSPARENT_BLOCK);
+            lm.setLightBlocking(
+                x * ms,
+                y * ms,
+                ms,
+                ms,
+                code !== CONSTS.PHYS_NONE &&
+                code !== CONSTS.PHYS_TRANSPARENT_BLOCK &&
+                code !== CONSTS.PHYS_INVISIBLE_BLOCK
+            );
             my[x] = nValue;
         }
     }
@@ -536,21 +552,19 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     }
 
 
-
-
-
-
-
-
     /**
      * Creates a raycasting scene
      * @return {*}
      */
-    createScene(xCamera, yCamera, fDirection, fHeight = 1) {
+    createScene(xCamera, yCamera, fDirection, fHeight = 1, vrPanel = 0) {
+        if (vrPanel != 0) {
+            xCamera += 16 * Math.cos(fDirection + vrPanel * Math.PI / 2);
+            yCamera += 16 * Math.sin(fDirection + vrPanel * Math.PI / 2);
+        }
         const SCREEN = this._options.screen;
         let oStorey = null;
         if (!!this._storey) {
-            oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2);
+            oStorey = this._storey.createScene(xCamera, yCamera, fDirection, fHeight + 2, vrPanel);
         }
         const focal = SCREEN.focal;
         const w = SCREEN.width;
@@ -582,6 +596,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             zbuffer: null,      // zbuffer to be drawn
             storeyScene: oStorey, // first story scene
             vr: SCREEN.vr,
+            vrPanel,
             xFrom: SCREEN.vr ? (w >> 1) - (w >> 2) : 0,
             xTo: SCREEN.vr ? (w >> 1) + (w >> 2) : w
         };
@@ -668,8 +683,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let xCamera = scene.camera.x;
         let yCamera = scene.camera.y;
         let fDirection = scene.camera.direction;
-        const METRICS = this._options.metrics;
         const SCREEN = this._options.screen;
+        const METRICS = this._options.metrics;
         let xScreenSize = SCREEN.width;
         let fViewAngle = scene.camera.fov;
         let nSpacing = METRICS.spacing;
@@ -1129,13 +1144,13 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[2] += nOffset;
                 if (nOffset > 0) {
                     aData[4] = ytex - nOffset;
-                    aData[8] = ((aData[4] / (z / xscr) + 0.5)) << 1;
+                    aData[8] = ((aData[4] / (z / xscr) + 0.5));
                 }
                 break;
 
             case CONSTS.PHYS_CURT_UP: // rideau coulissant vers le haut
                 if (nOffset > 0) {
-                    aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5)) << 1;
+                    aData[8] = (((ytex - nOffset) / (z / xscr) + 0.5));
                 }
                 break;
 
@@ -1199,7 +1214,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 aData[0] = null;
                 break;
         }
-        if (OPTIONS.textures.stretch) {
+        if (OPTIONS.textures.stretch && !this._firstFloor) {
             aData[6] -= aData[8];
             aData[8] <<= 1;
         }
@@ -1515,11 +1530,11 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * Will precompute anything necessary for the rendering phase
      */
-    computeScene(x, y, angle, height) {
+    computeScene(x, y, angle, height, vrPanel = 0) {
         if (this.optionsHaveMutated()) { // sync
             this.optionsReaction();     // async
         }
-        const scene = this.createScene(x, y, angle, height);
+        const scene = this.createScene(x, y, angle, height, vrPanel);
         this.computeScreenSliceBuffer(scene);
         return scene;
     }
@@ -1584,36 +1599,126 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         return oRayCasterLightSource;
     }
 
+
+    _setupVRRenderCanvas(oOriginalRenderCanvas) {
+        if (!this._renderVRCanvas) {
+            this._renderVRCanvas = CanvasHelper.cloneCanvas(oOriginalRenderCanvas);
+            this._renderVRContext = this._renderVRCanvas.getContext('2d');
+        }
+        const canvas = this._renderVRCanvas;
+        const context = this._renderVRContext;
+        if (canvas.width !== oOriginalRenderCanvas.width) {
+            canvas.width = oOriginalRenderCanvas.width;
+        }
+        if (canvas.height !== oOriginalRenderCanvas.height) {
+            canvas.height = oOriginalRenderCanvas.height;
+        }
+        return {
+            canvas, context
+        };
+    }
+
+
     /**
      * This will render the raycasting scene in the specified 2d context
-     * @param scene
+     * @param x {number}
+     * @param y {number}
+     * @param angle {number}
+     * @param height {number}
      */
-    render(scene) {
+    renderVR(x, y, angle, height) {
+        this.render(x, y, angle, height, -1);
+        const w = this._renderCanvas.width;
+        const h = this._renderCanvas.height;
+        const {canvas, context} = this._setupVRRenderCanvas(this._renderCanvas);
+        context.drawImage(
+            this._renderCanvas,
+            w >> 2,
+            0,
+            w >> 1,
+            h,
+            0,
+            0,
+            w >> 1,
+            h
+        );
+        this.render(x, y, angle, height, 1);
+        context.drawImage(
+            this._renderCanvas,
+            w >> 2,
+            0,
+            w >> 1,
+            h,
+            w >> 1,
+            0,
+            w >> 1,
+            h
+        );
+        this._renderContext.drawImage(canvas, 0, 0)
+    }
+
+
+    /**
+     * This will render the raycasting scene in the specified 2d context
+     * @param x {number}
+     * @param y {number}
+     * @param angle {number}
+     * @param height {number}
+     * @param vrPanel {number}
+     */
+    render(x, y, angle, height, vrPanel = 0) {
+        const vr = vrPanel !== 0;
+        if (!vr && this._options.screen.vr) {
+            this.renderVR(x, y, angle, height);
+            return;
+        }
+        const scene = this.computeScene(x, y, angle, height, vrPanel);
         const renderContext = this._renderContext;
-        const VR = scene.vr;
-        if (VR) {
+        if (vr) {
             renderContext.save();
             renderContext.beginPath();
             renderContext.rect(scene.xFrom, 0, scene.xTo - scene.xFrom + 1, this._options.screen.height);
             renderContext.clip();
         }
-        //this._lightSources.renderSources(this._csm, this._options.shading.shades);
+
         this.updateStaticLightMap();
 
         this.renderBackground(renderContext);
         if (scene.storeyScene) {
             Renderer.renderScreenSliceBuffer(scene.storeyScene, renderContext);
         }
-        this.renderFlats(scene, renderContext);
+        this.renderFlats(scene);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
         this.renderDebug(renderContext);
-        if (VR) {
+        if (vr) {
             renderContext.restore();
         }
     }
 
     flip(finalContext) {
         finalContext.drawImage(this._renderCanvas, 0, 0);
+    }
+
+    /**
+     * Returns a data image of the last rendered image
+     */
+    screenshot(width = null, height = null, sType = 'image/png') {
+        width = width || this._renderCanvas.width;
+        height = height || this._renderCanvas.height;
+        const oCanvas = CanvasHelper.createCanvas(width, height);
+        const oContext = oCanvas.getContext('2d');
+        oContext.drawImage(
+            this._renderCanvas,
+            0,
+            0,
+            this._renderCanvas.width,
+            this._renderCanvas.height,
+            0,
+            0,
+            width,
+            height
+        );
+        return CanvasHelper.getData(oCanvas, sType);
     }
 
 
@@ -1712,6 +1817,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const OPTIONS = this._options;
         const CAMERA = scene.camera;
         const SCREEN = OPTIONS.screen;
+        const METRICS = OPTIONS.metrics;
         const xspr = oSprite.x;
         const yspr = oSprite.y;
         const xcam = CAMERA.x;
@@ -1720,6 +1826,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const dy = yspr - ycam;
         const ts = oSprite.getTileSet();
         const fov = CAMERA.fov;
+        const ps = METRICS.spacing;
 
         const fTarget = Math.atan2(dy, dx);
         let fAlpha = fTarget - CAMERA.direction; // Angle
@@ -1753,7 +1860,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
             const sh = OPTIONS.shading.shades;
             // add contextual lighting
-            const lightFactor = this._csm.getLightMap(xspr, yspr, OPTIONS.metrics.spacing);
+            const lightFactor = this._csm.getLightMap(xspr, yspr, ps);
             const nShade = Math.max(0, Math.min(sh - 1, z / OPTIONS.shading.factor - lightFactor | 0));
 
             const data = [
@@ -1857,14 +1964,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param loop
      * @returns {*}
      */
-    createAnimation(base, count, duration, loop = 1) {
-        const oAnimation = new TileAnimation();
-        oAnimation.base = base;
-        oAnimation.count = count;
-        oAnimation.duration = duration;
-        oAnimation.loop = loop;
-        return this.linkAnimation(oAnimation);
+    buildSurfaceAnimation({start = 0, length = 1, duration = 100, loop = 0, iterations = Infinity}) {
+        const a = new TileAnimation();
+        a.base = start;
+        a.count = length;
+        a.duration = duration;
+        a.loop = loop;
+        a.iterations = iterations === null ? Infinity : iterations;
+        return this.linkAnimation(a);
     }
+
+
+
 
     /**
      * computes all tile animations
@@ -1877,7 +1988,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         const sprites = this._sprites;
         for (let i = 0, l = sprites.length; i < l; ++i) {
-            sprites[i].animation.animate(nTimeInc);
+            const s = sprites[i];
+            if (!!s.animation) {
+                s.animation.animate(nTimeInc);
+            }
         }
     }
 }
