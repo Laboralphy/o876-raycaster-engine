@@ -1,9 +1,9 @@
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 /**
- * This program is one of the simplest example we can give to build a level, and control a camera view inside
+ * This program shows how to use static lightning.
+ * In the map, some blocks are light-emitters.
  */
 
 const LEVEL = {
@@ -121,11 +121,6 @@ async function main() {
 
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
-
-    // declares all thinkers (there is only one here)
-    engine.useThinkers({
-        KeyboardControlThinker
-    });
 
     // builds level.
     // buildLevel() is an ASYNCHRONOUS function, which return a promise

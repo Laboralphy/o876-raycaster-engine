@@ -1,12 +1,13 @@
+/**
+ * This example shows how to include decals on walls at different positions.
+ */
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 const LEVEL = {
 
     "tilesets": [
-        // there is no tilset in this example
-        // we only have textures
+        // we have several tileset for this example, but most of tilesets consist only in one frame
         {
             "id": "d1",
             "width": 32,
@@ -73,8 +74,8 @@ const LEVEL = {
             "height": 96    // ceilling height is 96 texels height
         },
         "textures": {
-            "flats": "textures/flats.png",
-            "walls": "textures/walls.png"
+            "flats": "textures/flats.png", // floor and ceiling textures
+            "walls": "textures/walls.png"  // wall textures
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "########",
@@ -95,12 +96,12 @@ const LEVEL = {
             }
         }, {
             "code": '#',
-            "phys": "@PHYS_WALL", // you cannot walk on this character,
+            "phys": "@PHYS_WALL", // you cannot walk on this character : it's a wall,
             "faces": {
-                "n": 0, // north wall
-                "e": 0, // east wall
-                "w": 0, // west wall
-                "s": 0, // south wall
+                "n": 0, // north wall texture (taken from "walls" property)
+                "e": 0, // east wall texture  (taken from "walls" property)
+                "w": 0, // west wall texture  (....)
+                "s": 0, // south wall texture
             }
         }]
     },
@@ -115,6 +116,10 @@ const LEVEL = {
         // there is no object
     ],
     "decals": [
+        // x and y are the block coordinates, the "e" property means the "east side of the wall"
+        // the "s" is for the south side
+        // the "w" is for the west side
+        // the "n" is for the north side
         {"x": 0, "y": 6, "e": {"align": '@DECAL_ALIGN_TOP_LEFT', "tileset": 'd1'}},
         {"x": 0, "y": 5, "e": {"align": '@DECAL_ALIGN_TOP', "tileset": 'd2'}},
         {"x": 0, "y": 4, "e": {"align": '@DECAL_ALIGN_TOP_RIGHT', "tileset": 'd3'}},
@@ -134,11 +139,6 @@ async function main() {
 
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
-
-    // declares all thinkers (there is only one here)
-    engine.useThinkers({
-        KeyboardControlThinker
-    });
 
     // builds level.
     // buildLevel() is an ASYNCHRONOUS function, which return a promise

@@ -1,6 +1,5 @@
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 /**
  * This program enables the VR mode which splits the screen in two halves, vertically, each half being slightly
@@ -122,11 +121,6 @@ async function main() {
 
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
-
-    // declares all thinkers (tere is only one here)
-    engine.useThinkers({
-        KeyboardControlThinker
-    });
 
     // builds level.
     // buildLevel() is an ASYNCHRONOUS function, which return a promise

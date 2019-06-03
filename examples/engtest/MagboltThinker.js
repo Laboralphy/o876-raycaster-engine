@@ -18,7 +18,6 @@ class MagboltThinker extends MissileThinker {
 
     $explode_enter() {
         this.entity.sprite.setCurrentAnimation('explode', 0);
-        console.log(this.victims);
     }
 }
 

@@ -1,13 +1,15 @@
 import Engine from "../../src/engine/Engine";
-
-
-import StaticThinker from "../../src/engine/thinkers/StaticThinker";
 import DevKbdThinker from "./DevKbdThinker";
 import DevKbdMobThinker from "./DevKbdMobThinker";
 import MagboltThinker from "./MagboltThinker";
 
+
+/**
+ * This is a more complex example written during development phase
+ */
+
+
 const THINKERS = {
-    StaticThinker,
     DevKbdMobThinker,
     DevKbdThinker,
     MagboltThinker
@@ -268,6 +270,8 @@ async function main() {
     // which is a thinker of keyboard control, for controlling the camera
     // we want to customize keyboard event
     const ct = engine.camera.thinker;
+
+    // retrieve the warlock which is the second entity created
     const oWarlock = engine.horde.entities[1];
 
 	// plugs keyboard events
