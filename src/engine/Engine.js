@@ -643,7 +643,7 @@ class Engine {
         if (this._horde.isEntityLinked(e)) {
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
-            this.events.emit('entitydestroyed', {entity});
+            this.events.emit('entitydestroyed', {entity: e});
         }
     }
 

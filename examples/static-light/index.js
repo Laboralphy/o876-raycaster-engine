@@ -132,6 +132,10 @@ async function main() {
     // we use the "await" keywork to be sure the level is completly loaded before doing something else.
     await engine.buildLevel(LEVEL);
 
+    // bindings keyboard events
+    window.addEventListener('keydown', event => engine.camera.thinker.keyDown(event.key));
+    window.addEventListener('keyup', event => engine.camera.thinker.keyUp(event.key));
+
     // starts engine doomloop
     engine.startDoomLoop();
 }
