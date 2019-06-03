@@ -15,7 +15,7 @@
   },
   "repository": {
     "type" : "git",
-    "url" : "https://github.com/laboralphy/o876-raycaster-engine"
+    "url" : "https://github.com/Laboralphy/o876-raycaster-engine"
   },
   "license": "ISC",
   "devDependencies": {
