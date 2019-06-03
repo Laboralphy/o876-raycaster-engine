@@ -24,8 +24,6 @@ class DevKbdThinker extends TangibleThinker {
         };
 
         this._lastTime = 0;
-        window.addEventListener('keydown', event => this.keyDown(event.key));
-        window.addEventListener('keyup', event => this.keyUp(event.key));
     }
 
     keyDown(key) {

@@ -15,8 +15,6 @@ class DevKbdMobThinker extends TangibleThinker {
             fire: false
         };
         this.bWalk = false;
-        window.addEventListener('keydown', event => this.keyDown(event.key));
-        window.addEventListener('keyup', event => this.keyUp(event.key));
     }
 
     keyDown(key) {

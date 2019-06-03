@@ -1,15 +1,22 @@
 {
-  "name": "raycaster-es6",
+  "name": "o876-raycaster-es6",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Raycasting Rendering Engine, to build HTML 5 games in javascript that use the raycasting technology.",
   "main": "index.js",
   "scripts": {
     "test": "jasmine dist/tests.js",
     "build": "webpack",
     "watch": "webpack --watch"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["HTML5", "games", "raycasting", "laboralphy"],
+  "author": {
+    "name": "Raphaël Marandet",
+    "email": "raphael.marandet@gmail.com"
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/laboralphy/raycaster-es6"
+  },
   "license": "ISC",
   "devDependencies": {
     "css-loader": "^2.1.1",

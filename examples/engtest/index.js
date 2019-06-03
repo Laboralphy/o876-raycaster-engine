@@ -268,13 +268,16 @@ async function main() {
     // which is a thinker of keyboard control, for controlling the camera
     // we want to customize keyboard event
     const ct = engine.camera.thinker;
+    const oWarlock = engine.horde.entities[1];
 
 	// plugs keyboard events
     window.addEventListener('keydown', event => {
         ct.keyDown(event.key);
+        oWarlock.thinker.keyDown(event.key);
     });
     window.addEventListener('keyup', event => {
         ct.keyUp(event.key);
+        oWarlock.thinker.keyUp(event.key);
     });
 
 
