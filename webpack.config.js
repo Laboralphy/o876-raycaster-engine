@@ -44,6 +44,8 @@ const testConfig = {
 
 const mapeditConfig = require('./tools/mapedit/webpack.config');
 
+const websiteConfig = require('./tools/website/webpack.config');
+
 function getExampleList() {
     const output = {};
     fs
@@ -71,4 +73,4 @@ const exampleConfig = {
     target: 'web'
 };
 
-module.exports = [devConfig, testConfig, exampleConfig, mapeditConfig];
+module.exports = [devConfig, testConfig, exampleConfig, mapeditConfig, websiteConfig];
