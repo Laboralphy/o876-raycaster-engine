@@ -17,3 +17,22 @@ export async function fetchJSON(url, postData = null) {
     }
     return oResponse;
 }
+
+
+export async function deleteJSON(url) {
+    const headers = new Headers();
+
+    const oRequest = {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    };
+    const response = await fetch(url, oRequest);
+    const oResponse = await response.json();
+    if (response.status === 500) {
+        throw new Error('Error 500 : internal server error : ' + oResponse.message);
+    }
+    return oResponse;
+}

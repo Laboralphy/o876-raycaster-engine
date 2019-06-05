@@ -4,7 +4,7 @@
     >
         <template v-slot:toolbar>
             <MyButton :disabled="!selectedLevel" @click="loadAndExit"><FolderOpenIcon decorative></FolderOpenIcon> Open</MyButton>
-            <MyButton :disabled="!selectedLevel" @click="deleteLevel"><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
+            <MyButton :disabled="!selectedLevel" @click="erase"><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -54,13 +54,14 @@
         methods: {
 
             ...editorMapActions({
-                listLevel: EDITOR_ACTION.LIST_LEVELS,
+                listLevels: EDITOR_ACTION.LIST_LEVELS,
                 setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
                 setLevelName: EDITOR_ACTION.SET_LEVEL_NAME
             }),
 
             ...levelMapActions({
-                loadLevel: LEVEL_ACTION.LOAD_LEVEL
+                loadLevel: LEVEL_ACTION.LOAD_LEVEL,
+                deleteLevel: LEVEL_ACTION.DELETE_LEVEL
             }),
 
             loadAndExit: async function() {
@@ -79,14 +80,17 @@
                 this.loadAndExit(name);
             },
 
-            deleteLevel: function() {
-                alert('not yet implemented');
+            erase: async function() {
+                if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
+                    await this.deleteLevel({name: this.selectedLevel});
+                    await this.setStatusBarText({text: 'Level delete : ' + name});
+                    await this.listLevels();
+                }
             }
-
         },
 
         mounted: function() {
-            this.listLevel();
+            this.listLevels();
         }
     }
 </script>

@@ -5,9 +5,10 @@ export const TILE_TYPE_SPRITE = 'sprite';
 export const BLOCK_WIDTH = 96;
 export const BLOCK_HEIGHT = 96;
 
-export const SERVICE_URL_SAVE = '/vault/?action=save';
-export const SERVICE_URL_LOAD = '/vault/?action=load';
-export const SERVICE_URL_LIST = '/vault/?action=list';
+export const SERVICE_URL_SAVE = '/vault/';
+export const SERVICE_URL_LOAD = '/vault/';
+export const SERVICE_URL_LIST = '/vault';
+export const SERVICE_URL_DELETE = '/vault/';
 
 export const SHAPE_NONE = 0;
 export const SHAPE_CIRCLE = 1;

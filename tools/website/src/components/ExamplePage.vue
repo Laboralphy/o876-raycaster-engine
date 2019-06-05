@@ -7,7 +7,7 @@
         </div>
         <div class="row">
             <div class="col lg-12">
-                Here is a list of all examples and demos.
+                <p>Here is a list of all examples and demos.</p>
                 <ul>
                     <li v-for="ex in examples"><a :href="'/examples/' + ex">{{ ex }}</a></li>
                 </ul>

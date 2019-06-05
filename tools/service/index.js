@@ -35,33 +35,34 @@ function initMapEditor() {
     // service/?action=save
     // service/?action=load
     // service/?action=list
-    app. get('/vault', (req, res) => {
-        const q = req.query;
-        const action = 'action' in q ? q.action : '';
-        const name = 'name' in q ? q.name : '';
-        switch (action) {
-            case 'list':
-                persist.ls().then(r => res.json(r));
-                break;
 
-            case 'load':
-                persist.load(name).then(r => res.json(r));
-                break;
-        }
+    // list levels
+    app.get('/vault', (req, res) => {
+        persist.ls().then(r => res.json(r));
     });
-    app.post('/vault', (req, res) => {
-        const q = req.query;
+
+    // load level
+    app.get('/vault/:name', (req, res) => {
+        const name = req.params.name;
+        persist.load(name).then(r => res.json(r));
+    });
+
+    // save level
+    app.post('/vault/:name', (req, res) => {
+        const name = req.params.name;
         const {data} = req.body;
-        const action = 'action' in q ? q.action : '';
-        const name = 'name' in q ? q.name : '';
-        if (action === 'save') {
-            persist.save(name, data)
-                .then(r => res.json(r))
-                .catch(err => {
-                    console.error(err);
-                    res.json({status: 'error', error: err.message})
-                });
-        }
+        persist.save(name, data)
+            .then(r => res.json(r))
+            .catch(err => {
+                console.error(err);
+                res.json({status: 'error', error: err.message})
+            });
+    });
+
+    // delete level
+    app.delete('/vault/:name', (req, res) => {
+        const name = req.params.name;
+        persist.rm(name).then(r => res.json(r));
     });
 }
 
@@ -88,7 +89,7 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/website', express.static(path.resolve(ROOT, 'tools/website')));
+    app.use('/', express.static(path.resolve(ROOT, 'tools/website')));
     print('[url] http://localhost:8080/ - website location');
 }
 
