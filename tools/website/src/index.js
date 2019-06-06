@@ -13,6 +13,7 @@ import Application from './components/Application.vue';
 import HomePage from "./components/HomePage.vue";
 import ExamplePage from "./components/ExamplePage.vue";
 import MapEditPage from "./components/MapEditPage.vue";
+import FeatPage from "./components/FeatPage.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -30,6 +31,12 @@ function createApplication() {
             path: '/examples',
             components: {
                 default: ExamplePage
+            }
+        },
+        {
+            path: '/features',
+            components: {
+                default: FeatPage
             }
         },
         {
