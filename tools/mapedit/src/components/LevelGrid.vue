@@ -250,7 +250,8 @@
             ...levelMapGetters([
                 'getGridSize',
                 'getGrid',
-                'getBlocks'
+                'getBlocks',
+                'getStartpoint'
             ]),
 
             ...editorMapGetters([
@@ -624,10 +625,12 @@
                                 : 0
                     };
                 });
-                const misc = {
-                };
-                if (x === 1 && y === 1) {
-                    misc.startpoint = { angle: 0 };
+
+                const startpoint = this.getStartpoint;
+                const misc = {};
+
+                if (x === startpoint.x && y === startpoint.y) {
+                    misc.startpoint = startpoint;
                 }
                 const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark, aThings, misc);
                 if (!!oTagCanvas) {

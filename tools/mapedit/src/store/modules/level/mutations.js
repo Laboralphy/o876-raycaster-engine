@@ -364,5 +364,11 @@ export default {
         if (!!tile) {
             tile.content = content;
         }
+    },
+
+    [MUTATION.SET_STARTING_POINT]: (state, {x, y, angle}) => {
+        state.startpoint.x = x;
+        state.startpoint.y = y;
+        state.startpoint.angle = angle;
     }
 }

@@ -2,7 +2,7 @@ import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
 import CanvasHelper from "../../../../../../src/canvas-helper";
 import CACHE from "../../../libraries/block-cache";
-import {loadLevel, saveLevel} from '../../../libraries/fetch-helper';
+import {deleteLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
 import * as CONSTS from "../../../consts";
 import {render} from "../../../libraries/block-renderer";
 
@@ -210,6 +210,10 @@ export default {
         }
     },
 
+    [ACTION.DELETE_LEVEL]: async ({commit}, {name}) => {
+        const response = await deleteLevel(name);
+    },
+
     [ACTION.SET_GRID_CELL]: ({commit}, {x, y, floor, block}) => {
         switch (floor) {
             case 0:
@@ -306,5 +310,9 @@ export default {
 
     [ACTION.FEEDBACK_TILE_WIDTH]: ({commit}, {from, to}) => {
         commit(MUTATION.REPLACE_BLOCK_OFFSET, {from, to});
+    },
+
+    [ACTION.SET_STARTING_POINT]: ({commit}, {x, y, angle}) => {
+        commit(MUTATION.SET_STARTING_POINT, {x, y, angle});
     }
 }

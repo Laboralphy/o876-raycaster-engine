@@ -155,13 +155,9 @@ export default {
     },
 
     somethingHasChanged: false,
-
+    levelData: null, // last generated level data
     levelName: '',
-
-
     levelList: [],
-
-
     statusBar: {
         content: 'Welcome to Raycaster Map Editor',
         color: '#000'
