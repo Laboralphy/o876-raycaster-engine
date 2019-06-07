@@ -108,10 +108,6 @@ class SillyCanvasFactory {
                 ctx.stroke();
                 break;
 
-            case CONSTS.SHAPE_STARTPOINT:
-                this.drawStartPoint(canvas, parseFloat(color));
-                break;
-
             default:
                 throw new Error('unknown shape : ' + shape);
         }
@@ -175,7 +171,7 @@ class SillyCanvasFactory {
     }
 
     getCanvas(tags, mark, things, misc) {
-        if (tags.length === 0 && mark.shape === 0 && things.length === 0) {
+        if (tags.length === 0 && mark.shape === 0 && things.length === 0 && Object.keys(misc).length === 0) {
             return null;
         }
         const sKey = JSON.stringify({tags, mark, things, misc});
@@ -186,6 +182,9 @@ class SillyCanvasFactory {
             this.drawTags(canvas, tags);
             this.drawMark(canvas, mark);
             this.drawThings(canvas, things);
+            if ('startpoint' in misc) {
+                this.drawStartPoint(canvas, misc.startpoint.angle);
+            }
             return this._canvases[sKey] = canvas;
         }
     }

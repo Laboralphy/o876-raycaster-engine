@@ -8,7 +8,6 @@ import util from "util";
 class MapHelper {
 
     getAnimationKeyString(a) {
-        if (!a) console.trace();
         return a.join(';');
     }
 

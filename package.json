@@ -6,16 +6,22 @@
   "scripts": {
     "test": "jasmine dist/tests.js",
     "build": "webpack",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "serve": "node tools/service"
   },
-  "keywords": ["HTML5", "games", "raycasting", "laboralphy"],
+  "keywords": [
+    "HTML5",
+    "games",
+    "raycasting",
+    "laboralphy"
+  ],
   "author": {
     "name": "Raphaël Marandet",
     "email": "raphael.marandet@gmail.com"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/laboralphy/o876-raycaster-engine"
+    "type": "git",
+    "url": "https://github.com/Laboralphy/o876-raycaster-engine"
   },
   "license": "ISC",
   "devDependencies": {
@@ -33,6 +39,10 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "clean-css": "^4.2.1",
+    "express": "^4.17.1",
+    "mkdirp": "^0.5.1",
+    "pngjs": "^3.4.0",
     "vue": "^2.6.10",
     "vue-material-design-icons": "^3.1.0",
     "vue-router": "^3.0.6",

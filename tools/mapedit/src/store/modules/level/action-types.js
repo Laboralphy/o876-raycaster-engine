@@ -27,6 +27,7 @@ export const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 
 export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
+export const DELETE_LEVEL = 'DELETE_LEVEL';
 
 export const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
 export const SET_FLAG = 'SET_FLAG';
@@ -37,5 +38,5 @@ export const REPLACE_TILE_CONTENT = 'REPLACE_TILE_CONTENT';
 export const FEEDBACK_TILE_WIDTH = 'FEEDBACK_TILE_WIDTH';
 
 
-
+export const SET_STARTING_POINT = 'SET_STARTING_POINT';
 

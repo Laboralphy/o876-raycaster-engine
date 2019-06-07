@@ -1,4 +1,5 @@
 {
+    "version": "eng-100",
     "tilesets": [
         {
             "id": string,                   // tileset identifier (used in "blueprints" or "decals")

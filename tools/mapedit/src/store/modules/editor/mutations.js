@@ -62,6 +62,9 @@ export default {
 
     [MUTATION.TILEBROWSER_SET_TILE_TYPE]: (state, {value}) => {
         state.models.tileBrowser.type = value;
-    }
+    },
 
+    [MUTATION.SET_LEVEL_GENERATED_DATA]: (state, {value}) => {
+        state.levelData = value;
+    }
 }

@@ -1,4 +1,10 @@
+# webstorm config folder
 .idea
+
+# node modules
 node_modules
+
+# webpack output folders
 dist
 tools/mapedit/app
+tools/website/app

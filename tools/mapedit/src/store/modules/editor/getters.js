@@ -17,7 +17,8 @@ export default {
     getLevelList: state => state.levelList,
     getLevelName: state => state.levelName,
 
-    getStatusBarText: state => state.statusBar.content
+    getStatusBarText: state => state.statusBar.content,
+    getLevelGeneratedData: state => state.levelData
 }
 
 

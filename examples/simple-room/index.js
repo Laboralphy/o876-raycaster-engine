@@ -1,6 +1,5 @@
 import RCE from "../../src";
 const Engine = RCE.Engine;
-const KeyboardControlThinker = RCE.Thinkers.KeyboardControlThinker;
 
 /**
  * This program is one of the simplest example we can give to build a level, and control a camera view inside
@@ -15,7 +14,6 @@ const LEVEL = {
 
     "blueprints": [],
         // there are no blueprint in this example, we don't have any sprites
-
 
     "level": {
         "metrics": {
@@ -74,11 +72,6 @@ async function main() {
 
     // defines which DOM canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
-
-    // declares all thinkers (there is only one here : the keyboard controller)
-    engine.useThinkers({
-        KeyboardControlThinker
-    });
 
     // builds level.
     // buildLevel() is an ASYNCHRONOUS function, which return a promise
