@@ -7,7 +7,7 @@
         <div>
             <h3>Export level</h3>
             <p>Download this level as a JSON data string, so you can just use it directly with an engine instance.</p>
-            <MyButton :disabled="downloadData.length === 0" :href="downloadData" :download="getDownloadFileName">Export to JSON</MyButton>
+            <MyButton :disabled="!getDownloadURLData" :href="getDownloadURLData" :download="getDownloadFileName">Export to JSON</MyButton>
             <hr/>
         </div>
     </Window>
@@ -40,20 +40,26 @@
             ]),
 
             ...editorMapGetters([
-                'getLevelName'
+                'getLevelName',
+                'getLevelGeneratedData'
             ]),
+
+            getDownloadURLData: function() {
+                const data = this.getLevelGeneratedData;
+                if (!!data) {
+                    return "data:text/json;charset=utf-8," +
+                        encodeURIComponent(
+                            JSON.stringify(
+                                this.getLevelGeneratedData, null, '  '
+                            )
+                        );
+                } else {
+                    return null;
+                }
+            },
 
             getDownloadFileName: function() {
                 return this.getLevelName + '.json';
-            }
-        },
-
-        mounted: async function() {
-            try {
-                const data = await generate(this.getLevel);
-                this.downloadData = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
-            } catch (e) {
-
             }
         }
     }

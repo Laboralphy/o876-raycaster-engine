@@ -12,9 +12,11 @@
 
 <script>
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import {generate} from '../libraries/generate';
+    import {appendImages} from "../libraries/append-images";
     import Engine from "../../../../src/engine/Engine";
 
     let engine = null;
@@ -27,8 +29,9 @@
         engine.camera.thinker.keyDown(event.key);
     }
 
-
     const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+
     export default {
         name: "RenderView",
         components: {Window},
@@ -41,6 +44,11 @@
             ...levelMapActions({
                 setPreview: LEVEL_ACTION.SET_PREVIEW
             }),
+
+            ...editorMapMutations({
+                setLevelGeneratedData: EDITOR_MUTATION.SET_LEVEL_GENERATED_DATA
+            }),
+
             run: async function(level, canvas) {
                 const context = canvas.getContext('2d');
                 try {
@@ -56,7 +64,8 @@
                     context.fillRect(x, y, w, h);
                     context.fillStyle = 'white';
                     context.fillText('generating data', x, y - h);
-                    const data = await generate(level);
+                    const data = await generate(level, appendImages);
+                    this.setLevelGeneratedData({value: data});
                     engine = new Engine();
                     engine.setRenderingCanvas(canvas);
                     const grad = context.createLinearGradient(x, y, x, y + h);
@@ -109,6 +118,7 @@
                 window.removeEventListener('keydown', transmitKeydownEvent);
                 window.removeEventListener('keyup', transmitKeyUpEvent);
                 engine = null;
+                this.setLevelGeneratedData({value: null});
             }
         }
     }

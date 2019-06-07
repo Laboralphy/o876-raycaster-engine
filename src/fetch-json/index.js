@@ -20,7 +20,6 @@ export async function fetchJSON(url, postData = null) {
 
 
 export async function deleteJSON(url) {
-    const headers = new Headers();
 
     const oRequest = {
         method: 'DELETE',

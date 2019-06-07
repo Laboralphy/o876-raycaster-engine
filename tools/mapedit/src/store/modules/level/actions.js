@@ -310,5 +310,9 @@ export default {
 
     [ACTION.FEEDBACK_TILE_WIDTH]: ({commit}, {from, to}) => {
         commit(MUTATION.REPLACE_BLOCK_OFFSET, {from, to});
+    },
+
+    [ACTION.SET_STARTING_POINT]: ({commit}, {x, y, angle}) => {
+        commit(MUTATION.SET_STARTING_POINT, {x, y, angle});
     }
 }

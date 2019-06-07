@@ -33,7 +33,14 @@ async function _getFileContentJSON(name) {
 	return JSON.parse(buff.toString());
 }
 
-
+async function _isFolder(name) {
+	try {
+		const st = await stat(name);
+		return st.isDirectory();
+	} catch (e) {
+		return false;
+	}
+}
 
 /**
  * tests if file is writable
@@ -102,28 +109,53 @@ async function ls() {
 	const aOutput = [];
 	for (let i = 0, l = aList.length; i < l; ++i) {
 		const s = aList[i];
-		const filename = path.resolve(VAULT_PATH, s, 'level.json');
-		const previewFilename = path.resolve(VAULT_PATH, s, 'preview.json');
-		const st = await stat(filename);
-		const date = Math.floor(st.mtimeMs / 1000);
-		const name = s;
-		let preview = false;
-		if (await _isReadable(previewFilename)) {
-			preview = await _getFileContentJSON(previewFilename);
+		const dirname = path.resolve(VAULT_PATH, s);
+		if (await _isFolder(dirname)) {
+			const filename = path.resolve(VAULT_PATH, s, 'level.json');
+			const previewFilename = path.resolve(VAULT_PATH, s, 'preview.json');
+			const st = await stat(filename);
+			const date = Math.floor(st.mtimeMs / 1000);
+			const name = s;
+			let preview = false;
+			if (await _isReadable(previewFilename)) {
+				preview = await _getFileContentJSON(previewFilename);
+			}
+			aOutput.push({
+				"name": name,
+				"date": date,
+				"preview": preview
+			});
 		}
-		aOutput.push({
-			"name": name,
-			"date": date,
-			"preview": preview
-		});
 	}
 	return aOutput;
 }
 
+/**
+ * Recursive RMDIR
+ * @param dir
+ * @returns {Promise<void>}
+ * @private
+ */
+async function _rmdir_r(dir) {
+	const list = await readDir(dir);
+	for(let i = 0, l = list.length; i < l; ++i) {
+		const filename = path.join(dir, list[i]);
+		const st = await stat(filename);
+
+		if(st.isDirectory()) {
+			// rmdir recursively
+			await _rmdir_r(filename);
+		} else {
+			// rm fiilename
+			await unlink(filename);
+		}
+	}
+	await rmdir(dir);
+}
+
+
 async function rm(name) {
-	await unlink(path.resolve(VAULT_PATH, name, 'level.json'));
-	await unlink(path.resolve(VAULT_PATH, name, 'preview.json'));
-	await rmdir(path.resolve(VAULT_PATH, name));
+	await _rmdir_r(path.resolve(VAULT_PATH, name));
 	return {status: 'done'};
 }
 

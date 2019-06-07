@@ -34,23 +34,8 @@ export default {
     getThing: state => tid => state.things.find(t => t.id === tid),
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
-
     getBlocks: state => state.blocks.sort((b1, b2) => b1.phys - b2.phys),
-
-    getStartpoint: state => {
-        const grid = state.grid;
-        for (let y = 0; y < grid.length; ++y) {
-            const row = grid[y];
-            for (let x = 0; x < row.length; ++x) {
-                const cell = row[x];
-                if (cell.mark.shape === CONSTS.SHAPE_STARTPOINT) {
-                    return {x, y, angle: parseFloat(cell.mark.shape)};
-                }
-            }
-        }
-        return null;
-    },
-
+    getStartpoint: state => state.startpoint,
     getGrid: state => state.grid,
     getGridSize: state => state.grid.length,
     getLevel: state => state,

@@ -30,5 +30,10 @@ export default {
         },
         brightness: 0
     },
+    startpoint: {
+        x: -1,
+        y: -1,
+        angle: 0
+    },
     preview: ''
 };

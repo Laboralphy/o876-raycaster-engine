@@ -8,6 +8,8 @@ const CONFIG = require('./config');
 const express = require('express');
 const path = require('path');
 const persist = require('./persist');
+//const levelzip = require('./levelzip');
+//const {generate} = require('../mapedit/src/libraries/generate');
 const util = require('util');
 const fs = require('fs');
 
@@ -32,9 +34,6 @@ function initMapEditor() {
     print('[url] http://localhost:8080/mapedit - invokes the map editor');
     persist.setVaultPath(CONFIG.vault_folder);
     print('vault path is currently set at', persist.getVaultPath());
-    // service/?action=save
-    // service/?action=load
-    // service/?action=list
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -42,21 +41,33 @@ function initMapEditor() {
     });
 
     // load level
-    app.get('/vault/:name', (req, res) => {
+
+    app.get('/vault/:name.json', (req, res) => {
         const name = req.params.name;
         persist.load(name).then(r => res.json(r));
     });
 
+    app.get('/vault/:name.zip', async (req, res) => {
+        try {
+            const name = req.params.name;
+            //const data = generate(await persist.load(name));
+            //await levelzip.generateZipPackage(path.resolve(persist.getVaultPath(), name), name, data);
+            res.json({status: 'not-done'});
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+
     // save level
-    app.post('/vault/:name', (req, res) => {
-        const name = req.params.name;
-        const {data} = req.body;
-        persist.save(name, data)
-            .then(r => res.json(r))
-            .catch(err => {
-                console.error(err);
-                res.json({status: 'error', error: err.message})
-            });
+    app.post('/vault/:name', async (req, res) => {
+        try {
+            const name = req.params.name;
+            const {data} = req.body;
+            const r = await persist.save(name, data);
+            res.json(r)
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
     });
 
     // delete level

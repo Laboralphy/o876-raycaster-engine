@@ -10,7 +10,7 @@
                 <p>To open the Map Editor follow this link : <a href="/mapedit">/mapedit</a></p>
                 <div class="center">
                     <figure>
-                        <img class="screenshot" src="../../assets/images/screen-mapedit.jpg" />
+                        <a href="/mapedit"><img class="screenshot" src="../../assets/images/screen-mapedit.jpg" /></a>
                         <figcaption>A screenshot of the Map Editor Software.</figcaption>
                     </figure>
                 </div>

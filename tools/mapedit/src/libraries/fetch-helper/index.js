@@ -9,7 +9,7 @@ export function saveLevel(name, data) {
 }
 
 export async function loadLevel (name) {
-    return fetchJSON(CONSTS.SERVICE_URL_LOAD + name);
+    return fetchJSON(CONSTS.SERVICE_URL_LOAD + name + '.json');
 }
 
 export async function deleteLevel(name) {

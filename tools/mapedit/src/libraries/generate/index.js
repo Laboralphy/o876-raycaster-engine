@@ -1,41 +1,15 @@
-import CanvasHelper from "../../../../../src/canvas-helper";
-import {SHAPE_STARTPOINT} from "../../consts";
-
+let SHAPE_STARTPOINT = 10;
 const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 
-/**
- * Combine plusieurs tiles en une seule et renvoie les data-images
- * @param tilesets {array}
- * @param iStart
- * @param count
- * @return {Promise<*>}
- */
-async function combineTiles(tilesets, iStart, count) {
-    // déterminer la liste des frames à recombiner
-    const aAllTiles = [];
-    for (let i = 0; i < count; ++i) {
-        aAllTiles.push(tilesets[iStart + i].content);
-    }
-    const proms = aAllTiles.map(t => CanvasHelper.loadCanvas(t));
-    const aCanvases = await Promise.all(proms);
-    if (aCanvases.length === 0) {
-        throw new Error('no tile defined');
-    }
-    const w = aCanvases[0].width;
-    const h = aCanvases[0].height;
-    const cvsOutput = CanvasHelper.createCanvas(w * count, h);
-    const ctxOutput = cvsOutput.getContext('2d');
-    for (let i = 0; i < count; ++i) {
-        ctxOutput.drawImage(aCanvases[i], i * w, 0);
-    }
-    return {
-        src: CanvasHelper.getData(cvsOutput),
-        width: w | 0,
-        height: h | 0
-    };
+let combineTiles = async function() {};
+
+
+function setImageAppender(f) {
+    combineTiles = f;
 }
+
 
 
 async function generateTileset(tilesets, idTile) {
@@ -347,7 +321,7 @@ function generateObjectsAndDecals(input) {
             const idThingTemplate = thing.id;
             const oTT = thingTemplates.find(tt => tt.id === idThingTemplate);
             if (!oTT) {
-                throw new Error('cell x:' + x + ' y:' + y + ' references tile id:' + idTemplate + ' - but the tile template could not be found in store');
+                throw new Error('cell x:' + x + ' y:' + y + ' references tile id:' + idThingTemplate + ' - but the tile template could not be found in store');
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
@@ -423,23 +397,12 @@ function generateObjectsAndDecals(input) {
 
 function generateCamera(input) {
     // recherche de la "marque"
-    let camera = {};
-    input.grid.forEach(
-        (row, y) => row.forEach(
-            (cell, x) => {
-                if (cell.mark.shape === SHAPE_STARTPOINT) {
-                    camera = {
-                        x: x | 0,
-                        y: y | 0,
-                        z: 1,
-                        angle: parseFloat(cell.mark.color) * Math.PI,
-                        thinker: 'KeyboardControlThinker',
-                    }
-                }
-            }
-        )
-    );
-    return camera;
+    return {
+        x: input.startpoint.x,
+        y: input.startpoint.y,
+        angle: input.startpoint.angle * Math.PI,
+        thinker: 'KeyboardControlThinker'
+    };
 }
 
 function generateTags(input) {
@@ -458,8 +421,11 @@ function generateTags(input) {
     return aTags;
 }
 
-
-export async function generate(input) {
+export async function generate(input, imageAppender) {
+    if (!imageAppender) {
+        throw new Error('need image appender');
+    }
+    setImageAppender(imageAppender);
     return {
         version: 'eng-100',
         tilesets: await generateTilesets(input),

@@ -32,35 +32,35 @@
                 <tbody>
                     <tr>
                         <td>
-                            <MyButton @click="() => setStartpoint(1.25)"><ArrowTopLeftThickIcon></ArrowTopLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.25)"><ArrowTopLeftThickIcon></ArrowTopLeftThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => setStartpoint(1.5)"><ArrowUpThickIcon></ArrowUpThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.5)"><ArrowUpThickIcon></ArrowUpThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => setStartpoint(1.75)"><ArrowTopRightThickIcon></ArrowTopRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.75)"><ArrowTopRightThickIcon></ArrowTopRightThickIcon></MyButton>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <MyButton @click="() => setStartpoint(1)"><ArrowLeftThickIcon></ArrowLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1)"><ArrowLeftThickIcon></ArrowLeftThickIcon></MyButton>
                         </td>
                         <td>
 
                         </td>
                         <td>
-                            <MyButton @click="() => setStartpoint(0)"><ArrowRightThickIcon></ArrowRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0)"><ArrowRightThickIcon></ArrowRightThickIcon></MyButton>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <MyButton @click="() => setStartpoint(0.75)"><ArrowBottomLeftThickIcon></ArrowBottomLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.75)"><ArrowBottomLeftThickIcon></ArrowBottomLeftThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => setStartpoint(0.5)"><ArrowDownThickIcon></ArrowDownThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.5)"><ArrowDownThickIcon></ArrowDownThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => setStartpoint(0.25)"><ArrowBottomRightThickIcon></ArrowBottomRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.25)"><ArrowBottomRightThickIcon></ArrowBottomRightThickIcon></MyButton>
                         </td>
                     </tr>
                 </tbody>
@@ -134,7 +134,8 @@
 
         methods: {
             ...levelMapActions({
-                setCellMark: LEVEL_ACTION.SET_CELL_MARK
+                setCellMark: LEVEL_ACTION.SET_CELL_MARK,
+                setStartpoint: LEVEL_ACTION.SET_STARTING_POINT
             }),
 
             ...editorMapMutations({
@@ -155,17 +156,12 @@
                 }
             },
 
-            setStartpoint: async function(angle) {
+            placeStartPoint: async function(angle) {
                 if (this.isLevelGridRegionSelected) {
                     const sr = this.getLevelGridSelectedRegion;
                     const x = sr.x1;
                     const y = sr.y1;
-                    const sp = this.getStartpoint;
-                    if (!!sp) {
-                        // virer l'ancien startpoint
-                        await this.setCellMark({x: sp.x, y: sp.y, shape: CONSTS.SHAPE_NONE, color: 0});
-                    }
-                    await this.setCellMark({x, y, shape: CONSTS.SHAPE_STARTPOINT, color: angle.toString()});
+                    this.setStartpoint({x, y, angle});
                     this.somethingHasChanged({value: true});
                 }
             },
