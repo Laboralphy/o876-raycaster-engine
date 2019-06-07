@@ -15,9 +15,10 @@
     import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
-    import {generate} from '../libraries/generate';
+    import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
     import Engine from "../../../../src/engine/Engine";
+
 
     let engine = null;
 
@@ -50,6 +51,7 @@
             }),
 
             run: async function(level, canvas) {
+                console.log(generate);
                 const context = canvas.getContext('2d');
                 try {
                     context.font = '16px monospace';
