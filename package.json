@@ -39,6 +39,7 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "clean-css": "^4.2.1",
     "express": "^4.17.1",
     "mkdirp": "^0.5.1",
     "pngjs": "^3.4.0",
