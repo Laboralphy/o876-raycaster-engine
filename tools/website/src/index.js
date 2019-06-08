@@ -15,6 +15,7 @@ import ExamplePage from "./components/ExamplePage.vue";
 import MapEditPage from "./components/MapEditPage.vue";
 import FeatPage from "./components/FeatPage.vue";
 import TechPage from "./components/TechPage.vue";
+import AboutPage from "./components/AboutPage.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -50,6 +51,12 @@ function createApplication() {
             path: '/mapedit',
             components: {
                 default: MapEditPage
+            }
+        },
+        {
+            path: '/about',
+            components: {
+                default: AboutPage
             }
         }
     ];
