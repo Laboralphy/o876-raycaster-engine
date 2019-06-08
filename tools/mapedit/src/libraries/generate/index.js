@@ -1,2 +1,2 @@
-const generate = require('../../../../service/generate');
+const generate = require('../../../../generate');
 export default generate;

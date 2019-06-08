@@ -2,6 +2,8 @@ const fs = require('fs');
 const {PNG} = require('pngjs');
 let streams = require('stream');
 
+const PNG_MIME_SIGN =  'data:image/png;base64,';
+
 /**
  * Turns a buffer into a node js readable stream
  * @param buffer {Buffer} any buffer
@@ -68,7 +70,9 @@ function loadPNGFromString(s) {
     return loadPNGFromBuffer(getPNGBuffer(s));
 }
 
-
+function pngToBase64(png) {
+    return PNG_MIME_SIGN + PNG.sync.write(png).toString('base64');
+}
 
 async function appendImages(tilesets, iStart, count) {
     // déterminer la liste des frames à recombiner
