@@ -8,8 +8,7 @@ const CONFIG = require('./config');
 const express = require('express');
 const path = require('path');
 const persist = require('./persist');
-//const levelzip = require('./levelzip');
-//const {generate} = require('../mapedit/src/libraries/generate');
+const buildZip = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
 
@@ -37,7 +36,12 @@ function initMapEditor() {
 
     // list levels
     app.get('/vault', (req, res) => {
-        persist.ls().then(r => res.json(r));
+        persist.ls()
+            .then(r => res.json(r))
+            .catch(e => {
+                console.error('GET /vault - error');
+                console.error(e);
+            })
     });
 
     // load level
@@ -50,9 +54,9 @@ function initMapEditor() {
     app.get('/vault/:name.zip', async (req, res) => {
         try {
             const name = req.params.name;
-            //const data = generate(await persist.load(name));
-            //await levelzip.generateZipPackage(path.resolve(persist.getVaultPath(), name), name, data);
-            res.json({status: 'not-done'});
+            const data = await persist.load(name);
+            const archive = await buildZip(name, data);
+            res.download(archive.filename);
         } catch (e) {
             res.json({status: 'error', error: e.message});
         }

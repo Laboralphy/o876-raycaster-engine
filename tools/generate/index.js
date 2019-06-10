@@ -1,15 +1,22 @@
+/*
+ * Generates an engine compliant JSON out of a MapEdit save file
+ * this is a node.js module
+ */
 const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 let combineTiles = async function() {};
 
+/**
+ * Sets an image appender use to concatenates all tiles of an animation into one tile
+ * @param f {function}
+ */
 function setImageAppender(f) {
     combineTiles = f;
 }
 
 async function generateTileset(tilesets, idTile) {
     /*
-      une tile dans le state c'est cela :
       {
             id,             // identifiant numérique 1+
             type,           // toujour sprite
@@ -61,6 +68,7 @@ async function generateTileset(tilesets, idTile) {
     return output;
 }
 
+
 async function generateTilesets(input) {
     const tilesets = input.tiles.sprites;
     const output = [];
@@ -70,7 +78,6 @@ async function generateTilesets(input) {
     }
     return output;
 }
-
 
 function generateBlueprint(things, id) {
     /*

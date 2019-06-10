@@ -2,10 +2,29 @@ const fs = require('fs');
 const {PNG} = require('pngjs');
 let streams = require('stream');
 
+const PNG_SIGN =  'data:image/png;base64,';
+
+
+/**
+ * Write a png file on disk
+ * @param file {string} output filename
+ * @param png {PNG} png to be save
+ * @return {Promise<PNG>}
+ */
+function savePNG(file, png) {
+    return new Promise((resolve, reject) => {
+        const stream = fs.createWriteStream(file);
+        stream.on('close', event => {
+            resolve(png);
+        });
+        png.pack().pipe(stream);
+    });
+}
+
 /**
  * Turns a buffer into a node js readable stream
  * @param buffer {Buffer} any buffer
- * @return {module:stream.internal.Duplex}
+ * @return {module:stream.internal.Duplex|Stream}
  */
 function bufferToStream(buffer) {
     const Duplex = streams.Duplex;
@@ -23,6 +42,15 @@ function bufferToStream(buffer) {
  */
 function createPNG(width, height) {
     return new PNG({width, height});
+}
+
+/**
+ * turn a base64 image/png into a binary buffer
+ * @param imageData {string} base 64 image data
+ * @return {Buffer}
+ */
+function getPNGBuffer(imageData) {
+    return Buffer.from(imageData.substr(PNG_SIGN.length), 'base64');
 }
 
 /**
@@ -64,11 +92,18 @@ function loadPNGFromBuffer(buffer) {
  * @param s {String}
  * @return {Promise<PNG>}
  */
-function loadPNGFromString(s) {
+function loadPNGFromBase64(s) {
     return loadPNGFromBuffer(getPNGBuffer(s));
 }
 
-
+/**
+ * Renders a PNG into a base64 encoded string
+ * @param png {PNG} instance of PNG
+ * @returns {string} a base 64 string
+ */
+function pngToBase64(png) {
+    return PNG_SIGN + PNG.sync.write(png).toString('base64');
+}
 
 async function appendImages(tilesets, iStart, count) {
     // déterminer la liste des frames à recombiner
@@ -76,7 +111,7 @@ async function appendImages(tilesets, iStart, count) {
     for (let i = 0; i < count; ++i) {
         aAllTiles.push(tilesets[iStart + i].content);
     }
-    const proms = aAllTiles.map(t => loadPNGFromString(t));
+    const proms = aAllTiles.map(t => loadPNGFromBase64(t));
     const aCanvases = await Promise.all(proms);
     if (aCanvases.length === 0) {
         throw new Error('no tile defined');
@@ -93,3 +128,5 @@ async function appendImages(tilesets, iStart, count) {
         height: h | 0
     };
 }
+
+module.exports = appendImages;
