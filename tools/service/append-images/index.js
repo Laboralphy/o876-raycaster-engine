@@ -128,3 +128,5 @@ async function appendImages(tilesets, iStart, count) {
         height: h | 0
     };
 }
+
+module.exports = appendImages;

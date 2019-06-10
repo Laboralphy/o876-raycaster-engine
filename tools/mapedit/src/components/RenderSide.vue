@@ -7,7 +7,7 @@
         <div>
             <h3>Export level</h3>
             <p>Download this level as a JSON data string, so you can just use it directly with an engine instance.</p>
-            <MyButton :disabled="!getDownloadURLData" :href="getDownloadURLData" :download="getDownloadFileName">Export to JSON</MyButton>
+            <MyButton :disabled="!getDownloadURLData" :href="getDownloadURLData" :download="getDownloadFileName">Export to .json</MyButton>
             <hr/>
         </div>
     </Window>

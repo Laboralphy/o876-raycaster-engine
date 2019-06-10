@@ -1,33 +1,16 @@
 /**
  * Turns level data to a zip package
  */
-
 const crypto = require('crypto');
 const fs = require('fs');
-const util = require('util');
-const mkdirp = util.promisify(require('mkdirp'));
 const persist = require('../persist');
 const path = require('path');
-const {generate} = require('../../generate');
+const mkdirp = require('mkdirp');
+const generate = require('../../generate');
 const appendImages = require('../append-images');
+const archiver = require('archiver');
 
-
-const writeFile = util.promisify(fs.writeFile);
-
-
-
-
-const RC_FOLDER = 'rc';
-const ENG_FOLDER = 'eng';
-const ZIP_FOLDER = 'zip';
-
-
-
-
-const JSON_PATH = 'eng';
-const TEXTURE_FOLDER = 'textures';
-const TEXTURE_PATH = path.join(JSON_PATH, TEXTURE_FOLDER);
-const ZIP_PATH = 'zip';
+const PNG_FOLDER = 'textures';  // folder containing all png
 
 /**
  * Returns the md5 hash of the specified data
@@ -58,7 +41,7 @@ function getPNGBuffer(imageData) {
  */
 function generateImageEntry(src) {
     const sIndex = computeMD5(src);
-    const sFile = path.join(TEXTURE_FOLDER, sIndex + '.png');
+    const sFile = path.join('.', PNG_FOLDER, sIndex + '.png');
     return {
         index: sIndex,
         filename: sFile,
@@ -67,65 +50,71 @@ function generateImageEntry(src) {
 }
 
 /**
- * Create structure to put json and png files
- *
- * vault/{name}
- * vault/{name}/level.json              // map-edit save file
- * vault/{name}/preview.json            // base64 version of the preview thumbnail (map-edit)
- * vault/{name}/rc/                     // rc working directory
- * vault/{name}/rc/eng/                 // rc-engine version of the level - base directory
- * vault/{name}/rc/eng/level.json       // rc-engine json
- * vault/{name}/rc/eng/textures/*.png   // textures referenced by rc-engine level.json
- * vault/{name}/rc/zip/                 // packer working directory
- * vault/{name}/rc/zip/{name}.zip       // zipped version of /rc/eng
- *
- *
- *
- * @param baseDir
- * @returns {Promise<{LEVEL_FOLDER, ZIP_FOLDER}>}
+ * creates an archive and its content, out of a level-save-file
+ * @param name {string} name of the archive
+ * @param data {*} data loaded from save file (map edit)
+ * @param zipPath {string} path where to save the archive
+ * @returns {Promise<{filename, bytes}>} info about the archive file
  */
-async function createFileStructure(baseDir, name) {
-    const LEVEL_PATH = path.resolve(baseDir, name, JSON_PATH);
-    const ZIP_PATH = path.resolve(baseDir, name, ZIP_PATH);
-    const TEXTURE_PATH = path.resolve(baseDir, name, JSON_PATH, )
-    // creates output folder if not already done
-    await mkdirp(LEVEL_PATH);
-    await mkdirp(TEXTURE_PATH);
-    await mkdirp(ZIP_PATH);
-}
+async function generateZipPackage(name, data, zipPath) {
+    return new Promise((resolve, reject) => {
+        try {
+            // ZIP CREATION
+            const filename = path.resolve(zipPath, name + '.zip');
+            const output = fs.createWriteStream(filename);
+            const archive = archiver('zip', {
+                zlib: {level: 9}
+            });
 
+            // good practice to catch this error explicitly
+            archive.on('error', function (err) {
+                reject(err);
+            });
 
+            // pipe archive data to the file
+            archive.pipe(output);
 
+            // listen for all archive data to be written
+            // 'close' event is fired only when a file descriptor is involved
+            output.on('close', function () {
+                resolve({
+                    filename,
+                    bytes: archive.pointer()
+                });
+            });
 
-async function generateZipPackage(baseDir, name, data) {
+            // get all tiles
+            const aImageEntries = data.tilesets.map(ts => {
+                const ie = generateImageEntry(ts.src);
+                ts.src = ie.filename;
+                return ie;
+            });
 
-    // get all tiles
-    const aImageEntries = data.tilesets.map(ts => {
-        const ie = generateImageEntry(ts.src);
-        ts.src = ie.filename;
-        return ie;
-    });
+            const aTextureList = ['flats', 'walls', 'sky'];
+            const oTextures = data.level.textures;
 
-    const aTextureList = ['flats', 'walls', 'sky'];
-    const oTextures = data.level.textures;
+            // append all walls, flats and sky textures
+            aTextureList
+                .filter(t => typeof oTextures[t] === 'string' && oTextures[t].length > 0)
+                .forEach(t => {
+                    const ie = generateImageEntry(oTextures[t]);
+                    aImageEntries.push(ie);
+                    oTextures[t] = ie.filename;
+                });
 
-    // append all walls, flats and sky textures
-    aTextureList.forEach(t => {
-        if (t) {
-            const ie = generateImageEntry(oTextures[t]);
-            aImageEntries.push(ie);
-            oTextures[t] = ie.filename;
+            // aImageEntries in an array of imageEntries
+            for (let i = 0, l = aImageEntries.length; i < l; ++i) {
+                const t = aImageEntries[i];
+                archive.append(t.data, { name: t.filename });
+            }
+
+            archive.append(JSON.stringify(data, null, '  '), { name: 'level.json'});
+            archive.finalize();
+        } catch (e) {
+            console.error(e);
+            reject(e);
         }
     });
-
-    // aTexture in an array of imageEntries
-
-    for (let i = 0, l = aImageEntries.length; i < l; ++i) {
-        const t = aImageEntries[i];
-        await writeFile(path.resolve(baseDir, t.filename), t.data);
-    }
-
-    await writeFile(path.resolve(LEVEL_FOLDER, 'level.json'), data);
 }
 
 // 1) generate JSON from save file, use the node version of "append-images"
@@ -134,6 +123,17 @@ async function generateZipPackage(baseDir, name, data) {
 // 4) il faut préparer la structure des répertoire
 
 
-module.exports = {
-    generateZipPackage
-};
+/**
+ * Zips a project
+ * @param name {string} name of the project to be zipped
+ * @param dataME {*} data content
+ * @returns {Promise<{filename, bytes}>} will be resolve when the archive is fully built
+ */
+async function buildZip(name, dataME) {
+    const ZIP_PATH = path.resolve(persist.getVaultPath(), name, 'zip');
+    await mkdirp(ZIP_PATH);
+    const dataENG = await generate(dataME, appendImages);
+    return generateZipPackage(name, dataENG, ZIP_PATH);
+}
+
+module.exports = buildZip;

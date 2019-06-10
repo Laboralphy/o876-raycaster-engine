@@ -4,7 +4,12 @@
     >
         <template v-slot:toolbar>
             <MyButton :disabled="!selectedLevel" @click="loadAndExit"><FolderOpenIcon decorative></FolderOpenIcon> Open</MyButton>
-            <MyButton :disabled="!selectedLevel" @click="erase"><DeleteIcon decorative></DeleteIcon> Delete</MyButton>
+            <MyButton :disabled="!selectedLevel" @click="erase"><DeleteIcon decorative></DeleteIcon> Delete</MyButton> -
+            <MyButton
+                    :disabled="!selectedLevel"
+                    :href="'/vault/' + selectedLevel + '.zip'"
+                    title="download level as .json and all textures as .png, all packed in a .zip archive"
+            ><ArchiveIcon title="download level as .json and all textures as .png, all packed in a .zip archive" decorative></ArchiveIcon> Download as .zip</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -31,13 +36,14 @@
     import MyButton from "./MyButton.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
+    import ArchiveIcon from "vue-material-design-icons/Archive.vue";
 
     const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
     const {mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
-        components: {DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
+        components: {ArchiveIcon, DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
 
         data: function() {
             return {
