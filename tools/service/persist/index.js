@@ -113,18 +113,27 @@ async function ls() {
 		if (await _isFolder(dirname)) {
 			const filename = path.resolve(VAULT_PATH, s, 'level.json');
 			const previewFilename = path.resolve(VAULT_PATH, s, 'preview.json');
-			const st = await stat(filename);
-			const date = Math.floor(st.mtimeMs / 1000);
-			const name = s;
-			let preview = false;
-			if (await _isReadable(previewFilename)) {
-				preview = await _getFileContentJSON(previewFilename);
+			try {
+				const st = await stat(filename);
+				const date = Math.floor(st.mtimeMs / 1000);
+				const name = s;
+				let preview = false;
+				if (await _isReadable(previewFilename)) {
+					preview = await _getFileContentJSON(previewFilename);
+				}
+				aOutput.push({
+					"name": name,
+					"date": date,
+					"preview": preview
+				});
+			} catch (e) {
+				if (e.code === 'ENOENT') {
+					// no required file in this directory
+					console.warn('persist.ls - this directory contains neither level.json not preview.json : "' + s + '"');
+				} else {
+					throw e;
+				}
 			}
-			aOutput.push({
-				"name": name,
-				"date": date,
-				"preview": preview
-			});
 		}
 	}
 	return aOutput;

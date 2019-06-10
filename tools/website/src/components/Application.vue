@@ -9,6 +9,7 @@
                         <li><button @click="$router.push('/features')">Features</button></li>
                         <li><button @click="$router.push('/examples')">Examples</button></li>
                         <li><button @click="$router.push('/mapedit')">Map editor</button></li>
+                        <li><button @click="$router.push('/about')">About</button></li>
                     </ul>
                 </nav>
                 <router-view></router-view>
