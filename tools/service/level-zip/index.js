@@ -6,18 +6,28 @@ const crypto = require('crypto');
 const fs = require('fs');
 const util = require('util');
 const mkdirp = util.promisify(require('mkdirp'));
-const persist = require('./persist');
+const persist = require('../persist');
 const path = require('path');
-const appendImages = require('./append-images');
+const {generate} = require('../../generate');
+const appendImages = require('../append-images');
 
 
 const writeFile = util.promisify(fs.writeFile);
 
 
-const JSON_PATH = 'eng-100';
+
+
+const RC_FOLDER = 'rc';
+const ENG_FOLDER = 'eng';
+const ZIP_FOLDER = 'zip';
+
+
+
+
+const JSON_PATH = 'eng';
 const TEXTURE_FOLDER = 'textures';
 const TEXTURE_PATH = path.join(JSON_PATH, TEXTURE_FOLDER);
-const ZIP_PATH = 'pack';
+const ZIP_PATH = 'zip';
 
 /**
  * Returns the md5 hash of the specified data
@@ -56,10 +66,41 @@ function generateImageEntry(src) {
     };
 }
 
+/**
+ * Create structure to put json and png files
+ *
+ * vault/{name}
+ * vault/{name}/level.json              // map-edit save file
+ * vault/{name}/preview.json            // base64 version of the preview thumbnail (map-edit)
+ * vault/{name}/rc/                     // rc working directory
+ * vault/{name}/rc/eng/                 // rc-engine version of the level - base directory
+ * vault/{name}/rc/eng/level.json       // rc-engine json
+ * vault/{name}/rc/eng/textures/*.png   // textures referenced by rc-engine level.json
+ * vault/{name}/rc/zip/                 // packer working directory
+ * vault/{name}/rc/zip/{name}.zip       // zipped version of /rc/eng
+ *
+ *
+ *
+ * @param baseDir
+ * @returns {Promise<{LEVEL_FOLDER, ZIP_FOLDER}>}
+ */
+async function createFileStructure(baseDir, name) {
+    const LEVEL_PATH = path.resolve(baseDir, name, JSON_PATH);
+    const ZIP_PATH = path.resolve(baseDir, name, ZIP_PATH);
+    const TEXTURE_PATH = path.resolve(baseDir, name, JSON_PATH, )
+    // creates output folder if not already done
+    await mkdirp(LEVEL_PATH);
+    await mkdirp(TEXTURE_PATH);
+    await mkdirp(ZIP_PATH);
+}
+
+
+
+
 async function generateZipPackage(baseDir, name, data) {
 
     // get all tiles
-    const aTextures = data.tilesets.map(ts => {
+    const aImageEntries = data.tilesets.map(ts => {
         const ie = generateImageEntry(ts.src);
         ts.src = ie.filename;
         return ie;
@@ -72,25 +113,25 @@ async function generateZipPackage(baseDir, name, data) {
     aTextureList.forEach(t => {
         if (t) {
             const ie = generateImageEntry(oTextures[t]);
-            aTextures.push(ie);
+            aImageEntries.push(ie);
             oTextures[t] = ie.filename;
         }
     });
 
-    const LEVEL_FOLDER = path.resolve(baseDir, name, JSON_PATH);
-    const ZIP_FOLDER = path.resolve(baseDir, name, ZIP_PATH);
+    // aTexture in an array of imageEntries
 
-    // creates output folder if not already done
-    await mkdirp(LEVEL_FOLDER);
-    await mkdirp(ZIP_FOLDER);
-
-    for (let i = 0, l = aTextures.length; i < l; ++i) {
-        const t = aTextures[i];
+    for (let i = 0, l = aImageEntries.length; i < l; ++i) {
+        const t = aImageEntries[i];
         await writeFile(path.resolve(baseDir, t.filename), t.data);
     }
 
     await writeFile(path.resolve(LEVEL_FOLDER, 'level.json'), data);
 }
+
+// 1) generate JSON from save file, use the node version of "append-images"
+// 2) nous avons un JSON pret à l'emploi pour du raycasting
+// 3) nous allons extraire les images base64  dans des fichiers
+// 4) il faut préparer la structure des répertoire
 
 
 module.exports = {
