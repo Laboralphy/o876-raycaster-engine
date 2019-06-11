@@ -93,7 +93,7 @@
     import Tile from "./Tile.vue";
     import * as CONSTS from "../consts";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
-    import CanvasHelper from "../../../../src/canvas-helper";
+    import CanvasHelper from "../../../../lib/src/canvas-helper";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import SelectAllIcon from "vue-material-design-icons/SelectAll.vue";
     import SelectOffIcon from "vue-material-design-icons/SelectOff.vue";

@@ -32,35 +32,35 @@
                 <tbody>
                     <tr>
                         <td>
-                            <MyButton @click="() => placeStartPoint(1.25)"><ArrowTopLeftThickIcon></ArrowTopLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.25)"><ArrowTopLeftThickIcon decorative></ArrowTopLeftThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => placeStartPoint(1.5)"><ArrowUpThickIcon></ArrowUpThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.5)"><ArrowUpThickIcon decorative></ArrowUpThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => placeStartPoint(1.75)"><ArrowTopRightThickIcon></ArrowTopRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1.75)"><ArrowTopRightThickIcon decorative></ArrowTopRightThickIcon></MyButton>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <MyButton @click="() => placeStartPoint(1)"><ArrowLeftThickIcon></ArrowLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(1)"><ArrowLeftThickIcon decorative></ArrowLeftThickIcon></MyButton>
                         </td>
                         <td>
 
                         </td>
                         <td>
-                            <MyButton @click="() => placeStartPoint(0)"><ArrowRightThickIcon></ArrowRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0)"><ArrowRightThickIcon decorative></ArrowRightThickIcon></MyButton>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <MyButton @click="() => placeStartPoint(0.75)"><ArrowBottomLeftThickIcon></ArrowBottomLeftThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.75)"><ArrowBottomLeftThickIcon decorative></ArrowBottomLeftThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => placeStartPoint(0.5)"><ArrowDownThickIcon></ArrowDownThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.5)"><ArrowDownThickIcon decorative></ArrowDownThickIcon></MyButton>
                         </td>
                         <td>
-                            <MyButton @click="() => placeStartPoint(0.25)"><ArrowBottomRightThickIcon></ArrowBottomRightThickIcon></MyButton>
+                            <MyButton @click="() => placeStartPoint(0.25)"><ArrowBottomRightThickIcon decorative></ArrowBottomRightThickIcon></MyButton>
                         </td>
                     </tr>
                 </tbody>

@@ -1,4 +1,4 @@
-const DoorContext = require('../src/engine/DoorContext').default;
+const DoorContext = require('../lib/src/engine/DoorContext').default;
 
 describe('#DoorContext', function() {
     it ('should init 0', function() {

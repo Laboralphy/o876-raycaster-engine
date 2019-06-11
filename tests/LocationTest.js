@@ -1,4 +1,4 @@
-import Location from "../src/engine/Location";
+import Location from "../lib/src/engine/Location";
 
 describe('#Location', function() {
     describe('basic', function() {

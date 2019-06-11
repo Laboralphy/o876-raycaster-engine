@@ -370,5 +370,53 @@ export default {
         state.startpoint.x = x;
         state.startpoint.y = y;
         state.startpoint.angle = angle;
-    }
+    },
+
+    [MUTATION.SHIFT_GRID]: (state, {direction}) => {
+        const gl = state.grid.length;
+        if (gl === 0) {
+            return;
+        }
+        const xy = {
+            n: {x: 0, y: -1},
+            e: {x: 1, y: 0},
+            w: {x: -1, y: 0},
+            s: {x: 0, y: 1},
+        };
+        const {x, y} = xy[direction];
+        const sp = state.startpoint;
+        if (sp.x >= 0 && sp.y >= 0) {
+            sp.x = (sp.x + x + gl) % gl;
+            sp.y = (sp.y + y + gl) % gl;
+        }
+        switch (direction) {
+            case 'n': {
+                const r = state.grid.shift();
+                state.grid.push(r);
+                break;
+            }
+
+            case 's': {
+                const r = state.grid.pop();
+                state.grid.unshift(r);
+                break;
+            }
+
+            case 'e': {
+                state.grid.forEach(row => {
+                    const cell = row.pop();
+                    row.unshift(cell);
+                });
+                break;
+            }
+
+            case 'w': {
+                state.grid.forEach(row => {
+                    const cell = row.shift();
+                    row.push(cell);
+                });
+                break;
+            }
+        }
+    },
 }

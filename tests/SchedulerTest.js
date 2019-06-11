@@ -1,4 +1,4 @@
-const Scheduler = require('../src/engine/Scheduler').default;
+const Scheduler = require('../lib/src/engine/Scheduler').default;
 
 describe('#Scheduler', function() {
     it('should initialy have no commands', function() {

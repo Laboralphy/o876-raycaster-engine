@@ -1,4 +1,4 @@
-const Translator = require('../src/translator/Translator').default;
+const Translator = require('../lib/src/translator/Translator').default;
 
 describe('#translator', function() {
     it('should translate', function() {

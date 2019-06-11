@@ -1,6 +1,6 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
-import CanvasHelper from "../../../../../../src/canvas-helper";
+import CanvasHelper from "../../../../../../lib/src/canvas-helper";
 import CACHE from "../../../libraries/block-cache";
 import {deleteLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
 import * as CONSTS from "../../../consts";
@@ -314,5 +314,9 @@ export default {
 
     [ACTION.SET_STARTING_POINT]: ({commit}, {x, y, angle}) => {
         commit(MUTATION.SET_STARTING_POINT, {x, y, angle});
+    },
+
+    [ACTION.SHIFT_GRID]: ({commit}, {direction}) => {
+        commit(ACTION.SHIFT_GRID, {direction});
     }
 }

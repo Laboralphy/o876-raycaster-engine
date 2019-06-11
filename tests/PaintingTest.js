@@ -1,4 +1,4 @@
-import Painting from "../src/painting";
+import Painting from "../lib/src/painting";
 
 describe('#Painting', function() {
     describe('basic', function() {

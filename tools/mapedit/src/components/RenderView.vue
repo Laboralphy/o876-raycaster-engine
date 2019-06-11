@@ -17,7 +17,7 @@
     import Window from "./Window.vue";
     import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
-    import Engine from "../../../../src/engine/Engine";
+    import Engine from "../../../../lib/src/engine/Engine";
 
 
     let engine = null;
