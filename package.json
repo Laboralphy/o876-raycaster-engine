@@ -1,5 +1,5 @@
 {
-  "name": "o876-raycaster-es6",
+  "name": "o876-raycaster-engine",
   "version": "1.1.1",
   "description": "A Raycasting Rendering Engine, to build HTML 5 games in javascript that use the raycasting technology.",
   "main": "index.js",
