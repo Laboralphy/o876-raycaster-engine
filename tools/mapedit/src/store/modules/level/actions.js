@@ -314,5 +314,9 @@ export default {
 
     [ACTION.SET_STARTING_POINT]: ({commit}, {x, y, angle}) => {
         commit(MUTATION.SET_STARTING_POINT, {x, y, angle});
+    },
+
+    [ACTION.SHIFT_GRID]: ({commit}, {direction}) => {
+        commit(ACTION.SHIFT_GRID, {direction});
     }
 }

@@ -39,4 +39,5 @@ export const FEEDBACK_TILE_WIDTH = 'FEEDBACK_TILE_WIDTH';
 
 
 export const SET_STARTING_POINT = 'SET_STARTING_POINT';
+export const SHIFT_GRID = 'SHIFT_GRID';
 

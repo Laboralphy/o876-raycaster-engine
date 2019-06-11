@@ -20,6 +20,7 @@
     import Video3DIcon from "vue-material-design-icons/Video3d.vue";
     import SettingsIcon from "vue-material-design-icons/Settings.vue";
     import InformationIcon from "vue-material-design-icons/Information.vue"
+    import ToolboxIcon from "vue-material-design-icons/Toolbox.vue"
 
     export default {
         name: "MainMenu",
@@ -35,7 +36,8 @@
             ChessRookIcon,
             ShapeIcon,
             WeatherFogIcon,
-            SettingsIcon
+            SettingsIcon,
+            ToolboxIcon
         },
         data: function() {
             return {
@@ -111,6 +113,13 @@
                             highlight: /^\/level\/things/,
                             caption: 'Things',
                             title: 'Place sprites on the map'
+                        },
+                        {
+                            icon: ToolboxIcon,
+                            route: '/level/utilpanel',
+                            highlight: /^\/level\/utilpanel/,
+                            caption: 'Util.',
+                            title: 'Various tools and utilities'
                         }
                     ]
                 },

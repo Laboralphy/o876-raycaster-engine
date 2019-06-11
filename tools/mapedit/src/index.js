@@ -27,6 +27,7 @@ import AmbianceSetup from "./components/AmbianceSetup.vue";
 import RenderView from "./components/RenderView.vue";
 import RenderSide from "./components/RenderSide.vue";
 import Settings from "./components/Settings.vue";
+import UtilPanel from "./components/UtilPanel.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -67,6 +68,13 @@ function createApplication() {
             components: {
                 default: LevelGrid,
                 side: MarkerManager
+            }
+        },
+        {
+            path: "/level/utilpanel",
+            components: {
+                default: LevelGrid,
+                side: UtilPanel
             }
         },
         {
