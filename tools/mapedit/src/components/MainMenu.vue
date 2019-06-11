@@ -8,16 +8,18 @@
 <script>
     import StatusBar from "./StatusBar.vue";
     import MyButton from "./MyButton.vue";
+    import SimpleMenu from "./SimpleMenu.vue";
+
+    // icons
     import GridIcon from "vue-material-design-icons/Grid.vue";
     import FolderMultipleImageIcon from "vue-material-design-icons/FolderMultipleImage.vue";
     import AnimationIcon from "vue-material-design-icons/Animation.vue";
-    import SimpleMenu from "./SimpleMenu.vue";
     import TextureIcon from "vue-material-design-icons/Texture.vue";
     import TagIcon from "vue-material-design-icons/Tag.vue";
+    import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
     import ShapeIcon from "vue-material-design-icons/Shape.vue";
     import WeatherFogIcon from "vue-material-design-icons/WeatherFog.vue";
-    import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
-    import Video3DIcon from "vue-material-design-icons/Video3d.vue";
+    import GamepadVariantIcon from "vue-material-design-icons/GamepadVariant.vue";
     import SettingsIcon from "vue-material-design-icons/Settings.vue";
     import InformationIcon from "vue-material-design-icons/Information.vue"
     import ToolboxIcon from "vue-material-design-icons/Toolbox.vue"
@@ -37,7 +39,9 @@
             ShapeIcon,
             WeatherFogIcon,
             SettingsIcon,
-            ToolboxIcon
+            ToolboxIcon,
+            GamepadVariantIcon,
+            InformationIcon
         },
         data: function() {
             return {
@@ -69,7 +73,7 @@
                             title: 'Setup fog, brightness, and background image'
                         },
                         {
-                            icon: Video3DIcon,
+                            icon: GamepadVariantIcon,
                             route: '/render',
                             caption: 'Render',
                             title: 'Load the level into the raycasting engine'
