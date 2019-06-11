@@ -1,6 +1,6 @@
-const Collider = require('../src/collider/Collider').default;
-const Dummy = require('../src/collider/Dummy').default;
-const Vector = require('../src/geometry/Vector').default;
+const Collider = require('../lib/src/collider/Collider').default;
+const Dummy = require('../lib/src/collider/Dummy').default;
+const Vector = require('../lib/src/geometry/Vector').default;
 
 
 describe('#collider', function() {

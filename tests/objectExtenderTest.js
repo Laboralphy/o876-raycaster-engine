@@ -1,4 +1,4 @@
-const OE = require('../src/object-helper/Extender').default;
+const OE = require('../lib/src/object-helper/Extender').default;
 
 describe('#objectExtender', function() {
     it ('should build a map', function() {

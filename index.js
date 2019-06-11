@@ -1,6 +1,6 @@
 /**
  * Raycaster Engine
- * Should be include as ECMA Script
+ * Should be imported as ECMA Script
  */
-import * as RC from './src';
+import * as RC from './lib/src';
 export default RC;

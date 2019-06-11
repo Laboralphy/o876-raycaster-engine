@@ -1,4 +1,4 @@
-const Animation = require('../src/raycaster/TileAnimation').default;
+const Animation = require('../lib/src/raycaster/TileAnimation').default;
 
 describe('#TileAnimation', function() {
     it ('should animate', function() {

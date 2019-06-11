@@ -2,8 +2,8 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const mkdirp = util.promisify(require('mkdirp'));
-
-let VAULT_PATH = path.resolve(__dirname, 'vault');
+const CONFIG = require('../config');
+let VAULT_PATH = CONFIG.vault_path;
 
 
 const access = util.promisify(fs.access);

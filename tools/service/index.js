@@ -28,10 +28,9 @@ function print(...args) {
  * and the map editor persistance sub-service
  */
 function initMapEditor() {
-    app.use(express.json({limit: '50mb'})); // for parsing application/json
+    app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(ROOT, 'tools/mapedit')));
-    print('[url] http://localhost:8080/mapedit - invokes the map editor');
-    persist.setVaultPath(CONFIG.vault_folder);
+    persist.setVaultPath(CONFIG.vault_path);
     print('vault path is currently set at', persist.getVaultPath());
 
     // list levels
@@ -93,7 +92,6 @@ function initExamples() {
         const aList = await readdir(sExamplePath);
         res.json({list: aList});
     });
-    print('[url] http://localhost:8080/examples - is where all examples and demos are located');
 }
 
 
@@ -115,7 +113,6 @@ function initWebSite() {
  */
 function initDist() {
     app.use('/dist', express.static(path.resolve(ROOT, 'dist')));
-    print('[url] http://localhost:8080/dist - is where all packed scripts are located');
 }
 
 initMapEditor();
