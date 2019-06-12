@@ -4,10 +4,10 @@
   "description": "A Raycasting Rendering Engine, to build HTML 5 games in javascript that use the raycasting technology.",
   "main": "index.js",
   "scripts": {
-    "test": "jasmine dist/tests.js",
+    "test": "jasmine dist/tests/tests.js",
     "build": "webpack",
     "watch": "webpack --watch",
-    "serve": "node tools/service"
+    "serve": "node bin/o876-raycaster-engine.js"
   },
   "keywords": [
     "HTML5",
@@ -24,6 +24,9 @@
     "url": "https://github.com/Laboralphy/o876-raycaster-engine"
   },
   "license": "ISC",
+  "bin": {
+    "o876-raycaster-engine": "./bin/o876-raycaster-engine.js"
+  },
   "devDependencies": {
     "css-loader": "^2.1.1",
     "file-loader": "^3.0.1",

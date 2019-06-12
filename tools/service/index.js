@@ -21,8 +21,6 @@ function print(...args) {
     console.log(...args);
 }
 
-
-
 /**
  * inits the map editor sub-service
  * and the map editor persistance sub-service
@@ -31,7 +29,7 @@ function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(ROOT, 'tools/mapedit')));
     persist.setVaultPath(CONFIG.vault_path);
-    print('vault path is currently set at', persist.getVaultPath());
+    print('vault path : ', persist.getVaultPath());
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -103,7 +101,7 @@ function initExamples() {
  */
 function initWebSite() {
     app.use('/', express.static(path.resolve(ROOT, 'tools/website')));
-    print('[url] http://localhost:8080/ - website location');
+    print('website url : http://localhost:' + CONFIG.port + '/');
 }
 
 
@@ -115,10 +113,21 @@ function initDist() {
     app.use('/dist', express.static(path.resolve(ROOT, 'dist')));
 }
 
-initMapEditor();
-initExamples();
-initDist();
-initWebSite();
 
-app.listen(CONFIG.port);
-print('listening port', CONFIG.port);
+function run(options) {
+    if ('port' in options) {
+        CONFIG.port = options.port;
+    }
+
+    initMapEditor();
+    initExamples();
+    initDist();
+    initWebSite();
+
+    app.listen(CONFIG.port);
+    print('listening port', CONFIG.port);
+}
+
+module.exports = {
+    run
+};

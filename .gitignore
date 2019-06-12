@@ -4,7 +4,5 @@
 # node modules
 node_modules
 
-# webpack output folders
+# webpack output folder
 dist
-tools/mapedit/app
-tools/website/app

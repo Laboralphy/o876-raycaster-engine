@@ -12,3 +12,4 @@ require('./LightSourcesTest');
 require('./AbbrTest');
 require('./TagGridTest');
 require('./PaintingTest');
+require('./ArgumentParserTest');

@@ -17,8 +17,7 @@ const devConfig = {
         rules: [
         ]
     },
-    plugins: [
-    ],
+    plugins: [],
     target: 'web'
 };
 
@@ -28,7 +27,7 @@ const testConfig = {
         tests: path.resolve(__dirname, 'tests/index.js')
     },
     output: {
-        path: path.resolve(__dirname, 'dist'),
+        path: path.resolve(__dirname, 'dist/tests'),
         libraryTarget: 'commonjs2',
         filename: '[name].js'
     },
@@ -43,7 +42,6 @@ const testConfig = {
 };
 
 const mapeditConfig = require('./tools/mapedit/webpack.config');
-
 const websiteConfig = require('./tools/website/webpack.config');
 
 function getExampleList() {
@@ -73,4 +71,10 @@ const exampleConfig = {
     target: 'web'
 };
 
-module.exports = [devConfig, testConfig, exampleConfig, mapeditConfig, websiteConfig];
+module.exports = [
+    //devConfig,
+    testConfig,
+    exampleConfig,
+    mapeditConfig,
+    websiteConfig
+];

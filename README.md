@@ -1,5 +1,5 @@
 # O876 RAYCASTER ENGINE
-This is a Raycasting Engine to help you build games based on raycasting and 
+This is a Raycasting Engine aimed at building games based on raycasting and 
 running on modern web browsers. This framework provides a WYSIWYG level editor hosted 
 on an Express development server so you can immediatly start creating level.
 
@@ -15,10 +15,13 @@ You need :
 It depends whereas you want to used it or to contribute.
 To include the framework in your game project, the installation procedure is currently :
 ```bash
-npm install https://github.com/laboralphy/o876-raycaster-engine
+npm install --save https://github.com/laboralphy/o876-raycaster-engine
 ```
-but I'm still working on it.
-
+As the framework contains hundreds of files you'll also need __Webpack__ to build your 
+own game project.
+```bash
+npm install --save webpack webpack-cli
+```
 As for contributing you just need to git clone, or fork the project.
 
 
