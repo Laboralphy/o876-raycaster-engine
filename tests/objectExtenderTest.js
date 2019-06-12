@@ -117,4 +117,94 @@ describe('#objectExtender', function() {
             }
         });
     });
+
+    it ('should copy all branches to a new object', function() {
+        let a = {
+            a: 1,
+            b: 2,
+            c: {
+                bb: 9,
+                cc: 10,
+                v: 477
+            }
+        };
+        let b = {
+            a: 9,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: 'gamma'}
+        };
+        OE.objectExtends(a, b, true);
+        expect(a).toEqual({
+            a: 9,
+            b: 2,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100,
+                v: 477
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: 'gamma'}
+        });
+        a.blob.delta = 'delta';
+        expect(a).toEqual({
+            a: 9,
+            b: 2,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100,
+                v: 477
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: 'gamma', delta: 'delta'}
+        });
+        expect(b).toEqual({
+            a: 9,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: 'gamma'}
+        });
+
+    });
+    it ('should copy all branches to a new object even with deep structure', function() {
+        let a = {
+
+        };
+        let b = {
+            a: 9,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: {
+                rays: {are: {very: {hazardous: true}}}
+            }}
+        };
+        OE.objectExtends(a, b, true);
+        expect(a).toEqual({
+            a: 9,
+            d: 7,
+            c: {
+                bb: 89,
+                cc: 710,
+                x: 100
+            },
+            blob: {alpha: 'alpha', beta: 'beta', gamma: {
+                    rays: {are: {very: {hazardous: true}}}
+                }}
+        });
+    });
+
 });

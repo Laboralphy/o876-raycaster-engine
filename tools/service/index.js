@@ -7,6 +7,7 @@
 const CONFIG = require('./config');
 const express = require('express');
 const path = require('path');
+const os = require('os');
 const persist = require('./persist');
 const buildZip = require('./level-zip');
 const util = require('util');
@@ -119,13 +120,21 @@ function run(options) {
         CONFIG.port = options.port;
     }
 
+    if ('vault_path' in options) {
+        if (options.vault_path === '~' || options.vault_path.startsWith('~/')) {
+            options.vault_path = path.resolve(os.homedir(), options.vault_path.substr(2));
+        }
+        CONFIG.vault_path = options.vault_path;
+    }
+
     initMapEditor();
     initExamples();
     initDist();
     initWebSite();
 
     app.listen(CONFIG.port);
-    print('listening port', CONFIG.port);
+    print('game path : ', CONFIG.game_path);
+    print('server port : ', CONFIG.port);
 }
 
 module.exports = {

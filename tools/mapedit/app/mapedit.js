@@ -2007,7 +2007,22 @@ class Engine {
 // |__/                  |_|
 
 
-    async buildLevel(data, monitor) {
+    /**
+     * Builds a level with the specified content
+     * @param data {*} level definition
+     * @param monitor {function} callback to a function called when the building process is progressing
+     * @param extra {null|{blueprints: [], tilesets: []}} common blueprints and tilesets definition
+     * @return {Promise<void>}
+     */
+    async buildLevel(data, monitor, extra = null) {
+        if (typeof extra === 'object' && extra !== null) {
+            if ('blueprints' in extra) {
+                extra.blueprints.forEach(bp => data.blueprints.push(bp));
+            }
+            if ('tilesets' in extra) {
+                extra.tilesets.forEach(ts => data.tilesets.push(ts));
+            }
+        }
         const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
         const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
         const TAG_COUNT = data.tags ? 1 : 0;
@@ -4862,6 +4877,17 @@ class Extender {
         return {node, key};
     }
 
+    static objectMkBranch(oObj, sBranch) {
+        const aBranches = sBranch.split('.');
+        aBranches.pop();
+        aBranches.reduce((prev, next) => {
+            if (!(next in prev) || prev[next] === null || typeof prev[next] !== 'object') {
+                prev[next] = {};
+            }
+            return prev[next];
+        }, oObj);
+    }
+
     /**
      * changes the value of an item, inside an objet at the given path
      * @param oObj {*}
@@ -4888,12 +4914,19 @@ class Extender {
      * copies the items from "source" to "target"
      * @param oTarget
      * @param oSource
+     * @param bExtends {boolean} if true, then the target will inherit all aditional branches present in oSource
      */
-    static objectExtends(oTarget, oSource) {
+    static objectExtends(oTarget, oSource, bExtends = false) {
         const {common, missing} = Extender.objectDiffKeys(oTarget, oSource);
         common.forEach(path => {
             Extender.objectSet(oTarget, path, Extender.objectGet(oSource, path));
         });
+        if (bExtends) {
+            missing.forEach(path => {
+                Extender.objectMkBranch(oTarget, path);
+                Extender.objectSet(oTarget, path, Extender.objectGet(oSource, path));
+            });
+        }
     }
 }
 
