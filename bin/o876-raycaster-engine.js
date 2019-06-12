@@ -76,6 +76,12 @@ function main() {
     if ('server_port' in r) {
         options.port = r.server_port;
     }
+    if ('vault_dir' in r) {
+        options.vault_path = r.vault_dir;
+    }
+    if ('game_dir' in r) {
+        options.game_path = r.game_dir;
+    }
     Service.run(options);
 }
 
