@@ -2,8 +2,7 @@ const fs = require('fs');
 const util = require('util');
 const path = require('path');
 const mkdirp = util.promisify(require('mkdirp'));
-const CONFIG = require('../config');
-let VAULT_PATH = CONFIG.vault_path;
+let VAULT_PATH = '.';
 
 
 const access = util.promisify(fs.access);
@@ -186,4 +185,11 @@ function getVaultPath() {
 
 
 
-module.exports = {save, load, ls, rm, setVaultPath, getVaultPath};
+module.exports = {
+	save,
+	load,
+	ls,
+	rm,
+	setVaultPath,
+	getVaultPath
+};

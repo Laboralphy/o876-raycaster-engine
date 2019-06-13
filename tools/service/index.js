@@ -1,20 +1,31 @@
 /**
- * This service provides :
- * 1) access to the map editor and its persistance service
- * 2) access to examples
- * 3) access to scripts built in dist folder
+ * Service
+ *
+ * @description This is the main entry of the web service. This service offers pages that describes the project,
+ * gives access to the map editor program, manages the local game project...
+ *
+ * @author Raphaël Marandet
+ * @email raphael.marandet(at)gmail(dot)com
+ * @date 2019-06-13
  */
-const CONFIG = require('./config');
+
+
 const express = require('express');
 const path = require('path');
-const os = require('os');
 const persist = require('./persist');
 const buildZip = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
+const AppRootPath = require('app-root-path');
+const pm = require('./project-mgr');
 
 const app = express();
-const ROOT = path.resolve(__dirname, '../../');
+const O876_RC_ROOT_PATH = path.resolve(__dirname, '../../');
+const CONFIG = {
+    port: 8080,
+    vault_path: path.resolve(AppRootPath.path, 'vault'),
+    game_path: path.resolve(AppRootPath.path, 'game')
+};
 
 const readdir = util.promisify(fs.readdir);
 
@@ -28,9 +39,8 @@ function print(...args) {
  */
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
-    app.use('/mapedit', express.static(path.resolve(ROOT, 'tools/mapedit')));
+    app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
     persist.setVaultPath(CONFIG.vault_path);
-    print('vault path : ', persist.getVaultPath());
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -84,7 +94,7 @@ function initMapEditor() {
  * inits the examples sub-service to give access to all examples and demos
  */
 function initExamples() {
-    const sExamplePath = path.resolve(ROOT, 'examples');
+    const sExamplePath = path.resolve(O876_RC_ROOT_PATH, 'examples');
     app.use('/examples', express.static(sExamplePath));
     app.get('/examples-list', async (req, res) => {
         // get a list of all example
@@ -101,8 +111,7 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/', express.static(path.resolve(ROOT, 'tools/website')));
-    print('website url : http://localhost:' + CONFIG.port + '/');
+    app.use('/', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/website')));
 }
 
 
@@ -111,19 +120,29 @@ function initWebSite() {
  * provides access to all packed scripts inside the DIST folder
  */
 function initDist() {
-    app.use('/dist', express.static(path.resolve(ROOT, 'dist')));
+    app.use('/dist', express.static(path.resolve(O876_RC_ROOT_PATH, 'dist')));
+}
+
+/**
+ * create the game project tree
+ */
+function initGameProject() {
+    pm.run(AppRootPath.path);
 }
 
 
 function run(options) {
+    print('---------------------------------');
+    print('O876 Raycaster Engine Web Service');
+    print('version: ' + process.env.npm_package_version);
+    print('Laboralphy');
+    print('---------------------------------');
+    print(' ');
     if ('port' in options) {
         CONFIG.port = options.port;
     }
 
     if ('vault_path' in options) {
-        if (options.vault_path === '~' || options.vault_path.startsWith('~/')) {
-            options.vault_path = path.resolve(os.homedir(), options.vault_path.substr(2));
-        }
         CONFIG.vault_path = options.vault_path;
     }
 
@@ -131,10 +150,14 @@ function run(options) {
     initExamples();
     initDist();
     initWebSite();
+    initGameProject();
 
     app.listen(CONFIG.port);
-    print('game path : ', CONFIG.game_path);
-    print('server port : ', CONFIG.port);
+    print('vault location :', CONFIG.vault_path);
+    print('game project location :', path.join(AppRootPath.path, 'game'));
+    print('server port :', CONFIG.port);
+    print('website url : http://localhost:' + CONFIG.port + '/');
+    print('service is now listening...')
 }
 
 module.exports = {

@@ -1,0 +1,1 @@
+Whenever a level is published, its textures are stored in this directory.
