@@ -182,6 +182,7 @@
     import * as LEVEL_MUTATION from '../store/modules/level/mutation-types';
     import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
+    import * as FH from '../libraries/fetch-helper';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MapIcon from "vue-material-design-icons/Map.vue";
@@ -251,7 +252,8 @@
                 'getGridSize',
                 'getGrid',
                 'getBlocks',
-                'getStartpoint'
+                'getStartpoint',
+                'getLevel'
             ]),
 
             ...editorMapGetters([
@@ -352,12 +354,10 @@
         methods: {
             ...levelMapActions({
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
-                saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 setGridCell: LEVEL_ACTION.SET_GRID_CELL,
                 setGridCells: LEVEL_ACTION.SET_GRID_CELLS,
                 setCellProps: LEVEL_ACTION.SET_CELL_PROPS
             }),
-
 
             ...editorMapActions({
                 setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
@@ -843,10 +843,10 @@
             /**
              * Save the level
              */
-            saveClick: function () {
+            saveClick: async function () {
                 const sFileName = prompt('Enter a filename', this.getLevelName);
                 if (!!sFileName) {
-                    this.saveLevel({name: sFileName});
+                    await FH.saveLevel(name, this.getLevel);
                     this.setStatusBarText({text: 'Level saved : ' + sFileName});
                 } else {
                     this.setStatusBarText({text: 'Level NOT saved'});

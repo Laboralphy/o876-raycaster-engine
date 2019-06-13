@@ -2,7 +2,7 @@ import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
 import CanvasHelper from "../../../../../../lib/src/canvas-helper";
 import CACHE from "../../../libraries/block-cache";
-import {deleteLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
+import {deleteLevel, exportLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
 import * as CONSTS from "../../../consts";
 import {render} from "../../../libraries/block-renderer";
 
@@ -190,10 +190,6 @@ export default {
         commit(MUTATION.REMOVE_CELL_TAG, {x, y, value});
     },
 
-    [ACTION.SAVE_LEVEL]: async ({commit, getters}, {name}) => {
-        await saveLevel(name, getters.getLevel);
-    },
-
     [ACTION.LOAD_LEVEL]: async ({commit}, {name}) => {
         const content = await loadLevel(name);
         if (!content) {
@@ -208,10 +204,6 @@ export default {
             CACHE.store(b.id, oCanvas);
             commit(MUTATION.SET_BLOCK_PREVIEW, {id: b.id, content: sSrc});
         }
-    },
-
-    [ACTION.DELETE_LEVEL]: async ({commit}, {name}) => {
-        const response = await deleteLevel(name);
     },
 
     [ACTION.SET_GRID_CELL]: ({commit}, {x, y, floor, block}) => {

@@ -1313,10 +1313,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Camera */ "./lib/src/engine/Camera.js");
 /* harmony import */ var _thinkers__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./thinkers */ "./lib/src/engine/thinkers/index.js");
 /* harmony import */ var _levenshtein__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../levenshtein */ "./lib/src/levenshtein/index.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
-/* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
+/* harmony import */ var _fetch_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../fetch-json */ "./lib/src/fetch-json/index.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_18___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_18__);
+/* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
+/* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
+
 
 
 
@@ -1357,7 +1359,7 @@ class Engine {
         // instanciate at construct
         this._thinkers = {};
         this.useThinkers(_thinkers__WEBPACK_IMPORTED_MODULE_15__["default"]);
-        this._collider = new _collider_Collider__WEBPACK_IMPORTED_MODULE_18__["default"](); // this collider is freely used by certain thinkers
+        this._collider = new _collider_Collider__WEBPACK_IMPORTED_MODULE_19__["default"](); // this collider is freely used by certain thinkers
         this._collider.setCellWidth(_consts__WEBPACK_IMPORTED_MODULE_0__["METRIC_COLLIDER_SECTOR_SIZE"]);
         this._collider.setCellHeight(_consts__WEBPACK_IMPORTED_MODULE_0__["METRIC_COLLIDER_SECTOR_SIZE"]);
 
@@ -1365,7 +1367,7 @@ class Engine {
         this._timeMod = 0;
         this._renderContext = null;
 
-        this._events = new events__WEBPACK_IMPORTED_MODULE_17___default.a();
+        this._events = new events__WEBPACK_IMPORTED_MODULE_18___default.a();
     }
 
     get events() {
@@ -1378,7 +1380,7 @@ class Engine {
     initializeRenderer() {
         this._rc = new _raycaster_Renderer__WEBPACK_IMPORTED_MODULE_12__["default"]();
         this._dm = new _DoorManager__WEBPACK_IMPORTED_MODULE_2__["default"]();
-        this._tm = new _TagManager__WEBPACK_IMPORTED_MODULE_19__["default"]();
+        this._tm = new _TagManager__WEBPACK_IMPORTED_MODULE_20__["default"]();
         this._scheduler = new _Scheduler__WEBPACK_IMPORTED_MODULE_4__["default"]();
         this._horde = new _Horde__WEBPACK_IMPORTED_MODULE_5__["default"]();
         this.initializeCamera();
@@ -2277,6 +2279,34 @@ class Engine {
         this.events.emit('levelbuilt');
     }
 
+
+
+//    _                    __      _       _
+//   (_)___  ___  _ __    / _| ___| |_ ___| |__
+//   | / __|/ _ \| '_ \  | |_ / _ \ __/ __| '_ \
+//   | \__ \ (_) | | | | |  _|  __/ || (__| | | |
+//  _/ |___/\___/|_| |_| |_|  \___|\__\___|_| |_|
+// |__/
+
+    /**
+     * This will fetch an asset. You just have to specify the name, without path and without the .json extension.
+     * onlye asset type level and data (json) may be loaded this way.
+     * @example fetchAsset(CONST.ASSET_TYPE_LEVEL, 'the-hangar') will fetch a level file named "./assets/level/the-hangar.json"
+     * (because the asset type is ASST_TYPE_LEVEL
+     * @param sType {string} on of the constant ASSET_TYPE_*
+     * @param sName {string} asset name
+     * @return {*} the loaded json (a promise in fact)
+     */
+    fetchAsset(sType, sName) {
+        switch (sType) {
+            case _consts__WEBPACK_IMPORTED_MODULE_0__["ASSET_TYPE_DATA"]:
+            case _consts__WEBPACK_IMPORTED_MODULE_0__["ASSET_TYPE_LEVEL"]:
+                return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["PATH_ASSETS"] + '/' + sType + '/' + sName + '.json');
+
+            default:
+                return Promise.reject('asset "' + sName + '" not found in directory "' + _consts__WEBPACK_IMPORTED_MODULE_0__["PATH_ASSETS"] + '/' + sType + '"');
+        }
+    }
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Engine);
@@ -2749,7 +2779,7 @@ class TagManager {
 /*!****************************************!*\
   !*** ./lib/src/engine/consts/index.js ***!
   \****************************************/
-/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT */
+/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT, PATH_ASSETS, ASSET_TYPE_LEVEL, ASSET_TYPE_DATA, ASSET_TYPE_TEXTURE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2780,6 +2810,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_LEFT", function() { return DECAL_ALIGN_BOTTOM_LEFT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM", function() { return DECAL_ALIGN_BOTTOM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_RIGHT", function() { return DECAL_ALIGN_BOTTOM_RIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PATH_ASSETS", function() { return PATH_ASSETS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_LEVEL", function() { return ASSET_TYPE_LEVEL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_DATA", function() { return ASSET_TYPE_DATA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_TEXTURE", function() { return ASSET_TYPE_TEXTURE; });
 // used with forEachNeighbor function
 const CELL_NEIGHBOR_SIDE = 1;        // selects cells that share a common side with a given cell
 const CELL_NEIGHBOR_CORNER = 2;      // selects cells that share a common corner with a given cell
@@ -2804,10 +2838,13 @@ const METRIC_PUSH_DISTANCE = 48; // distance of pushing action
 
 const SPRITE_DIRECTION_COUNT = 8;
 
+// These are collision channels... for example if an entity has a
+// collision mask of 3, it can hit creatures and missiles
+// if an entity has a collision of 1, hit can only hit creatures, not missiles.
 const COLLISION_CHANNEL_CREATURE = 1;  // collision channel for normal tangible creature
 const COLLISION_CHANNEL_MISSILE = 2;   // collision channel for normal exploding missile of any type
 
-
+// decal position alignnement presets
 const DECAL_ALIGN_TOP_LEFT = 7;
 const DECAL_ALIGN_TOP = 8;
 const DECAL_ALIGN_TOP_RIGHT = 9;
@@ -2817,6 +2854,16 @@ const DECAL_ALIGN_RIGHT = 6;
 const DECAL_ALIGN_BOTTOM_LEFT = 1;
 const DECAL_ALIGN_BOTTOM = 2;
 const DECAL_ALIGN_BOTTOM_RIGHT = 3;
+
+// built in path values
+// currently you just should not change this.
+// the game architechture is rather simple
+const PATH_ASSETS = 'assets';
+const ASSET_TYPE_LEVEL = 'levels';
+const ASSET_TYPE_DATA = 'data';
+const ASSET_TYPE_TEXTURE = 'textures';
+
+
 
 /***/ }),
 
@@ -24353,10 +24400,10 @@ utils.intFromLE = intFromLE;
 /*!********************************************!*\
   !*** ./node_modules/elliptic/package.json ***!
   \********************************************/
-/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, dependencies, deprecated, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
+/*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, bugs, dependencies, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = {"_from":"elliptic@^6.0.0","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"elliptic@^6.0.0","name":"elliptic","escapedName":"elliptic","rawSpec":"^6.0.0","saveSpec":null,"fetchSpec":"^6.0.0"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_shasum":"c2d0b7776911b86722c632c3c06c60f2f819939a","_spec":"elliptic@^6.0.0","_where":"/home/ralphy/public_html/raycaster-es6/node_modules/browserify-sign","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
+module.exports = {"_args":[["elliptic@6.4.1","/home/ralphy/public_html/raycaster-es6"]],"_development":true,"_from":"elliptic@6.4.1","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"elliptic@6.4.1","name":"elliptic","escapedName":"elliptic","rawSpec":"6.4.1","saveSpec":null,"fetchSpec":"6.4.1"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_spec":"6.4.1","_where":"/home/ralphy/public_html/raycaster-es6","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
 
 /***/ }),
 
@@ -39302,31 +39349,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_modules_level_mutation_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/mutation-types */ "./tools/mapedit/src/store/modules/level/mutation-types.js");
 /* harmony import */ var _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/modules/editor/mutation-types */ "./tools/mapedit/src/store/modules/editor/mutation-types.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/Map.vue */ "./node_modules/vue-material-design-icons/Map.vue");
-/* harmony import */ var vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/OfficeBuilding.vue */ "./node_modules/vue-material-design-icons/OfficeBuilding.vue");
-/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
-/* harmony import */ var _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../libraries/grid-renderer */ "./tools/mapedit/src/libraries/grid-renderer/index.js");
-/* harmony import */ var vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-material-design-icons/ArrowCollapse.vue */ "./node_modules/vue-material-design-icons/ArrowCollapse.vue");
-/* harmony import */ var vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/ArrowExpand.vue */ "./node_modules/vue-material-design-icons/ArrowExpand.vue");
-/* harmony import */ var vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/MagnifyPlus.vue */ "./node_modules/vue-material-design-icons/MagnifyPlus.vue");
-/* harmony import */ var vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/MagnifyMinus.vue */ "./node_modules/vue-material-design-icons/MagnifyMinus.vue");
-/* harmony import */ var vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/ContentSave.vue */ "./node_modules/vue-material-design-icons/ContentSave.vue");
-/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
-/* harmony import */ var _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../../../lib/src/marker-registry */ "./lib/src/marker-registry/index.js");
-/* harmony import */ var _Siblings_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Siblings.vue */ "./tools/mapedit/src/components/Siblings.vue");
-/* harmony import */ var _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./SiblingButton.vue */ "./tools/mapedit/src/components/SiblingButton.vue");
-/* harmony import */ var vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! vue-material-design-icons/Select.vue */ "./node_modules/vue-material-design-icons/Select.vue");
-/* harmony import */ var vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! vue-material-design-icons/Pencil.vue */ "./node_modules/vue-material-design-icons/Pencil.vue");
-/* harmony import */ var vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! vue-material-design-icons/ArrowUpBold.vue */ "./node_modules/vue-material-design-icons/ArrowUpBold.vue");
-/* harmony import */ var vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! vue-material-design-icons/ArrowDownBold.vue */ "./node_modules/vue-material-design-icons/ArrowDownBold.vue");
-/* harmony import */ var _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../libraries/block-cache */ "./tools/mapedit/src/libraries/block-cache/index.js");
-/* harmony import */ var vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! vue-material-design-icons/Undo.vue */ "./node_modules/vue-material-design-icons/Undo.vue");
-/* harmony import */ var vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! vue-material-design-icons/ContentCopy.vue */ "./node_modules/vue-material-design-icons/ContentCopy.vue");
-/* harmony import */ var vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! vue-material-design-icons/ContentPaste.vue */ "./node_modules/vue-material-design-icons/ContentPaste.vue");
-/* harmony import */ var vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! vue-material-design-icons/Close.vue */ "./node_modules/vue-material-design-icons/Close.vue");
-/* harmony import */ var _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ../libraries/silly-canvas-factory */ "./tools/mapedit/src/libraries/silly-canvas-factory/index.js");
+/* harmony import */ var _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../libraries/fetch-helper */ "./tools/mapedit/src/libraries/fetch-helper/index.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Map.vue */ "./node_modules/vue-material-design-icons/Map.vue");
+/* harmony import */ var vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/OfficeBuilding.vue */ "./node_modules/vue-material-design-icons/OfficeBuilding.vue");
+/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
+/* harmony import */ var _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../libraries/grid-renderer */ "./tools/mapedit/src/libraries/grid-renderer/index.js");
+/* harmony import */ var vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/ArrowCollapse.vue */ "./node_modules/vue-material-design-icons/ArrowCollapse.vue");
+/* harmony import */ var vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/ArrowExpand.vue */ "./node_modules/vue-material-design-icons/ArrowExpand.vue");
+/* harmony import */ var vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/MagnifyPlus.vue */ "./node_modules/vue-material-design-icons/MagnifyPlus.vue");
+/* harmony import */ var vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/MagnifyMinus.vue */ "./node_modules/vue-material-design-icons/MagnifyMinus.vue");
+/* harmony import */ var vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vue-material-design-icons/ContentSave.vue */ "./node_modules/vue-material-design-icons/ContentSave.vue");
+/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
+/* harmony import */ var _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../../../lib/src/marker-registry */ "./lib/src/marker-registry/index.js");
+/* harmony import */ var _Siblings_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Siblings.vue */ "./tools/mapedit/src/components/Siblings.vue");
+/* harmony import */ var _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./SiblingButton.vue */ "./tools/mapedit/src/components/SiblingButton.vue");
+/* harmony import */ var vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! vue-material-design-icons/Select.vue */ "./node_modules/vue-material-design-icons/Select.vue");
+/* harmony import */ var vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! vue-material-design-icons/Pencil.vue */ "./node_modules/vue-material-design-icons/Pencil.vue");
+/* harmony import */ var vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! vue-material-design-icons/ArrowUpBold.vue */ "./node_modules/vue-material-design-icons/ArrowUpBold.vue");
+/* harmony import */ var vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! vue-material-design-icons/ArrowDownBold.vue */ "./node_modules/vue-material-design-icons/ArrowDownBold.vue");
+/* harmony import */ var _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../libraries/block-cache */ "./tools/mapedit/src/libraries/block-cache/index.js");
+/* harmony import */ var vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! vue-material-design-icons/Undo.vue */ "./node_modules/vue-material-design-icons/Undo.vue");
+/* harmony import */ var vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! vue-material-design-icons/ContentCopy.vue */ "./node_modules/vue-material-design-icons/ContentCopy.vue");
+/* harmony import */ var vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! vue-material-design-icons/ContentPaste.vue */ "./node_modules/vue-material-design-icons/ContentPaste.vue");
+/* harmony import */ var vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! vue-material-design-icons/Close.vue */ "./node_modules/vue-material-design-icons/Close.vue");
+/* harmony import */ var _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ../libraries/silly-canvas-factory */ "./tools/mapedit/src/libraries/silly-canvas-factory/index.js");
 //
 //
 //
@@ -39505,6 +39553,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -39541,7 +39590,7 @@ __webpack_require__.r(__webpack_exports__);
 const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = Object(vuex__WEBPACK_IMPORTED_MODULE_4__["createNamespacedHelpers"])('level');
 const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_4__["createNamespacedHelpers"])('editor');
 
-const SCF = new _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_29__["default"]();
+const SCF = new _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_30__["default"]();
 
 
 const OBJECT_TYPE_BLOCK = 'OBJECT_TYPE_BLOCK';
@@ -39552,27 +39601,27 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "LevelGrid",
     components: {
-        CloseIcon: vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
-        ContentPasteIcon: vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
-        ContentCopyIcon: vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
-        UndoIcon: vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_25__["default"],
-        ArrowDownBoldIcon: vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_23__["default"],
-        ArrowUpBoldIcon: vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_22__["default"],
-        PencilIcon: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_21__["default"],
-        SelectIcon: vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_20__["default"],
-        SiblingButton: _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
-        Siblings: _Siblings_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
-        FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
-        ContentSaveIcon: vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
-        MagnifyMinusIcon: vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
-        MagnifyPlusIcon: vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
-        ArrowExpandIcon: vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
-        ArrowCollapseIcon: vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-        Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-        MapIcon: vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-        OfficeBuildingIcon: vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-        MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-        Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+        CloseIcon: vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_29__["default"],
+        ContentPasteIcon: vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
+        ContentCopyIcon: vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
+        UndoIcon: vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
+        ArrowDownBoldIcon: vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_24__["default"],
+        ArrowUpBoldIcon: vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_23__["default"],
+        PencilIcon: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_22__["default"],
+        SelectIcon: vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_21__["default"],
+        SiblingButton: _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_20__["default"],
+        Siblings: _Siblings_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
+        FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
+        ContentSaveIcon: vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
+        MagnifyMinusIcon: vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
+        MagnifyPlusIcon: vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+        ArrowExpandIcon: vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+        ArrowCollapseIcon: vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+        Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+        MapIcon: vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+        OfficeBuildingIcon: vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+        MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+        Window: _Window_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
     },
 
     computed: {
@@ -39580,7 +39629,8 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             'getGridSize',
             'getGrid',
             'getBlocks',
-            'getStartpoint'
+            'getStartpoint',
+            'getLevel'
         ]),
 
         ...editorMapGetters([
@@ -39639,9 +39689,9 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
 
     data: function () {
         return {
-            gridRenderer: new _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_10__["default"](),
+            gridRenderer: new _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_11__["default"](),
             containerWidth: 0,
-            modifications: new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_17__["default"](),
+            modifications: new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__["default"](),
             selecting: false,
             selectedFloor: 0,
             selectedTool: 0,
@@ -39681,12 +39731,10 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
     methods: {
         ...levelMapActions({
             setGridSize: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_SIZE"],
-            saveLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SAVE_LEVEL"],
             setGridCell: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELL"],
             setGridCells: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELLS"],
             setCellProps: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_CELL_PROPS"]
         }),
-
 
         ...editorMapActions({
             setStatusBarText: _store_modules_editor_action_types__WEBPACK_IMPORTED_MODULE_1__["SET_STATUSBAR_TEXT"],
@@ -39761,13 +39809,13 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             let oLowerCvs = null;
             let oUpperCvs = null;
 
-            window.BC = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"];
+            window.BC = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"];
             if (!!cell.block) {
-                oLowerCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"].load(cell.block);
+                oLowerCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.block);
             }
 
             if (!!cell.upperblock) {
-                oUpperCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"].load(cell.upperblock);
+                oUpperCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.upperblock);
             }
 
 
@@ -40172,10 +40220,10 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         /**
          * Save the level
          */
-        saveClick: function () {
+        saveClick: async function () {
             const sFileName = prompt('Enter a filename', this.getLevelName);
             if (!!sFileName) {
-                this.saveLevel({name: sFileName});
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["saveLevel"](name, this.getLevel);
                 this.setStatusBarText({text: 'Level saved : ' + sFileName});
             } else {
                 this.setStatusBarText({text: 'Level NOT saved'});
@@ -40377,12 +40425,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _store_modules_editor_action_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/modules/editor/action-types */ "./tools/mapedit/src/store/modules/editor/action-types.js");
 /* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
-/* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/mapedit/src/components/LevelThumbnail.vue");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
-/* harmony import */ var vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/Delete.vue */ "./node_modules/vue-material-design-icons/Delete.vue");
-/* harmony import */ var vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Archive.vue */ "./node_modules/vue-material-design-icons/Archive.vue");
+/* harmony import */ var _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../libraries/fetch-helper */ "./tools/mapedit/src/libraries/fetch-helper/index.js");
+/* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/mapedit/src/components/LevelThumbnail.vue");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
+/* harmony import */ var vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Delete.vue */ "./node_modules/vue-material-design-icons/Delete.vue");
+/* harmony import */ var vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/Archive.vue */ "./node_modules/vue-material-design-icons/Archive.vue");
 //
 //
 //
@@ -40412,6 +40461,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -40428,7 +40478,7 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "LevelList",
-    components: {ArchiveIcon: vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_8__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_7__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_6__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_4__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_3__["default"]},
+    components: {ArchiveIcon: vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_9__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__["default"]},
 
     data: function() {
         return {
@@ -40451,8 +40501,7 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
         }),
 
         ...levelMapActions({
-            loadLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["LOAD_LEVEL"],
-            deleteLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["DELETE_LEVEL"]
+            loadLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["LOAD_LEVEL"]
         }),
 
         loadAndExit: async function() {
@@ -40473,9 +40522,18 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
 
         erase: async function() {
             if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                await this.deleteLevel({name: this.selectedLevel});
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["deleteLevel"](this.selectedLevel);
                 await this.setStatusBarText({text: 'Level delete : ' + name});
                 await this.listLevels();
+            }
+        },
+
+        exportToGame: async function() {
+            const result = await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["exportLevel"](this.selectedLevel);
+            if (result.status === 'done') {
+                await this.setStatusBarText({text: 'Level successfully exported : ' + name});
+            } else {
+                await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
             }
         }
     },
@@ -48759,20 +48817,20 @@ var render = function() {
                 {
                   attrs: {
                     disabled: !_vm.selectedLevel,
-                    href: "/vault/" + _vm.selectedLevel + ".zip",
                     title:
-                      "download level as .json and all textures as .png, all packed in a .zip archive"
-                  }
+                      "exports the level and its textures into the game project asset directories"
+                  },
+                  on: { click: _vm.exportToGame }
                 },
                 [
                   _c("ArchiveIcon", {
                     attrs: {
                       title:
-                        "download level as .json and all textures as .png, all packed in a .zip archive",
+                        "exports the level and its textures into the game project asset directories",
                       decorative: ""
                     }
                   }),
-                  _vm._v(" Download as .zip")
+                  _vm._v(" Export to game")
                 ],
                 1
               )
@@ -70855,7 +70913,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************!*\
   !*** ./tools/mapedit/src/consts/index.js ***!
   \*******************************************/
-/*! exports provided: TILE_TYPE_WALL, TILE_TYPE_FLAT, TILE_TYPE_SPRITE, BLOCK_WIDTH, BLOCK_HEIGHT, SERVICE_LEVEL, SERVICE_URL_SAVE, SERVICE_URL_LOAD, SERVICE_URL_LIST, SERVICE_URL_DELETE, SHAPE_NONE, SHAPE_CIRCLE, SHAPE_TRIANGLE, SHAPE_RHOMBUS, SHAPE_HEXAGON, SHAPE_SQUARE */
+/*! exports provided: TILE_TYPE_WALL, TILE_TYPE_FLAT, TILE_TYPE_SPRITE, BLOCK_WIDTH, BLOCK_HEIGHT, SERVICE_LEVEL, SERVICE_URL_SAVE, SERVICE_URL_LOAD, SERVICE_URL_LIST, SERVICE_URL_DELETE, SERVICE_URL_EXPORT, SHAPE_NONE, SHAPE_CIRCLE, SHAPE_TRIANGLE, SHAPE_RHOMBUS, SHAPE_HEXAGON, SHAPE_SQUARE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70870,6 +70928,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_LOAD", function() { return SERVICE_URL_LOAD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_LIST", function() { return SERVICE_URL_LIST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_DELETE", function() { return SERVICE_URL_DELETE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_EXPORT", function() { return SERVICE_URL_EXPORT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_NONE", function() { return SHAPE_NONE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_CIRCLE", function() { return SHAPE_CIRCLE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_TRIANGLE", function() { return SHAPE_TRIANGLE; });
@@ -70889,6 +70948,7 @@ const SERVICE_URL_SAVE = '/vault/';
 const SERVICE_URL_LOAD = '/vault/';
 const SERVICE_URL_LIST = '/vault';
 const SERVICE_URL_DELETE = '/vault/';
+const SERVICE_URL_EXPORT = '/export/';
 
 const SHAPE_NONE = 0;
 const SHAPE_CIRCLE = 1;
@@ -71562,13 +71622,14 @@ const FRAME_WITH_PICTURE =   '\u{1F5BC}';
 /*!***********************************************************!*\
   !*** ./tools/mapedit/src/libraries/fetch-helper/index.js ***!
   \***********************************************************/
-/*! exports provided: saveLevel, loadLevel, deleteLevel, getLevelList */
+/*! exports provided: saveLevel, loadLevel, exportLevel, deleteLevel, getLevelList */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveLevel", function() { return saveLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadLevel", function() { return loadLevel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportLevel", function() { return exportLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteLevel", function() { return deleteLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLevelList", function() { return getLevelList; });
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../consts */ "./tools/mapedit/src/consts/index.js");
@@ -71583,15 +71644,19 @@ function saveLevel(name, data) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_SAVE"] + name, {data});
 }
 
-async function loadLevel (name) {
+function loadLevel (name) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_LOAD"] + name + '.json');
 }
 
-async function deleteLevel(name) {
+function exportLevel (name) {
+    return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_EXPORT"] + name);
+}
+
+function deleteLevel(name) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_DELETE"] + name);
 }
 
-async function getLevelList() {
+function getLevelList() {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_LIST"]);
 }
 
@@ -72464,7 +72529,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************************!*\
   !*** ./tools/mapedit/src/store/modules/level/action-types.js ***!
   \***************************************************************/
-/*! exports provided: LOAD_TILE, LOAD_TILES, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, REORDER_TILE, CREATE_BLOCK, MODIFY_BLOCK, DELETE_BLOCK, CREATE_THING, MODIFY_THING, DELETE_THING, REORDER_THING, SET_GRID_SIZE, SET_CELL_PROPS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_GRID_CELL, SET_GRID_CELLS, REMOVE_CELL_THING, SAVE_LEVEL, LOAD_LEVEL, DELETE_LEVEL, SETUP_AMBIANCE, SET_FLAG, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, FEEDBACK_TILE_WIDTH, SET_STARTING_POINT, SHIFT_GRID */
+/*! exports provided: LOAD_TILE, LOAD_TILES, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, REORDER_TILE, CREATE_BLOCK, MODIFY_BLOCK, DELETE_BLOCK, CREATE_THING, MODIFY_THING, DELETE_THING, REORDER_THING, SET_GRID_SIZE, SET_CELL_PROPS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_GRID_CELL, SET_GRID_CELLS, REMOVE_CELL_THING, LOAD_LEVEL, SETUP_AMBIANCE, SET_FLAG, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, FEEDBACK_TILE_WIDTH, SET_STARTING_POINT, SHIFT_GRID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72490,9 +72555,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_GRID_CELL", function() { return SET_GRID_CELL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_GRID_CELLS", function() { return SET_GRID_CELLS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_CELL_THING", function() { return REMOVE_CELL_THING; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SAVE_LEVEL", function() { return SAVE_LEVEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_LEVEL", function() { return LOAD_LEVEL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LEVEL", function() { return DELETE_LEVEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SETUP_AMBIANCE", function() { return SETUP_AMBIANCE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG", function() { return SET_FLAG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_WIDTH", function() { return SET_TILE_WIDTH; });
@@ -72529,9 +72592,7 @@ const SET_GRID_CELLS = 'SET_GRID_CELLS';
 const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 
 
-const SAVE_LEVEL = 'SAVE_LEVEL';
 const LOAD_LEVEL = 'LOAD_LEVEL';
-const DELETE_LEVEL = 'DELETE_LEVEL';
 
 const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
 const SET_FLAG = 'SET_FLAG';
@@ -72757,10 +72818,6 @@ function renderAndStoreBlock(tiles, data) {
         commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["REMOVE_CELL_TAG"], {x, y, value});
     },
 
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["SAVE_LEVEL"]]: async ({commit, getters}, {name}) => {
-        await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["saveLevel"])(name, getters.getLevel);
-    },
-
     [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_LEVEL"]]: async ({commit}, {name}) => {
         const content = await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["loadLevel"])(name);
         if (!content) {
@@ -72775,10 +72832,6 @@ function renderAndStoreBlock(tiles, data) {
             _libraries_block_cache__WEBPACK_IMPORTED_MODULE_3__["default"].store(b.id, oCanvas);
             commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_BLOCK_PREVIEW"], {id: b.id, content: sSrc});
         }
-    },
-
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["DELETE_LEVEL"]]: async ({commit}, {name}) => {
-        const response = await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["deleteLevel"])(name);
     },
 
     [_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELL"]]: ({commit}, {x, y, floor, block}) => {

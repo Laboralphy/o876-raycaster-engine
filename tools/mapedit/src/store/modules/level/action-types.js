@@ -25,9 +25,7 @@ export const SET_GRID_CELLS = 'SET_GRID_CELLS';
 export const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 
 
-export const SAVE_LEVEL = 'SAVE_LEVEL';
 export const LOAD_LEVEL = 'LOAD_LEVEL';
-export const DELETE_LEVEL = 'DELETE_LEVEL';
 
 export const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
 export const SET_FLAG = 'SET_FLAG';

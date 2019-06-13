@@ -7,9 +7,9 @@
             <MyButton :disabled="!selectedLevel" @click="erase"><DeleteIcon decorative></DeleteIcon> Delete</MyButton> -
             <MyButton
                     :disabled="!selectedLevel"
-                    :href="'/vault/' + selectedLevel + '.zip'"
-                    title="download level as .json and all textures as .png, all packed in a .zip archive"
-            ><ArchiveIcon title="download level as .json and all textures as .png, all packed in a .zip archive" decorative></ArchiveIcon> Download as .zip</MyButton>
+                    @click="exportToGame"
+                    title="exports the level and its textures into the game project asset directories"
+            ><ArchiveIcon title="exports the level and its textures into the game project asset directories" decorative></ArchiveIcon> Export to game</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -31,6 +31,7 @@
     import {createNamespacedHelpers} from 'vuex';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as FH from '../libraries/fetch-helper';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -66,8 +67,7 @@
             }),
 
             ...levelMapActions({
-                loadLevel: LEVEL_ACTION.LOAD_LEVEL,
-                deleteLevel: LEVEL_ACTION.DELETE_LEVEL
+                loadLevel: LEVEL_ACTION.LOAD_LEVEL
             }),
 
             loadAndExit: async function() {
@@ -88,9 +88,18 @@
 
             erase: async function() {
                 if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                    await this.deleteLevel({name: this.selectedLevel});
+                    await FH.deleteLevel(this.selectedLevel);
                     await this.setStatusBarText({text: 'Level delete : ' + name});
                     await this.listLevels();
+                }
+            },
+
+            exportToGame: async function() {
+                const result = await FH.exportLevel(this.selectedLevel);
+                if (result.status === 'done') {
+                    await this.setStatusBarText({text: 'Level successfully exported : ' + name});
+                } else {
+                    await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
                 }
             }
         },

@@ -13,7 +13,7 @@
 const express = require('express');
 const path = require('path');
 const persist = require('./persist');
-const buildZip = require('./level-zip');
+const LZ = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
 const AppRootPath = require('app-root-path');
@@ -21,11 +21,7 @@ const pm = require('./project-mgr');
 
 const app = express();
 const O876_RC_ROOT_PATH = path.resolve(__dirname, '../../');
-const CONFIG = {
-    port: 8080,
-    vault_path: path.resolve(AppRootPath.path, 'vault'),
-    game_path: path.resolve(AppRootPath.path, 'game')
-};
+const CONFIG = require('./config');
 
 const readdir = util.promisify(fs.readdir);
 
@@ -40,7 +36,7 @@ function print(...args) {
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
-    persist.setVaultPath(CONFIG.vault_path);
+    persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.vault_path));
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -63,7 +59,7 @@ function initMapEditor() {
         try {
             const name = req.params.name;
             const data = await persist.load(name);
-            const archive = await buildZip(name, data);
+            const archive = await LZ.buildZip(name, data);
             res.download(archive.filename);
         } catch (e) {
             res.json({status: 'error', error: e.message});
@@ -87,8 +83,23 @@ function initMapEditor() {
         const name = req.params.name;
         persist.rm(name).then(r => res.json(r));
     });
-}
 
+    // export this level to the game assets
+    app.get('/export/:name', async (req, res) => {
+        try {
+            const name = req.params.name;
+            const data = await persist.load(name);
+            await LZ.exportLevel(name, data, {
+                textures: CONFIG.texture_path,
+                level: CONFIG.level_path,
+                game: path.resolve(AppRootPath.path, 'game')
+            });
+            res.json({status: 'done'});
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+}
 
 /**
  * inits the examples sub-service to give access to all examples and demos
@@ -153,8 +164,9 @@ function run(options) {
     initGameProject();
 
     app.listen(CONFIG.port);
+    print('base location', AppRootPath.path);
     print('vault location :', CONFIG.vault_path);
-    print('game project location :', path.join(AppRootPath.path, 'game'));
+    print('game project location :', CONFIG.game_path);
     print('server port :', CONFIG.port);
     print('website url : http://localhost:' + CONFIG.port + '/');
     print('service is now listening...')

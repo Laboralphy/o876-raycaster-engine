@@ -5,12 +5,15 @@ const crypto = require('crypto');
 const fs = require('fs');
 const persist = require('../persist');
 const path = require('path');
+const util = require('util');
 const mkdirp = require('mkdirp');
 const generate = require('../../generate');
 const appendImages = require('../append-images');
 const archiver = require('archiver');
 
-const PNG_FOLDER = 'textures';  // folder containing all png
+
+
+const wf = util.promisify(fs.writeFile);
 
 /**
  * Returns the md5 hash of the specified data
@@ -28,7 +31,7 @@ function computeMD5(data) {
  */
 function getPNGBuffer(imageData) {
     const sign = "data:image/png;base64,";
-    return new Buffer(imageData.substr(sign.length), 'base64');
+    return Buffer.from(imageData.substr(sign.length), 'base64');
 }
 
 /**
@@ -37,16 +40,51 @@ function getPNGBuffer(imageData) {
  * - filename : to get the file final location
  * - data : to get a binary buffer
  * @param src {string} base 64 image content
+ * @param sImagePath {string} directory where image goes
  * @return {{filename: string, data: Buffer, index: string}}
  */
-function generateImageEntry(src) {
+function generateImageEntry(src, sImagePath) {
     const sIndex = computeMD5(src);
-    const sFile = path.join('.', PNG_FOLDER, sIndex + '.png');
+    const sFile = sIndex + '.png';
     return {
         index: sIndex,
-        filename: sFile,
+        filename: path.join(sImagePath, sFile),
         data: getPNGBuffer(src)
     };
+}
+
+/**
+ * Builds an image Registry out of the specified data
+ * This registry contains item with this format :
+ * {
+ *     index {string} md5 hash of the image content
+ *     filename {string} image filename
+ *     data {Buffer} image content (pure binary data)
+ * }
+ * @param data
+ * @param sImagePath
+ * @return []
+ */
+function buildImageRegistry(data, sImagePath = '') {
+    // get all tiles
+    const aImageEntries = data.tilesets.map(ts => {
+        const ie = generateImageEntry(ts.src, sImagePath);
+        ts.src = ie.filename;
+        return ie;
+    });
+
+    const aTextureList = ['flats', 'walls', 'sky'];
+    const oTextures = data.level.textures;
+
+    // append all walls, flats and sky textures
+    aTextureList
+        .filter(t => typeof oTextures[t] === 'string' && oTextures[t].length > 0)
+        .forEach(t => {
+            const ie = generateImageEntry(oTextures[t], sImagePath);
+            aImageEntries.push(ie);
+            oTextures[t] = ie.filename;
+        });
+    return aImageEntries;
 }
 
 /**
@@ -84,23 +122,7 @@ async function generateZipPackage(name, data, zipPath) {
             });
 
             // get all tiles
-            const aImageEntries = data.tilesets.map(ts => {
-                const ie = generateImageEntry(ts.src);
-                ts.src = ie.filename;
-                return ie;
-            });
-
-            const aTextureList = ['flats', 'walls', 'sky'];
-            const oTextures = data.level.textures;
-
-            // append all walls, flats and sky textures
-            aTextureList
-                .filter(t => typeof oTextures[t] === 'string' && oTextures[t].length > 0)
-                .forEach(t => {
-                    const ie = generateImageEntry(oTextures[t]);
-                    aImageEntries.push(ie);
-                    oTextures[t] = ie.filename;
-                });
+            const aImageEntries = buildImageRegistry(data);
 
             // aImageEntries in an array of imageEntries
             for (let i = 0, l = aImageEntries.length; i < l; ++i) {
@@ -136,4 +158,26 @@ async function buildZip(name, dataME) {
     return generateZipPackage(name, dataENG, ZIP_PATH);
 }
 
-module.exports = buildZip;
+/**
+ * Export a level from Map Editor to the Game Project Directory
+ * @param name {string} name of the project to be exported
+ * @param dataME {*} data content
+ * @param textures {string} directory where texture goes
+ * @param level {string} directory where level go
+ * @param game {string} game base directory
+ * @returns {Promise<void>}
+ */
+async function exportLevel(name, dataME, {textures, level, game}) {
+    const dataENG = await generate(dataME, appendImages);
+    const aImageEntries = buildImageRegistry(dataENG, textures);
+
+    // saving all textures
+    const promWf= aImageEntries.map(ie => wf(path.resolve(game, ie.filename), ie.data));
+    promWf.push(wf(path.resolve(game, level, name + '.json'), JSON.stringify(dataENG, null, '  ')));
+    return Promise.all(promWf);
+}
+
+module.exports = {
+    buildZip,
+    exportLevel
+};
