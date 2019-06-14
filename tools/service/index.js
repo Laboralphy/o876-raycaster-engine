@@ -55,6 +55,12 @@ function initMapEditor() {
         persist.load(name).then(r => res.json(r));
     });
 
+    app.get('/vault/:name.jpg', (req, res) => {
+        const name = req.params.name;
+        const filename = path.resolve(persist.getVaultPath(), name, 'preview.jpg');
+        res.sendFile(filename);
+    });
+
     app.get('/vault/:name.zip', async (req, res) => {
         try {
             const name = req.params.name;

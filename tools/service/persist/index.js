@@ -84,7 +84,10 @@ async function save(name, data) {
 		// get the preview
 		const preview = data.preview;
 		if (preview) {
-			await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+			const i = preview.indexOf(',');
+			// does not need preview.json any longer
+			// await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+			await writeFile(path.resolve(filename, 'preview.jpg'), Buffer.from(preview.substr(i + 1), 'base64'));
 		}
 		await writeFile(path.resolve(filename, 'level.json'), JSON.stringify(data));
 		return {status: 'done'};
@@ -96,13 +99,22 @@ async function save(name, data) {
 
 /**
  * load data from project folder
- * @param $name String project name
+ * @param name String project name
  */
-function load($name) {
-	const filename = _getFullName($name);
+function load(name) {
+	const filename = _getFullName(name);
 	return _getFileContentJSON(path.resolve(filename, 'level.json'));
 }
 
+
+async function loadPreview(name) {
+	const filename = _getFullName(name);
+	if (await _isReadable(filename)) {
+		return readFile(path.resolve(filename, 'preview.jpg'));
+	} else {
+		return '';
+	}
+}
 
 /**
  * lists all project saved so far
@@ -192,6 +204,7 @@ function getVaultPath() {
 module.exports = {
 	save,
 	load,
+	loadPreview,
 	ls,
 	rm,
 	setVaultPath,

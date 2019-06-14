@@ -18969,7 +18969,7 @@ exports.push([module.i, "\ndiv.canvas-container canvas[data-v-073f5d27] {\n    p
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\nfigure.level-thumbnail[data-v-6fbefe4a] {\n    display: inline-block;\n    border: outset #AAA 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #AAA;\n    margin: 1.5em;\n    cursor: pointer;\n}\nfigure.level-thumbnail img[data-v-6fbefe4a] {\n    border: solid thin #000;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-6fbefe4a] {\n}\nfigure.level-thumbnail[data-v-6fbefe4a]:hover {\n    filter: brightness(140%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a] {\n    border-color: lime;\n    filter: brightness(120%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-6fbefe4a] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
+exports.push([module.i, "\nfigure.level-thumbnail[data-v-6fbefe4a] {\n    display: inline-block;\n    border: outset #AAA 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #AAA;\n    margin: 1.5em;\n    cursor: pointer;\n}\nfigure.level-thumbnail img[data-v-6fbefe4a] {\n    border: solid thin #000;\n    padding: 0;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-6fbefe4a] {\n}\nfigure.level-thumbnail[data-v-6fbefe4a]:hover {\n    filter: brightness(140%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a] {\n    border-color: lime;\n    filter: brightness(120%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-6fbefe4a] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
 
 
 
@@ -34959,59 +34959,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "ArchiveIcon",
-  props: {
-    title: {
-      type: String,
-      default: "Archive icon"
-    },
-    decorative: {
-      type: Boolean,
-      default: false
-    },
-    fillColor: {
-      type: String,
-      default: "currentColor"
-    },
-    size: {
-      type: Number,
-      default: 24
-    }
-  }
-});
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/ArrowBottomLeftThick.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/ArrowBottomLeftThick.vue?vue&type=script&lang=js& ***!
@@ -36954,6 +36901,59 @@ __webpack_require__.r(__webpack_exports__);
     title: {
       type: String,
       default: "Plus icon"
+    },
+    decorative: {
+      type: Boolean,
+      default: false
+    },
+    fillColor: {
+      type: String,
+      default: "currentColor"
+    },
+    size: {
+      type: Number,
+      default: 24
+    }
+  }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PublishIcon",
+  props: {
+    title: {
+      type: String,
+      default: "Publish icon"
     },
     decorative: {
       type: Boolean,
@@ -40223,7 +40223,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
          */
         saveClick: async function () {
             if (this.getFlagExport) {
-                if (!confirm('As the export flag is "on". You must confirm the level auto-exportation during saving process.')) {
+                if (!confirm('As the auto-publish flag is "on". You must confirm the level auto-publication during saving process.')) {
                     this.setStatusBarText({text: 'Level NOT saved'});
                     return false;
                 }
@@ -40233,7 +40233,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
                 await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["saveLevel"](sFileName, this.getLevel);
                 if (this.getFlagExport) {
                     await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["exportLevel"](sFileName);
-                    this.setStatusBarText({text: 'Level saved and exported : ' + sFileName});
+                    this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
                 } else {
                     this.setStatusBarText({text: 'Level saved : ' + sFileName});
                 }
@@ -40443,7 +40443,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
 /* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
 /* harmony import */ var vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Delete.vue */ "./node_modules/vue-material-design-icons/Delete.vue");
-/* harmony import */ var vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/Archive.vue */ "./node_modules/vue-material-design-icons/Archive.vue");
+/* harmony import */ var vue_material_design_icons_Publish_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/Publish.vue */ "./node_modules/vue-material-design-icons/Publish.vue");
 //
 //
 //
@@ -40490,7 +40490,7 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "LevelList",
-    components: {ArchiveIcon: vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_9__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__["default"]},
+    components: {PublishIcon: vue_material_design_icons_Publish_vue__WEBPACK_IMPORTED_MODULE_9__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__["default"]},
 
     data: function() {
         return {
@@ -40546,11 +40546,11 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
             const name = this.selectedLevel;
             const result = await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["exportLevel"](name);
             if (result.status === 'done') {
-                await this.setStatusBarText({text: 'Level successfully exported : ' + name});
-                alert('Level successfully exported : ' + name)
+                await this.setStatusBarText({text: 'Level successfully published : ' + name});
+                alert('Level successfully published : ' + name)
             } else {
-                await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
-                alert('Error while exporting level : ' + name + ' - ' + result.error)
+                await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
+                alert('Error while publishing level : ' + name + ' - ' + result.error)
             }
         }
     },
@@ -40658,6 +40658,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_material_design_icons_Settings_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/Settings.vue */ "./node_modules/vue-material-design-icons/Settings.vue");
 /* harmony import */ var vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/Information.vue */ "./node_modules/vue-material-design-icons/Information.vue");
 /* harmony import */ var vue_material_design_icons_Toolbox_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/Toolbox.vue */ "./node_modules/vue-material-design-icons/Toolbox.vue");
+/* harmony import */ var vue_material_design_icons_Home_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/Home.vue */ "./node_modules/vue-material-design-icons/Home.vue");
+//
 //
 //
 //
@@ -40671,6 +40673,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // icons
+
 
 
 
@@ -40701,7 +40704,8 @@ __webpack_require__.r(__webpack_exports__);
         SettingsIcon: vue_material_design_icons_Settings_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
         ToolboxIcon: vue_material_design_icons_Toolbox_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
         GamepadVariantIcon: vue_material_design_icons_GamepadVariant_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-        InformationIcon: vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__["default"]
+        InformationIcon: vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+        HomeIcon: vue_material_design_icons_Home_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
     },
     data: function() {
         return {
@@ -40789,6 +40793,14 @@ __webpack_require__.r(__webpack_exports__);
             },
         }
     },
+
+    methods: {
+        goHome: function() {
+            if (confirm('You are about to LEAVE the Map Editor, make sure you have saved all your work before leaving.\n(Press "Cancel" to stay in the Map Editor).')) {
+                window.location.href = '/';
+            }
+        }
+    }
 
 });
 
@@ -43475,71 +43487,6 @@ render._withStripped = true
 
 /***/ }),
 
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374& ***!
-  \*************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "span",
-    {
-      staticClass: "material-design-icon archive-icon",
-      attrs: {
-        "aria-hidden": _vm.decorative,
-        "aria-label": _vm.title,
-        role: "img"
-      },
-      on: {
-        click: function($event) {
-          return _vm.$emit("click", $event)
-        }
-      }
-    },
-    [
-      _c(
-        "svg",
-        {
-          staticClass: "material-design-icon__svg",
-          attrs: {
-            fill: _vm.fillColor,
-            width: _vm.size,
-            height: _vm.size,
-            viewBox: "0 0 24 24"
-          }
-        },
-        [
-          _c(
-            "path",
-            {
-              attrs: {
-                d:
-                  "M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11C9.22,11 9,11.22 9,11.5V13H15V11.5C15,11.22 14.78,11 14.5,11H9.5Z"
-              }
-            },
-            [_c("title", [_vm._v(_vm._s(_vm.title))])]
-          )
-        ]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/ArrowBottomLeftThick.vue?vue&type=template&id=7175f3ce&":
 /*!**************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/ArrowBottomLeftThick.vue?vue&type=template&id=7175f3ce& ***!
@@ -45911,6 +45858,66 @@ var render = function() {
           _c(
             "path",
             { attrs: { d: "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" } },
+            [_c("title", [_vm._v(_vm._s(_vm.title))])]
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "span",
+    {
+      staticClass: "material-design-icon publish-icon",
+      attrs: {
+        "aria-hidden": _vm.decorative,
+        "aria-label": _vm.title,
+        role: "img"
+      },
+      on: {
+        click: function($event) {
+          return _vm.$emit("click", $event)
+        }
+      }
+    },
+    [
+      _c(
+        "svg",
+        {
+          staticClass: "material-design-icon__svg",
+          attrs: {
+            fill: _vm.fillColor,
+            width: _vm.size,
+            height: _vm.size,
+            viewBox: "0 0 24 24"
+          }
+        },
+        [
+          _c(
+            "path",
+            { attrs: { d: "M5,4V6H19V4H5M5,14H9V20H15V14H19L12,7L5,14Z" } },
             [_c("title", [_vm._v(_vm._s(_vm.title))])]
           )
         ]
@@ -48855,19 +48862,19 @@ var render = function() {
                   attrs: {
                     disabled: !_vm.selectedLevel,
                     title:
-                      "exports the level and its textures into the game project asset directories"
+                      "Publishes the level and its textures into the game project asset directories"
                   },
                   on: { click: _vm.exportToGame }
                 },
                 [
-                  _c("ArchiveIcon", {
+                  _c("PublishIcon", {
                     attrs: {
                       title:
-                        "exports the level and its textures into the game project asset directories",
+                        "Publishes the level and its textures into the game project asset directories",
                       decorative: ""
                     }
                   }),
-                  _vm._v(" Export to game")
+                  _vm._v(" Publish")
                 ],
                 1
               )
@@ -48887,7 +48894,7 @@ var render = function() {
             attrs: {
               name: l.name,
               date: l.date,
-              preview: l.preview,
+              preview: "/vault/" + l.name + ".jpg",
               selected: l.name === _vm.selectedLevel
             },
             on: {
@@ -48975,6 +48982,13 @@ var render = function() {
   return _c(
     "StatusBar",
     [
+      _c(
+        "MyButton",
+        { on: { click: _vm.goHome } },
+        [_c("HomeIcon", { attrs: { decorative: "" } })],
+        1
+      ),
+      _vm._v(" "),
       _c("SimpleMenu", { attrs: { routes: _vm.routes.main } }),
       _vm._v(" "),
       _c("SimpleMenu", {
@@ -49875,11 +49889,11 @@ var render = function() {
         ]),
         _vm._v(" "),
         _c("fieldset", [
-          _c("legend", [_vm._v("Level export")]),
+          _c("legend", [_vm._v("Level publication")]),
           _vm._v(" "),
           _c("div", [
             _c("label", [
-              _vm._v("Auto-export this level\n                    "),
+              _vm._v("Auto-publish this level:\n                    "),
               _c("input", {
                 directives: [
                   {
@@ -49924,7 +49938,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "hint" }, [
               _vm._v(
-                "If checked, when you save the level, it will also be exported to the local game project."
+                "If checked, each time you save the level, it will also be published to the local game project."
               )
             ])
           ])
@@ -51781,75 +51795,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_AnimationPlay_vue_vue_type_template_id_669c325c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_AnimationPlay_vue_vue_type_template_id_669c325c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue":
-/*!************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Archive.vue?vue&type=template&id=ed321374& */ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&");
-/* harmony import */ var _Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Archive.vue?vue&type=script&lang=js& */ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "node_modules/vue-material-design-icons/Archive.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib??vue-loader-options!./Archive.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&":
-/*!*******************************************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374& ***!
-  \*******************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../vue-loader/lib??vue-loader-options!./Archive.vue?vue&type=template&id=ed321374& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -54403,6 +54348,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Plus_vue_vue_type_template_id_18bbb6c6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Plus_vue_vue_type_template_id_18bbb6c6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Publish.vue?vue&type=template&id=25f5c413& */ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&");
+/* harmony import */ var _Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Publish.vue?vue&type=script&lang=js& */ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "node_modules/vue-material-design-icons/Publish.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib??vue-loader-options!./Publish.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../vue-loader/lib??vue-loader-options!./Publish.vue?vue&type=template&id=25f5c413& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

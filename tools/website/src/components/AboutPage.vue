@@ -1,5 +1,5 @@
 <template>
-    <div class="row">
+    <div>
         <div class="row">
             <div class="col lg-12">
                 <h3>About the O876 Raycaster Game Engine</h3>
@@ -60,6 +60,7 @@
 
 <script>
     import Logo from "./Logo.vue";
+
     export default {
         name: "AboutPage",
         components: {Logo}

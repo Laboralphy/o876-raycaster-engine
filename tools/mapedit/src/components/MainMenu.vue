@@ -1,5 +1,6 @@
 <template>
     <StatusBar>
+        <MyButton @click="goHome"><HomeIcon decorative></HomeIcon></MyButton>
         <SimpleMenu :routes="routes.main"></SimpleMenu>
         <SimpleMenu style="float: right" :routes="routes.tools"></SimpleMenu>
     </StatusBar>
@@ -22,7 +23,8 @@
     import GamepadVariantIcon from "vue-material-design-icons/GamepadVariant.vue";
     import SettingsIcon from "vue-material-design-icons/Settings.vue";
     import InformationIcon from "vue-material-design-icons/Information.vue"
-    import ToolboxIcon from "vue-material-design-icons/Toolbox.vue"
+    import ToolboxIcon from "vue-material-design-icons/Toolbox.vue";
+    import HomeIcon from "vue-material-design-icons/Home.vue"
 
     export default {
         name: "MainMenu",
@@ -41,7 +43,8 @@
             SettingsIcon,
             ToolboxIcon,
             GamepadVariantIcon,
-            InformationIcon
+            InformationIcon,
+            HomeIcon
         },
         data: function() {
             return {
@@ -129,6 +132,14 @@
                 },
             }
         },
+
+        methods: {
+            goHome: function() {
+                if (confirm('You are about to LEAVE the Map Editor, make sure you have saved all your work before leaving.\n(Press "Cancel" to stay in the Map Editor).')) {
+                    window.location.href = '/';
+                }
+            }
+        }
 
     }
 </script>

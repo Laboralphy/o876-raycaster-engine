@@ -8,8 +8,8 @@
             <MyButton
                     :disabled="!selectedLevel"
                     @click="exportToGame"
-                    title="exports the level and its textures into the game project asset directories"
-            ><ArchiveIcon title="exports the level and its textures into the game project asset directories" decorative></ArchiveIcon> Export to game</MyButton>
+                    title="Publishes the level and its textures into the game project asset directories"
+            ><PublishIcon title="Publishes the level and its textures into the game project asset directories" decorative></PublishIcon> Publish</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -17,7 +17,7 @@
                     :key="l.name"
                     :name="l.name"
                     :date="l.date"
-                    :preview="l.preview"
+                    :preview="'/vault/' + l.name + '.jpg'"
                     :selected="l.name === selectedLevel"
                     @click="() => onClick(l.name)"
                     @dblclick="() => onDblClick(l.name)"
@@ -37,14 +37,14 @@
     import MyButton from "./MyButton.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
-    import ArchiveIcon from "vue-material-design-icons/Archive.vue";
+    import PublishIcon from "vue-material-design-icons/Publish.vue";
 
     const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
     const {mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
-        components: {ArchiveIcon, DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
+        components: {PublishIcon, DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
 
         data: function() {
             return {
@@ -100,11 +100,11 @@
                 const name = this.selectedLevel;
                 const result = await FH.exportLevel(name);
                 if (result.status === 'done') {
-                    await this.setStatusBarText({text: 'Level successfully exported : ' + name});
-                    alert('Level successfully exported : ' + name)
+                    await this.setStatusBarText({text: 'Level successfully published : ' + name});
+                    alert('Level successfully published : ' + name)
                 } else {
-                    await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
-                    alert('Error while exporting level : ' + name + ' - ' + result.error)
+                    await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
+                    alert('Error while publishing level : ' + name + ' - ' + result.error)
                 }
             }
         },
