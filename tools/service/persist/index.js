@@ -78,15 +78,19 @@ async function _isWritable(name) {
  * @param data {*} project content
  */
 async function save(name, data) {
-	const filename = _getFullName(name);
-	await mkdirp(filename);
-	// get the preview
-	const preview = data.preview;
-	if (preview) {
-		await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+	try {
+		const filename = _getFullName(name);
+		await mkdirp(filename);
+		// get the preview
+		const preview = data.preview;
+		if (preview) {
+			await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+		}
+		await writeFile(path.resolve(filename, 'level.json'), JSON.stringify(data));
+		return {status: 'done'};
+	} catch (e) {
+		return {status: 'error', error: e.message};
 	}
-	await writeFile(path.resolve(filename, 'level.json'), JSON.stringify(data));
-	return {status: 'done'};
 }
 
 
@@ -94,9 +98,9 @@ async function save(name, data) {
  * load data from project folder
  * @param $name String project name
  */
-async function load($name) {
+function load($name) {
 	const filename = _getFullName($name);
-	return await _getFileContentJSON(path.resolve(filename, 'level.json'));
+	return _getFileContentJSON(path.resolve(filename, 'level.json'));
 }
 
 

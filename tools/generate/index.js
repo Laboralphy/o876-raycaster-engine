@@ -436,7 +436,8 @@ async function generate(input, imageAppender) {
         shading: generateShading(input),
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
-        tags: generateTags(input)
+        tags: generateTags(input),
+        preview: input.preview
     };
 }
 

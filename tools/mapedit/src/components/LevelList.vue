@@ -71,9 +71,10 @@
             }),
 
             loadAndExit: async function() {
-                await this.loadLevel({name: this.selectedLevel});
+                const name = this.selectedLevel;
+                await this.loadLevel({name});
                 await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
-                await this.setLevelName({name: this.selectedLevel});
+                await this.setLevelName({name});
                 this.$router.push('/level/blocks');
             },
 
@@ -87,19 +88,23 @@
             },
 
             erase: async function() {
-                if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                    await FH.deleteLevel(this.selectedLevel);
+                const name = this.selectedLevel;
+                if (confirm('Do you want to delete this level : ' + name + ' ? (this operation is definitive)')) {
+                    await FH.deleteLevel(name);
                     await this.setStatusBarText({text: 'Level delete : ' + name});
                     await this.listLevels();
                 }
             },
 
             exportToGame: async function() {
-                const result = await FH.exportLevel(this.selectedLevel);
+                const name = this.selectedLevel;
+                const result = await FH.exportLevel(name);
                 if (result.status === 'done') {
                     await this.setStatusBarText({text: 'Level successfully exported : ' + name});
+                    alert('Level successfully exported : ' + name)
                 } else {
                     await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
+                    alert('Error while exporting level : ' + name + ' - ' + result.error)
                 }
             }
         },

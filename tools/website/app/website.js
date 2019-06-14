@@ -1541,6 +1541,58 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Logo_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Logo.vue */ "./tools/website/src/components/Logo.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -1551,8 +1603,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "AboutPage"
+    name: "AboutPage",
+    components: {Logo: _Logo_vue__WEBPACK_IMPORTED_MODULE_0__["default"]}
 });
 
 
@@ -1569,7 +1623,6 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Card_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Card.vue */ "./tools/website/src/components/Card.vue");
 /* harmony import */ var vue_material_design_icons_Home_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue-material-design-icons/Home.vue */ "./node_modules/vue-material-design-icons/Home.vue");
-//
 //
 //
 //
@@ -2038,7 +2091,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Logo_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Logo.vue */ "./tools/website/src/components/Logo.vue");
 //
 //
 //
@@ -2053,53 +2105,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "HomePage",
-    components: {Logo: _Logo_vue__WEBPACK_IMPORTED_MODULE_0__["default"]}
 });
 
 
@@ -2181,6 +2189,320 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2371,7 +2693,133 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", { staticClass: "row" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-webstorm.svg",
+                href:
+                  "https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet",
+                title: "Fast and powerful IDE that integrates Vue.js perfectly"
+              }
+            },
+            [_vm._v("Webstorm IDE")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-jetbrains.svg",
+                href:
+                  "https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet",
+                title:
+                  "Creators of Webstorm, Phpstorm and many more IDE that are essential for large and modern projects."
+              }
+            },
+            [_vm._v("Jetbrains")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-vue-js.svg",
+                href: "https://vuejs.org/",
+                title:
+                  "A cutting edge framework which is actually very fun to work with. Everything is faster with Vue.js."
+              }
+            },
+            [_vm._v("Vue.js")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-node-js-2.svg",
+                href: "https://nodejs.org/",
+                title:
+                  "A JavaScript runtime built on Chrome's V8 JavaScript engine."
+              }
+            },
+            [_vm._v("Node.js")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-webpack.svg",
+                href: "https://webpack.js.org/",
+                title:
+                  "A module blunder. Essential when you write thousand of classes, files and assets."
+              }
+            },
+            [_vm._v("Webpack")]
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "col lg-3 md-4 sm-6" },
+        [
+          _c(
+            "Logo",
+            {
+              attrs: {
+                src: "../../assets/logos/logo-jasmine.svg",
+                href: "https://jasmine.github.io/",
+                title: "I do test driven development !"
+              }
+            },
+            [_vm._v("Jasmine")]
+          )
+        ],
+        1
+      )
+    ]),
+    _vm._v(" "),
+    _vm._m(1)
+  ])
 }
 var staticRenderFns = [
   function() {
@@ -2380,10 +2828,30 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col lg-12" }, [
-        _c("h3", [_vm._v("About Raphaël Marandet, the author...")]),
+        _c("h3", [_vm._v("About the O876 Raycaster Game Engine")]),
         _vm._v(" "),
-        _c("p", [_vm._v("I spend too much time building games...")])
+        _c("p", [
+          _vm._v(
+            "The O876 Raycaster Engine is an open-source, free-to-use Raycasting framework, for building web browser games."
+          )
+        ]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "This project has been developped with some useful products and libraries."
+          )
+        ])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col lg-12" }, [
+      _c("h3", [_vm._v("About Raphaël Marandet, the author...")]),
+      _vm._v(" "),
+      _c("p", [_vm._v("I spend too much time building games...")])
     ])
   }
 ]
@@ -2439,11 +2907,11 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.$router.push("/tech")
+                          return _vm.$router.push("/mapedit")
                         }
                       }
                     },
-                    [_vm._v("Raycasting")]
+                    [_vm._v("Map editor")]
                   )
                 ]),
                 _vm._v(" "),
@@ -2453,11 +2921,11 @@ var render = function() {
                     {
                       on: {
                         click: function($event) {
-                          return _vm.$router.push("/features")
+                          return _vm.$router.push("/tech")
                         }
                       }
                     },
-                    [_vm._v("Features")]
+                    [_vm._v("Docs")]
                   )
                 ]),
                 _vm._v(" "),
@@ -2471,21 +2939,7 @@ var render = function() {
                         }
                       }
                     },
-                    [_vm._v("Examples")]
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          return _vm.$router.push("/mapedit")
-                        }
-                      }
-                    },
-                    [_vm._v("Map editor")]
+                    [_vm._v("Demos")]
                   )
                 ]),
                 _vm._v(" "),
@@ -3144,151 +3598,25 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-webstorm.svg",
-                href:
-                  "https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet",
-                title: "Fast and powerful IDE that integrates Vue.js perfectly"
-              }
-            },
-            [_vm._v("Webstorm IDE")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-jetbrains.svg",
-                href:
-                  "https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet",
-                title:
-                  "Creators of Webstorm, Phpstorm and many more IDE that are essential for large and modern projects."
-              }
-            },
-            [_vm._v("Jetbrains")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-vue-js.svg",
-                href: "https://vuejs.org/",
-                title:
-                  "A cutting edge framework which is actually very fun to work with. Everything is faster with Vue.js."
-              }
-            },
-            [_vm._v("Vue.js")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-node-js-2.svg",
-                href: "https://nodejs.org/",
-                title:
-                  "A JavaScript runtime built on Chrome's V8 JavaScript engine."
-              }
-            },
-            [_vm._v("Node.js")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-webpack.svg",
-                href: "https://webpack.js.org/",
-                title:
-                  "A module blunder. Essential when you write thousand of classes, files and assets."
-              }
-            },
-            [_vm._v("Webpack")]
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "col lg-3 md-4 sm-6" },
-        [
-          _c(
-            "Logo",
-            {
-              attrs: {
-                src: "../../assets/logos/logo-jasmine.svg",
-                href: "https://jasmine.github.io/",
-                title: "I do test driven development !"
-              }
-            },
-            [_vm._v("Jasmine")]
-          )
-        ],
-        1
-      )
-    ])
-  ])
+  return _vm._m(0)
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col lg-12" }, [
-        _c("h3", [_vm._v("Home")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "The O876 Raycaster Engine is an open-source, free-to-use Raycasting framework, for building web browser games."
-          )
-        ]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "This project has been developped with some useful products and libraries."
-          )
+    return _c("div", [
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Local project status")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("This page is your local game project management page.")
+          ]),
+          _vm._v(" "),
+          _c("h4", [_vm._v("Levels")]),
+          _vm._v(" "),
+          _c("h4")
         ])
       ])
     ])
@@ -3604,6 +3932,494 @@ var staticRenderFns = [
                     ])
                   ]
                 )
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Basic Raycasting")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "The primary task of a Raycasting Engine is to render 3D simplified environnement.\n                        It is said that Raycasting is a 2.5D algorithm because the 3D environnement\n                        is rendered from a 2D map and there are only perpendicular walls only flat floor and\n                        ceiling, and so on... A lot of limitations that are not present in real 3D engines."
+                )
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "But this simplicity has its own advantages :\n                    "
+                ),
+                _c("ul", [
+                  _c("li", [_vm._v("fast level design.")]),
+                  _vm._v(" "),
+                  _c("li", [
+                    _vm._v("No need of complex geometry understanding.")
+                  ]),
+                  _vm._v(" "),
+                  _c("li", [_vm._v("runs on slow computers.")]),
+                  _vm._v(" "),
+                  _c("li", [_vm._v("fast assets downloading.")])
+                ])
+              ]),
+              _c("p", [
+                _vm._v(
+                  "Let's have a look at what features are available in this engine..."
+                )
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Door management")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "There are several type of doors, the only difference is the way they open :\n                        They can slide to any direction (left, right, top, bottom), there are even\n                        double panel sliding doors as well."
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-open-door-0.jpg */ "./tools/website/assets/images/feat-open-door-0.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Double panel door")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-open-door-1.jpg */ "./tools/website/assets/images/feat-open-door-1.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Top sliding door")])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Secret door management")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("Just like the game "),
+                _c("i", [_vm._v("wolfenstein 3D")]),
+                _vm._v(
+                  ",\n                        walls can be pushed to reveal secret areas."
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-secret-door-0.jpg */ "./tools/website/assets/images/feat-secret-door-0.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v(
+                        "This wall has been pushed, and reveals a hidden zone !"
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Sprite management")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  'Animated sprites with composite effect (alpha, opacity...).\n                        Each sprite can have several overlays so rendering "haze" effects\n                        is possible.'
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/game-blight.jpg */ "./tools/website/assets/images/game-blight.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/game-scr19.jpg */ "./tools/website/assets/images/game-scr19.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/game-scr20.jpg */ "./tools/website/assets/images/game-scr20.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Floor and ceiling textures")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("Floor and ceiling can have textures, just like walls.")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/game-scr13.jpg */ "./tools/website/assets/images/game-scr13.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v("Without floor and ceiling textures")
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/game-scr18.jpg */ "./tools/website/assets/images/game-scr18.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v("With floor and ceiling textures (looks better)")
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Outdoor environnement / sky texture")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Wall, ceiling, and floor textures can be replaced by a sky texture."
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-sky-0.jpg */ "./tools/website/assets/images/feat-sky-0.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Sky is visible outside")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-sky-1.jpg */ "./tools/website/assets/images/feat-sky-1.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Red sky")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-sky-2.jpg */ "./tools/website/assets/images/feat-sky-2.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v("Sky is visible through the ceilling")
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-sky-3.jpg */ "./tools/website/assets/images/feat-sky-3.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Dark sky and landscape")])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Animated wall textures")]),
+              _vm._v(" "),
+              _c("p", [_vm._v("Walls can have animated textures.")]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-0.gif */ "./tools/website/assets/images/feat-anim-wall-0.gif")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Fireplace")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-1.gif */ "./tools/website/assets/images/feat-anim-wall-1.gif")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Pixelated fireplace")])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Dynamic texture modification")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "Wall, floor and ceiling textures can be modified,\n                        allowing programmer to draw anything on it (like drawing on a canvas and using canvas\n                        context methods). This ability is used for static lighting (lighten walls that are\n                        near light emmiting sources)."
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-decal-0.jpg */ "./tools/website/assets/images/feat-decal-0.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("Ketchup on the wall !")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-light-effects-1.jpg */ "./tools/website/assets/images/feat-light-effects-1.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v("Candles may affect wall textures")
+                    ])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-light-effects-0.jpg */ "./tools/website/assets/images/feat-light-effects-0.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [
+                      _vm._v(
+                        "Light emmitting objects cast light and shadows on both floor and ceiling"
+                      )
+                    ])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Using VR Glasses")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v(
+                  "The framework has the ability to switch between normal rendering\n                        and "
+                ),
+                _c("b", [_vm._v("VR Rendering")]),
+                _vm._v(".")
+              ]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("You should try it out with "),
+                _c(
+                  "a",
+                  {
+                    attrs: {
+                      href:
+                        "https://www.google.fr/search?q=vr+glasses+cardboard"
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        this kind of cardboard glasses"
+                    )
+                  ]
+                ),
+                _vm._v(".")
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c(
+                  "div",
+                  {
+                    staticClass:
+                      "col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-12 xs-offset-0"
+                  },
+                  [
+                    _c("figure", [
+                      _c("img", {
+                        attrs: {
+                          src: __webpack_require__(/*! ../../assets/images/vr-glasses.jpg */ "./tools/website/assets/images/vr-glasses.jpg")
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c("figcaption", [_vm._v("VR Glasses")])
+                    ])
+                  ]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "row" }, [
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-vr-00.jpg */ "./tools/website/assets/images/feat-vr-00.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("city : normal")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-vr-01.jpg */ "./tools/website/assets/images/feat-vr-01.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("city : vr-rendering")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-vr-10.jpg */ "./tools/website/assets/images/feat-vr-10.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("mansion : normal")])
+                  ])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col 4" }, [
+                  _c("figure", [
+                    _c("img", {
+                      attrs: {
+                        src: __webpack_require__(/*! ../../assets/images/feat-vr-11.jpg */ "./tools/website/assets/images/feat-vr-11.jpg")
+                      }
+                    }),
+                    _vm._v(" "),
+                    _c("figcaption", [_vm._v("mansion : vr-rendering")])
+                  ])
+                ])
               ])
             ])
           ])

@@ -5,40 +5,56 @@
         <template v-slot:toolbar>
         </template>
         <form>
-            <div>
-                <label>Tile width:
+            <fieldset>
+                <legend>Tile size</legend>
+                <div>
+                    <label>Tile width:
                         <input v-model="value.tileWidth" type="number" min="1"/>
-                </label>
-                <div class="hint">Tile width in pixels</div>
-            </div>
+                    </label>
+                    <div class="hint">Tile width in pixels</div>
+                </div>
+                <div>
+                    <label>Tile height:
+                        <input v-model="value.tileHeight" type="number" min="1"/>
+                    </label>
+                    <div class="hint">Tile height in pixels, from floor to ceiling</div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Texture flags</legend>
+                <div>
+                    <label>Texture smoothing:
+                        <input v-model="value.flagSmooth" type="checkbox" />
+                    </label>
+                    <div class="hint">If checked, the wall texture rendering will be smoothed, else, it will be pixelated</div>
+                </div>
+                <div>
+                    <label>Second story texture stretching:
+                        <input v-model="value.flagStretch" type="checkbox" />
+                    </label>
+                    <div class="hint">If checked, the second story wall textures will be stretched, and will appear twice taller.</div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>Level export</legend>
+                <div>
+                    <label>Auto-export this level
+                        <input v-model="value.flagExport" type="checkbox" />
+                    </label>
+                    <div class="hint">If checked, when you save the level, it will also be exported to the local game project.</div>
+                </div>
+            </fieldset>
+            <br/>
             <div>
-                <label>Tile height:
-                    <input v-model="value.tileHeight" type="number" min="1"/>
-                </label>
-                <div class="hint">Tile height in pixels, from floor to ceiling</div>
-            </div>
-            <div>
-                <label>Texture smoothing:
-                    <input v-model="value.flagSmooth" type="checkbox" />
-                </label>
-                <div class="hint">If checked, the wall texture rendering will be smoothed, else, it will be pixelated</div>
-            </div>
-            <div>
-                <label>Second story texture stretching:
-                    <input v-model="value.flagStretch" type="checkbox" />
-                </label>
-                <div class="hint">If checked, the second story wall textures will be stretched, and will appear twice taller.</div>
-            </div>
-            <div>
-                <MyButton :disabled="indicator.length > 0" @click="applyClicked">Apply</MyButton> {{ indicator }}
+                <MyButton :disabled="indicator.length > 0" @click="applyClicked">Apply changes</MyButton> {{ indicator }}
             </div>
             <h3>Warning</h3>
             <p style="color: darkred; font-weight: bold">
-                Changing tile width will resize all existing tiles and affect texture resolution and quality.
+                Changing tile width or height, will resize all existing tiles and affect texture resolution and quality.
                 It will also modify all metrics, block light radius values, block offsets, and thing physical size.
             </p>
             <p>
-                Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.
+                Hint : Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.
             </p>
         </form>
     </Window>
@@ -65,7 +81,8 @@
                     tileWidth: 64,
                     tileHeight: 96,
                     flagSmooth: false,
-                    flagStretch: false
+                    flagStretch: false,
+                    flagExport: false
                 },
 
                 indicator: ''
@@ -78,6 +95,7 @@
                 'getTileHeight',
                 'getFlagSmooth',
                 'getFlagStretch',
+                'getFlagExport',
                 'getTiles'
             ])
         },
@@ -125,6 +143,7 @@
                 }
                 await this.setFlag({flag: 'smooth', value: !!this.value.flagSmooth});
                 await this.setFlag({flag: 'stretch', value: !!this.value.flagStretch});
+                await this.setFlag({flag: 'export', value: !!this.value.flagExport});
                 this.indicator = '';
                 this.$router.push('/level/blocks');
             }
@@ -135,6 +154,7 @@
             this.value.tileHeight = this.getTileHeight;
             this.value.flagSmooth = this.getFlagSmooth;
             this.value.flagStretch = this.getFlagStretch;
+            this.value.flagExport = this.getFlagExport;
         }
     }
 </script>

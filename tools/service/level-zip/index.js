@@ -35,7 +35,17 @@ function getPNGBuffer(imageData) {
 }
 
 /**
- * out of image content, build the following :
+ * turn a base64 image/jpeg into a binary buffer
+ * @param imageData {string} base 64 image data
+ * @return {Buffer}
+ */
+function getJPEGBuffer(imageData) {
+    const sign = "data:image/jpeg;base64,";
+    return Buffer.from(imageData.substr(sign.length), 'base64');
+}
+
+/**
+ * out of png image content, build the following :
  * - md5 : to get the name
  * - filename : to get the file final location
  * - data : to get a binary buffer
@@ -43,13 +53,32 @@ function getPNGBuffer(imageData) {
  * @param sImagePath {string} directory where image goes
  * @return {{filename: string, data: Buffer, index: string}}
  */
-function generateImageEntry(src, sImagePath) {
+function generatePNGImageEntry(src, sImagePath) {
     const sIndex = computeMD5(src);
     const sFile = sIndex + '.png';
     return {
         index: sIndex,
         filename: path.join(sImagePath, sFile),
         data: getPNGBuffer(src)
+    };
+}
+
+/**
+ * out of jpeg image content, build the following :
+ * - md5 : to get the name
+ * - filename : to get the file final location
+ * - data : to get a binary buffer
+ * @param src {string} base 64 image content
+ * @param sImagePath {string} directory where image goes
+ * @return {{filename: string, data: Buffer, index: string}}
+ */
+function generateJPEGImageEntry(src, sImagePath) {
+    const sIndex = computeMD5(src);
+    const sFile = sIndex + '.jpg';
+    return {
+        index: sIndex,
+        filename: path.join(sImagePath, sFile),
+        data: getJPEGBuffer(src)
     };
 }
 
@@ -68,7 +97,7 @@ function generateImageEntry(src, sImagePath) {
 function buildImageRegistry(data, sImagePath = '') {
     // get all tiles
     const aImageEntries = data.tilesets.map(ts => {
-        const ie = generateImageEntry(ts.src, sImagePath);
+        const ie = generatePNGImageEntry(ts.src, sImagePath);
         ts.src = ie.filename;
         return ie;
     });
@@ -80,10 +109,15 @@ function buildImageRegistry(data, sImagePath = '') {
     aTextureList
         .filter(t => typeof oTextures[t] === 'string' && oTextures[t].length > 0)
         .forEach(t => {
-            const ie = generateImageEntry(oTextures[t], sImagePath);
+            const ie = generatePNGImageEntry(oTextures[t], sImagePath);
             aImageEntries.push(ie);
             oTextures[t] = ie.filename;
         });
+    if (data.preview.length > 0) {
+        const iePreview = generateJPEGImageEntry(data.preview, sImagePath);
+        aImageEntries.push(iePreview);
+        data.preview = iePreview.filename;
+    }
     return aImageEntries;
 }
 

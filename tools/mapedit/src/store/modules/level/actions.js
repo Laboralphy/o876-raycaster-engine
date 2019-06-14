@@ -279,6 +279,10 @@ export default {
                 commit(MUTATION.SET_FLAG_STRETCH, {value});
                 break;
 
+            case 'export':
+                commit(MUTATION.SET_FLAG_EXPORT, {value});
+                break;
+
             default:
                 throw new Error('this flag is unknown : "' + flag + '"');
         }

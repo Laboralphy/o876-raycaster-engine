@@ -328,11 +328,15 @@ export default {
     },
 
     [MUTATION.SET_FLAG_STRETCH]: (state, {value}) => {
-        state.flags.stretch = value;
+        state.flags.stretch = !!value;
     },
 
     [MUTATION.SET_FLAG_SMOOTH]: (state, {value}) => {
-        state.flags.smooth = value;
+        state.flags.smooth = !!value;
+    },
+
+    [MUTATION.SET_FLAG_EXPORT]: (state, {value}) => {
+        state.flags.export = !!value;
     },
 
     [MUTATION.SET_TILE_WIDTH]: (state, {value}) => {

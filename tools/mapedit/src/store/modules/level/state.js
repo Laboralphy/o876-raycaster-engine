@@ -13,7 +13,8 @@ export default {
     },
     flags: {
         smooth: false,
-        stretch: false
+        stretch: false,
+        export: false
     },
     time: {
         interval: 40

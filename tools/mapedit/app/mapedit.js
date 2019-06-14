@@ -24400,10 +24400,10 @@ utils.intFromLE = intFromLE;
 /*!********************************************!*\
   !*** ./node_modules/elliptic/package.json ***!
   \********************************************/
-/*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, bugs, dependencies, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
+/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, dependencies, deprecated, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = {"_args":[["elliptic@6.4.1","/home/ralphy/public_html/raycaster-es6"]],"_development":true,"_from":"elliptic@6.4.1","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"elliptic@6.4.1","name":"elliptic","escapedName":"elliptic","rawSpec":"6.4.1","saveSpec":null,"fetchSpec":"6.4.1"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_spec":"6.4.1","_where":"/home/ralphy/public_html/raycaster-es6","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
+module.exports = {"_from":"elliptic@^6.0.0","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"elliptic@^6.0.0","name":"elliptic","escapedName":"elliptic","rawSpec":"^6.0.0","saveSpec":null,"fetchSpec":"^6.0.0"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_shasum":"c2d0b7776911b86722c632c3c06c60f2f819939a","_spec":"elliptic@^6.0.0","_where":"/home/ralphy/public_html/raycaster-es6/node_modules/browserify-sign","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
 
 /***/ }),
 
@@ -39630,7 +39630,8 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             'getGrid',
             'getBlocks',
             'getStartpoint',
-            'getLevel'
+            'getLevel',
+            'getFlagExport'
         ]),
 
         ...editorMapGetters([
@@ -40221,10 +40222,21 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
          * Save the level
          */
         saveClick: async function () {
+            if (this.getFlagExport) {
+                if (!confirm('As the export flag is "on". You must confirm the level auto-exportation during saving process.')) {
+                    this.setStatusBarText({text: 'Level NOT saved'});
+                    return false;
+                }
+            }
             const sFileName = prompt('Enter a filename', this.getLevelName);
             if (!!sFileName) {
-                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["saveLevel"](name, this.getLevel);
-                this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["saveLevel"](sFileName, this.getLevel);
+                if (this.getFlagExport) {
+                    await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["exportLevel"](sFileName);
+                    this.setStatusBarText({text: 'Level saved and exported : ' + sFileName});
+                } else {
+                    this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                }
             } else {
                 this.setStatusBarText({text: 'Level NOT saved'});
             }
@@ -40505,9 +40517,10 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
         }),
 
         loadAndExit: async function() {
-            await this.loadLevel({name: this.selectedLevel});
+            const name = this.selectedLevel;
+            await this.loadLevel({name});
             await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
-            await this.setLevelName({name: this.selectedLevel});
+            await this.setLevelName({name});
             this.$router.push('/level/blocks');
         },
 
@@ -40521,19 +40534,23 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
         },
 
         erase: async function() {
-            if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["deleteLevel"](this.selectedLevel);
+            const name = this.selectedLevel;
+            if (confirm('Do you want to delete this level : ' + name + ' ? (this operation is definitive)')) {
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["deleteLevel"](name);
                 await this.setStatusBarText({text: 'Level delete : ' + name});
                 await this.listLevels();
             }
         },
 
         exportToGame: async function() {
-            const result = await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["exportLevel"](this.selectedLevel);
+            const name = this.selectedLevel;
+            const result = await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["exportLevel"](name);
             if (result.status === 'done') {
                 await this.setStatusBarText({text: 'Level successfully exported : ' + name});
+                alert('Level successfully exported : ' + name)
             } else {
                 await this.setStatusBarText({text: 'Error while exporting level : ' + name + ' - ' + result.error});
+                alert('Error while exporting level : ' + name + ' - ' + result.error)
             }
         }
     },
@@ -41384,6 +41401,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -41405,7 +41438,8 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
                 tileWidth: 64,
                 tileHeight: 96,
                 flagSmooth: false,
-                flagStretch: false
+                flagStretch: false,
+                flagExport: false
             },
 
             indicator: ''
@@ -41418,6 +41452,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
             'getTileHeight',
             'getFlagSmooth',
             'getFlagStretch',
+            'getFlagExport',
             'getTiles'
         ])
     },
@@ -41465,6 +41500,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
             }
             await this.setFlag({flag: 'smooth', value: !!this.value.flagSmooth});
             await this.setFlag({flag: 'stretch', value: !!this.value.flagStretch});
+            await this.setFlag({flag: 'export', value: !!this.value.flagExport});
             this.indicator = '';
             this.$router.push('/level/blocks');
         }
@@ -41475,6 +41511,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
         this.value.tileHeight = this.getTileHeight;
         this.value.flagSmooth = this.getFlagSmooth;
         this.value.flagStretch = this.getFlagStretch;
+        this.value.flagExport = this.getFlagExport;
     }
 });
 
@@ -49667,167 +49704,233 @@ var render = function() {
     [
       _vm._v(" "),
       _c("form", [
-        _c("div", [
-          _c("label", [
-            _vm._v("Tile width:\n                    "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.tileWidth,
-                  expression: "value.tileWidth"
-                }
-              ],
-              attrs: { type: "number", min: "1" },
-              domProps: { value: _vm.value.tileWidth },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.value, "tileWidth", $event.target.value)
-                }
-              }
-            })
-          ]),
+        _c("fieldset", [
+          _c("legend", [_vm._v("Tile size")]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [_vm._v("Tile width in pixels")])
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Tile height:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.tileHeight,
-                  expression: "value.tileHeight"
-                }
-              ],
-              attrs: { type: "number", min: "1" },
-              domProps: { value: _vm.value.tileHeight },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          _c("div", [
+            _c("label", [
+              _vm._v("Tile width:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.tileWidth,
+                    expression: "value.tileWidth"
                   }
-                  _vm.$set(_vm.value, "tileHeight", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v("Tile height in pixels, from floor to ceiling")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Texture smoothing:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.flagSmooth,
-                  expression: "value.flagSmooth"
-                }
-              ],
-              attrs: { type: "checkbox" },
-              domProps: {
-                checked: Array.isArray(_vm.value.flagSmooth)
-                  ? _vm._i(_vm.value.flagSmooth, null) > -1
-                  : _vm.value.flagSmooth
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.value.flagSmooth,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 &&
-                        _vm.$set(_vm.value, "flagSmooth", $$a.concat([$$v]))
-                    } else {
-                      $$i > -1 &&
-                        _vm.$set(
-                          _vm.value,
-                          "flagSmooth",
-                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                        )
+                ],
+                attrs: { type: "number", min: "1" },
+                domProps: { value: _vm.value.tileWidth },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  } else {
-                    _vm.$set(_vm.value, "flagSmooth", $$c)
+                    _vm.$set(_vm.value, "tileWidth", $event.target.value)
                   }
                 }
-              }
-            })
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [_vm._v("Tile width in pixels")])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v(
-              "If checked, the wall texture rendering will be smoothed, else, it will be pixelated"
-            )
+          _c("div", [
+            _c("label", [
+              _vm._v("Tile height:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.tileHeight,
+                    expression: "value.tileHeight"
+                  }
+                ],
+                attrs: { type: "number", min: "1" },
+                domProps: { value: _vm.value.tileHeight },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.value, "tileHeight", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v("Tile height in pixels, from floor to ceiling")
+            ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Second story texture stretching:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.flagStretch,
-                  expression: "value.flagStretch"
-                }
-              ],
-              attrs: { type: "checkbox" },
-              domProps: {
-                checked: Array.isArray(_vm.value.flagStretch)
-                  ? _vm._i(_vm.value.flagStretch, null) > -1
-                  : _vm.value.flagStretch
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.value.flagStretch,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 &&
-                        _vm.$set(_vm.value, "flagStretch", $$a.concat([$$v]))
+        _c("fieldset", [
+          _c("legend", [_vm._v("Texture flags")]),
+          _vm._v(" "),
+          _c("div", [
+            _c("label", [
+              _vm._v("Texture smoothing:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagSmooth,
+                    expression: "value.flagSmooth"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagSmooth)
+                    ? _vm._i(_vm.value.flagSmooth, null) > -1
+                    : _vm.value.flagSmooth
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagSmooth,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagSmooth", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagSmooth",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
                     } else {
-                      $$i > -1 &&
-                        _vm.$set(
-                          _vm.value,
-                          "flagStretch",
-                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                        )
+                      _vm.$set(_vm.value, "flagSmooth", $$c)
                     }
-                  } else {
-                    _vm.$set(_vm.value, "flagStretch", $$c)
                   }
                 }
-              }
-            })
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, the wall texture rendering will be smoothed, else, it will be pixelated"
+              )
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v(
-              "If checked, the second story wall textures will be stretched, and will appear twice taller."
-            )
+          _c("div", [
+            _c("label", [
+              _vm._v("Second story texture stretching:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagStretch,
+                    expression: "value.flagStretch"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagStretch)
+                    ? _vm._i(_vm.value.flagStretch, null) > -1
+                    : _vm.value.flagStretch
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagStretch,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagStretch", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagStretch",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.value, "flagStretch", $$c)
+                    }
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, the second story wall textures will be stretched, and will appear twice taller."
+              )
+            ])
           ])
         ]),
+        _vm._v(" "),
+        _c("fieldset", [
+          _c("legend", [_vm._v("Level export")]),
+          _vm._v(" "),
+          _c("div", [
+            _c("label", [
+              _vm._v("Auto-export this level\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagExport,
+                    expression: "value.flagExport"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagExport)
+                    ? _vm._i(_vm.value.flagExport, null) > -1
+                    : _vm.value.flagExport
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagExport,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagExport", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagExport",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.value, "flagExport", $$c)
+                    }
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, when you save the level, it will also be exported to the local game project."
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("br"),
         _vm._v(" "),
         _c(
           "div",
@@ -49838,7 +49941,7 @@ var render = function() {
                 attrs: { disabled: _vm.indicator.length > 0 },
                 on: { click: _vm.applyClicked }
               },
-              [_vm._v("Apply")]
+              [_vm._v("Apply changes")]
             ),
             _vm._v(" " + _vm._s(_vm.indicator) + "\n        ")
           ],
@@ -49849,13 +49952,13 @@ var render = function() {
         _vm._v(" "),
         _c("p", { staticStyle: { color: "darkred", "font-weight": "bold" } }, [
           _vm._v(
-            "\n            Changing tile width will resize all existing tiles and affect texture resolution and quality.\n            It will also modify all metrics, block light radius values, block offsets, and thing physical size.\n        "
+            "\n            Changing tile width or height, will resize all existing tiles and affect texture resolution and quality.\n            It will also modify all metrics, block light radius values, block offsets, and thing physical size.\n        "
           )
         ]),
         _vm._v(" "),
         _c("p", [
           _vm._v(
-            "\n            Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.\n        "
+            "\n            Hint : Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.\n        "
           )
         ])
       ])
@@ -68097,7 +68200,8 @@ async function generate(input, imageAppender) {
         shading: generateShading(input),
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
-        tags: generateTags(input)
+        tags: generateTags(input),
+        preview: input.preview
     };
 }
 
@@ -72907,6 +73011,10 @@ function renderAndStoreBlock(tiles, data) {
                 commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_FLAG_STRETCH"], {value});
                 break;
 
+            case 'export':
+                commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_FLAG_EXPORT"], {value});
+                break;
+
             default:
                 throw new Error('this flag is unknown : "' + flag + '"');
         }
@@ -72997,7 +73105,8 @@ function redMaxId(prev, curr) {
     getThings: state => state.things,
     getAmbiance: state => state.ambiance,
     getFlagSmooth: state => state.flags.smooth,
-    getFlagStretch: state => state.flags.stretch
+    getFlagStretch: state => state.flags.stretch,
+    getFlagExport: state => state.flags.export
 });
 
 /***/ }),
@@ -73035,7 +73144,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./tools/mapedit/src/store/modules/level/mutation-types.js ***!
   \*****************************************************************/
-/*! exports provided: ADD_TILE, MOVE_TILE, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, DEFINE_BLOCK, SET_BLOCK_PREVIEW, DESTROY_BLOCK, DEFINE_THING, DESTROY_THING, MOVE_THING, SET_GRID_SIZE, SET_CELL_BLOCK, SET_CELL_TAGS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_CELL_THING, SET_CELL_UPPER_BLOCK, REMOVE_CELL_THING, SETUP_AMBIANCE, SET_STATE_CONTENT, SET_FLAG_SMOOTH, SET_FLAG_STRETCH, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, REPLACE_BLOCK_OFFSET, SET_STARTING_POINT, SHIFT_GRID */
+/*! exports provided: ADD_TILE, MOVE_TILE, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, DEFINE_BLOCK, SET_BLOCK_PREVIEW, DESTROY_BLOCK, DEFINE_THING, DESTROY_THING, MOVE_THING, SET_GRID_SIZE, SET_CELL_BLOCK, SET_CELL_TAGS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_CELL_THING, SET_CELL_UPPER_BLOCK, REMOVE_CELL_THING, SETUP_AMBIANCE, SET_STATE_CONTENT, SET_FLAG_SMOOTH, SET_FLAG_STRETCH, SET_FLAG_EXPORT, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, REPLACE_BLOCK_OFFSET, SET_STARTING_POINT, SHIFT_GRID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -73064,6 +73173,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_STATE_CONTENT", function() { return SET_STATE_CONTENT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_SMOOTH", function() { return SET_FLAG_SMOOTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_STRETCH", function() { return SET_FLAG_STRETCH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_EXPORT", function() { return SET_FLAG_EXPORT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_WIDTH", function() { return SET_TILE_WIDTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_HEIGHT", function() { return SET_TILE_HEIGHT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PREVIEW", function() { return SET_PREVIEW; });
@@ -73102,6 +73212,7 @@ const SET_STATE_CONTENT = 'SET_STATE_CONTENT';
 
 const SET_FLAG_SMOOTH = 'SET_FLAG_SMOOTH';
 const SET_FLAG_STRETCH = 'SET_FLAG_STRETCH';
+const SET_FLAG_EXPORT = 'SET_FLAG_EXPORT';
 const SET_TILE_WIDTH = 'SET_TILE_WIDTH';
 const SET_TILE_HEIGHT = 'SET_TILE_HEIGHT';
 
@@ -73458,11 +73569,15 @@ function getTileStructure(type, state) {
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_STRETCH"]]: (state, {value}) => {
-        state.flags.stretch = value;
+        state.flags.stretch = !!value;
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_SMOOTH"]]: (state, {value}) => {
-        state.flags.smooth = value;
+        state.flags.smooth = !!value;
+    },
+
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_EXPORT"]]: (state, {value}) => {
+        state.flags.export = !!value;
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_TILE_WIDTH"]]: (state, {value}) => {
@@ -73577,7 +73692,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     flags: {
         smooth: false,
-        stretch: false
+        stretch: false,
+        export: false
     },
     time: {
         interval: 40
