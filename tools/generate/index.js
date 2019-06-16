@@ -57,14 +57,15 @@ async function generateTileset(tilesets, idTile) {
     output.src = src;
     output.width = width;
     output.height = height;
-    output.animations = nFrames > 1 ? {
-        [DEFAULT_ANIMATION_NAME]: {
+    output.animations = nFrames > 1 ? [
+        {
+            id: DEFAULT_ANIMATION_NAME,
             start: [0, 0, 0, 0, 0, 0, 0, 0],
             length: nFrames | 0,
             duration: tile.animation.duration | 0,
             loop: LOOPS[tile.animation.loop]
         }
-    } : null;
+    ] : [];
     return output;
 }
 

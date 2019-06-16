@@ -31,336 +31,39 @@
               "description": "The height in pixels of a tile in the tileset"
             },
             "animations": {
-              "type": "object",
-              "properties": {
-                "stand": {
+              "type": "array",
+              "description": "A list of animation definitions for this tileset",
+              "items": [
+                {
                   "type": "object",
+                  "description": "An animation definition",
                   "properties": {
                     "start": {
                       "type": "array",
+                      "description": "All starting frames",
                       "items": [
                         {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
+                          "type": "integer",
+                          "description": "One starting frame index"
                         }
                       ]
                     },
                     "length": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Animation length in frames"
                     },
                     "loop": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop"
-                  ]
-                },
-                "walk": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        }
-                      ]
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
+                      "type": "string",
+                      "description": "Animation loop type",
+                      "enum": ["@LOOP_NONE", "@LOOP_FORWARD", "@LOOP_YOYO"]
                     },
                     "duration": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration"
-                  ]
-                },
-                "attack": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        }
-                      ]
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    },
-                    "duration": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration"
-                  ]
-                },
-                "death": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "integer"
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    },
-                    "duration": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Animation duration in millliseconds"
                     },
                     "iterations": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration",
-                    "iterations"
-                  ]
-                }
-              },
-              "required": [
-                "stand",
-                "walk",
-                "attack",
-                "death"
-              ]
-            }
-          },
-          "required": [
-            "id",
-            "src",
-            "width",
-            "height",
-            "animations"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "src": {
-              "type": "string"
-            },
-            "width": {
-              "type": "integer"
-            },
-            "height": {
-              "type": "integer"
-            },
-            "fx": {
-              "type": "string"
-            },
-            "animations": {
-              "type": "object",
-              "properties": {
-                "fly": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "array",
-                      "items": [
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        },
-                        {
-                          "type": "integer"
-                        }
-                      ]
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop"
-                  ]
-                },
-                "explode": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "integer"
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    },
-                    "duration": {
-                      "type": "integer"
-                    },
-                    "iterations": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration",
-                    "iterations"
-                  ]
-                }
-              },
-              "required": [
-                "fly",
-                "explode"
-              ]
-            }
-          },
-          "required": [
-            "id",
-            "src",
-            "width",
-            "height",
-            "fx",
-            "animations"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "src": {
-              "type": "string"
-            },
-            "width": {
-              "type": "integer"
-            },
-            "height": {
-              "type": "integer"
-            },
-            "fx": {
-              "type": "string"
-            },
-            "animations": {
-              "type": "object",
-              "properties": {
-                "normal": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "integer"
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
+                      "type": "integer",
+                      "description": "A number of iterations after which the animation is suspended"
                     }
                   },
                   "required": [
@@ -369,9 +72,6 @@
                     "loop"
                   ]
                 }
-              },
-              "required": [
-                "normal"
               ]
             }
           },
@@ -380,90 +80,6 @@
             "src",
             "width",
             "height",
-            "fx",
-            "animations"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "src": {
-              "type": "string"
-            },
-            "width": {
-              "type": "integer"
-            },
-            "height": {
-              "type": "integer"
-            },
-            "fx": {
-              "type": "string"
-            },
-            "animations": {
-              "type": "object",
-              "properties": {
-                "blue": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "integer"
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    },
-                    "duration": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration"
-                  ]
-                },
-                "red": {
-                  "type": "object",
-                  "properties": {
-                    "start": {
-                      "type": "integer"
-                    },
-                    "length": {
-                      "type": "integer"
-                    },
-                    "loop": {
-                      "type": "string"
-                    },
-                    "duration": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "start",
-                    "length",
-                    "loop",
-                    "duration"
-                  ]
-                }
-              },
-              "required": [
-                "blue",
-                "red"
-              ]
-            }
-          },
-          "required": [
-            "id",
-            "src",
-            "width",
-            "height",
-            "fx",
             "animations"
           ]
         }
@@ -471,99 +87,45 @@
     },
     "blueprints": {
       "type": "array",
+      "description": "Definition of physical object that can be spawned on the level during runtime",
       "items": [
         {
           "type": "object",
+          "description": "Definition of a blueprint",
           "properties": {
             "id": {
-              "type": "string"
+              "type": "string",
+              "description": "The id that is references by 'objects'"
             },
             "tileset": {
-              "type": "string"
+              "type": "string",
+              "description": "A reference to the tileset used by this blueprint"
             },
             "thinker": {
-              "type": "string"
+              "type": "string",
+              "description": "The name of a thinker class"
             },
             "size": {
-              "type": "integer"
-            }
-          },
-          "required": [
-            "id",
-            "tileset",
-            "thinker",
-            "size"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "tileset": {
-              "type": "string"
-            },
-            "thinker": {
-              "type": "string"
-            },
-            "size": {
-              "type": "integer"
+              "type": "integer",
+              "description": "The physical size of the blueprint (in texels)"
             },
             "fx": {
               "type": "array",
+              "description": "A list of visual effets applied to the blueprint",
               "items": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "description": "A value of a FX_ flag",
+                  "enum": [
+                    "@FX_NONE",
+                    "@FX_LIGHT_SOURCE",
+                    "@FX_LIGHT_ADD",
+                    "@FX_ALPHA_75",
+                    "@FX_ALPHA_50",
+                    "@FX_ALPHA_25"
+                  ]
                 }
               ]
-            }
-          },
-          "required": [
-            "id",
-            "tileset",
-            "thinker",
-            "size",
-            "fx"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "tileset": {
-              "type": "string"
-            },
-            "thinker": {
-              "type": "null"
-            },
-            "size": {
-              "type": "integer"
-            }
-          },
-          "required": [
-            "id",
-            "tileset",
-            "thinker",
-            "size"
-          ]
-        },
-        {
-          "type": "object",
-          "properties": {
-            "id": {
-              "type": "string"
-            },
-            "tileset": {
-              "type": "string"
-            },
-            "thinker": {
-              "type": "string"
-            },
-            "size": {
-              "type": "integer"
             }
           },
           "required": [
