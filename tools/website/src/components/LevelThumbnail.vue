@@ -3,7 +3,14 @@
             :class="getComputedClass"
     >
         <img :alt="name + ' preview'" :src="getSource" />
-        <figcaption><span class="filename">{{ name }}</span> - <span class="datestring">{{ getDateString }}</span></figcaption>
+        <figcaption>
+            <div>
+                <span class="filename">{{ name }}</span> - <span class="datestring">{{ getDateString }}</span>
+            </div>
+            <div v-if="exported">
+                <a href="#" @click="unpublish(name)">Unpublish</a>
+            </div>
+        </figcaption>
     </figure>
 </template>
 
@@ -54,6 +61,12 @@
                 return !!this.preview ? this.preview : './assets/images/no-preview.png';
             }
         },
+
+        methods: {
+            unpublish: function(name) {
+                this.$emit('unpublish', {name});
+            }
+        }
     }
 </script>
 

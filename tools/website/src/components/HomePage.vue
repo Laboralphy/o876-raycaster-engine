@@ -15,12 +15,13 @@
                         :date="l.date"
                         :preview="'/vault/' + l.name + '.jpg'"
                         :exported="l.exported"
+                        @unpublish="({name}) => unpublish(name)"
                 ></LevelThumbnail>
             </div>
         </div>
         <div class="row">
             <div class="col lg-12">
-                <h4>Unpublished levels</h4>
+                <h4>In vault levels</h4>
                 <p>These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.
                 To publish a level, go to the Map Editor, load a level, check the flag "auto-publish" on and save the level.</p>
                 <LevelThumbnail
@@ -67,6 +68,23 @@
 
             getUnpublishedLevel: function() {
                 return this.levels.filter(l => !l.exported);
+            }
+        },
+
+        methods: {
+            unpublish: function(name) {
+
+                const aStr = [];
+                if (!!this.getUnpublishedLevel.find(l => l.name === name)) {
+                    aStr.push('This action will remove the level "' + name + '" from the game level, ' +
+                        'but it will still be available in vault for the Map Editor and you will be able to publish it again.');
+                } else {
+                    aStr.push('This action will delete the level "' + name + '" permanantly.');
+                }
+                aStr.push('Do you want to proceed ?');
+                if (confirm(aStr.join('\n'))) {
+
+                }
             }
         }
     }

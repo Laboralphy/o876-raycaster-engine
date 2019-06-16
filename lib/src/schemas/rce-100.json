@@ -1,0 +1,1016 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "description": "Object used for the O876-Raycaster-Engine level definition",
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "tilesets": {
+      "type": "array",
+      "description": "A list of tiles referenced by blueprints",
+      "items": [
+        {
+          "type": "object",
+          "description": "A tileset is the definition of graphic item used by blueprints",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The tileset id, referenced by blueprints, and decals"
+            },
+            "src": {
+              "type": "string",
+              "description": "A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"
+            },
+            "width": {
+              "type": "integer",
+              "description": "The width in pixels of a tile in the tileset"
+            },
+            "height": {
+              "type": "integer",
+              "description": "The height in pixels of a tile in the tileset"
+            },
+            "animations": {
+              "type": "object",
+              "properties": {
+                "stand": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop"
+                  ]
+                },
+                "walk": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration"
+                  ]
+                },
+                "attack": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration"
+                  ]
+                },
+                "death": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    },
+                    "iterations": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration",
+                    "iterations"
+                  ]
+                }
+              },
+              "required": [
+                "stand",
+                "walk",
+                "attack",
+                "death"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "src",
+            "width",
+            "height",
+            "animations"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "src": {
+              "type": "string"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "fx": {
+              "type": "string"
+            },
+            "animations": {
+              "type": "object",
+              "properties": {
+                "fly": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "array",
+                      "items": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ]
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop"
+                  ]
+                },
+                "explode": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    },
+                    "iterations": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration",
+                    "iterations"
+                  ]
+                }
+              },
+              "required": [
+                "fly",
+                "explode"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "src",
+            "width",
+            "height",
+            "fx",
+            "animations"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "src": {
+              "type": "string"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "fx": {
+              "type": "string"
+            },
+            "animations": {
+              "type": "object",
+              "properties": {
+                "normal": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop"
+                  ]
+                }
+              },
+              "required": [
+                "normal"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "src",
+            "width",
+            "height",
+            "fx",
+            "animations"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "src": {
+              "type": "string"
+            },
+            "width": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            },
+            "fx": {
+              "type": "string"
+            },
+            "animations": {
+              "type": "object",
+              "properties": {
+                "blue": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration"
+                  ]
+                },
+                "red": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "integer"
+                    },
+                    "length": {
+                      "type": "integer"
+                    },
+                    "loop": {
+                      "type": "string"
+                    },
+                    "duration": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "length",
+                    "loop",
+                    "duration"
+                  ]
+                }
+              },
+              "required": [
+                "blue",
+                "red"
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "src",
+            "width",
+            "height",
+            "fx",
+            "animations"
+          ]
+        }
+      ]
+    },
+    "blueprints": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "tileset": {
+              "type": "string"
+            },
+            "thinker": {
+              "type": "string"
+            },
+            "size": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "tileset",
+            "thinker",
+            "size"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "tileset": {
+              "type": "string"
+            },
+            "thinker": {
+              "type": "string"
+            },
+            "size": {
+              "type": "integer"
+            },
+            "fx": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "tileset",
+            "thinker",
+            "size",
+            "fx"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "tileset": {
+              "type": "string"
+            },
+            "thinker": {
+              "type": "null"
+            },
+            "size": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "tileset",
+            "thinker",
+            "size"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "tileset": {
+              "type": "string"
+            },
+            "thinker": {
+              "type": "string"
+            },
+            "size": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "id",
+            "tileset",
+            "thinker",
+            "size"
+          ]
+        }
+      ]
+    },
+    "level": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "spacing": {
+              "type": "integer"
+            },
+            "height": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "spacing",
+            "height"
+          ]
+        },
+        "textures": {
+          "type": "object",
+          "properties": {
+            "flats": {
+              "type": "string"
+            },
+            "walls": {
+              "type": "string"
+            },
+            "sky": {
+              "type": "string"
+            },
+            "smooth": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "flats",
+            "walls",
+            "sky",
+            "smooth"
+          ]
+        },
+        "map": {
+          "type": "array",
+          "items": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "string"
+            }
+          ]
+        },
+        "legend": {
+          "type": "array",
+          "items": [
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "phys": {
+                  "type": "string"
+                },
+                "faces": {
+                  "type": "object",
+                  "properties": {
+                    "f": {
+                      "type": "integer"
+                    },
+                    "c": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "f",
+                    "c"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "phys",
+                "faces"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "phys": {
+                  "type": "string"
+                },
+                "faces": {
+                  "type": "object",
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "e": {
+                      "type": "integer"
+                    },
+                    "w": {
+                      "type": "integer"
+                    },
+                    "s": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "n",
+                    "e",
+                    "w",
+                    "s"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "phys",
+                "faces"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "phys": {
+                  "type": "string"
+                },
+                "faces": {
+                  "type": "object",
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "e": {
+                      "type": "integer"
+                    },
+                    "w": {
+                      "type": "integer"
+                    },
+                    "s": {
+                      "type": "integer"
+                    },
+                    "f": {
+                      "type": "integer"
+                    },
+                    "c": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "n",
+                    "e",
+                    "w",
+                    "s",
+                    "f",
+                    "c"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "phys",
+                "faces"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "phys": {
+                  "type": "string"
+                },
+                "faces": {
+                  "type": "object",
+                  "properties": {
+                    "n": {
+                      "type": "integer"
+                    },
+                    "e": {
+                      "type": "integer"
+                    },
+                    "w": {
+                      "type": "integer"
+                    },
+                    "s": {
+                      "type": "integer"
+                    },
+                    "f": {
+                      "type": "integer"
+                    },
+                    "c": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "n",
+                    "e",
+                    "w",
+                    "s",
+                    "f",
+                    "c"
+                  ]
+                },
+                "offset": {
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "code",
+                "phys",
+                "faces",
+                "offset"
+              ]
+            },
+            {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "phys": {
+                  "type": "string"
+                },
+                "faces": {
+                  "type": "object",
+                  "properties": {
+                    "f": {
+                      "type": "integer"
+                    },
+                    "c": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "f",
+                    "c"
+                  ]
+                },
+                "light": {
+                  "type": "object",
+                  "properties": {
+                    "r0": {
+                      "type": "integer"
+                    },
+                    "r1": {
+                      "type": "integer"
+                    },
+                    "v": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "r0",
+                    "r1",
+                    "v"
+                  ]
+                }
+              },
+              "required": [
+                "code",
+                "phys",
+                "faces",
+                "light"
+              ]
+            }
+          ]
+        }
+      },
+      "required": [
+        "metrics",
+        "textures",
+        "map",
+        "legend"
+      ]
+    },
+    "objects": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "integer"
+            },
+            "y": {
+              "type": "integer"
+            },
+            "angle": {
+              "type": "number"
+            },
+            "blueprint": {
+              "type": "string"
+            },
+            "animation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "angle",
+            "blueprint",
+            "animation"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "integer"
+            },
+            "y": {
+              "type": "integer"
+            },
+            "angle": {
+              "type": "number"
+            },
+            "blueprint": {
+              "type": "string"
+            },
+            "animation": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "x",
+            "y",
+            "angle",
+            "blueprint",
+            "animation"
+          ]
+        }
+      ]
+    },
+    "decals": {
+      "type": "array",
+      "items": {}
+    },
+    "camera": {
+      "type": "object",
+      "properties": {
+        "thinker": {
+          "type": "string"
+        },
+        "x": {
+          "type": "integer"
+        },
+        "y": {
+          "type": "integer"
+        },
+        "angle": {
+          "type": "number"
+        },
+        "z": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "thinker",
+        "x",
+        "y",
+        "angle",
+        "z"
+      ]
+    }
+  },
+  "required": [
+    "version",
+    "tilesets",
+    "blueprints",
+    "level",
+    "objects",
+    "decals",
+    "camera"
+  ]
+}

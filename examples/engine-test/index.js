@@ -17,7 +17,7 @@ const THINKERS = {
 
 function getLevel() {
     return {
-
+        "version": "rce-100",
         "tilesets": [
             {
                 "id": "m-warlock-b",

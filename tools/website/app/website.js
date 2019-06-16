@@ -2176,6 +2176,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2208,6 +2209,23 @@ __webpack_require__.r(__webpack_exports__);
         getUnpublishedLevel: function() {
             return this.levels.filter(l => !l.exported);
         }
+    },
+
+    methods: {
+        unpublish: function(name) {
+
+            const aStr = [];
+            if (!!this.getUnpublishedLevel.find(l => l.name === name)) {
+                aStr.push('This action will remove the level "' + name + '" from the game level, ' +
+                    'but it will still be available in vault for the Map Editor and you will be able to publish it again.');
+            } else {
+                aStr.push('This action will delete the level "' + name + '" permanantly.');
+            }
+            aStr.push('Do you want to proceed ?');
+            if (confirm(aStr.join('\n'))) {
+
+            }
+        }
     }
 });
 
@@ -2223,6 +2241,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2279,6 +2304,12 @@ __webpack_require__.r(__webpack_exports__);
             return !!this.preview ? this.preview : './assets/images/no-preview.png';
         }
     },
+
+    methods: {
+        unpublish: function(name) {
+            this.$emit('unpublish', {name});
+        }
+    }
 });
 
 
@@ -3744,6 +3775,13 @@ var render = function() {
                 date: l.date,
                 preview: "/vault/" + l.name + ".jpg",
                 exported: l.exported
+              },
+              on: {
+                unpublish: function(ref) {
+                  var name = ref.name
+
+                  return _vm.unpublish(name)
+                }
               }
             })
           })
@@ -3757,7 +3795,7 @@ var render = function() {
         "div",
         { staticClass: "col lg-12" },
         [
-          _c("h4", [_vm._v("Unpublished levels")]),
+          _c("h4", [_vm._v("In vault levels")]),
           _vm._v(" "),
           _c("p", [
             _vm._v(
@@ -3808,11 +3846,30 @@ var render = function() {
     _c("img", { attrs: { alt: _vm.name + " preview", src: _vm.getSource } }),
     _vm._v(" "),
     _c("figcaption", [
-      _c("span", { staticClass: "filename" }, [_vm._v(_vm._s(_vm.name))]),
-      _vm._v(" - "),
-      _c("span", { staticClass: "datestring" }, [
-        _vm._v(_vm._s(_vm.getDateString))
-      ])
+      _c("div", [
+        _c("span", { staticClass: "filename" }, [_vm._v(_vm._s(_vm.name))]),
+        _vm._v(" - "),
+        _c("span", { staticClass: "datestring" }, [
+          _vm._v(_vm._s(_vm.getDateString))
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.exported
+        ? _c("div", [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    return _vm.unpublish(_vm.name)
+                  }
+                }
+              },
+              [_vm._v("Unpublish")]
+            )
+          ])
+        : _vm._e()
     ])
   ])
 }

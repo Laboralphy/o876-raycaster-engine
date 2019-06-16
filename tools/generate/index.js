@@ -429,7 +429,7 @@ async function generate(input, imageAppender) {
     }
     setImageAppender(imageAppender);
     return {
-        version: 'eng-100',
+        version: 'rce-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),
