@@ -139,15 +139,19 @@
     },
     "level": {
       "type": "object",
+      "description": "The level definition",
       "properties": {
         "metrics": {
           "type": "object",
+          "description": "Properties that rule over texture size",
           "properties": {
             "spacing": {
-              "type": "integer"
+              "type": "integer",
+              "description": "The size of a map cell, in texels"
             },
             "height": {
-              "type": "integer"
+              "type": "integer",
+              "description": "the height of a cell, in texels"
             }
           },
           "required": [
@@ -157,312 +161,148 @@
         },
         "textures": {
           "type": "object",
+          "description": "Properties that rule over textures",
           "properties": {
             "flats": {
-              "type": "string"
+              "type": "string",
+              "description": "A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"
             },
             "walls": {
-              "type": "string"
+              "type": "string",
+              "description": "A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"
             },
             "sky": {
-              "type": "string"
+              "type": "string",
+              "description": "A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image"
             },
             "smooth": {
-              "type": "boolean"
+              "type": "boolean",
+              "description": "if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"
+            },
+            "stretch": {
+              "type": "boolean",
+              "description": "If true then all texture will be stretched x2 along their height, this is useful when designing tall building"
             }
           },
           "required": [
             "flats",
             "walls",
             "sky",
-            "smooth"
+            "smooth",
+            "stretch"
           ]
         },
         "map": {
           "type": "array",
+          "description": "Contains all cell values, that describes the map geometry",
           "items": [
             {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
-            },
-            {
-              "type": "string"
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "integer",
+                      "description": "A cell value, references of of the legend item code"
+                    }
+                  ]
+                },
+                {
+                  "type": "string",
+                  "description": "Because a string is sometimes seen as an array of characters, a string here is equivalant to an array of character. Each caracter referenced a legend item code"
+                }
+              ]
             }
           ]
         },
         "legend": {
           "type": "array",
+          "description": "A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above",
           "items": [
             {
               "type": "object",
               "properties": {
                 "code": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "A code referenced by a cell value"
                 },
                 "phys": {
-                  "type": "string"
+                  "type": "string",
+                  "description": "A value describing the physical property of this cell",
+                  "enum": [
+                    "@PHYS_NONE",
+                    "@PHYS_WALL",
+                    "@PHYS_DOOR_UP",
+                    "@PHYS_CURT_UP",
+                    "@PHYS_DOOR_DOWN",
+                    "@PHYS_CURT_DOWN",
+                    "@PHYS_DOOR_LEFT",
+                    "@PHYS_DOOR_RIGHT",
+                    "@PHYS_DOOR_DOUBLE",
+                    "@PHYS_SECRET_BLOCK",
+                    "@PHYS_TRANSPARENT_BLOCK",
+                    "@PHYS_INVISIBLE_BLOCK",
+                    "@PHYS_OFFSET_BLOCK"
+                  ]
                 },
                 "faces": {
                   "type": "object",
+                  "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face",
                   "properties": {
                     "f": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "the floor face, a flat face"
                     },
                     "c": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "the ceiling face, a flat face"
+                    },
+                    "n": {
+                      "type": "integer",
+                      "description": "the north face, a wall face"
+                    },
+                    "e": {
+                      "type": "integer",
+                      "description": "the east face, a wall face"
+                    },
+                    "w": {
+                      "type": "integer",
+                      "description": "the west face, a wall face"
+                    },
+                    "s": {
+                      "type": "integer",
+                      "description": "the south face, a wall face"
                     }
-                  },
-                  "required": [
-                    "f",
-                    "c"
-                  ]
+                  }
                 }
+              },
+              "light": {
+                "type": "object",
+                "description": "Definition of the light emited by the block",
+                "properties": {
+                  "r0": {
+                    "type": "integer",
+                    "description": "inner radius value, below the value, the light is at its maximum intensity"
+                  },
+                  "r1": {
+                    "type": "integer",
+                    "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
+                  },
+                  "v": {
+                    "type": "number",
+                    "description": "light maximum intensity"
+                  }
+                },
+                "required": [
+                  "r0",
+                  "r1",
+                  "v"
+                ]
               },
               "required": [
                 "code",
                 "phys",
                 "faces"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "phys": {
-                  "type": "string"
-                },
-                "faces": {
-                  "type": "object",
-                  "properties": {
-                    "n": {
-                      "type": "integer"
-                    },
-                    "e": {
-                      "type": "integer"
-                    },
-                    "w": {
-                      "type": "integer"
-                    },
-                    "s": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "n",
-                    "e",
-                    "w",
-                    "s"
-                  ]
-                }
-              },
-              "required": [
-                "code",
-                "phys",
-                "faces"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "phys": {
-                  "type": "string"
-                },
-                "faces": {
-                  "type": "object",
-                  "properties": {
-                    "n": {
-                      "type": "integer"
-                    },
-                    "e": {
-                      "type": "integer"
-                    },
-                    "w": {
-                      "type": "integer"
-                    },
-                    "s": {
-                      "type": "integer"
-                    },
-                    "f": {
-                      "type": "integer"
-                    },
-                    "c": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "n",
-                    "e",
-                    "w",
-                    "s",
-                    "f",
-                    "c"
-                  ]
-                }
-              },
-              "required": [
-                "code",
-                "phys",
-                "faces"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "phys": {
-                  "type": "string"
-                },
-                "faces": {
-                  "type": "object",
-                  "properties": {
-                    "n": {
-                      "type": "integer"
-                    },
-                    "e": {
-                      "type": "integer"
-                    },
-                    "w": {
-                      "type": "integer"
-                    },
-                    "s": {
-                      "type": "integer"
-                    },
-                    "f": {
-                      "type": "integer"
-                    },
-                    "c": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "n",
-                    "e",
-                    "w",
-                    "s",
-                    "f",
-                    "c"
-                  ]
-                },
-                "offset": {
-                  "type": "integer"
-                }
-              },
-              "required": [
-                "code",
-                "phys",
-                "faces",
-                "offset"
-              ]
-            },
-            {
-              "type": "object",
-              "properties": {
-                "code": {
-                  "type": "string"
-                },
-                "phys": {
-                  "type": "string"
-                },
-                "faces": {
-                  "type": "object",
-                  "properties": {
-                    "f": {
-                      "type": "integer"
-                    },
-                    "c": {
-                      "type": "integer"
-                    }
-                  },
-                  "required": [
-                    "f",
-                    "c"
-                  ]
-                },
-                "light": {
-                  "type": "object",
-                  "properties": {
-                    "r0": {
-                      "type": "integer"
-                    },
-                    "r1": {
-                      "type": "integer"
-                    },
-                    "v": {
-                      "type": "number"
-                    }
-                  },
-                  "required": [
-                    "r0",
-                    "r1",
-                    "v"
-                  ]
-                }
-              },
-              "required": [
-                "code",
-                "phys",
-                "faces",
-                "light"
               ]
             }
           ]
@@ -478,33 +318,6 @@
     "objects": {
       "type": "array",
       "items": [
-        {
-          "type": "object",
-          "properties": {
-            "x": {
-              "type": "integer"
-            },
-            "y": {
-              "type": "integer"
-            },
-            "angle": {
-              "type": "number"
-            },
-            "blueprint": {
-              "type": "string"
-            },
-            "animation": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "x",
-            "y",
-            "angle",
-            "blueprint",
-            "animation"
-          ]
-        },
         {
           "type": "object",
           "properties": {
