@@ -209,7 +209,7 @@
                 },
                 {
                   "type": "string",
-                  "description": "Because a string is sometimes seen as an array of characters, a string here is equivalant to an array of character. Each caracter referenced a legend item code"
+                  "description": "A string is sometimes seen as an array of characters. Each character references a legend item code"
                 }
               ]
             }
@@ -278,18 +278,18 @@
               },
               "light": {
                 "type": "object",
-                "description": "Definition of the light emited by the block",
+                "description": "Definition of the light emitted by the block",
                 "properties": {
                   "r0": {
-                    "type": "integer",
+                    "type": "number",
                     "description": "inner radius value, below the value, the light is at its maximum intensity"
                   },
                   "r1": {
-                    "type": "integer",
+                    "type": "number",
                     "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
                   },
                   "v": {
-                    "type": "number",
+                    "type": "integer",
                     "description": "light maximum intensity"
                   }
                 },
@@ -317,29 +317,40 @@
     },
     "objects": {
       "type": "array",
+      "description": "A list of object that are spawned during level building",
       "items": [
         {
           "type": "object",
           "properties": {
             "x": {
-              "type": "integer"
+              "type": "number",
+              "description": "Object position on map (along x axis)"
             },
             "y": {
-              "type": "integer"
+              "type": "number",
+              "description": "Object position on map (along y axis)"
+            },
+            "z": {
+              "type": "number",
+              "description": "Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"
             },
             "angle": {
-              "type": "number"
+              "type": "number",
+              "description": "Object heading angle"
             },
             "blueprint": {
-              "type": "string"
+              "type": "string",
+              "description": "Reference to a blueprint"
             },
             "animation": {
-              "type": "string"
+              "type": "string",
+              "description": "Reference of the starting animation (this value must reference an animation define within the blueprint)"
             }
           },
           "required": [
             "x",
             "y",
+            "z",
             "angle",
             "blueprint",
             "animation"
@@ -349,33 +360,70 @@
     },
     "decals": {
       "type": "array",
-      "items": {}
+      "description": "A collection of decal definitions",
+      "items": [
+        {
+          "x": {
+            "type": "number",
+            "description": "Cell coordinates where the decal is located (x axis)"
+          },
+          "y": {
+            "type": "number",
+            "description": "Cell coordinates where the decal is located (y axis)"
+          },
+          "f": {
+            "type": "integer",
+            "description": "Reference of a tileset for the floor face."
+          },
+          "c": {
+            "type": "integer",
+            "description": "Reference of a tileset for the ceiling face."
+          },
+          "n": {
+            "type": "integer",
+            "description": "Reference of a tileset for the north wall face."
+          },
+          "e": {
+            "type": "integer",
+            "description": "Reference of a tileset for the east wall face."
+          },
+          "w": {
+            "type": "integer",
+            "description": "Reference of a tileset for the west wall face."
+          },
+          "s": {
+            "type": "integer",
+            "description": "Reference of a tileset for the south wall face."
+          }
+        }
+      ]
     },
     "camera": {
       "type": "object",
+      "description": "The camera properties. Location, angle etc...",
       "properties": {
         "thinker": {
           "type": "string"
         },
         "x": {
-          "type": "integer"
+          "type": "number"
         },
         "y": {
-          "type": "integer"
-        },
-        "angle": {
           "type": "number"
         },
         "z": {
-          "type": "integer"
+          "type": "number"
+        },
+        "angle": {
+          "type": "number"
         }
       },
       "required": [
         "thinker",
         "x",
         "y",
-        "angle",
-        "z"
+        "z",
+        "angle"
       ]
     }
   },

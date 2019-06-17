@@ -336,6 +336,7 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
+                    z: 0,
                     angle: 0,
                     blueprint: idThingTemplate,
                     animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false

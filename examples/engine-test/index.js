@@ -238,6 +238,7 @@ function getLevel() {
             {
                 "x": 9 * 64 + 32,
                 "y": 13 * 64 + 32,
+                "z": 0,
                 "angle": 0,
                 "blueprint": "o-bluereddisc",
                 "animation": "blue"
@@ -245,6 +246,7 @@ function getLevel() {
             {
                 "x": 14 * 64 + 32,
                 "y": 13 * 64 + 32,
+                "z": 0,
                 "angle": 0,
                 "blueprint": "m-warlock-b",
                 "animation": "stand"
