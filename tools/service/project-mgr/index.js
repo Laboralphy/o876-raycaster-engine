@@ -5,6 +5,9 @@ const fs = require('fs');
 // promisification
 const mkdirp = util.promisify(require('mkdirp'));
 const stat = util.promisify(fs.stat);
+const readDir = util.promisify(fs.readdir);
+const readFile = util.promisify(fs.readFile);
+const unlink = util.promisify(fs.unlink);
 
 let BASE_DIR = '.';
 const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
@@ -15,6 +18,7 @@ let GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
 let GAME_DATA_DIR = path.join(GAME_ROOT_DIR, 'data');
 let GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
 let VAULT_DIR = 'vault';
+const JSON_EXT = '.json';
 
 
 /**
@@ -119,6 +123,46 @@ function copy(from, to) {
     });
 }
 
+
+/**
+ * Returns a list of published levels
+ * @returns []
+ */
+async function getPublishedLevels() {
+    const p = path.resolve(GAME_ASSETS_DIR, 'levels');
+    const aFiles = await readDir(p, {
+        withFileTypes: true
+    });
+    const aLevels = [];
+    for (let i = 0, l = aFiles.length; i < l; ++i) {
+        const f = aFiles[i];
+        if (f.isFile() && f.name.endsWith(JSON_EXT)) {
+            const sFileName = path.resolve(GAME_ASSETS_DIR, 'levels', f.name);
+            const content = await readFile(sFileName);
+            const data = JSON.parse(content);
+            const name = f.name.substr(0, f.name.length - JSON_EXT.length);
+            const exported = true;
+            const preview = '/game/' + data.preview;
+            const st = await stat(sFileName);
+            const date = Math.floor(st.mtimeMs / 1000);
+            aLevels.push({
+                name, preview, exported, date
+            });
+        }
+    }
+    return aLevels;
+}
+
+async function unpublishLevel(name) {
+    const sFileName = path.resolve(GAME_ASSETS_DIR, 'levels', name + JSON_EXT);
+    if (await exists(sFileName)) {
+        await unlink(sFileName);
+    } else {
+        console.warn('unpublish', name, 'failed : file does not exist');
+    }
+}
+
+
 /**
  * Run a template element.
  * @param oItem {*}
@@ -148,5 +192,8 @@ async function run(sBaseDir) {
 }
 
 module.exports = {
-    run
+    run,
+    getPublishedLevels,
+    unpublishLevel,
+    setBaseDirectory
 };

@@ -190,7 +190,7 @@ exports.push([module.i, "\nfigure.logo[data-v-2e370a16] {\n    display: inline-b
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\nfigure.level-thumbnail[data-v-519c4ed0] {\n    display: inline-block;\n    border: outset #999 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #999;\n    margin: 1.5em;\n}\nfigure.level-thumbnail img[data-v-519c4ed0] {\n    border: solid thin #000;\n    margin: 0;\n}\nfigure.level-thumbnail.not-exported[data-v-519c4ed0] {\n    filter: grayscale(100%);\n    opacity: 0.666;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-519c4ed0] {\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-519c4ed0] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
+exports.push([module.i, "\nfigure.level-thumbnail[data-v-519c4ed0] {\n    display: inline-block;\n    border: outset #999 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #999;\n    margin: 1.5em;\n}\nfigure.level-thumbnail img[data-v-519c4ed0] {\n    border: solid thin #000;\n    margin: 0;\n}\nfigure.level-thumbnail.not-exported img[data-v-519c4ed0] {\n    filter: grayscale(100%);\n    opacity: 0.666;\n}\nfigure.level-thumbnail.not-invault .filename[data-v-519c4ed0] {\n    color: #880000;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-519c4ed0] {\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-519c4ed0] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
 
 
 
@@ -2138,6 +2138,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/website/src/components/LevelThumbnail.vue");
+/* harmony import */ var _lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../lib/src/fetch-json */ "./lib/src/fetch-json/index.js");
 //
 //
 //
@@ -2177,6 +2178,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2184,48 +2191,51 @@ __webpack_require__.r(__webpack_exports__);
     components: {LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__["default"]},
     data: function() {
         return {
-            levels: [
-                {
-                    name: 'test-dal',
-                    preview: "/vault/test-dal.jpg",
-                    date: Date.now(),
-                    exported: true
-                },
-                {
-                    name: 'test-dal-2',
-                    preview: "/vault/test-dal.jpg",
-                    date: Date.now(),
-                    exported: false
-                }
-            ]
+            levels: []
         }
     },
 
     computed: {
-        getPublishedLevel: function() {
+        getPublishedLevels: function() {
             return this.levels.filter(l => l.exported);
         },
 
-        getUnpublishedLevel: function() {
+        getInVaultLevels: function() {
             return this.levels.filter(l => !l.exported);
-        }
+        },
+
+        getUnpublishedLevels: function() {
+            const pl = this.getPublishedLevels.map(l => l.name);
+            return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+        },
     },
 
     methods: {
-        unpublish: function(name) {
-
+        unpublish: async function(name) {
             const aStr = [];
-            if (!!this.getUnpublishedLevel.find(l => l.name === name)) {
-                aStr.push('This action will remove the level "' + name + '" from the game level, ' +
-                    'but it will still be available in vault for the Map Editor and you will be able to publish it again.');
-            } else {
-                aStr.push('This action will delete the level "' + name + '" permanantly.');
+            if (!this.getInVaultLevels.find(l => l.name === name)) {
+                if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
+                    return;
+                }
             }
-            aStr.push('Do you want to proceed ?');
-            if (confirm(aStr.join('\n'))) {
+            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])('/game/level/' + name);
+            await this.fetchLevelData();
+        },
 
-            }
+        publish: async function(name) {
+            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/export/' + name);
+            await this.fetchLevelData();
+        },
+
+        fetchLevelData: function() {
+            Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/game/levels').then(data => {
+                this.levels.splice(0, this.levels.length, ...data);
+            });
         }
+    },
+
+    mounted: function() {
+        this.fetchLevelData();
     }
 });
 
@@ -2241,6 +2251,9 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
 //
 //
 //
@@ -2277,6 +2290,14 @@ __webpack_require__.r(__webpack_exports__);
         exported: {
             required: false,
             default: false
+        },
+        invault: {
+            required: false,
+            default: false
+        },
+        publishable: {
+            required: false,
+            default: false
         }
     },
 
@@ -2287,13 +2308,15 @@ __webpack_require__.r(__webpack_exports__);
             if (!this.exported) {
                 a.push('not-exported');
             }
+            if (!this.invault) {
+                a.push('not-invault');
+            }
             return a.join(' ');
         },
 
         getDateString: function() {
             //const d = new Date(parseInt(this.date.toString() + '000'));
             const d = new Date(this.date);
-            console.log(d);
             //2019-05-28T16:35:04.231Z
             const d2 = d.toJSON();
             const r = d2.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2})/);
@@ -2308,6 +2331,10 @@ __webpack_require__.r(__webpack_exports__);
     methods: {
         unpublish: function(name) {
             this.$emit('unpublish', {name});
+        },
+
+        publish: function(name) {
+            this.$emit('publish', {name});
         }
     }
 });
@@ -3767,14 +3794,15 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
-          _vm._l(_vm.getPublishedLevel, function(l) {
+          _vm._l(_vm.getPublishedLevels, function(l) {
             return _c("LevelThumbnail", {
               key: l.name,
               attrs: {
                 name: l.name,
                 date: l.date,
-                preview: "/vault/" + l.name + ".jpg",
-                exported: l.exported
+                preview: l.preview,
+                exported: l.exported,
+                invault: l.invault
               },
               on: {
                 unpublish: function(ref) {
@@ -3799,18 +3827,27 @@ var render = function() {
           _vm._v(" "),
           _c("p", [
             _vm._v(
-              'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n            To publish a level, go to the Map Editor, load a level, check the flag "auto-publish" on and save the level.'
+              'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n            To publish a level, click on "Publish" or use the Map Editor.'
             )
           ]),
           _vm._v(" "),
-          _vm._l(_vm.getUnpublishedLevel, function(l) {
+          _vm._l(_vm.getUnpublishedLevels, function(l) {
             return _c("LevelThumbnail", {
               key: l.name,
               attrs: {
                 name: l.name,
                 date: l.date,
-                preview: "/vault/" + l.name + ".jpg",
-                exported: l.exported
+                preview: l.preview,
+                exported: l.exported,
+                invault: l.invault,
+                publishable: true
+              },
+              on: {
+                publish: function(ref) {
+                  var name = ref.name
+
+                  return _vm.publish(name)
+                }
               }
             })
           })
@@ -3866,7 +3903,22 @@ var render = function() {
                   }
                 }
               },
-              [_vm._v("Unpublish")]
+              [_vm._v(_vm._s(_vm.invault ? "Unpublish" : "Delete"))]
+            )
+          ])
+        : _vm.publishable
+        ? _c("div", [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    return _vm.publish(_vm.name)
+                  }
+                }
+              },
+              [_vm._v("Publish")]
             )
           ])
         : _vm._e()

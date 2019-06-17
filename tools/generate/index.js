@@ -2,7 +2,26 @@
  * Generates an engine compliant JSON out of a MapEdit save file
  * this is a node.js module
  */
-const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
+const LOOPS = [
+    '@LOOP_NONE',
+    '@LOOP_FORWARD',
+    '@LOOP_YOYO'
+];
+const PHYS = [
+    "@PHYS_NONE",
+    "@PHYS_WALL",
+    "@PHYS_DOOR_UP",
+    "@PHYS_CURT_UP",
+    "@PHYS_DOOR_DOWN",
+    "@PHYS_CURT_DOWN",
+    "@PHYS_DOOR_LEFT",
+    "@PHYS_DOOR_RIGHT",
+    "@PHYS_DOOR_DOUBLE",
+    "@PHYS_SECRET_BLOCK",
+    "@PHYS_TRANSPARENT_BLOCK",
+    "@PHYS_INVISIBLE_BLOCK",
+    "@PHYS_OFFSET_BLOCK"
+];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 let combineTiles = async function() {};
@@ -266,7 +285,7 @@ function generateLegend(input, block) {
     // ca ne marche pas
     return {
         code: block.id,
-        phys: block.phys,
+        phys: PHYS[block.phys],
         offset: block.offs | 0,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
@@ -404,6 +423,7 @@ function generateCamera(input) {
     return {
         x: input.startpoint.x,
         y: input.startpoint.y,
+        z: 1,
         angle: input.startpoint.angle * Math.PI,
         thinker: 'KeyboardControlThinker'
     };
@@ -431,7 +451,7 @@ async function generate(input, imageAppender) {
     }
     setImageAppender(imageAppender);
     return {
-        version: 'rce-100',
+        version: 'RCE-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),

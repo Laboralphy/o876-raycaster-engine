@@ -120,26 +120,22 @@ async function loadPreview(name) {
  * lists all project saved so far
  */
 async function ls() {
-	const aList = await readDir(VAULT_PATH);
+	const aList = await readDir(VAULT_PATH, {
+		withFileTypes: true
+	});
 	const aOutput = [];
 	for (let i = 0, l = aList.length; i < l; ++i) {
-		const s = aList[i];
-		const dirname = path.resolve(VAULT_PATH, s);
-		if (await _isFolder(dirname)) {
+		const f = aList[i];
+		const s = f.name;
+		if (f.isDirectory()) {
 			const filename = path.resolve(VAULT_PATH, s, 'level.json');
-			const previewFilename = path.resolve(VAULT_PATH, s, 'preview.json');
 			try {
 				const st = await stat(filename);
 				const date = Math.floor(st.mtimeMs / 1000);
 				const name = s;
-				let preview = false;
-				if (await _isReadable(previewFilename)) {
-					preview = await _getFileContentJSON(previewFilename);
-				}
 				aOutput.push({
 					"name": name,
-					"date": date,
-					"preview": preview
+					"date": date
 				});
 			} catch (e) {
 				if (e.code === 'ENOENT') {

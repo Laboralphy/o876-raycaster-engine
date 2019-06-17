@@ -4,7 +4,8 @@
   "description": "Object used for the O876-Raycaster-Engine level definition",
   "properties": {
     "version": {
-      "type": "string"
+      "type": "string",
+      "enum": ["RCE-100"]
     },
     "tilesets": {
       "type": "array",
@@ -173,7 +174,7 @@
             },
             "sky": {
               "type": "string",
-              "description": "A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image"
+              "description": "A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"
             },
             "smooth": {
               "type": "boolean",
@@ -223,8 +224,16 @@
               "type": "object",
               "properties": {
                 "code": {
-                  "type": "string",
-                  "description": "A code referenced by a cell value"
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "description": "A code referenced by a cell value"
+                    },
+                    {
+                      "type": "integer",
+                      "description": "A code referenced by a cell value"
+                    }
+                  ]
                 },
                 "phys": {
                   "type": "string",
@@ -250,28 +259,76 @@
                   "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face",
                   "properties": {
                     "f": {
-                      "type": "integer",
-                      "description": "the floor face, a flat face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the floor face, a flat face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     },
                     "c": {
-                      "type": "integer",
-                      "description": "the ceiling face, a flat face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the ceiling face, a flat face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     },
                     "n": {
-                      "type": "integer",
-                      "description": "the north face, a wall face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the north face, a wall face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     },
                     "e": {
-                      "type": "integer",
-                      "description": "the east face, a wall face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the east face, a wall face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     },
                     "w": {
-                      "type": "integer",
-                      "description": "the west face, a wall face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the west face, a wall face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     },
                     "s": {
-                      "type": "integer",
-                      "description": "the south face, a wall face"
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "description": "the south face, a wall face"
+                        },
+                        {
+                          "type": "null",
+                          "description": "no texture defined on this face"
+                        }
+                      ]
                     }
                   }
                 }
@@ -373,27 +430,27 @@
           },
           "f": {
             "type": "integer",
-            "description": "Reference of a tileset for the floor face."
+            "description": "indicates that the decal will be put on the floor face"
           },
           "c": {
             "type": "integer",
-            "description": "Reference of a tileset for the ceiling face."
+            "description": "indicates that the decal will be put on the ceiling face"
           },
           "n": {
             "type": "integer",
-            "description": "Reference of a tileset for the north wall face."
+            "description": "indicates that the decal will be put on the north face"
           },
           "e": {
             "type": "integer",
-            "description": "Reference of a tileset for the east wall face."
+            "description": "indicates that the decal will be put on the east face"
           },
           "w": {
             "type": "integer",
-            "description": "Reference of a tileset for the west wall face."
+            "description": "indicates that the decal will be put on the west face"
           },
           "s": {
             "type": "integer",
-            "description": "Reference of a tileset for the south wall face."
+            "description": "indicates that the decal will be put on the south face"
           }
         }
       ]

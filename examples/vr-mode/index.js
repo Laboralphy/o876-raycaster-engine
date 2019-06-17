@@ -7,6 +7,7 @@ const Engine = RCE.Engine;
  */
 
 const LEVEL = {
+    "version": "RCE-100",
 
     "tilesets": [],
     // there is no tilset in this example
@@ -24,7 +25,9 @@ const LEVEL = {
         "textures": {
             "flats": "textures/flats.png",
             "sky": "textures/sky-ls.png",
-            "walls": "textures/walls.png"
+            "walls": "textures/walls.png",
+            "smooth": false,
+            "stretch": false
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "######################",

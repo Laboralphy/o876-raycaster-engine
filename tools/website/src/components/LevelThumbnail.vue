@@ -8,7 +8,10 @@
                 <span class="filename">{{ name }}</span> - <span class="datestring">{{ getDateString }}</span>
             </div>
             <div v-if="exported">
-                <a href="#" @click="unpublish(name)">Unpublish</a>
+                <a href="#" @click="unpublish(name)">{{ invault ? 'Unpublish' : 'Delete'}}</a>
+            </div>
+            <div v-else-if="publishable">
+                <a href="#" @click="publish(name)">Publish</a>
             </div>
         </figcaption>
     </figure>
@@ -34,6 +37,14 @@
             exported: {
                 required: false,
                 default: false
+            },
+            invault: {
+                required: false,
+                default: false
+            },
+            publishable: {
+                required: false,
+                default: false
             }
         },
 
@@ -44,13 +55,15 @@
                 if (!this.exported) {
                     a.push('not-exported');
                 }
+                if (!this.invault) {
+                    a.push('not-invault');
+                }
                 return a.join(' ');
             },
 
             getDateString: function() {
                 //const d = new Date(parseInt(this.date.toString() + '000'));
                 const d = new Date(this.date);
-                console.log(d);
                 //2019-05-28T16:35:04.231Z
                 const d2 = d.toJSON();
                 const r = d2.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2})/);
@@ -65,6 +78,10 @@
         methods: {
             unpublish: function(name) {
                 this.$emit('unpublish', {name});
+            },
+
+            publish: function(name) {
+                this.$emit('publish', {name});
             }
         }
     }
@@ -85,9 +102,13 @@
         margin: 0;
     }
 
-    figure.level-thumbnail.not-exported {
+    figure.level-thumbnail.not-exported img {
         filter: grayscale(100%);
         opacity: 0.666;
+    }
+
+    figure.level-thumbnail.not-invault .filename {
+        color: #880000;
     }
 
     figure.level-thumbnail figcaption span.filename {

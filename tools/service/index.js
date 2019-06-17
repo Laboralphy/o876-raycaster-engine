@@ -36,6 +36,7 @@ function print(...args) {
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
+    app.use('/game/assets', express.static(path.resolve(O876_RC_ROOT_PATH, 'game/assets')));
     persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.vault_path));
 
     // list levels
@@ -46,6 +47,33 @@ function initMapEditor() {
                 console.error('GET /vault - error');
                 console.error(e);
             })
+    });
+
+    // list of published levels
+    app.get('/game/levels', async (req, res) => {
+        try {
+            const aPublished = await pm.getPublishedLevels();
+            const aVault = await persist.ls();
+            aPublished.forEach(l => {
+                l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
+            });
+            aVault.forEach(l => {
+                l.exported = false;
+                l.preview = '/vault/' + l.name + '.jpg';
+                l.invault = true;
+            });
+            const aLevels = aPublished.concat(aVault);
+            res.json(aLevels);
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+
+    app.delete('/game/level/:name', (req, res) => {
+        pm
+            .unpublishLevel(req.params.name)
+            .then(() => res.json({status: 'done'}))
+            .catch(e => res.json({status: 'error', error: e.message}));
     });
 
     // load level

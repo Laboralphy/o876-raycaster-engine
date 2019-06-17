@@ -9,12 +9,13 @@
                 If you modify one of these level via the Map Editor, you'll have to publish it again.</p>
                 <!-- lists of level that are currently present -->
                 <LevelThumbnail
-                        v-for="l in getPublishedLevel"
+                        v-for="l in getPublishedLevels"
                         :key="l.name"
                         :name="l.name"
                         :date="l.date"
-                        :preview="'/vault/' + l.name + '.jpg'"
+                        :preview="l.preview"
                         :exported="l.exported"
+                        :invault="l.invault"
                         @unpublish="({name}) => unpublish(name)"
                 ></LevelThumbnail>
             </div>
@@ -23,14 +24,17 @@
             <div class="col lg-12">
                 <h4>In vault levels</h4>
                 <p>These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.
-                To publish a level, go to the Map Editor, load a level, check the flag "auto-publish" on and save the level.</p>
+                To publish a level, click on "Publish" or use the Map Editor.</p>
                 <LevelThumbnail
-                        v-for="l in getUnpublishedLevel"
+                        v-for="l in getUnpublishedLevels"
                         :key="l.name"
                         :name="l.name"
                         :date="l.date"
-                        :preview="'/vault/' + l.name + '.jpg'"
+                        :preview="l.preview"
                         :exported="l.exported"
+                        :invault="l.invault"
+                        :publishable="true"
+                        @publish="({name}) => publish(name)"
                 ></LevelThumbnail>
             </div>
         </div>
@@ -39,53 +43,58 @@
 
 <script>
     import LevelThumbnail from "./LevelThumbnail.vue";
+    import {deleteJSON, fetchJSON} from "../../../../lib/src/fetch-json";
+
     export default {
         name: "HomePage",
         components: {LevelThumbnail},
         data: function() {
             return {
-                levels: [
-                    {
-                        name: 'test-dal',
-                        preview: "/vault/test-dal.jpg",
-                        date: Date.now(),
-                        exported: true
-                    },
-                    {
-                        name: 'test-dal-2',
-                        preview: "/vault/test-dal.jpg",
-                        date: Date.now(),
-                        exported: false
-                    }
-                ]
+                levels: []
             }
         },
 
         computed: {
-            getPublishedLevel: function() {
+            getPublishedLevels: function() {
                 return this.levels.filter(l => l.exported);
             },
 
-            getUnpublishedLevel: function() {
+            getInVaultLevels: function() {
                 return this.levels.filter(l => !l.exported);
-            }
+            },
+
+            getUnpublishedLevels: function() {
+                const pl = this.getPublishedLevels.map(l => l.name);
+                return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+            },
         },
 
         methods: {
-            unpublish: function(name) {
-
+            unpublish: async function(name) {
                 const aStr = [];
-                if (!!this.getUnpublishedLevel.find(l => l.name === name)) {
-                    aStr.push('This action will remove the level "' + name + '" from the game level, ' +
-                        'but it will still be available in vault for the Map Editor and you will be able to publish it again.');
-                } else {
-                    aStr.push('This action will delete the level "' + name + '" permanantly.');
+                if (!this.getInVaultLevels.find(l => l.name === name)) {
+                    if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
+                        return;
+                    }
                 }
-                aStr.push('Do you want to proceed ?');
-                if (confirm(aStr.join('\n'))) {
+                await deleteJSON('/game/level/' + name);
+                await this.fetchLevelData();
+            },
 
-                }
+            publish: async function(name) {
+                await fetchJSON('/export/' + name);
+                await this.fetchLevelData();
+            },
+
+            fetchLevelData: function() {
+                fetchJSON('/game/levels').then(data => {
+                    this.levels.splice(0, this.levels.length, ...data);
+                });
             }
+        },
+
+        mounted: function() {
+            this.fetchLevelData();
         }
     }
 </script>
