@@ -15,8 +15,10 @@ const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
 let GAME_ROOT_DIR = 'game';
 let GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
 let GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
-let GAME_DATA_DIR = path.join(GAME_ROOT_DIR, 'data');
 let GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
+let GAME_DATA_DIR = path.join(GAME_ASSETS_DIR, 'data');
+let GAME_TEXTURES_DIR = path.join(GAME_ASSETS_DIR, 'textures');
+let GAME_LEVELS_DIR = path.join(GAME_ASSETS_DIR, 'levels');
 let VAULT_DIR = 'vault';
 const JSON_EXT = '.json';
 
@@ -30,8 +32,10 @@ function setBaseDirectory(sDir) {
     GAME_ROOT_DIR = 'game';
     GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
     GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
-    GAME_DATA_DIR = path.join(GAME_ROOT_DIR, 'data');
     GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
+    GAME_DATA_DIR = path.join(GAME_ASSETS_DIR, 'data');
+    GAME_TEXTURES_DIR = path.join(GAME_ASSETS_DIR, 'textures');
+    GAME_LEVELS_DIR = path.join(GAME_ASSETS_DIR, 'levels');
     VAULT_DIR = 'vault';
 }
 
@@ -64,12 +68,12 @@ const PROJECT_TREE = [
     },
 
     {
-        path: path.join(GAME_ASSETS_DIR, 'levels', 'assets_levels_readme.txt'),
+        path: path.join(GAME_LEVELS_DIR, 'assets_levels_readme.txt'),
         template: 'assets_levels_readme.txt'
     },
 
     {
-        path: path.join(GAME_ASSETS_DIR, 'textures', 'assets_textures_readme.txt'),
+        path: path.join(GAME_TEXTURES_DIR, 'assets_textures_readme.txt'),
         template: 'assets_textures_readme.txt'
     },
 
@@ -123,13 +127,50 @@ function copy(from, to) {
     });
 }
 
+function _getLevelReferencedTextures(data) {
+    return ([
+        data.level.textures.flats,
+        data.level.textures.walls,
+        data.level.textures.sky,
+        data.preview
+    ])
+        .concat(data.tilesets.map(ts => ts.src))
+        .filter(t => !!t && t.length > 0)
+        .map(t => path.basename(t))
+        .filter((x, i, a) => a.indexOf(x) === i);
+}
+
+
+async function getUnusedTextures() {
+    const p = path.resolve(GAME_TEXTURES_DIR);
+    let aTextures = await readDir(p);
+    const aFiles = await getPublishedLevels();
+    let aFoundTextures = [];
+    for (let i = 0, l = aFiles.length; i < l; ++i) {
+        const sFileName = path.resolve(GAME_LEVELS_DIR, aFiles[i].name + '.json');
+        const content = await readFile(sFileName);
+        const data = JSON.parse(content);
+        const aLocalTextures = _getLevelReferencedTextures(data);
+        aFoundTextures = aFoundTextures.concat(aLocalTextures);
+    }
+    const aUnused = aTextures.filter(t => aFoundTextures.indexOf(t) < 0);
+    return aUnused.filter(t => ['.png', '.jpg'].includes(path.extname(t)));
+}
+
+async function removeUnusedTextures() {
+    const aRemovees = await getUnusedTextures();
+    const aProms = aRemovees.map(t => unlink(path.resolve(GAME_TEXTURES_DIR, t)));
+    return Promise.all(aProms);
+}
+
+
 
 /**
  * Returns a list of published levels
  * @returns []
  */
 async function getPublishedLevels() {
-    const p = path.resolve(GAME_ASSETS_DIR, 'levels');
+    const p = path.resolve(GAME_LEVELS_DIR);
     const aFiles = await readDir(p, {
         withFileTypes: true
     });
@@ -137,14 +178,14 @@ async function getPublishedLevels() {
     for (let i = 0, l = aFiles.length; i < l; ++i) {
         const f = aFiles[i];
         if (f.isFile() && f.name.endsWith(JSON_EXT)) {
-            const sFileName = path.resolve(GAME_ASSETS_DIR, 'levels', f.name);
+            const sFileName = path.resolve(GAME_LEVELS_DIR, f.name);
             const content = await readFile(sFileName);
             const data = JSON.parse(content);
-            const name = f.name.substr(0, f.name.length - JSON_EXT.length);
+            const name = path.basename(f.name, JSON_EXT);
             const exported = true;
             const preview = '/game/' + data.preview;
             const st = await stat(sFileName);
-            const date = Math.floor(st.mtimeMs / 1000);
+            const date = Math.floor(st.mtimeMs);
             aLevels.push({
                 name, preview, exported, date
             });
@@ -154,9 +195,10 @@ async function getPublishedLevels() {
 }
 
 async function unpublishLevel(name) {
-    const sFileName = path.resolve(GAME_ASSETS_DIR, 'levels', name + JSON_EXT);
+    const sFileName = path.resolve(GAME_LEVELS_DIR, name + JSON_EXT);
     if (await exists(sFileName)) {
         await unlink(sFileName);
+        await removeUnusedTextures();
     } else {
         console.warn('unpublish', name, 'failed : file does not exist');
     }

@@ -20,6 +20,7 @@ const AppRootPath = require('app-root-path');
 const pm = require('./project-mgr');
 
 const app = express();
+
 const O876_RC_ROOT_PATH = path.resolve(__dirname, '../../');
 const CONFIG = require('./config');
 
@@ -36,7 +37,9 @@ function print(...args) {
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
-    app.use('/game/assets', express.static(path.resolve(O876_RC_ROOT_PATH, 'game/assets')));
+
+    app.use('/game/assets', express.static(path.resolve(AppRootPath.path, CONFIG.game_path, 'assets')));
+    app.use('/game/dist', express.static(path.resolve(AppRootPath.path, CONFIG.game_path, 'dist')));
     persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.vault_path));
 
     // list levels
@@ -74,6 +77,14 @@ function initMapEditor() {
             .unpublishLevel(req.params.name)
             .then(() => res.json({status: 'done'}))
             .catch(e => res.json({status: 'error', error: e.message}));
+    });
+
+    app.get('/game/', (req, res) => {
+        res.redirect(301, '/game/index.html');
+    });
+
+    app.get('/game/index.html', (req, res) => {
+        res.sendFile(path.resolve(AppRootPath.path, CONFIG.game_path, 'index.html'));
     });
 
     // load level
@@ -126,7 +137,7 @@ function initMapEditor() {
             await LZ.exportLevel(name, data, {
                 textures: CONFIG.texture_path,
                 level: CONFIG.level_path,
-                game: path.resolve(AppRootPath.path, 'game')
+                game: path.resolve(AppRootPath.path, CONFIG.game_path)
             });
             res.json({status: 'done'});
         } catch (e) {
