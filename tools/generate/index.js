@@ -2,7 +2,26 @@
  * Generates an engine compliant JSON out of a MapEdit save file
  * this is a node.js module
  */
-const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
+const LOOPS = [
+    '@LOOP_NONE',
+    '@LOOP_FORWARD',
+    '@LOOP_YOYO'
+];
+const PHYS = [
+    "@PHYS_NONE",
+    "@PHYS_WALL",
+    "@PHYS_DOOR_UP",
+    "@PHYS_CURT_UP",
+    "@PHYS_DOOR_DOWN",
+    "@PHYS_CURT_DOWN",
+    "@PHYS_DOOR_LEFT",
+    "@PHYS_DOOR_RIGHT",
+    "@PHYS_DOOR_DOUBLE",
+    "@PHYS_SECRET_BLOCK",
+    "@PHYS_TRANSPARENT_BLOCK",
+    "@PHYS_INVISIBLE_BLOCK",
+    "@PHYS_OFFSET_BLOCK"
+];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 let combineTiles = async function() {};
@@ -57,14 +76,15 @@ async function generateTileset(tilesets, idTile) {
     output.src = src;
     output.width = width;
     output.height = height;
-    output.animations = nFrames > 1 ? {
-        [DEFAULT_ANIMATION_NAME]: {
+    output.animations = nFrames > 1 ? [
+        {
+            id: DEFAULT_ANIMATION_NAME,
             start: [0, 0, 0, 0, 0, 0, 0, 0],
             length: nFrames | 0,
             duration: tile.animation.duration | 0,
             loop: LOOPS[tile.animation.loop]
         }
-    } : null;
+    ] : [];
     return output;
 }
 
@@ -265,7 +285,7 @@ function generateLegend(input, block) {
     // ca ne marche pas
     return {
         code: block.id,
-        phys: block.phys,
+        phys: PHYS[block.phys],
         offset: block.offs | 0,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
@@ -327,7 +347,11 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size | 0;
+                const size = (oTile.width >> 1) | 0;
+                if (size < 4) {
+                    console.log(oTile);
+                    throw new Error('xxx');
+                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -335,9 +359,10 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
+                    z: 0,
                     angle: 0,
                     blueprint: idThingTemplate,
-                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false
+                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
                 });
             } else {
                 // il s'agit d'un decal
@@ -402,6 +427,7 @@ function generateCamera(input) {
     return {
         x: input.startpoint.x,
         y: input.startpoint.y,
+        z: 1,
         angle: input.startpoint.angle * Math.PI,
         thinker: 'KeyboardControlThinker'
     };
@@ -429,7 +455,7 @@ async function generate(input, imageAppender) {
     }
     setImageAppender(imageAppender);
     return {
-        version: 'eng-100',
+        version: 'RCE-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),

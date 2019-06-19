@@ -51,7 +51,6 @@
             }),
 
             run: async function(level, canvas) {
-                console.log(generate);
                 const context = canvas.getContext('2d');
                 try {
                     context.font = '16px monospace';

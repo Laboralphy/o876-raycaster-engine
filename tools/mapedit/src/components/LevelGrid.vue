@@ -846,7 +846,7 @@
              */
             saveClick: async function () {
                 if (this.getFlagExport) {
-                    if (!confirm('As the export flag is "on". You must confirm the level auto-exportation during saving process.')) {
+                    if (!confirm('As the auto-publish flag is "on". You must confirm the level auto-publication during saving process.')) {
                         this.setStatusBarText({text: 'Level NOT saved'});
                         return false;
                     }
@@ -856,7 +856,7 @@
                     await FH.saveLevel(sFileName, this.getLevel);
                     if (this.getFlagExport) {
                         await FH.exportLevel(sFileName);
-                        this.setStatusBarText({text: 'Level saved and exported : ' + sFileName});
+                        this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
                     } else {
                         this.setStatusBarText({text: 'Level saved : ' + sFileName});
                     }

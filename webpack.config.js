@@ -1,6 +1,8 @@
 const path = require('path');
 const fs = require('fs');
 
+const gameConfig = require('./game/webpack.config');
+
 
 const devConfig = {
     mode: "development",
@@ -73,6 +75,7 @@ const exampleConfig = {
 
 module.exports = [
     //devConfig,
+    gameConfig,
     testConfig,
     exampleConfig,
     mapeditConfig,

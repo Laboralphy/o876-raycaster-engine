@@ -5,6 +5,7 @@ import RCE from "../../lib/src";
 const Engine = RCE.Engine;
 
 const LEVEL = {
+    "version": "RCE-100",
 
     "tilesets": [
         // we have several tileset for this example, but most of tilesets consist only in one frame
@@ -75,7 +76,10 @@ const LEVEL = {
         },
         "textures": {
             "flats": "textures/flats.png", // floor and ceiling textures
-            "walls": "textures/walls.png"  // wall textures
+            "walls": "textures/walls.png",  // wall textures
+            "sky": "",
+            "smooth": false,
+            "stretch": false
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "########",

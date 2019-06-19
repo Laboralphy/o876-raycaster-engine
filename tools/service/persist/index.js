@@ -84,7 +84,10 @@ async function save(name, data) {
 		// get the preview
 		const preview = data.preview;
 		if (preview) {
-			await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+			const i = preview.indexOf(',');
+			// does not need preview.json any longer
+			// await writeFile(path.resolve(filename, 'preview.json'), JSON.stringify(preview));
+			await writeFile(path.resolve(filename, 'preview.jpg'), Buffer.from(preview.substr(i + 1), 'base64'));
 		}
 		await writeFile(path.resolve(filename, 'level.json'), JSON.stringify(data));
 		return {status: 'done'};
@@ -96,38 +99,43 @@ async function save(name, data) {
 
 /**
  * load data from project folder
- * @param $name String project name
+ * @param name String project name
  */
-function load($name) {
-	const filename = _getFullName($name);
+function load(name) {
+	const filename = _getFullName(name);
 	return _getFileContentJSON(path.resolve(filename, 'level.json'));
 }
 
+
+async function loadPreview(name) {
+	const filename = _getFullName(name);
+	if (await _isReadable(filename)) {
+		return readFile(path.resolve(filename, 'preview.jpg'));
+	} else {
+		return '';
+	}
+}
 
 /**
  * lists all project saved so far
  */
 async function ls() {
-	const aList = await readDir(VAULT_PATH);
+	const aList = await readDir(VAULT_PATH, {
+		withFileTypes: true
+	});
 	const aOutput = [];
 	for (let i = 0, l = aList.length; i < l; ++i) {
-		const s = aList[i];
-		const dirname = path.resolve(VAULT_PATH, s);
-		if (await _isFolder(dirname)) {
+		const f = aList[i];
+		const s = f.name;
+		if (f.isDirectory()) {
 			const filename = path.resolve(VAULT_PATH, s, 'level.json');
-			const previewFilename = path.resolve(VAULT_PATH, s, 'preview.json');
 			try {
 				const st = await stat(filename);
 				const date = Math.floor(st.mtimeMs / 1000);
 				const name = s;
-				let preview = false;
-				if (await _isReadable(previewFilename)) {
-					preview = await _getFileContentJSON(previewFilename);
-				}
 				aOutput.push({
 					"name": name,
-					"date": date,
-					"preview": preview
+					"date": date
 				});
 			} catch (e) {
 				if (e.code === 'ENOENT') {
@@ -192,6 +200,7 @@ function getVaultPath() {
 module.exports = {
 	save,
 	load,
+	loadPreview,
 	ls,
 	rm,
 	setVaultPath,

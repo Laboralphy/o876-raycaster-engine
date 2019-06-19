@@ -181,6 +181,21 @@ exports.push([module.i, "\nfigure.logo[data-v-2e370a16] {\n    display: inline-b
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&":
+/*!*******************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, "\nfigure.level-thumbnail[data-v-519c4ed0] {\n    display: inline-block;\n    border: outset #999 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #999;\n    margin: 1.5em;\n}\nfigure.level-thumbnail img[data-v-519c4ed0] {\n    border: solid thin #000;\n    margin: 0;\n}\nfigure.level-thumbnail.not-exported img[data-v-519c4ed0] {\n    filter: grayscale(100%);\n    opacity: 0.666;\n}\nfigure.level-thumbnail.not-invault .filename[data-v-519c4ed0] {\n    color: #880000;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-519c4ed0] {\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-519c4ed0] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/Logo.vue?vue&type=style&index=0&id=5f6da59a&scoped=true&lang=css&":
 /*!*********************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/Logo.vue?vue&type=style&index=0&id=5f6da59a&scoped=true&lang=css& ***!
@@ -280,7 +295,7 @@ exports.push([module.i, "/*! normalize.css v4.1.1 | MIT License | github.com/nec
 
 exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "/* STARTER CSS FOR MOBILE FIRST DOCUMENTS */\n\n/* This style sheet is aimed at introducing some structural directive\n * to make a page responsive.\n * the styles here are limited to metrics like padding, margin, size, alignement...\n */\n \n/* DEBUG */\n/*\n* {\n\tbackground-color: rgba(0, 0, 0, 0.2);\n\tborder: thin solid transparent;\n}\n*/\n\n\n/*\n######\n#     #  ######  ######    ##    #    #  #        #####   ####\n#     #  #       #        #  #   #    #  #          #    #\n#     #  #####   #####   #    #  #    #  #          #     ####\n#     #  #       #       ######  #    #  #          #         #\n#     #  #       #       #    #  #    #  #          #    #    #\n######   ######  #       #    #   ####   ######     #     ####\n*/\n\n\n/* DEFAULT Configuration for standard éléments */\n\n* {\n\tpadding-top: 0.25em;\n\tpadding-bottom: 0.25em;\n\tbox-sizing: border-box;\n}\n\n/* \n * html and body are 100% height by default\n * font size is 18px\n */\nhtml, body {\n\theight: 100%;\n\tfont-size: 18px;\n}\n\n\n\n\n\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n\n/* navigation bar for buttons */\nnav ul {\n\tpadding: 0;\n}\n\n/* list items in navigation bar are on the same line */\nnav li {\n\tlist-style-type: none;\n\tdisplay: inline-block;\n}\n\n/* navigation block for larger menu with long item names */\nnav.block li {\n\tlist-style-type: none;\n\tdisplay: block;\n}\n\n\n\n\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n\n/* buttons and a.btn share the same styles */\nbutton, a.btn {\n\tdisplay: block;\n\tpadding: 0.5em 1em;\n\tborder-radius: 0.3em;\n\ttext-decoration: none;\n\tmargin-left: 0.2em;\n\tmargin-right: 0.2em;\n}\n\n/* butons are reshaped */\nbutton {\n\tborder: none;\n\tcursor: pointer;\n}\n\nbutton:hover, a.btn:hover {\n\ttransition: all 0.5s;\n}\n\n\n\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n\n/* default style for images : use all available space, vertically aligned on the middle */\nimg {\n\tvertical-align: middle;\n\twidth: 100%;\n}\n\nfigure {\n\tmargin: 0;\n}\n\nfigure figcaption {\n\tfont-style: italic;\n\tfont-size: 0.85em;\n}\n\n\n\n\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n\ndt {\n\tfont-size: 1.1em;\n\tfont-weight: bold;\n}\n\ndt + dd + dt {\n\tmargin-top: 2em;\n}\n\n/* remove margin top for paragraph and headings */\nh1, h2, h3, h4, h5, p {\n\tmargin-top: 0;\n}\n\nhr {\n\theight: 0;\n\tpadding: 0;\n\tborder: none;\n\tborder-top: solid thin rgba(0, 0, 0, 0.5);\n}\n\n\n\n\n\n\n\n\n\n/*\n#     #\n#     #  ######  #       #####   ######  #####    ####\n#     #  #       #       #    #  #       #    #  #\n#######  #####   #       #    #  #####   #    #   ####\n#     #  #       #       #####   #       #####        #\n#     #  #       #       #       #       #   #   #    #\n#     #  ######  ######  #       ######  #    #   ####\n*/\n\n/* default smaller font helper */\n.font-smaller {\n\tfont-size: 0.75em;\n}\n\n/* default bigger font helper */\n.font-bigger {\n\tfont-size: 1.25em;\n}\n\n/* wrapper is an alias to 100% wide */\n.wrapper {\n\twidth: 100%;\n}\n\n/* a container is limited to 1240 pixels wide */\n.container {\n\tmax-width: 1240px;\n\tmargin: auto;\n}\n\n\n\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n\n/* containers, wrappers and row act like a table */\n.container:before, .wrapper:before, .row:before,\n.container:after, .wrapper:after, .row:after {\n\tcontent: \"\";\n\tdisplay: table;\n\tclear: both;\n}\n\n\n\n\n\n\n\n\n/*\n######\n#     #  ######   ####   #####    ####   #    #   ####      #    #    #  ######\n#     #  #       #       #    #  #    #  ##   #  #          #    #    #  #\n######   #####    ####   #    #  #    #  # #  #   ####      #    #    #  #####\n#   #    #            #  #####   #    #  #  # #       #     #    #    #  #\n#    #   #       #    #  #       #    #  #   ##  #    #     #     #  #   #\n#     #  ######   ####   #        ####   #    #   ####      #      ##    ######\n*/\n\n/* \n * col-lg : large\t\tabove 1366px\n * col-md : medium\t\tmax 1366px\n * col-sm : small\t\tmax 750px\n * col-xs : extra small max 640px\n */\n\n.row {\n\tposition: relative;\n}\n\n.col {\n\tposition: relative;\n\tfloat: left;\n\tpadding-left: 1rem;\n\tpadding-right: 1rem;\n}\n\n.row .row {\n\tmargin-left: -1rem;\n\tmargin-right: -1rem;\n}\n\n.col.lg-12 {\n\twidth: 100%;\n}\n.col.lg-11 {\n\twidth: calc(100% * 11 / 12);\n}\n.col.lg-10 {\n\twidth: calc(100% * 10 / 12);\n}\n.col.lg-9 {\n\twidth: calc(100% * 9 / 12);\n}\n.col.lg-8 {\n\twidth: calc(100% * 8 / 12);\n}\n.col.lg-7 {\n\twidth: calc(100% * 7 / 12);\n}\n.col.lg-6 {\n\twidth: calc(100% * 6 / 12);\n}\n.col.lg-5 {\n\twidth: calc(100% * 5 / 12);\n}\n.col.lg-4 {\n\twidth: calc(100% * 4 / 12);\n}\n.col.lg-3 {\n\twidth: calc(100% * 3 / 12);\n}\n.col.lg-2 {\n\twidth: calc(100% * 2 / 12);\n}\n.col.lg-1 {\n\twidth: calc(100% * 1 / 12);\n}\n\n.col.lg-offset-12 {\n\tmargin-left: 100%;\n}\n.col.lg-offset-11 {\n\tmargin-left: calc(100% * 11 / 12);\n}\n.col.lg-offset-10 {\n\tmargin-left: calc(100% * 10 / 12);\n}\n.col.lg-offset-9 {\n\tmargin-left: calc(100% * 9 / 12);\n}\n.col.lg-offset-8 {\n\tmargin-left: calc(100% * 8 / 12);\n}\n.col.lg-offset-7 {\n\tmargin-left: calc(100% * 7 / 12);\n}\n.col.lg-offset-6 {\n\tmargin-left: calc(100% * 6 / 12);\n}\n.col.lg-offset-5 {\n\tmargin-left: calc(100% * 5 / 12);\n}\n.col.lg-offset-4 {\n\tmargin-left: calc(100% * 4 / 12);\n}\n.col.lg-offset-3 {\n\tmargin-left: calc(100% * 3 / 12);\n}\n.col.lg-offset-2 {\n\tmargin-left: calc(100% * 2 / 12);\n}\n.col.lg-offset-1 {\n\tmargin-left: calc(100% * 1 / 12);\n}\n\n/* LAPTOP */\n@media all and (max-width: 1366px) {\n\n\tbody {\n\t\tfont-size: 16px;\n\t}\n\n\t.col.md-12 {\n\t\twidth: 100%;\n\t}\n\t.col.md-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.md-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.md-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.md-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.md-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.md-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.md-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.md-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.md-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.md-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.md-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.md-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.md-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.md-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.md-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.md-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.md-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.md-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.md-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.md-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.md-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.md-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.md-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.md-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n\n/* PAD */\n@media all and (max-width: 750px) {\n\n\tbody {\n\t\tfont-size: 14px;\n\t}\n\n\t.col.sm-12 {\n\t\twidth: 100%;\n\t}\n\t.col.sm-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.sm-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.sm-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.sm-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.sm-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.sm-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.sm-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.sm-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.sm-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.sm-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.sm-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.sm-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.sm-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.sm-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.sm-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.sm-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.sm-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.sm-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.sm-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.sm-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.sm-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.sm-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.sm-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.sm-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n\n/* MOBILE */\n@media all and (max-width: 640px) {\n\n\tbody {\n\t\tfont-size: 12px;\n\t}\n\n\t.col.xs-12 {\n\t\twidth: 100%;\n\t}\n\t.col.xs-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.xs-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.xs-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.xs-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.xs-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.xs-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.xs-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.xs-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.xs-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.xs-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.xs-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.xs-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.xs-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.xs-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.xs-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.xs-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.xs-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.xs-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.xs-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.xs-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.xs-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.xs-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.xs-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.xs-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n", ""]);
+exports.push([module.i, "/* STARTER CSS FOR MOBILE FIRST DOCUMENTS */\n\n/* This style sheet is aimed at introducing some structural directive\n * to make a page responsive.\n * the styles here are limited to metrics like padding, margin, size, alignement...\n */\n \n/* DEBUG */\n/*\n* {\n\tbackground-color: rgba(0, 0, 0, 0.2);\n\tborder: thin solid transparent;\n}\n*/\n\n\n/*\n######\n#     #  ######  ######    ##    #    #  #        #####   ####\n#     #  #       #        #  #   #    #  #          #    #\n#     #  #####   #####   #    #  #    #  #          #     ####\n#     #  #       #       ######  #    #  #          #         #\n#     #  #       #       #    #  #    #  #          #    #    #\n######   ######  #       #    #   ####   ######     #     ####\n*/\n\n\n/* DEFAULT Configuration for standard éléments */\n\n* {\n\tpadding-top: 0.25em;\n\tpadding-bottom: 0.25em;\n\tbox-sizing: border-box;\n}\n\n/* \n * html and body are 100% height by default\n * font size is 18px\n */\nhtml, body {\n\theight: 100%;\n\tfont-size: 14px;\n}\n\n\n\n\n\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n/****** NAVIGATION BAR AND BLOCK ****** NAVIGATION BAR AND BLOCK ******/\n\n/* navigation bar for buttons */\nnav ul {\n\tpadding: 0;\n}\n\n/* list items in navigation bar are on the same line */\nnav li {\n\tlist-style-type: none;\n\tdisplay: inline-block;\n}\n\n/* navigation block for larger menu with long item names */\nnav.block li {\n\tlist-style-type: none;\n\tdisplay: block;\n}\n\n\n\n\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n/****** BUTTONS AND A.NAV ****** BUTTONS AND A.NAV ******/\n\n/* buttons and a.btn share the same styles */\nbutton, a.btn {\n\tdisplay: block;\n\tpadding: 0.5em 1em;\n\tborder-radius: 0.3em;\n\ttext-decoration: none;\n\tmargin-left: 0.2em;\n\tmargin-right: 0.2em;\n}\n\n/* butons are reshaped */\nbutton {\n\tborder: none;\n\tcursor: pointer;\n}\n\nbutton:hover, a.btn:hover {\n\ttransition: all 0.5s;\n}\n\n\n\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n/******* FIGURES AND IMAGES ******* FIGURES AND IMAGES *******/\n\n/* default style for images : use all available space, vertically aligned on the middle */\nimg {\n\tvertical-align: middle;\n\twidth: 100%;\n}\n\nfigure {\n\tmargin: 0;\n}\n\nfigure figcaption {\n\tfont-style: italic;\n\tfont-size: 0.85em;\n}\n\n\n\n\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n/****** TEXT STYLES ****** TEXT STYLES ****** TEXT STYLES ******/\n\ndt {\n\tfont-size: 1.1em;\n\tfont-weight: bold;\n}\n\ndt + dd + dt {\n\tmargin-top: 2em;\n}\n\n/* remove margin top for paragraph and headings */\nh1, h2, h3, h4, h5, p {\n\tmargin-top: 0;\n}\n\nhr {\n\theight: 0;\n\tpadding: 0;\n\tborder: none;\n\tborder-top: solid thin rgba(0, 0, 0, 0.5);\n}\n\n\n\n\n\n\n\n\n\n/*\n#     #\n#     #  ######  #       #####   ######  #####    ####\n#     #  #       #       #    #  #       #    #  #\n#######  #####   #       #    #  #####   #    #   ####\n#     #  #       #       #####   #       #####        #\n#     #  #       #       #       #       #   #   #    #\n#     #  ######  ######  #       ######  #    #   ####\n*/\n\n/* default smaller font helper */\n.font-smaller {\n\tfont-size: 0.75em;\n}\n\n/* default bigger font helper */\n.font-bigger {\n\tfont-size: 1.25em;\n}\n\n/* wrapper is an alias to 100% wide */\n.wrapper {\n\twidth: 100%;\n}\n\n/* a container is limited to 1240 pixels wide */\n.container {\n\tmax-width: 1240px;\n\tmargin: auto;\n}\n\n\n\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n/****** TABLE-IZATION ****** TABLE-IZATION ****** TABLE-IZATION ******/\n\n/* containers, wrappers and row act like a table */\n.container:before, .wrapper:before, .row:before,\n.container:after, .wrapper:after, .row:after {\n\tcontent: \"\";\n\tdisplay: table;\n\tclear: both;\n}\n\n\n\n\n\n\n\n\n/*\n######\n#     #  ######   ####   #####    ####   #    #   ####      #    #    #  ######\n#     #  #       #       #    #  #    #  ##   #  #          #    #    #  #\n######   #####    ####   #    #  #    #  # #  #   ####      #    #    #  #####\n#   #    #            #  #####   #    #  #  # #       #     #    #    #  #\n#    #   #       #    #  #       #    #  #   ##  #    #     #     #  #   #\n#     #  ######   ####   #        ####   #    #   ####      #      ##    ######\n*/\n\n/* \n * col-lg : large\t\tabove 1366px\n * col-md : medium\t\tmax 1366px\n * col-sm : small\t\tmax 750px\n * col-xs : extra small max 640px\n */\n\n.row {\n\tposition: relative;\n}\n\n.col {\n\tposition: relative;\n\tfloat: left;\n\tpadding-left: 1rem;\n\tpadding-right: 1rem;\n}\n\n.row .row {\n\tmargin-left: -1rem;\n\tmargin-right: -1rem;\n}\n\n.col.lg-12 {\n\twidth: 100%;\n}\n.col.lg-11 {\n\twidth: calc(100% * 11 / 12);\n}\n.col.lg-10 {\n\twidth: calc(100% * 10 / 12);\n}\n.col.lg-9 {\n\twidth: calc(100% * 9 / 12);\n}\n.col.lg-8 {\n\twidth: calc(100% * 8 / 12);\n}\n.col.lg-7 {\n\twidth: calc(100% * 7 / 12);\n}\n.col.lg-6 {\n\twidth: calc(100% * 6 / 12);\n}\n.col.lg-5 {\n\twidth: calc(100% * 5 / 12);\n}\n.col.lg-4 {\n\twidth: calc(100% * 4 / 12);\n}\n.col.lg-3 {\n\twidth: calc(100% * 3 / 12);\n}\n.col.lg-2 {\n\twidth: calc(100% * 2 / 12);\n}\n.col.lg-1 {\n\twidth: calc(100% * 1 / 12);\n}\n\n.col.lg-offset-12 {\n\tmargin-left: 100%;\n}\n.col.lg-offset-11 {\n\tmargin-left: calc(100% * 11 / 12);\n}\n.col.lg-offset-10 {\n\tmargin-left: calc(100% * 10 / 12);\n}\n.col.lg-offset-9 {\n\tmargin-left: calc(100% * 9 / 12);\n}\n.col.lg-offset-8 {\n\tmargin-left: calc(100% * 8 / 12);\n}\n.col.lg-offset-7 {\n\tmargin-left: calc(100% * 7 / 12);\n}\n.col.lg-offset-6 {\n\tmargin-left: calc(100% * 6 / 12);\n}\n.col.lg-offset-5 {\n\tmargin-left: calc(100% * 5 / 12);\n}\n.col.lg-offset-4 {\n\tmargin-left: calc(100% * 4 / 12);\n}\n.col.lg-offset-3 {\n\tmargin-left: calc(100% * 3 / 12);\n}\n.col.lg-offset-2 {\n\tmargin-left: calc(100% * 2 / 12);\n}\n.col.lg-offset-1 {\n\tmargin-left: calc(100% * 1 / 12);\n}\n\n/* LAPTOP */\n@media all and (max-width: 1366px) {\n\n\tbody {\n\t\tfont-size: 16px;\n\t}\n\n\t.col.md-12 {\n\t\twidth: 100%;\n\t}\n\t.col.md-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.md-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.md-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.md-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.md-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.md-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.md-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.md-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.md-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.md-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.md-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.md-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.md-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.md-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.md-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.md-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.md-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.md-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.md-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.md-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.md-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.md-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.md-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.md-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n\n/* PAD */\n@media all and (max-width: 750px) {\n\n\tbody {\n\t\tfont-size: 14px;\n\t}\n\n\t.col.sm-12 {\n\t\twidth: 100%;\n\t}\n\t.col.sm-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.sm-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.sm-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.sm-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.sm-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.sm-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.sm-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.sm-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.sm-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.sm-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.sm-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.sm-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.sm-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.sm-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.sm-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.sm-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.sm-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.sm-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.sm-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.sm-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.sm-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.sm-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.sm-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.sm-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n\n/* MOBILE */\n@media all and (max-width: 640px) {\n\n\tbody {\n\t\tfont-size: 12px;\n\t}\n\n\t.col.xs-12 {\n\t\twidth: 100%;\n\t}\n\t.col.xs-11 {\n\t\twidth: calc(100% * 11 / 12);\n\t}\n\t.col.xs-10 {\n\t\twidth: calc(100% * 10 / 12);\n\t}\n\t.col.xs-9 {\n\t\twidth: calc(100% * 9 / 12);\n\t}\n\t.col.xs-8 {\n\t\twidth: calc(100% * 8 / 12);\n\t}\n\t.col.xs-7 {\n\t\twidth: calc(100% * 7 / 12);\n\t}\n\t.col.xs-6 {\n\t\twidth: calc(100% * 6 / 12);\n\t}\n\t.col.xs-5 {\n\t\twidth: calc(100% * 5 / 12);\n\t}\n\t.col.xs-4 {\n\t\twidth: calc(100% * 4 / 12);\n\t}\n\t.col.xs-3 {\n\t\twidth: calc(100% * 3 / 12);\n\t}\n\t.col.xs-2 {\n\t\twidth: calc(100% * 2 / 12);\n\t}\n\t.col.xs-1 {\n\t\twidth: calc(100% * 1 / 12);\n\t}\n\n\t.col.xs-offset-12 {\n\t\tmargin-left: 100%;\n\t}\n\t.col.xs-offset-11 {\n\t\tmargin-left: calc(100% * 11 / 12);\n\t}\n\t.col.xs-offset-10 {\n\t\tmargin-left: calc(100% * 10 / 12);\n\t}\n\t.col.xs-offset-9 {\n\t\tmargin-left: calc(100% * 9 / 12);\n\t}\n\t.col.xs-offset-8 {\n\t\tmargin-left: calc(100% * 8 / 12);\n\t}\n\t.col.xs-offset-7 {\n\t\tmargin-left: calc(100% * 7 / 12);\n\t}\n\t.col.xs-offset-6 {\n\t\tmargin-left: calc(100% * 6 / 12);\n\t}\n\t.col.xs-offset-5 {\n\t\tmargin-left: calc(100% * 5 / 12);\n\t}\n\t.col.xs-offset-4 {\n\t\tmargin-left: calc(100% * 4 / 12);\n\t}\n\t.col.xs-offset-3 {\n\t\tmargin-left: calc(100% * 3 / 12);\n\t}\n\t.col.xs-offset-2 {\n\t\tmargin-left: calc(100% * 2 / 12);\n\t}\n\t.col.xs-offset-1 {\n\t\tmargin-left: calc(100% * 1 / 12);\n\t}\n\t.col.xs-offset-0 {\n\t\tmargin-left: 0;\n\t}\n}\n", ""]);
 
 
 
@@ -814,6 +829,36 @@ if(false) {}
 
 
 var content = __webpack_require__(/*! !../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./HomePage.vue?vue&type=style&index=0&id=2e370a16&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/HomePage.vue?vue&type=style&index=0&id=2e370a16&scoped=true&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&":
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& */ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&");
 
 if(typeof content === 'string') content = [[module.i, content, '']];
 
@@ -1604,6 +1649,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "AboutPage",
     components: {Logo: _Logo_vue__WEBPACK_IMPORTED_MODULE_0__["default"]}
@@ -2091,6 +2137,133 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/website/src/components/LevelThumbnail.vue");
+/* harmony import */ var _lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../lib/src/fetch-json */ "./lib/src/fetch-json/index.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "HomePage",
+    components: {LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__["default"]},
+    data: function() {
+        return {
+            levels: []
+        }
+    },
+
+    computed: {
+        getPublishedLevels: function() {
+            return this.levels.filter(l => l.exported);
+        },
+
+        getInVaultLevels: function() {
+            return this.levels.filter(l => !l.exported);
+        },
+
+        getUnpublishedLevels: function() {
+            const pl = this.getPublishedLevels.map(l => l.name);
+            return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+        },
+    },
+
+    methods: {
+        unpublish: async function(name) {
+            const aStr = [];
+            if (!this.getInVaultLevels.find(l => l.name === name)) {
+                if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
+                    return;
+                }
+            }
+            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])('/game/level/' + name);
+            return this.fetchLevelData();
+        },
+
+        publish: async function(name) {
+            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/export/' + name);
+            return this.fetchLevelData();
+        },
+
+        fetchLevelData: function() {
+            return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/game/levels').then(data => {
+                this.levels.splice(0, this.levels.length, ...data);
+            });
+        }
+    },
+
+    mounted: function() {
+        this.fetchLevelData();
+    }
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2107,7 +2280,71 @@ __webpack_require__.r(__webpack_exports__);
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "HomePage",
+    name: "LevelThumbnail",
+
+    props: {
+        name: {
+            type: String,
+            required: true
+        },
+        preview: {
+            required: false,
+            default: false
+        },
+        date: {
+            required: false,
+            default: false
+        },
+        exported: {
+            required: false,
+            default: false
+        },
+        invault: {
+            required: false,
+            default: false
+        },
+        publishable: {
+            required: false,
+            default: false
+        }
+    },
+
+    computed: {
+
+        getComputedClass: function() {
+            const a = ['level-thumbnail'];
+            if (!this.exported) {
+                a.push('not-exported');
+            }
+            if (!this.invault) {
+                a.push('not-invault');
+            }
+            return a.join(' ');
+        },
+
+        getDateString: function() {
+            //const d = new Date(parseInt(this.date.toString() + '000'));
+            const d = new Date(this.date);
+            //2019-05-28T16:35:04.231Z
+            const d2 = d.toJSON();
+            const r = d2.match(/^([0-9]{4}-[0-9]{2}-[0-9]{2})T([0-9]{2}:[0-9]{2})/);
+            return r[1] + ' ' + r[2];
+        },
+
+        getSource: function() {
+            return !!this.preview ? this.preview : './assets/images/no-preview.png';
+        }
+    },
+
+    methods: {
+        unpublish: function(name) {
+            this.$emit('unpublish', {name});
+        },
+
+        publish: function(name) {
+            this.$emit('publish', {name});
+        }
+    }
 });
 
 
@@ -2189,59 +2426,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2693,7 +2877,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "row" }, [
+  return _c("div", [
     _vm._m(0),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
@@ -3598,30 +3782,193 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col lg-12" },
+        [
+          _c("h4", [_vm._v("Published levels")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n            If you modify one of these levels via the Map Editor, you'll have to publish it again."
+            )
+          ]),
+          _vm._v(" "),
+          _vm.getPublishedLevels.length === 0
+            ? _c("p", { staticStyle: { color: "#800" } }, [
+                _vm._v("No published level.")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.getPublishedLevels, function(l) {
+            return _c("LevelThumbnail", {
+              key: l.name,
+              attrs: {
+                name: l.name,
+                date: l.date,
+                preview: l.preview,
+                exported: l.exported,
+                invault: l.invault
+              },
+              on: {
+                unpublish: function(ref) {
+                  var name = ref.name
+
+                  return _vm.unpublish(name)
+                }
+              }
+            })
+          })
+        ],
+        2
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        { staticClass: "col lg-12" },
+        [
+          _c("h4", [_vm._v("In vault levels")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n            To publish a level, click on "Publish" or use the Map Editor.'
+            )
+          ]),
+          _vm._v(" "),
+          _vm.getUnpublishedLevels.length === 0
+            ? _c("p", { staticStyle: { color: "#800" } }, [
+                _vm._v("Nothing to publish.")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.getUnpublishedLevels, function(l) {
+            return _c("LevelThumbnail", {
+              key: l.name,
+              attrs: {
+                name: l.name,
+                date: l.date,
+                preview: l.preview,
+                exported: l.exported,
+                invault: l.invault,
+                publishable: true
+              },
+              on: {
+                publish: function(ref) {
+                  var name = ref.name
+
+                  return _vm.publish(name)
+                }
+              }
+            })
+          })
+        ],
+        2
+      )
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("h3", [_vm._v("Local project status")]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v("This page is your local game project management page.")
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("Local project status")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Welcome to your local game project management page.")
+        ]),
+        _vm._v(" "),
+        _c("h4", [_vm._v("Run project")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Click here to "),
+          _c("a", { attrs: { href: "/game" } }, [
+            _c("b", { staticStyle: { "font-size": "1.3em" } }, [
+              _vm._v("run your project")
+            ])
           ]),
-          _vm._v(" "),
-          _c("h4", [_vm._v("Levels")]),
-          _vm._v(" "),
-          _c("h4")
+          _vm._v(".")
         ])
       ])
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true&":
+/*!**********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true& ***!
+  \**********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("figure", { class: _vm.getComputedClass }, [
+    _c("img", { attrs: { alt: _vm.name + " preview", src: _vm.getSource } }),
+    _vm._v(" "),
+    _c("figcaption", [
+      _c("div", [
+        _c("span", { staticClass: "filename" }, [_vm._v(_vm._s(_vm.name))]),
+        _vm._v(" - "),
+        _c("span", { staticClass: "datestring" }, [
+          _vm._v(_vm._s(_vm.getDateString))
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.exported
+        ? _c("div", [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    return _vm.unpublish(_vm.name)
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.invault ? "Unpublish" : "Delete"))]
+            )
+          ])
+        : _vm.publishable
+        ? _c("div", [
+            _c(
+              "a",
+              {
+                attrs: { href: "#" },
+                on: {
+                  click: function($event) {
+                    return _vm.publish(_vm.name)
+                  }
+                }
+              },
+              [_vm._v("Publish")]
+            )
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -3748,87 +4095,133 @@ var staticRenderFns = [
     return _c("div", [
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Making old-school games with Raycasting.")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "If you are interested in old game technologies like Raycasting, that were used during the early 90's,\n                    and if you wonder how is it possible to build web games with such tech, then you are in the right place."
-                )
-              ])
+          _c("h3", [_vm._v("Making old-school games with Raycasting.")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "If you are interested in old game technologies like Raycasting, that were used during the early 90's,\n            and if you wonder how is it possible to build web games with such tech, then you are in the right place."
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-8 xs-12" }, [
+          _c("h3", [_vm._v("What is Raycasting ?")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Raycasting is a 3D rendering method using simple computations.\n                It renders 3D environments but with lots of limitation to ensure the highest frame rate.\n            "
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("This technology was mainly used in older 90's games like "),
+            _c("b", [_vm._v("Wolfenstein 3D")]),
+            _vm._v("\n                and "),
+            _c("b", [_vm._v("Doom")]),
+            _vm._v(
+              ". Games built around this rendering method are easily designed because they are\n                essentially build out of a 2D map."
+            )
+          ]),
+          _vm._v(" "),
+          _c("hr"),
+          _vm._v(" "),
+          _c("h3", [_vm._v("Main features")]),
+          _vm._v(" "),
+          _c("ul", [
+            _c("li", [_vm._v("The engine is 100% javascript")]),
+            _vm._v(" "),
+            _c("li", [
+              _vm._v(
+                "Supported by any serious HTML 5 Browsers like Firefox, Google Chrome and Chromium."
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", [
+              _vm._v(
+                "Fair performances : games will run at around 25 fps on older architectures like Intel Core2 Duo."
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", [
+              _vm._v(
+                "Full screen, Pointer lock, and Audio support (mp3 and ogg)."
+              )
+            ]),
+            _vm._v(" "),
+            _c("li", [
+              _vm._v(
+                "An HTML 5 Level Editor is available online - Designing levels is now easy."
+              )
             ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col lg-4 xs-12" }, [
+          _c("figure", [
+            _c("img", {
+              attrs: {
+                alt: "raycasting explained",
+                src: __webpack_require__(/*! ../../assets/images/fig-raycasting.png */ "./tools/website/assets/images/fig-raycasting.png")
+              }
+            }),
+            _vm._v(" "),
+            _c("figcaption", [_vm._v("How raycasting works.")])
           ])
         ])
       ]),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("What does it look like ?")]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-8 xs-12" }, [
-              _c("h3", [_vm._v("What is Raycasting ?")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "Raycasting is a 3D rendering method using simple computations.\n                        It renders 3D environments but with lots of limitation to ensure the highest frame rate.\n                    "
-                )
-              ]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "This technology was mainly used in older 90's games like "
-                ),
-                _c("b", [_vm._v("Wolfenstein 3D")]),
-                _vm._v("\n                        and "),
-                _c("b", [_vm._v("Doom")]),
-                _vm._v(
-                  ". Games built around this rendering method are easily designed because they are\n                        essentially build out of a 2D map."
-                )
-              ]),
-              _vm._v(" "),
-              _c("hr"),
-              _vm._v(" "),
-              _c("h3", [_vm._v("Main features")]),
-              _vm._v(" "),
-              _c("ul", [
-                _c("li", [_vm._v("The engine is 100% javascript")]),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-ambush.jpg */ "./tools/website/assets/images/game-ambush.jpg") }
+                }),
                 _vm._v(" "),
-                _c("li", [
-                  _vm._v(
-                    "Supported by any serious HTML 5 Browsers like Firefox, Google Chrome and Chromium."
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _vm._v(
-                    "Fair performances : games will run at around 25 fps on older architectures like Intel Core2 Duo."
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _vm._v(
-                    "Full screen, Pointer lock, and Audio support (mp3 and ogg)."
-                  )
-                ]),
-                _vm._v(" "),
-                _c("li", [
-                  _vm._v(
-                    "An HTML 5 Level Editor is available online - Designing levels is now easy."
-                  )
+                _c("figcaption", [
+                  _vm._v("Reikaster underland (ambush in forest)")
                 ])
               ])
             ]),
             _vm._v(" "),
-            _c("div", { staticClass: "col lg-4 xs-12" }, [
+            _c("div", { staticClass: "col 4" }, [
               _c("figure", [
                 _c("img", {
                   attrs: {
-                    alt: "raycasting explained",
-                    src: __webpack_require__(/*! ../../assets/images/fig-raycasting.png */ "./tools/website/assets/images/fig-raycasting.png")
+                    src: __webpack_require__(/*! ../../assets/images/game-underwater.jpg */ "./tools/website/assets/images/game-underwater.jpg")
                   }
                 }),
                 _vm._v(" "),
-                _c("figcaption", [_vm._v("How raycasting works.")])
+                _c("figcaption", [_vm._v("Reikaster underland (underwater)")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/game-mansion-1.jpg */ "./tools/website/assets/images/game-mansion-1.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("The mansion")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/game-mansion-7.jpg */ "./tools/website/assets/images/game-mansion-7.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("The mansion (interior)")])
               ])
             ])
           ])
@@ -3837,139 +4230,101 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Inspirations")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "The Engine use the very same technics used by old 90's first person shooter games. The most popular in this genre was "
+            ),
+            _c("b", [_vm._v("Wolfenstein 3D")]),
+            _vm._v(".")
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("What does it look like ?")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-ambush.jpg */ "./tools/website/assets/images/game-ambush.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("Reikaster underland (ambush in forest)")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-underwater.jpg */ "./tools/website/assets/images/game-underwater.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("Reikaster underland (underwater)")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-mansion-1.jpg */ "./tools/website/assets/images/game-mansion-1.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("The mansion")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-mansion-7.jpg */ "./tools/website/assets/images/game-mansion-7.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("The mansion (interior)")])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Inspirations")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "The Engine use the very same technics used by old 90's first person shooter games. The most popular in this genre was "
-                ),
-                _c("b", [_vm._v("Wolfenstein 3D")]),
-                _vm._v(".")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "col lg-offset-4 md-6 md-offset-3 sm-12 sm-offset-0"
-                  },
-                  [
-                    _c("figure", [
-                      _c("img", {
-                        attrs: {
-                          src: __webpack_require__(/*! ../../assets/images/wolf3d.jpg */ "./tools/website/assets/images/wolf3d.jpg")
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("figcaption", [_vm._v("Wolfenstein 3D by Id Sofware")])
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Basic Raycasting")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "The primary task of a Raycasting Engine is to render 3D simplified environnement.\n                        It is said that Raycasting is a 2.5D algorithm because the 3D environnement\n                        is rendered from a 2D map and there are only perpendicular walls only flat floor and\n                        ceiling, and so on... A lot of limitations that are not present in real 3D engines."
-                )
-              ]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "But this simplicity has its own advantages :\n                    "
-                ),
-                _c("ul", [
-                  _c("li", [_vm._v("fast level design.")]),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "col lg-offset-4 md-6 md-offset-3 sm-12 sm-offset-0"
+              },
+              [
+                _c("figure", [
+                  _c("img", {
+                    attrs: { src: __webpack_require__(/*! ../../assets/images/wolf3d.jpg */ "./tools/website/assets/images/wolf3d.jpg") }
+                  }),
                   _vm._v(" "),
-                  _c("li", [
-                    _vm._v("No need of complex geometry understanding.")
-                  ]),
-                  _vm._v(" "),
-                  _c("li", [_vm._v("runs on slow computers.")]),
-                  _vm._v(" "),
-                  _c("li", [_vm._v("fast assets downloading.")])
+                  _c("figcaption", [_vm._v("Wolfenstein 3D by Id Sofware")])
                 ])
-              ]),
-              _c("p", [
-                _vm._v(
-                  "Let's have a look at what features are available in this engine..."
-                )
+              ]
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Basic Raycasting")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "The primary task of a Raycasting Engine is to render 3D simplified environnement.\n                It is said that Raycasting is a 2.5D algorithm because the 3D environnement\n                is rendered from a 2D map and there are only perpendicular walls only flat floor and\n                ceiling, and so on... A lot of limitations that are not present in real 3D engines."
+            )
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "But this simplicity has its own advantages :\n            "
+            ),
+            _c("ul", [
+              _c("li", [_vm._v("fast level design.")]),
+              _vm._v(" "),
+              _c("li", [_vm._v("No need of complex geometry understanding.")]),
+              _vm._v(" "),
+              _c("li", [_vm._v("runs on slow computers.")]),
+              _vm._v(" "),
+              _c("li", [_vm._v("fast assets downloading.")])
+            ])
+          ]),
+          _c("p", [
+            _vm._v(
+              "Let's have a look at what features are available in this engine..."
+            )
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Door management")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "There are several type of doors, the only difference is the way they open :\n                They can slide to any direction (left, right, top, bottom), there are even\n                double panel sliding doors as well."
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-open-door-0.jpg */ "./tools/website/assets/images/feat-open-door-0.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Double panel door")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-open-door-1.jpg */ "./tools/website/assets/images/feat-open-door-1.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Top sliding door")])
               ])
             ])
           ])
@@ -3978,129 +4333,29 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Secret door management")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("Just like the game "),
+            _c("i", [_vm._v("wolfenstein 3D")]),
+            _vm._v(
+              ",\n                walls can be pushed to reveal secret areas."
+            )
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Door management")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "There are several type of doors, the only difference is the way they open :\n                        They can slide to any direction (left, right, top, bottom), there are even\n                        double panel sliding doors as well."
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-open-door-0.jpg */ "./tools/website/assets/images/feat-open-door-0.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Double panel door")])
-                  ])
-                ]),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-secret-door-0.jpg */ "./tools/website/assets/images/feat-secret-door-0.jpg")
+                  }
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-open-door-1.jpg */ "./tools/website/assets/images/feat-open-door-1.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Top sliding door")])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Secret door management")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v("Just like the game "),
-                _c("i", [_vm._v("wolfenstein 3D")]),
-                _vm._v(
-                  ",\n                        walls can be pushed to reveal secret areas."
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-secret-door-0.jpg */ "./tools/website/assets/images/feat-secret-door-0.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v(
-                        "This wall has been pushed, and reveals a hidden zone !"
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Sprite management")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  'Animated sprites with composite effect (alpha, opacity...).\n                        Each sprite can have several overlays so rendering "haze" effects\n                        is possible.'
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-blight.jpg */ "./tools/website/assets/images/game-blight.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-scr19.jpg */ "./tools/website/assets/images/game-scr19.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-scr20.jpg */ "./tools/website/assets/images/game-scr20.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Sprites from Blight Magic")])
-                  ])
+                _c("figcaption", [
+                  _vm._v(
+                    "This wall has been pushed, and reveals a hidden zone !"
+                  )
                 ])
               ])
             ])
@@ -4110,41 +4365,75 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Sprite management")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              'Animated sprites with composite effect (alpha, opacity...).\n                Each sprite can have several overlays so rendering "haze" effects\n                is possible.'
+            )
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Floor and ceiling textures")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v("Floor and ceiling can have textures, just like walls.")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-scr13.jpg */ "./tools/website/assets/images/game-scr13.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("Without floor and ceiling textures")
-                    ])
-                  ])
-                ]),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-blight.jpg */ "./tools/website/assets/images/game-blight.jpg") }
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/game-scr18.jpg */ "./tools/website/assets/images/game-scr18.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("With floor and ceiling textures (looks better)")
-                    ])
-                  ])
+                _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-scr19.jpg */ "./tools/website/assets/images/game-scr19.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-scr20.jpg */ "./tools/website/assets/images/game-scr20.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Sprites from Blight Magic")])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Floor and ceiling textures")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("Floor and ceiling can have textures, just like walls.")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-scr13.jpg */ "./tools/website/assets/images/game-scr13.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Without floor and ceiling textures")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/game-scr18.jpg */ "./tools/website/assets/images/game-scr18.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [
+                  _vm._v("With floor and ceiling textures (looks better)")
                 ])
               ])
             ])
@@ -4154,65 +4443,141 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Outdoor environnement / sky texture")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Wall, ceiling, and floor textures can be replaced by a sky texture."
+            )
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Outdoor environnement / sky texture")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "Wall, ceiling, and floor textures can be replaced by a sky texture."
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-sky-0.jpg */ "./tools/website/assets/images/feat-sky-0.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Sky is visible outside")])
-                  ])
-                ]),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-sky-0.jpg */ "./tools/website/assets/images/feat-sky-0.jpg") }
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-sky-1.jpg */ "./tools/website/assets/images/feat-sky-1.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Red sky")])
-                  ])
-                ]),
+                _c("figcaption", [_vm._v("Sky is visible outside")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-sky-1.jpg */ "./tools/website/assets/images/feat-sky-1.jpg") }
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-sky-2.jpg */ "./tools/website/assets/images/feat-sky-2.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("Sky is visible through the ceilling")
-                    ])
-                  ])
-                ]),
+                _c("figcaption", [_vm._v("Red sky")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-sky-2.jpg */ "./tools/website/assets/images/feat-sky-2.jpg") }
+                }),
                 _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-sky-3.jpg */ "./tools/website/assets/images/feat-sky-3.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Dark sky and landscape")])
-                  ])
+                _c("figcaption", [
+                  _vm._v("Sky is visible through the ceilling")
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-sky-3.jpg */ "./tools/website/assets/images/feat-sky-3.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Dark sky and landscape")])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Animated wall textures")]),
+          _vm._v(" "),
+          _c("p", [_vm._v("Walls can have animated textures.")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-0.gif */ "./tools/website/assets/images/feat-anim-wall-0.gif")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Fireplace")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-1.gif */ "./tools/website/assets/images/feat-anim-wall-1.gif")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Pixelated fireplace")])
+              ])
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Dynamic texture modification")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "Wall, floor and ceiling textures can be modified,\n                allowing programmer to draw anything on it (like drawing on a canvas and using canvas\n                context methods). This ability is used for static lighting (lighten walls that are\n                near light emmiting sources)."
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-decal-0.jpg */ "./tools/website/assets/images/feat-decal-0.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Ketchup on the wall !")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-light-effects-1.jpg */ "./tools/website/assets/images/feat-light-effects-1.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("Candles may affect wall textures")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: {
+                    src: __webpack_require__(/*! ../../assets/images/feat-light-effects-0.jpg */ "./tools/website/assets/images/feat-light-effects-0.jpg")
+                  }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [
+                  _vm._v(
+                    "Light emmitting objects cast light and shadows on both floor and ceiling"
+                  )
                 ])
               ])
             ])
@@ -4222,204 +4587,89 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col lg-12" }, [
+          _c("h3", [_vm._v("Using VR Glasses")]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v(
+              "The framework has the ability to switch between normal rendering\n                and "
+            ),
+            _c("b", [_vm._v("VR Rendering")]),
+            _vm._v(".")
+          ]),
+          _vm._v(" "),
+          _c("p", [
+            _vm._v("You should try it out with "),
+            _c(
+              "a",
+              {
+                attrs: {
+                  href: "https://www.google.fr/search?q=vr+glasses+cardboard"
+                }
+              },
+              [_vm._v("\n                this kind of cardboard glasses")]
+            ),
+            _vm._v(".")
+          ]),
+          _vm._v(" "),
           _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Animated wall textures")]),
-              _vm._v(" "),
-              _c("p", [_vm._v("Walls can have animated textures.")]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-0.gif */ "./tools/website/assets/images/feat-anim-wall-0.gif")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Fireplace")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-anim-wall-1.gif */ "./tools/website/assets/images/feat-anim-wall-1.gif")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Pixelated fireplace")])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Dynamic texture modification")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "Wall, floor and ceiling textures can be modified,\n                        allowing programmer to draw anything on it (like drawing on a canvas and using canvas\n                        context methods). This ability is used for static lighting (lighten walls that are\n                        near light emmiting sources)."
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-decal-0.jpg */ "./tools/website/assets/images/feat-decal-0.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("Ketchup on the wall !")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-light-effects-1.jpg */ "./tools/website/assets/images/feat-light-effects-1.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v("Candles may affect wall textures")
-                    ])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col lg-4 sm-6 xs-12" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-light-effects-0.jpg */ "./tools/website/assets/images/feat-light-effects-0.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [
-                      _vm._v(
-                        "Light emmitting objects cast light and shadows on both floor and ceiling"
-                      )
-                    ])
-                  ])
-                ])
-              ])
-            ])
-          ])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("div", { staticClass: "row" }, [
-            _c("div", { staticClass: "col lg-12" }, [
-              _c("h3", [_vm._v("Using VR Glasses")]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v(
-                  "The framework has the ability to switch between normal rendering\n                        and "
-                ),
-                _c("b", [_vm._v("VR Rendering")]),
-                _vm._v(".")
-              ]),
-              _vm._v(" "),
-              _c("p", [
-                _vm._v("You should try it out with "),
-                _c(
-                  "a",
-                  {
+            _c(
+              "div",
+              {
+                staticClass:
+                  "col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-12 xs-offset-0"
+              },
+              [
+                _c("figure", [
+                  _c("img", {
                     attrs: {
-                      href:
-                        "https://www.google.fr/search?q=vr+glasses+cardboard"
+                      src: __webpack_require__(/*! ../../assets/images/vr-glasses.jpg */ "./tools/website/assets/images/vr-glasses.jpg")
                     }
-                  },
-                  [
-                    _vm._v(
-                      "\n                        this kind of cardboard glasses"
-                    )
-                  ]
-                ),
-                _vm._v(".")
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c(
-                  "div",
-                  {
-                    staticClass:
-                      "col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-12 xs-offset-0"
-                  },
-                  [
-                    _c("figure", [
-                      _c("img", {
-                        attrs: {
-                          src: __webpack_require__(/*! ../../assets/images/vr-glasses.jpg */ "./tools/website/assets/images/vr-glasses.jpg")
-                        }
-                      }),
-                      _vm._v(" "),
-                      _c("figcaption", [_vm._v("VR Glasses")])
-                    ])
-                  ]
-                )
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-vr-00.jpg */ "./tools/website/assets/images/feat-vr-00.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("city : normal")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-vr-01.jpg */ "./tools/website/assets/images/feat-vr-01.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("city : vr-rendering")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-vr-10.jpg */ "./tools/website/assets/images/feat-vr-10.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("mansion : normal")])
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col 4" }, [
-                  _c("figure", [
-                    _c("img", {
-                      attrs: {
-                        src: __webpack_require__(/*! ../../assets/images/feat-vr-11.jpg */ "./tools/website/assets/images/feat-vr-11.jpg")
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c("figcaption", [_vm._v("mansion : vr-rendering")])
-                  ])
+                  }),
+                  _vm._v(" "),
+                  _c("figcaption", [_vm._v("VR Glasses")])
                 ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-vr-00.jpg */ "./tools/website/assets/images/feat-vr-00.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("city : normal")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-vr-01.jpg */ "./tools/website/assets/images/feat-vr-01.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("city : vr-rendering")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-vr-10.jpg */ "./tools/website/assets/images/feat-vr-10.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("mansion : normal")])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col 4" }, [
+              _c("figure", [
+                _c("img", {
+                  attrs: { src: __webpack_require__(/*! ../../assets/images/feat-vr-11.jpg */ "./tools/website/assets/images/feat-vr-11.jpg") }
+                }),
+                _vm._v(" "),
+                _c("figcaption", [_vm._v("mansion : vr-rendering")])
               ])
             ])
           ])
@@ -17584,6 +17834,93 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HomePage_vue_vue_type_template_id_2e370a16_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HomePage_vue_vue_type_template_id_2e370a16_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./tools/website/src/components/LevelThumbnail.vue":
+/*!*********************************************************!*\
+  !*** ./tools/website/src/components/LevelThumbnail.vue ***!
+  \*********************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true& */ "./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true&");
+/* harmony import */ var _LevelThumbnail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LevelThumbnail.vue?vue&type=script&lang=js& */ "./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& */ "./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _LevelThumbnail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "519c4ed0",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "tools/website/src/components/LevelThumbnail.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************!*\
+  !*** ./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib??vue-loader-options!./LevelThumbnail.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&":
+/*!******************************************************************************************************************!*\
+  !*** ./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& ***!
+  \******************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/style-loader!../../../../node_modules/css-loader/dist/cjs.js!../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../node_modules/vue-loader/lib??vue-loader-options!./LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=style&index=0&id=519c4ed0&scoped=true&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_style_loader_index_js_node_modules_css_loader_dist_cjs_js_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_style_index_0_id_519c4ed0_scoped_true_lang_css___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+
+/***/ "./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true&":
+/*!****************************************************************************************************!*\
+  !*** ./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true& ***!
+  \****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/LevelThumbnail.vue?vue&type=template&id=519c4ed0&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LevelThumbnail_vue_vue_type_template_id_519c4ed0_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

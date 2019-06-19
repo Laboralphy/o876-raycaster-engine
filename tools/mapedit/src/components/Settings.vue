@@ -36,12 +36,12 @@
                 </div>
             </fieldset>
             <fieldset>
-                <legend>Level export</legend>
+                <legend>Level publication</legend>
                 <div>
-                    <label>Auto-export this level
+                    <label>Auto-publish this level:
                         <input v-model="value.flagExport" type="checkbox" />
                     </label>
-                    <div class="hint">If checked, when you save the level, it will also be exported to the local game project.</div>
+                    <div class="hint">If checked, each time you save the level, it will also be published to the local game project.</div>
                 </div>
             </fieldset>
             <br/>

@@ -44,8 +44,9 @@ export default {
      * @param commit
      * @param content {string}
      */
-    [ACTION.LOAD_TILE]: ({commit, getters, state}, {type, content}) => {
-        commit(MUTATION.ADD_TILE, {id: getters.getMaxTileId + 1, type, content});
+    [ACTION.LOAD_TILE]: async ({commit, getters, state}, {type, content}) => {
+        const oCvs = await CanvasHelper.loadCanvas(content);
+        commit(MUTATION.ADD_TILE, {id: getters.getMaxTileId + 1, type, content, width: oCvs.width, height: oCvs.height});
     },
 
     /**
@@ -53,10 +54,12 @@ export default {
      * @param commit
      * @param content {string}
      */
-    [ACTION.LOAD_TILES]: ({commit, getters, state}, {type, contents}) => {
+    [ACTION.LOAD_TILES]: async ({commit, getters, state}, {type, contents}) => {
         let id = getters.getMaxTileId + 1;
         for (let i = 0, l = contents.length; i < l; ++i) {
-            commit(MUTATION.ADD_TILE, {id: id + i, type, content: contents[i]});
+            const content = contents[i];
+            const oCvs = await CanvasHelper.loadCanvas(content);
+            commit(MUTATION.ADD_TILE, {id: id + i, type, content, width: oCvs.width, height: oCvs.height});
         }
     },
 
