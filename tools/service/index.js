@@ -30,6 +30,14 @@ function print(...args) {
     console.log(...args);
 }
 
+
+function initFavicon() {
+    app.get('/favicon.ico', (req, res) => {
+        print('serving favicon');
+        res.sendFile(path.resolve(__dirname, 'favicon/favicon.png'));
+    });
+}
+
 /**
  * inits the map editor sub-service
  * and the map editor persistance sub-service
@@ -51,42 +59,6 @@ function initMapEditor() {
                 console.error(e);
             })
     });
-
-    // list of published levels
-    app.get('/game/levels', async (req, res) => {
-        try {
-            const aPublished = await pm.getPublishedLevels();
-            const aVault = await persist.ls();
-            aPublished.forEach(l => {
-                l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
-            });
-            aVault.forEach(l => {
-                l.exported = false;
-                l.preview = '/vault/' + l.name + '.jpg';
-                l.invault = true;
-            });
-            const aLevels = aPublished.concat(aVault);
-            res.json(aLevels);
-        } catch (e) {
-            res.json({status: 'error', error: e.message});
-        }
-    });
-
-    app.delete('/game/level/:name', (req, res) => {
-        pm
-            .unpublishLevel(req.params.name)
-            .then(() => res.json({status: 'done'}))
-            .catch(e => res.json({status: 'error', error: e.message}));
-    });
-
-    app.get('/game/', (req, res) => {
-        res.redirect(301, '/game/index.html');
-    });
-
-    app.get('/game/index.html', (req, res) => {
-        res.sendFile(path.resolve(AppRootPath.path, CONFIG.game_path, 'index.html'));
-    });
-
     // load level
 
     app.get('/vault/:name.json', (req, res) => {
@@ -183,6 +155,42 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
+
+    // list of published levels
+    app.get('/game/levels', async (req, res) => {
+        try {
+            const aPublished = await pm.getPublishedLevels();
+            const aVault = await persist.ls();
+            aPublished.forEach(l => {
+                l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
+            });
+            aVault.forEach(l => {
+                l.exported = false;
+                l.preview = '/vault/' + l.name + '.jpg';
+                l.invault = true;
+            });
+            const aLevels = aPublished.concat(aVault);
+            res.json(aLevels);
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+
+    app.delete('/game/level/:name', (req, res) => {
+        pm
+            .unpublishLevel(req.params.name)
+            .then(() => res.json({status: 'done'}))
+            .catch(e => res.json({status: 'error', error: e.message}));
+    });
+
+    app.get('/game/', (req, res) => {
+        res.redirect(301, '/game/index.html');
+    });
+
+    app.get('/game/index.html', (req, res) => {
+        res.sendFile(path.resolve(AppRootPath.path, CONFIG.game_path, 'index.html'));
+    });
+
     pm.run(AppRootPath.path);
 }
 
@@ -202,6 +210,7 @@ function run(options) {
         CONFIG.vault_path = options.vault_path;
     }
 
+    initFavicon();
     initMapEditor();
     initExamples();
     initDist();
