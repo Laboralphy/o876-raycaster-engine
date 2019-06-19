@@ -26,19 +26,9 @@ async function loadLevel(overlay, engine, name) {
     overlay.innerHTML = Interface.buildProgressBar();
     const progressBar = overlay.querySelector('progress');
 
-    const data = await engine.fetchAsset('levels', name);
-    const tilesets = await engine.fetchAsset('data', 'tilesets');
-    const blueprints = await engine.fetchAsset('data', 'blueprints');
-    await engine.buildLevel(data, (phase, progress) => {
+    await engine.loadLevel(name, (phase, progress) => {
         progressBar.setAttribute('value', (progress * 100).toString());
-    }, {
-        tilesets,
-        blueprints
     });
-    // bindings keyboard events
-    window.addEventListener('keydown', event => engine.camera.thinker.keyDown(event.key));
-    window.addEventListener('keyup', event => engine.camera.thinker.keyUp(event.key));
-
     // starts engine doomloop
     engine.startDoomLoop();
 
@@ -75,6 +65,16 @@ async function main() {
     const screen = configScreen();
     const engine = configEngine(screen.surface);
     const level = await userSelectLevel(screen.overlay);
+    window.addEventListener('keydown', event => {
+        if (!!engine && !!engine.camera) {
+            engine.camera.thinker.keyDown(event.key)
+        }
+    });
+    window.addEventListener('keyup', event => {
+        if (!!engine && !!engine.camera) {
+            engine.camera.thinker.keyUp(event.key)
+        }
+    });
     await loadLevel(screen.overlay, engine, level);
 }
 

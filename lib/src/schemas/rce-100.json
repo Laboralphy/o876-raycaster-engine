@@ -16,7 +16,7 @@
           "description": "A tileset is the definition of graphic item used by blueprints",
           "properties": {
             "id": {
-              "type": "string",
+              "type": "integer",
               "description": "The tileset id, referenced by blueprints, and decals"
             },
             "src": {
@@ -95,12 +95,12 @@
           "description": "Definition of a blueprint",
           "properties": {
             "id": {
-              "type": "string",
-              "description": "The id that is references by 'objects'"
+              "type": "integer",
+              "description": "The blueprint id, referenced by objects"
             },
             "tileset": {
-              "type": "string",
-              "description": "A reference to the tileset used by this blueprint"
+              "type": "integer",
+              "description": "A reference to a tileset"
             },
             "thinker": {
               "type": "string",
@@ -396,12 +396,20 @@
               "description": "Object heading angle"
             },
             "blueprint": {
-              "type": "string",
-              "description": "Reference to a blueprint"
+              "type": "integer",
+              "description": "A reference to a blueprint"
             },
             "animation": {
-              "type": "string",
-              "description": "Reference of the starting animation (this value must reference an animation define within the blueprint)"
+              "anyOf": [
+                {
+                  "type": "string",
+                  "description": "Reference of the starting animation (this value must reference an animation define within the blueprint)"
+                },
+                {
+                  "type": "null",
+                  "description": "No animation for this object"
+                }
+              ]
             }
           },
           "required": [
@@ -409,8 +417,7 @@
             "y",
             "z",
             "angle",
-            "blueprint",
-            "animation"
+            "blueprint"
           ]
         }
       ]

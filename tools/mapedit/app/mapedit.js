@@ -1373,6 +1373,11 @@ class Engine {
         this._renderContext = null;
 
         this._events = new events__WEBPACK_IMPORTED_MODULE_20___default.a();
+
+        this._urls = {
+            FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
+            FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"]
+        };
     }
 
     get events() {
@@ -2307,23 +2312,36 @@ class Engine {
 // |__/
 
     /**
-     * This will fetch an asset. You just have to specify the name, without path and without the .json extension.
-     * onlye asset type level and data (json) may be loaded this way.
-     * @example fetchAsset(CONST.ASSET_TYPE_LEVEL, 'the-hangar') will fetch a level file named "./assets/level/the-hangar.json"
-     * (because the asset type is ASST_TYPE_LEVEL
-     * @param sType {string} on of the constant ASSET_TYPE_*
+     * This will fetch a level asset. You just have to specify the name, without path and without the .json extension.
+     * @example fetchLevel('the-hangar') will fetch a level file named "./assets/levels/the-hangar.json" (by default)
      * @param sName {string} asset name
      * @return {*} the loaded json (a promise in fact)
      */
-    fetchAsset(sType, sName) {
-        switch (sType) {
-            case _consts__WEBPACK_IMPORTED_MODULE_0__["ASSET_TYPE_DATA"]:
-            case _consts__WEBPACK_IMPORTED_MODULE_0__["ASSET_TYPE_LEVEL"]:
-                return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["PATH_ASSETS"] + '/' + sType + '/' + sName + '.json');
+    fetchLevel(sName) {
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_LEVEL.replace(/:name/, sName));
+    }
 
-            default:
-                return Promise.reject('asset "' + sName + '" not found in directory "' + _consts__WEBPACK_IMPORTED_MODULE_0__["PATH_ASSETS"] + '/' + sType + '"');
-        }
+    /**
+     * This will fetch a data asset. Works exactly as fetchLevel, by with data
+     * @param sName {string} asset name
+     * @return {*} the loaded json (a promise in fact)
+     */
+    fetchData(sName) {
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_DATA.replace(/:name/, sName));
+    }
+
+
+    /**
+     * Loads a level
+     * @param sName {string}
+     * @param pMonitor {function}S
+     * @return {Promise<void>}
+     */
+    async loadLevel(sName, pMonitor) {
+        const data = await this.fetchLevel(sName);
+        const tilesets = await this.fetchData('tilesets');
+        const blueprints = await this.fetchData('blueprints');
+        return this.buildLevel(data, pMonitor, { tilesets, blueprints });
     }
 
 }
@@ -2798,7 +2816,7 @@ class TagManager {
 /*!****************************************!*\
   !*** ./lib/src/engine/consts/index.js ***!
   \****************************************/
-/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT, PATH_ASSETS, ASSET_TYPE_LEVEL, ASSET_TYPE_DATA, ASSET_TYPE_TEXTURE */
+/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT, FETCH_LEVEL_URL, FETCH_DATA_URL, FETCH_LEVEL_LIST_URL */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2829,10 +2847,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_LEFT", function() { return DECAL_ALIGN_BOTTOM_LEFT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM", function() { return DECAL_ALIGN_BOTTOM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_RIGHT", function() { return DECAL_ALIGN_BOTTOM_RIGHT; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PATH_ASSETS", function() { return PATH_ASSETS; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_LEVEL", function() { return ASSET_TYPE_LEVEL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_DATA", function() { return ASSET_TYPE_DATA; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ASSET_TYPE_TEXTURE", function() { return ASSET_TYPE_TEXTURE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_LEVEL_URL", function() { return FETCH_LEVEL_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_DATA_URL", function() { return FETCH_DATA_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_LEVEL_LIST_URL", function() { return FETCH_LEVEL_LIST_URL; });
 // used with forEachNeighbor function
 const CELL_NEIGHBOR_SIDE = 1;        // selects cells that share a common side with a given cell
 const CELL_NEIGHBOR_CORNER = 2;      // selects cells that share a common corner with a given cell
@@ -2875,11 +2892,9 @@ const DECAL_ALIGN_BOTTOM = 2;
 const DECAL_ALIGN_BOTTOM_RIGHT = 3;
 
 // built in path values
-const PATH_ASSETS = 'assets';
-const ASSET_TYPE_LEVEL = 'levels';
-const ASSET_TYPE_DATA = 'data';
-const ASSET_TYPE_TEXTURE = 'textures';
-
+const FETCH_LEVEL_URL = '/game/assets/levels/:name.json';
+const FETCH_DATA_URL = '/game/assets/data/:name.json';
+const FETCH_LEVEL_LIST_URL = '/game/levels';
 
 
 /***/ }),
@@ -8807,7 +8822,7 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*! exports provided: $schema, type, description, properties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"string","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"string","description":"The id that is references by 'objects'"},"tileset":{"type":"string","description":"A reference to the tileset used by this blueprint"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"string","description":"Reference to a blueprint"},"animation":{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"}},"required":["x","y","z","angle","blueprint","animation"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["thinker","x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["thinker","x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
 
 /***/ }),
 
@@ -44454,7 +44469,6 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
         }),
 
         run: async function(level, canvas) {
-            console.log(_libraries_generate__WEBPACK_IMPORTED_MODULE_4__["default"]);
             const context = canvas.getContext('2d');
             try {
                 context.font = '16px monospace';
@@ -45174,11 +45188,12 @@ const {mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_
             this.$router.push('/build-thing/' + this.selected);
         },
 
-        deleteClicked: function() {
+        deleteClicked: async function() {
             // effacer le thing
             const id = this.selected;
             if (!!id && confirm('Delete this block ?')) {
-                this.deleteThing({id});
+                await this.deleteThing({id});
+                this.somethingHasChanged({value: true});
                 this.selected = null;
             }
         },
@@ -71303,7 +71318,11 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size | 0;
+                const size = (oTile.width >> 1) | 0;
+                if (size < 4) {
+                    console.log(oTile);
+                    throw new Error('xxx');
+                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -71314,7 +71333,7 @@ function generateObjectsAndDecals(input) {
                     z: 0,
                     angle: 0,
                     blueprint: idThingTemplate,
-                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false
+                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
                 });
             } else {
                 // il s'agit d'un decal
@@ -75990,8 +76009,9 @@ function renderAndStoreBlock(tiles, data) {
      * @param commit
      * @param content {string}
      */
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILE"]]: ({commit, getters, state}, {type, content}) => {
-        commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: getters.getMaxTileId + 1, type, content});
+    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILE"]]: async ({commit, getters, state}, {type, content}) => {
+        const oCvs = await _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_2__["default"].loadCanvas(content);
+        commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: getters.getMaxTileId + 1, type, content, width: oCvs.width, height: oCvs.height});
     },
 
     /**
@@ -75999,10 +76019,12 @@ function renderAndStoreBlock(tiles, data) {
      * @param commit
      * @param content {string}
      */
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILES"]]: ({commit, getters, state}, {type, contents}) => {
+    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILES"]]: async ({commit, getters, state}, {type, contents}) => {
         let id = getters.getMaxTileId + 1;
         for (let i = 0, l = contents.length; i < l; ++i) {
-            commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: id + i, type, content: contents[i]});
+            const content = contents[i];
+            const oCvs = await _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_2__["default"].loadCanvas(content);
+            commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: id + i, type, content, width: oCvs.width, height: oCvs.height});
         }
     },
 
@@ -76476,7 +76498,7 @@ function getTileStructure(type, state) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["ADD_TILE"]]: (state, {id, type, content}) => {
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["ADD_TILE"]]: (state, {id, type, content, width, height}) => {
         const tiles = getTileStructure(type, state);
         if (tiles.find(t => t.id === id)) {
             throw new Error('this id is already present in store');
@@ -76488,6 +76510,8 @@ function getTileStructure(type, state) {
             id,
             type,
             content,
+            width,
+            height,
             animation: null
         });
     },
@@ -76743,6 +76767,14 @@ function getTileStructure(type, state) {
         const iThing = state.things.findIndex(t => t.id === id);
         if (iThing >= 0) {
             state.things.splice(iThing, 1);
+            state.grid.forEach(row => row.forEach(cell => {
+                const things = cell.things;
+                for (let iTh = things.length - 1; iTh >= 0; --iTh) {
+                    if (things[iTh].id === id) {
+                        things.splice(iTh, 1);
+                    }
+                }
+            }));
         } else {
             throw new Error('could not find thing #' + id);
         }

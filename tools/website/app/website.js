@@ -2182,6 +2182,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2219,16 +2227,16 @@ __webpack_require__.r(__webpack_exports__);
                 }
             }
             await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])('/game/level/' + name);
-            await this.fetchLevelData();
+            return this.fetchLevelData();
         },
 
         publish: async function(name) {
             await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/export/' + name);
-            await this.fetchLevelData();
+            return this.fetchLevelData();
         },
 
         fetchLevelData: function() {
-            Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/game/levels').then(data => {
+            return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/game/levels').then(data => {
                 this.levels.splice(0, this.levels.length, ...data);
             });
         }
@@ -3775,24 +3783,26 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c(
         "div",
         { staticClass: "col lg-12" },
         [
-          _c("h3", [_vm._v("Local project status")]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v("Welcome to your local game project management page.")
-          ]),
-          _vm._v(" "),
           _c("h4", [_vm._v("Published levels")]),
           _vm._v(" "),
           _c("p", [
             _vm._v(
-              "These levels have been published from the Map Editor. They can be load in the Raycaster Game Engine.\n            If you modify one of these level via the Map Editor, you'll have to publish it again."
+              "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n            If you modify one of these levels via the Map Editor, you'll have to publish it again."
             )
           ]),
+          _vm._v(" "),
+          _vm.getPublishedLevels.length === 0
+            ? _c("p", { staticStyle: { color: "#800" } }, [
+                _vm._v("No published level.")
+              ])
+            : _vm._e(),
           _vm._v(" "),
           _vm._l(_vm.getPublishedLevels, function(l) {
             return _c("LevelThumbnail", {
@@ -3831,6 +3841,12 @@ var render = function() {
             )
           ]),
           _vm._v(" "),
+          _vm.getUnpublishedLevels.length === 0
+            ? _c("p", { staticStyle: { color: "#800" } }, [
+                _vm._v("Nothing to publish.")
+              ])
+            : _vm._e(),
+          _vm._v(" "),
           _vm._l(_vm.getUnpublishedLevels, function(l) {
             return _c("LevelThumbnail", {
               key: l.name,
@@ -3857,7 +3873,34 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("Local project status")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Welcome to your local game project management page.")
+        ]),
+        _vm._v(" "),
+        _c("h4", [_vm._v("Run project")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Click here to "),
+          _c("a", { attrs: { href: "/game" } }, [
+            _c("b", { staticStyle: { "font-size": "1.3em" } }, [
+              _vm._v("run your project")
+            ])
+          ]),
+          _vm._v(".")
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 

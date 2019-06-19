@@ -347,7 +347,11 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size | 0;
+                const size = (oTile.width >> 1) | 0;
+                if (size < 4) {
+                    console.log(oTile);
+                    throw new Error('xxx');
+                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -358,7 +362,7 @@ function generateObjectsAndDecals(input) {
                     z: 0,
                     angle: 0,
                     blueprint: idThingTemplate,
-                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false
+                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
                 });
             } else {
                 // il s'agit d'un decal

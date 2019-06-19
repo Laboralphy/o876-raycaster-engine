@@ -4,9 +4,16 @@
             <div class="col lg-12">
                 <h3>Local project status</h3>
                 <p>Welcome to your local game project management page.</p>
+                <h4>Run project</h4>
+                <p>Click here to <a href="/game"><b style="font-size: 1.3em">run your project</b></a>.</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col lg-12">
                 <h4>Published levels</h4>
-                <p>These levels have been published from the Map Editor. They can be load in the Raycaster Game Engine.
-                If you modify one of these level via the Map Editor, you'll have to publish it again.</p>
+                <p>These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.
+                If you modify one of these levels via the Map Editor, you'll have to publish it again.</p>
+                <p v-if="getPublishedLevels.length === 0" style="color: #800">No published level.</p>
                 <!-- lists of level that are currently present -->
                 <LevelThumbnail
                         v-for="l in getPublishedLevels"
@@ -25,6 +32,7 @@
                 <h4>In vault levels</h4>
                 <p>These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.
                 To publish a level, click on "Publish" or use the Map Editor.</p>
+                <p v-if="getUnpublishedLevels.length === 0" style="color: #800">Nothing to publish.</p>
                 <LevelThumbnail
                         v-for="l in getUnpublishedLevels"
                         :key="l.name"
@@ -78,16 +86,16 @@
                     }
                 }
                 await deleteJSON('/game/level/' + name);
-                await this.fetchLevelData();
+                return this.fetchLevelData();
             },
 
             publish: async function(name) {
                 await fetchJSON('/export/' + name);
-                await this.fetchLevelData();
+                return this.fetchLevelData();
             },
 
             fetchLevelData: function() {
-                fetchJSON('/game/levels').then(data => {
+                return fetchJSON('/game/levels').then(data => {
                     this.levels.splice(0, this.levels.length, ...data);
                 });
             }

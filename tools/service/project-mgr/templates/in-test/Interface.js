@@ -2,8 +2,6 @@ import {fetchJSON} from "../../lib/src/fetch-json";
 
 class Interface {
 
-
-
     static clear(target) {
         while (!!target.firstChild) {
             target.removeChild(target.firstChild);
@@ -28,27 +26,8 @@ progress {
 
 
     static async buildLevelSelectionPage() {
-
-        const htmlTitle = `<h2>Level selection</h2>`;
-
-        const aLevels = await fetchJSON('/game/levels');
-        const htmlLevels = aLevels
-            .filter(level => level.exported)
-            .map(({preview, name}) =>
-
-
-// template of level thumbnail
-`<figure class="level" data-level="${name}">
-    <img src="${preview}" alt="Preview of ${name}"/>
-    <figcaption>${name}</figcaption>
-</figure>`
-
-            ).join('\n');
-        const htmlStyles =
-
-
 // template of scoped styles
-`<style scoped="scoped">
+        const htmlStyles = `<style scoped="scoped">
 figure {
     display: inline-block;
     background-color: rgba(0, 0, 0, 0.5);
@@ -75,9 +54,30 @@ h2 {
     color: white;
 }
 </style>`;
+        const htmlTitle = `<h2>Level selection</h2>`;
+        const aLevels = (await fetchJSON('/game/levels')).filter(level => level.exported);
+        if (aLevels.length === 0) {
+            return htmlStyles + htmlTitle + '<p>There are currently no published levels.</p>';
+        }
+
+        const htmlLevels = aLevels
+            .map(({preview, name}) =>
 
 
-        return htmlTitle + htmlStyles + htmlLevels;
+// template of level thumbnail
+`<figure class="level" data-level="${name}">
+    <img src="${preview}" alt="Preview of ${name}"/>
+    <figcaption>${name}</figcaption>
+</figure>`
+
+            ).join('\n');
+
+
+
+
+
+
+        return htmlStyles + htmlTitle + htmlLevels;
     }
 }
 
