@@ -1,6 +1,7 @@
 const util = require('util');
 const path = require('path');
 const fs = require('fs');
+const CONFIG = require('../config');
 
 // promisification
 const mkdirp = util.promisify(require('mkdirp'));
@@ -12,14 +13,14 @@ const unlink = util.promisify(fs.unlink);
 let BASE_DIR = '.';
 const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
 
-let GAME_ROOT_DIR = 'game';
+let GAME_ROOT_DIR = CONFIG.game_path;
 let GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
 let GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
 let GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
-let GAME_DATA_DIR = path.join(GAME_ASSETS_DIR, 'data');
-let GAME_TEXTURES_DIR = path.join(GAME_ASSETS_DIR, 'textures');
-let GAME_LEVELS_DIR = path.join(GAME_ASSETS_DIR, 'levels');
-let VAULT_DIR = 'vault';
+let GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.data_path);
+let GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.texture_path);
+let GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.level_path);
+let VAULT_DIR = CONFIG.vault_path;
 const JSON_EXT = '.json';
 
 
@@ -29,14 +30,14 @@ const JSON_EXT = '.json';
  */
 function setBaseDirectory(sDir) {
     BASE_DIR = sDir;
-    GAME_ROOT_DIR = 'game';
+    GAME_ROOT_DIR = CONFIG.game_path;
     GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
     GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
     GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
-    GAME_DATA_DIR = path.join(GAME_ASSETS_DIR, 'data');
-    GAME_TEXTURES_DIR = path.join(GAME_ASSETS_DIR, 'textures');
-    GAME_LEVELS_DIR = path.join(GAME_ASSETS_DIR, 'levels');
-    VAULT_DIR = 'vault';
+    GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.data_path);
+    GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.texture_path);
+    GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.level_path);
+    VAULT_DIR = CONFIG.vault_path;
 }
 
 

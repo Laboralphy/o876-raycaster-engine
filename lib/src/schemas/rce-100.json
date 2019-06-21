@@ -483,7 +483,6 @@
         }
       },
       "required": [
-        "thinker",
         "x",
         "y",
         "z",

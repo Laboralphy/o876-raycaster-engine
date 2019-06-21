@@ -856,6 +856,26 @@ class Easing {
         this._f = this[options.use] || Easing.LINEAR;
     }
 
+    from(y) {
+        this._yFrom = y;
+        return this;
+    }
+
+    to(y) {
+        this._yTo = y;
+        return this;
+    }
+
+    steps(x) {
+        this._xMax = x;
+        return this;
+    }
+
+    use(f) {
+        this.setFunction(f);
+        return this;
+    }
+
     setOutputRange(y0, y1) {
         this._yFrom = y0;
         this._yTo = y1;
@@ -1324,6 +1344,8 @@ var _schemas_rce_100_json__WEBPACK_IMPORTED_MODULE_19___namespace = /*#__PURE__*
 /* harmony import */ var events__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_20__);
 /* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
 /* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
+/* harmony import */ var _filters_FilterManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../filters/FilterManager */ "./lib/src/filters/FilterManager.js");
+
 
 
 
@@ -1374,13 +1396,25 @@ class Engine {
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
-
+        this._filters = new _filters_FilterManager__WEBPACK_IMPORTED_MODULE_23__["default"]();
         this._events = new events__WEBPACK_IMPORTED_MODULE_20___default.a();
 
-        this._urls = {
-            FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
-            FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"]
+        this._config = {
+            urls: {
+                FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
+                FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
+            },
+            cameraThinker: 'FPSControlThinker'
+
         };
+    }
+
+    /**
+     * returns the filter manager instance
+     * @returns {FilterManager}
+     */
+    get filters() {
+        return this._filters;
     }
 
     get events() {
@@ -1647,6 +1681,7 @@ class Engine {
         const nTimes = Math.min(10, tm / tp | 0);
         this._timeMod = tm % tp;
         let bRender = false;
+        this._filters.process(this._time);
         for (let i = 0; i < nTimes; ++i) {
             // logic doom loop here
             this._scheduler.schedule(this._time);
@@ -1669,6 +1704,10 @@ class Engine {
     }
 
     _render() {
+        /**
+         * The raycaster instance
+         * @type {Renderer}
+         */
         const rend = this._rc;
         // recompute all texture/sprite animation with a time-delta of 40ms
         rend.computeAnimations(this._TIME_INTERVAL);
@@ -1678,6 +1717,7 @@ class Engine {
             const loc = camera.location;
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(loc.x, loc.y, loc.angle, loc.z);
+            this._filters.render(rend._renderCanvas);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {
@@ -2180,9 +2220,9 @@ class Engine {
                 x: x * ps + (ps >> 1), // camera coordinates (x-axis)
                 y: y * ps + (ps >> 1), // camera coordinates (y-axis)
                 angle, // looking angle
-                z: 1 // camera altitude (1 is the default object)
+                z: z // camera altitude (1 is the default object)
             });
-            this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
+            this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
         }
 
 
@@ -2321,7 +2361,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchLevel(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_LEVEL.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_LEVEL.replace(/:name/, sName));
     }
 
     /**
@@ -2330,7 +2370,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchData(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_DATA.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_DATA.replace(/:name/, sName));
     }
 
 
@@ -2902,10 +2942,10 @@ const FETCH_LEVEL_LIST_URL = '/game/levels';
 
 /***/ }),
 
-/***/ "./lib/src/engine/thinkers/KeyboardControlThinker.js":
-/*!***********************************************************!*\
-  !*** ./lib/src/engine/thinkers/KeyboardControlThinker.js ***!
-  \***********************************************************/
+/***/ "./lib/src/engine/thinkers/FPSControlThinker.js":
+/*!******************************************************!*\
+  !*** ./lib/src/engine/thinkers/FPSControlThinker.js ***!
+  \******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2914,6 +2954,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _easing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../easing */ "./lib/src/easing/index.js");
 /* harmony import */ var _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TangibleThinker */ "./lib/src/engine/thinkers/TangibleThinker.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../consts */ "./lib/src/engine/consts/index.js");
+/* harmony import */ var _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../geometry/Vector */ "./lib/src/geometry/Vector.js");
+
 
 
 
@@ -2922,8 +2964,9 @@ const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
 const ANGLE_INT_MAX_VALUE = 0.1;
 const SPEED = 6;
+const STRAFE_SPEED = 0.8;
 
-class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     constructor() {
         super();
@@ -2935,20 +2978,26 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         this._keys = {};
         this.SPEED = SPEED;
         this.setupKeys({
-            "forward": "ArrowUp",
-            "backward": "ArrowDown",
-            "steerright": "ArrowRight",
-            "steerleft": "ArrowLeft",
-            "use": " "
+            forward: ["ArrowUp", "w", "z"],       // going forward
+            backward: ["ArrowDown", "s"],         // going backward
+            turnright: "ArrowRight",              // turn right
+            turnleft: "ArrowLeft",                // turn left
+            straferight: ["a", "q"],              // side step to the right, looking angle does not change
+            strafeleft: "d",                      // side step to the left, looking angle does not change
+            use: " "                              // use something in front of...
         });
+        this._lookAmount = 0;
 
         this._lastTime = 0;
     }
 
-    setupKeys(oKeys) {
+    setupKeys(oKeys, bReset = false) {
+        if (bReset) {
+            this._keys = {};
+        }
         for (let sKey in oKeys) {
             this._keys[sKey] = {
-                code: oKeys[sKey],
+                code: Array.isArray(oKeys[sKey]) ? oKeys[sKey] : [oKeys[sKey]],
                 state: false
             };
         }
@@ -2958,7 +3007,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const k = this._keys;
         for (let sKey in k) {
             const ik = k[sKey];
-            if (ik.code === key) {
+            if (ik.code.indexOf(key) >= 0) {
                 return ik;
             }
         }
@@ -2979,12 +3028,40 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         }
     }
 
+    look(x) {
+        this._lookAmount += x;
+    }
+
     computeAngleSpeed(nTime) {
         if (nTime > ANGLE_INT_MAX_TIME) {
             return ANGLE_INT_MAX_VALUE;
         } else {
             return this._easing.compute(nTime).y;
         }
+    }
+
+    /**
+     * Compute forward vector
+     * @param fAngle
+     * @return {Vector}
+     */
+    getVectorForward(fAngle, fSpeed) {
+        return new _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"](
+            fSpeed * Math.cos(fAngle),
+            fSpeed * Math.sin(fAngle)
+        );
+    }
+
+    getVectorBackward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI, fSpeed);
+    }
+
+    getVectorLeftward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI / 2, fSpeed);
+    }
+
+    getVectorRightward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle - Math.PI / 2, fSpeed);
     }
 
     computeSpeedVector() {
@@ -2995,35 +3072,94 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
         const oEntLoc = this.entity.location;
+        const PI = Math.PI;
+        const PI2 = Math.PI / 2;
+        const PI4 = Math.PI / 4;
 
-        const forw = (k.forward.state !== false ? 1 : 0) | (k.backward.state !== false ? 2 : 0);
-        switch (forw) {
-            case 1:
+        if (k.turnright.state !== false) {
+            oEntLoc.angle += this.computeAngleSpeed(t - k.turnright.state);
+        }
+        if (k.turnleft.state !== false) {
+            oEntLoc.angle -= this.computeAngleSpeed(t - k.turnleft.state);
+        }
+
+        oEntLoc.angle += this._lookAmount;
+        this._lookAmount = 0;
+
+        const nDirMask =
+            (k.forward.state !== false ? 1 : 0) |
+            (k.backward.state !== false ? 2 : 0) |
+            (k.strafeleft.state !== false ? 4 : 0) |
+            (k.straferight.state !== false ? 8 : 0)
+        ;
+
+        let fAngleQuant = oEntLoc.angle;
+        let speed = this.SPEED;
+
+        switch (nDirMask) {
+            case 1: // forward only
+            case 13: // straferight and strafeleft and forward
+                // result : FORWARD
+                this.setSpeed(this.getVectorForward(fAngleQuant, speed));
+                break;
+
+            case 2: // backward only
+            case 14: // straferight and strafeleft and backward
+                // result : BACKWARD
+                this.setSpeed(this.getVectorBackward(fAngleQuant, speed));
+                break;
+
+            case 0: // nothing
+            case 3: // forward and backward
+            case 12: // straferight and strafeleft
+            case 15: // straferight and strafeleft and forward and backward
+                // result : NO MOVE
+                this.setSpeed(_geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"].zero());
+                break;
+
+            case 4: // strafeleft only
+            case 7: // strafeleft and forward and backward
+                // result : FULL LEFT
+                this.setSpeed(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 8: // straferight only
+            case 11: // straferight and forward and backward
+                // result : FULL RIGHT
+                this.setSpeed(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 5: // strafeleft and forward
+                // result : DIAG FORWARD+LEFT
                 this.setSpeed(
-                    this.SPEED * Math.cos(oEntLoc.angle),
-                    this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 2:
+            case 6: // strafeleft and backward
+                // result : DIAG BACKWARD+LEFT
                 this.setSpeed(
-                    -this.SPEED * Math.cos(oEntLoc.angle),
-                    -this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 0:
-            case 3:
-                // no move
-                this.setSpeed(0, 0);
+            case 9: // straferight and forward
+                // result : DIAG FORWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
                 break;
-        }
 
-        if (k.steerright.state !== false) {
-            oEntLoc.angle += this.computeAngleSpeed(t - k.steerright.state);
-        }
-        if (k.steerleft.state !== false) {
-            oEntLoc.angle -= this.computeAngleSpeed(t - k.steerleft.state);
+            case 10: // straferight and backward
+                // result : DIAG BACKWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
+                break;
         }
 
         if (k.use.state !== false) {
@@ -3051,7 +3187,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
     }
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (KeyboardControlThinker);
+/* harmony default export */ __webpack_exports__["default"] = (FPSControlThinker);
 
 /***/ }),
 
@@ -3648,7 +3784,7 @@ class Thinker {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Thinker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Thinker */ "./lib/src/engine/thinkers/Thinker.js");
-/* harmony import */ var _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KeyboardControlThinker */ "./lib/src/engine/thinkers/KeyboardControlThinker.js");
+/* harmony import */ var _FPSControlThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FPSControlThinker */ "./lib/src/engine/thinkers/FPSControlThinker.js");
 /* harmony import */ var _MissileThinker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MissileThinker */ "./lib/src/engine/thinkers/MissileThinker.js");
 /* harmony import */ var _MoverThinker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoverThinker */ "./lib/src/engine/thinkers/MoverThinker.js");
 /* harmony import */ var _StaticThinker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StaticThinker */ "./lib/src/engine/thinkers/StaticThinker.js");
@@ -3669,7 +3805,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     Thinker: _Thinker__WEBPACK_IMPORTED_MODULE_0__["default"],
-    KeyboardControlThinker: _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__["default"],
+    FPSControlThinker: _FPSControlThinker__WEBPACK_IMPORTED_MODULE_1__["default"],
     MissileThinker: _MissileThinker__WEBPACK_IMPORTED_MODULE_2__["default"],
     MoverThinker: _MoverThinker__WEBPACK_IMPORTED_MODULE_3__["default"],
     StaticThinker: _StaticThinker__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -3731,6 +3867,60 @@ async function deleteJSON(url) {
     }
     return oJSON;
 }
+
+/***/ }),
+
+/***/ "./lib/src/filters/FilterManager.js":
+/*!******************************************!*\
+  !*** ./lib/src/filters/FilterManager.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class FilterManager {
+
+    constructor() {
+        this._filters = [];
+    }
+
+    /**
+     * Adds a new filter to the list
+     * @param oFilter {AbstractFilter} the new filter
+     */
+    link(oFilter) {
+        this._filters.push(oFilter);
+    }
+
+    /**
+     * run process method for all filters
+     * removes dead filters
+     * @param time {number} advancement time
+     */
+    process(time) {
+        this._filters = this
+            ._filters
+            .filter(f => !f.over())
+            .map(f => {
+                f.process(time);
+                return f;
+            });
+    }
+
+    /**
+     * run render method for all filters
+     * updates the specified canvas
+     * @param canvas {HTMLCanvasElement}
+     */
+    render(canvas) {
+        this._filters.forEach(f => f.render(canvas));
+    }
+
+}
+
+
+/* harmony default export */ __webpack_exports__["default"] = (FilterManager);
 
 /***/ }),
 
@@ -8140,55 +8330,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
     }
 
-
-
-//  _____ _ _ _
-// |  ___(_) | |_ ___ _ __ ___
-// | |_  | | | __/ _ \ '__/ __|
-// |  _| | | | ||  __/ |  \__ \
-// |_|   |_|_|\__\___|_|  |___/
-
-
-    /**
-     * Adds a new filter to the list
-     * @param oFilter {Abstract} the new filter
-     */
-    linkFilter(oFilter) {
-        this._filters.push(oFilter);
-    }
-
-    removeDeadFilters() {
-        if (this._bCheckFilters) {
-            const filters = this._filters;
-            let i = filters.length - 1;
-            const f = filters[i];
-            while (i >= 0) {
-                if (f.over()) {
-                    filters.splice(i, 1);
-                }
-            }
-            this._bCheckFilters = false;
-        }
-    }
-
-    processFilters(time) {
-        this.removeDeadFilters();
-        for (let i = 0, l = this._filters.length; i < l; ++i) {
-            const f = this._filters[i];
-            f.process(time);
-            if (f.over()) {
-                this._bCheckFilters = true;
-            }
-        }
-    }
-
-    renderFilters() {
-        const filters = this._filters;
-        for (let i = 0, l = filters.length; i < l; ++i) {
-            filters[i].render(this._renderCanvas);
-        }
-    }
-
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Renderer);
@@ -8878,7 +9019,7 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*! exports provided: $schema, type, description, properties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["thinker","x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
 
 /***/ }),
 
@@ -71455,8 +71596,7 @@ function generateCamera(input) {
         x: input.startpoint.x,
         y: input.startpoint.y,
         z: 1,
-        angle: input.startpoint.angle * Math.PI,
-        thinker: 'KeyboardControlThinker'
+        angle: input.startpoint.angle * Math.PI
     };
 }
 
