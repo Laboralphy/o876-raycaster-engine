@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
 
-const gameConfig = require('./game/webpack.config');
+const gameConfig = require('./game-export/webpack.config');
 
 
 const devConfig = {

@@ -1374,9 +1374,13 @@ class Engine {
 
         this._events = new events__WEBPACK_IMPORTED_MODULE_20___default.a();
 
-        this._urls = {
-            FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
-            FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"]
+        this._config = {
+            urls: {
+                FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
+                FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
+            },
+            cameraThinker: 'FPSControlThinker'
+
         };
     }
 
@@ -2177,9 +2181,9 @@ class Engine {
                 x: x * ps + (ps >> 1), // camera coordinates (x-axis)
                 y: y * ps + (ps >> 1), // camera coordinates (y-axis)
                 angle, // looking angle
-                z: 1 // camera altitude (1 is the default object)
+                z: z // camera altitude (1 is the default object)
             });
-            this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
+            this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
         }
 
 
@@ -2318,7 +2322,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchLevel(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_LEVEL.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_LEVEL.replace(/:name/, sName));
     }
 
     /**
@@ -2327,7 +2331,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchData(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._urls.FETCH_DATA.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_DATA.replace(/:name/, sName));
     }
 
 
@@ -2899,10 +2903,10 @@ const FETCH_LEVEL_LIST_URL = '/game/levels';
 
 /***/ }),
 
-/***/ "./lib/src/engine/thinkers/KeyboardControlThinker.js":
-/*!***********************************************************!*\
-  !*** ./lib/src/engine/thinkers/KeyboardControlThinker.js ***!
-  \***********************************************************/
+/***/ "./lib/src/engine/thinkers/FPSControlThinker.js":
+/*!******************************************************!*\
+  !*** ./lib/src/engine/thinkers/FPSControlThinker.js ***!
+  \******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2911,6 +2915,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _easing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../easing */ "./lib/src/easing/index.js");
 /* harmony import */ var _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TangibleThinker */ "./lib/src/engine/thinkers/TangibleThinker.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../consts */ "./lib/src/engine/consts/index.js");
+/* harmony import */ var _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../geometry/Vector */ "./lib/src/geometry/Vector.js");
+
 
 
 
@@ -2919,8 +2925,9 @@ const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
 const ANGLE_INT_MAX_VALUE = 0.1;
 const SPEED = 6;
+const STRAFE_SPEED = 0.8;
 
-class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     constructor() {
         super();
@@ -2932,20 +2939,26 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         this._keys = {};
         this.SPEED = SPEED;
         this.setupKeys({
-            "forward": "ArrowUp",
-            "backward": "ArrowDown",
-            "steerright": "ArrowRight",
-            "steerleft": "ArrowLeft",
-            "use": " "
+            forward: ["ArrowUp", "w", "z"],       // going forward
+            backward: ["ArrowDown", "s"],         // going backward
+            turnright: "ArrowRight",              // turn right
+            turnleft: "ArrowLeft",                // turn left
+            straferight: ["a", "q"],              // side step to the right, looking angle does not change
+            strafeleft: "d",                      // side step to the left, looking angle does not change
+            use: " "                              // use something in front of...
         });
+        this._lookAmount = 0;
 
         this._lastTime = 0;
     }
 
-    setupKeys(oKeys) {
+    setupKeys(oKeys, bReset = false) {
+        if (bReset) {
+            this._keys = {};
+        }
         for (let sKey in oKeys) {
             this._keys[sKey] = {
-                code: oKeys[sKey],
+                code: Array.isArray(oKeys[sKey]) ? oKeys[sKey] : [oKeys[sKey]],
                 state: false
             };
         }
@@ -2955,7 +2968,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const k = this._keys;
         for (let sKey in k) {
             const ik = k[sKey];
-            if (ik.code === key) {
+            if (ik.code.indexOf(key) >= 0) {
                 return ik;
             }
         }
@@ -2976,12 +2989,40 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         }
     }
 
+    look(x) {
+        this._lookAmount += x;
+    }
+
     computeAngleSpeed(nTime) {
         if (nTime > ANGLE_INT_MAX_TIME) {
             return ANGLE_INT_MAX_VALUE;
         } else {
             return this._easing.compute(nTime).y;
         }
+    }
+
+    /**
+     * Compute forward vector
+     * @param fAngle
+     * @return {Vector}
+     */
+    getVectorForward(fAngle, fSpeed) {
+        return new _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"](
+            fSpeed * Math.cos(fAngle),
+            fSpeed * Math.sin(fAngle)
+        );
+    }
+
+    getVectorBackward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI, fSpeed);
+    }
+
+    getVectorLeftward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI / 2, fSpeed);
+    }
+
+    getVectorRightward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle - Math.PI / 2, fSpeed);
     }
 
     computeSpeedVector() {
@@ -2992,35 +3033,94 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
         const oEntLoc = this.entity.location;
+        const PI = Math.PI;
+        const PI2 = Math.PI / 2;
+        const PI4 = Math.PI / 4;
 
-        const forw = (k.forward.state !== false ? 1 : 0) | (k.backward.state !== false ? 2 : 0);
-        switch (forw) {
-            case 1:
+        if (k.turnright.state !== false) {
+            oEntLoc.angle += this.computeAngleSpeed(t - k.turnright.state);
+        }
+        if (k.turnleft.state !== false) {
+            oEntLoc.angle -= this.computeAngleSpeed(t - k.turnleft.state);
+        }
+
+        oEntLoc.angle += this._lookAmount;
+        this._lookAmount = 0;
+
+        const nDirMask =
+            (k.forward.state !== false ? 1 : 0) |
+            (k.backward.state !== false ? 2 : 0) |
+            (k.strafeleft.state !== false ? 4 : 0) |
+            (k.straferight.state !== false ? 8 : 0)
+        ;
+
+        let fAngleQuant = oEntLoc.angle;
+        let speed = this.SPEED;
+
+        switch (nDirMask) {
+            case 1: // forward only
+            case 13: // straferight and strafeleft and forward
+                // result : FORWARD
+                this.setSpeed(this.getVectorForward(fAngleQuant, speed));
+                break;
+
+            case 2: // backward only
+            case 14: // straferight and strafeleft and backward
+                // result : BACKWARD
+                this.setSpeed(this.getVectorBackward(fAngleQuant, speed));
+                break;
+
+            case 0: // nothing
+            case 3: // forward and backward
+            case 12: // straferight and strafeleft
+            case 15: // straferight and strafeleft and forward and backward
+                // result : NO MOVE
+                this.setSpeed(_geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"].zero());
+                break;
+
+            case 4: // strafeleft only
+            case 7: // strafeleft and forward and backward
+                // result : FULL LEFT
+                this.setSpeed(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 8: // straferight only
+            case 11: // straferight and forward and backward
+                // result : FULL RIGHT
+                this.setSpeed(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 5: // strafeleft and forward
+                // result : DIAG FORWARD+LEFT
                 this.setSpeed(
-                    this.SPEED * Math.cos(oEntLoc.angle),
-                    this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 2:
+            case 6: // strafeleft and backward
+                // result : DIAG BACKWARD+LEFT
                 this.setSpeed(
-                    -this.SPEED * Math.cos(oEntLoc.angle),
-                    -this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 0:
-            case 3:
-                // no move
-                this.setSpeed(0, 0);
+            case 9: // straferight and forward
+                // result : DIAG FORWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
                 break;
-        }
 
-        if (k.steerright.state !== false) {
-            oEntLoc.angle += this.computeAngleSpeed(t - k.steerright.state);
-        }
-        if (k.steerleft.state !== false) {
-            oEntLoc.angle -= this.computeAngleSpeed(t - k.steerleft.state);
+            case 10: // straferight and backward
+                // result : DIAG BACKWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
+                break;
         }
 
         if (k.use.state !== false) {
@@ -3048,7 +3148,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
     }
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (KeyboardControlThinker);
+/* harmony default export */ __webpack_exports__["default"] = (FPSControlThinker);
 
 /***/ }),
 
@@ -3645,7 +3745,7 @@ class Thinker {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Thinker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Thinker */ "./lib/src/engine/thinkers/Thinker.js");
-/* harmony import */ var _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KeyboardControlThinker */ "./lib/src/engine/thinkers/KeyboardControlThinker.js");
+/* harmony import */ var _FPSControlThinker__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./FPSControlThinker */ "./lib/src/engine/thinkers/FPSControlThinker.js");
 /* harmony import */ var _MissileThinker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MissileThinker */ "./lib/src/engine/thinkers/MissileThinker.js");
 /* harmony import */ var _MoverThinker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoverThinker */ "./lib/src/engine/thinkers/MoverThinker.js");
 /* harmony import */ var _StaticThinker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StaticThinker */ "./lib/src/engine/thinkers/StaticThinker.js");
@@ -3666,7 +3766,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     Thinker: _Thinker__WEBPACK_IMPORTED_MODULE_0__["default"],
-    KeyboardControlThinker: _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__["default"],
+    FPSControlThinker: _FPSControlThinker__WEBPACK_IMPORTED_MODULE_7__["default"],
     MissileThinker: _MissileThinker__WEBPACK_IMPORTED_MODULE_2__["default"],
     MoverThinker: _MoverThinker__WEBPACK_IMPORTED_MODULE_3__["default"],
     StaticThinker: _StaticThinker__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -8822,7 +8922,7 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*! exports provided: $schema, type, description, properties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["thinker","x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
 
 /***/ }),
 
@@ -24469,10 +24569,10 @@ utils.intFromLE = intFromLE;
 /*!********************************************!*\
   !*** ./node_modules/elliptic/package.json ***!
   \********************************************/
-/*! exports provided: _args, _development, _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _spec, _where, author, bugs, dependencies, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
+/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, dependencies, deprecated, description, devDependencies, files, homepage, keywords, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = {"_args":[["elliptic@6.4.1","/home/ralphy/public_html/raycaster-es6"]],"_development":true,"_from":"elliptic@6.4.1","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"elliptic@6.4.1","name":"elliptic","escapedName":"elliptic","rawSpec":"6.4.1","saveSpec":null,"fetchSpec":"6.4.1"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_spec":"6.4.1","_where":"/home/ralphy/public_html/raycaster-es6","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
+module.exports = {"_from":"elliptic@^6.0.0","_id":"elliptic@6.4.1","_inBundle":false,"_integrity":"sha512-BsXLz5sqX8OHcsh7CqBMztyXARmGQ3LWPtGjJi6DiJHq5C/qvi9P3OqgswKSDftbu8+IoI/QDTAm2fFnQ9SZSQ==","_location":"/elliptic","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"elliptic@^6.0.0","name":"elliptic","escapedName":"elliptic","rawSpec":"^6.0.0","saveSpec":null,"fetchSpec":"^6.0.0"},"_requiredBy":["/browserify-sign","/create-ecdh"],"_resolved":"https://registry.npmjs.org/elliptic/-/elliptic-6.4.1.tgz","_shasum":"c2d0b7776911b86722c632c3c06c60f2f819939a","_spec":"elliptic@^6.0.0","_where":"/home/ralphy/public_html/raycaster-es6/node_modules/browserify-sign","author":{"name":"Fedor Indutny","email":"fedor@indutny.com"},"bugs":{"url":"https://github.com/indutny/elliptic/issues"},"bundleDependencies":false,"dependencies":{"bn.js":"^4.4.0","brorand":"^1.0.1","hash.js":"^1.0.0","hmac-drbg":"^1.0.0","inherits":"^2.0.1","minimalistic-assert":"^1.0.0","minimalistic-crypto-utils":"^1.0.0"},"deprecated":false,"description":"EC cryptography","devDependencies":{"brfs":"^1.4.3","coveralls":"^2.11.3","grunt":"^0.4.5","grunt-browserify":"^5.0.0","grunt-cli":"^1.2.0","grunt-contrib-connect":"^1.0.0","grunt-contrib-copy":"^1.0.0","grunt-contrib-uglify":"^1.0.1","grunt-mocha-istanbul":"^3.0.1","grunt-saucelabs":"^8.6.2","istanbul":"^0.4.2","jscs":"^2.9.0","jshint":"^2.6.0","mocha":"^2.1.0"},"files":["lib"],"homepage":"https://github.com/indutny/elliptic","keywords":["EC","Elliptic","curve","Cryptography"],"license":"MIT","main":"lib/elliptic.js","name":"elliptic","repository":{"type":"git","url":"git+ssh://git@github.com/indutny/elliptic.git"},"scripts":{"jscs":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","jshint":"jscs benchmarks/*.js lib/*.js lib/**/*.js lib/**/**/*.js test/index.js","lint":"npm run jscs && npm run jshint","test":"npm run lint && npm run unit","unit":"istanbul test _mocha --reporter=spec test/index.js","version":"grunt dist && git add dist/"},"version":"6.4.1"};
 
 /***/ }),
 
@@ -71399,8 +71499,7 @@ function generateCamera(input) {
         x: input.startpoint.x,
         y: input.startpoint.y,
         z: 1,
-        angle: input.startpoint.angle * Math.PI,
-        thinker: 'KeyboardControlThinker'
+        angle: input.startpoint.angle * Math.PI
     };
 }
 
