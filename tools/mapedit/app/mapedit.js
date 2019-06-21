@@ -844,13 +844,16 @@ class Easing {
     static get SINE() { return SINE; }
     static get COSINE() { return COSINE; }
 
-    constructor() {
-        this._yFrom = 0;       // starting value of y
-        this._yTo = 0;         // ending value of y
+    constructor(options = undefined) {
+        if (options === undefined) {
+            options = {};
+        }
+        this._yFrom = options.from || 0;         // starting value of y
+        this._yTo = options.to || 1;             // ending value of y
         this._y = 0;                // y value computed as interpolator(x)
         this._x = 0;
-        this._xMax = 0;             // maximum value of x
-        this._f = null;
+        this._xMax = options.steps || 10;             // maximum value of x
+        this._f = this[options.use] || Easing.LINEAR;
     }
 
     setOutputRange(y0, y1) {
@@ -6217,6 +6220,8 @@ class Renderer {
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
         this._firstFloor = true; // if false then this instance is second story
+        this._filters = [];
+        this._bCheckFilters = false;
     }
 
 
@@ -7828,6 +7833,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         this.renderFlats(scene);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
+        this.red
         this.renderDebug(renderContext);
         if (vr) {
             renderContext.restore();
@@ -8133,6 +8139,56 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
         }
     }
+
+
+
+//  _____ _ _ _
+// |  ___(_) | |_ ___ _ __ ___
+// | |_  | | | __/ _ \ '__/ __|
+// |  _| | | | ||  __/ |  \__ \
+// |_|   |_|_|\__\___|_|  |___/
+
+
+    /**
+     * Adds a new filter to the list
+     * @param oFilter {Abstract} the new filter
+     */
+    linkFilter(oFilter) {
+        this._filters.push(oFilter);
+    }
+
+    removeDeadFilters() {
+        if (this._bCheckFilters) {
+            const filters = this._filters;
+            let i = filters.length - 1;
+            const f = filters[i];
+            while (i >= 0) {
+                if (f.over()) {
+                    filters.splice(i, 1);
+                }
+            }
+            this._bCheckFilters = false;
+        }
+    }
+
+    processFilters(time) {
+        this.removeDeadFilters();
+        for (let i = 0, l = this._filters.length; i < l; ++i) {
+            const f = this._filters[i];
+            f.process(time);
+            if (f.over()) {
+                this._bCheckFilters = true;
+            }
+        }
+    }
+
+    renderFilters() {
+        const filters = this._filters;
+        for (let i = 0, l = filters.length; i < l; ++i) {
+            filters[i].render(this._renderCanvas);
+        }
+    }
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Renderer);
