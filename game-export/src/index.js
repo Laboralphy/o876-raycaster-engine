@@ -3,6 +3,7 @@ import FadeOut from '../../lib/src/engine/filters/FadeOut';
 import Halo from '../../lib/src/engine/filters/Halo';
 import FadeIn from "../../lib/src/engine/filters/FadeIn";
 import Timed from "../../lib/src/engine/filters/Timed";
+import Blur from "../../lib/src/engine/filters/Blur";
 
 
 class Game extends GameAbstract {
@@ -26,9 +27,10 @@ async function main() {
         if (event.key === 'h') {
             g.engine.filters.link(new Timed({duration: 2000, child: new FadeOut({duration: 500})}));
         }
+        if (event.key === 'j') {
+            g.engine.filters.link(new Timed({duration: 2000, child: new Blur(4)}));
+        }
     });
-
-
 }
 
 window.addEventListener('load', main);
