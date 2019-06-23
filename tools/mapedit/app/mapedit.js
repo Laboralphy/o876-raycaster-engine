@@ -6477,6 +6477,10 @@ class Renderer {
 	    return this._options;
     }
 
+    get renderCanvas() {
+	    return this._renderCanvas;
+    }
+
     adaptFocal() {
 	    const SCREEN = this._options.screen;
 	    SCREEN.focal = (SCREEN.width >> 1) * (16 / 9);
