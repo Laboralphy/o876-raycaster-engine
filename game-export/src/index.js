@@ -22,12 +22,9 @@ async function main() {
             g.engine.filters.link(new FadeIn({color: 'pink', duration: 2000}));
         }
         if (event.key === 'g') {
-            g.engine.filters.link(new FadeOut({duration: 500}));
-        }
-        if (event.key === 'h') {
             g.engine.filters.link(new Timed({duration: 2000, child: new FadeOut({duration: 500})}));
         }
-        if (event.key === 'j') {
+        if (event.key === 'h') {
             g.engine.filters.link(new Timed({duration: 2000, child: new Blur(4)}));
         }
     });
