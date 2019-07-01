@@ -13,14 +13,14 @@ const unlink = util.promisify(fs.unlink);
 let BASE_DIR = '.';
 const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
 
-let GAME_ROOT_DIR = CONFIG.game_path;
+let GAME_ROOT_DIR = CONFIG.getVariable('game_path');
 let GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
 let GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
 let GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
-let GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.data_path);
-let GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.texture_path);
-let GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.level_path);
-let VAULT_DIR = CONFIG.vault_path;
+let GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('data_path'));
+let GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('texture_path'));
+let GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('level_path'));
+let VAULT_DIR = CONFIG.getVariable('vault_path');
 const JSON_EXT = '.json';
 
 
@@ -30,70 +30,16 @@ const JSON_EXT = '.json';
  */
 function setBaseDirectory(sDir) {
     BASE_DIR = sDir;
-    GAME_ROOT_DIR = CONFIG.game_path;
+    GAME_ROOT_DIR = CONFIG.getVariable('game_path');
     GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
     GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
     GAME_DIST_DIR = path.join(GAME_ROOT_DIR, 'dist');
-    GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.data_path);
-    GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.texture_path);
-    GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.level_path);
-    VAULT_DIR = CONFIG.vault_path;
+    GAME_DATA_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('data_path'));
+    GAME_TEXTURES_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('texture_path'));
+    GAME_LEVELS_DIR = path.join(GAME_ROOT_DIR, CONFIG.getVariable('level_path'));
+    VAULT_DIR = CONFIG.getVariable('vault_path');
 }
 
-
-const PROJECT_TREE = [
-
-    {
-        path: path.join(GAME_ROOT_DIR, 'index.html'),
-        template: 'index.html'
-    },
-
-    {
-        path: path.join(GAME_ROOT_DIR, 'webpack.config.js'),
-        template: 'webpack.config.js'
-    },
-
-    {
-        path: path.join(VAULT_DIR, 'vault_readme.txt'),
-        template: 'vault_readme.txt'
-    },
-
-    {
-        path: path.join(GAME_DIST_DIR, 'dist_readme.txt'),
-        template: 'dist_readme.txt'
-    },
-
-    {
-        path: path.join(GAME_SRC_DIR, 'index.js'),
-        template: 'index.js'
-    },
-
-    {
-        path: path.join(GAME_LEVELS_DIR, 'assets_levels_readme.txt'),
-        template: 'assets_levels_readme.txt'
-    },
-
-    {
-        path: path.join(GAME_TEXTURES_DIR, 'assets_textures_readme.txt'),
-        template: 'assets_textures_readme.txt'
-    },
-
-    {
-        path: path.join(GAME_DATA_DIR, 'tilesets.json'),
-        template: 'tilesets.json'
-    },
-
-    {
-        path: path.join(GAME_DATA_DIR, 'blueprints.json'),
-        template: 'blueprints.json'
-    },
-
-    {
-        path: path.join(GAME_ASSETS_DIR, 'styles', 'base.css'),
-        template: 'base.css'
-    }
-
-];
 
 /**
  * if the file exists this promise resolves true, else resolves false
@@ -229,6 +175,58 @@ async function runTemplateItem(oItem) {
  */
 async function run(sBaseDir) {
     setBaseDirectory(sBaseDir);
+    const PROJECT_TREE = [
+
+        {
+            path: path.join(GAME_ROOT_DIR, 'index.html'),
+            template: 'index.html'
+        },
+
+        {
+            path: path.join(GAME_ROOT_DIR, 'webpack.config.js'),
+            template: 'webpack.config.js'
+        },
+
+        {
+            path: path.join(VAULT_DIR, 'vault_readme.txt'),
+            template: 'vault_readme.txt'
+        },
+
+        {
+            path: path.join(GAME_DIST_DIR, 'dist_readme.txt'),
+            template: 'dist_readme.txt'
+        },
+
+        {
+            path: path.join(GAME_SRC_DIR, 'index.js'),
+            template: 'index.js'
+        },
+
+        {
+            path: path.join(GAME_LEVELS_DIR, 'assets_levels_readme.txt'),
+            template: 'assets_levels_readme.txt'
+        },
+
+        {
+            path: path.join(GAME_TEXTURES_DIR, 'assets_textures_readme.txt'),
+            template: 'assets_textures_readme.txt'
+        },
+
+        {
+            path: path.join(GAME_DATA_DIR, 'tilesets.json'),
+            template: 'tilesets.json'
+        },
+
+        {
+            path: path.join(GAME_DATA_DIR, 'blueprints.json'),
+            template: 'blueprints.json'
+        },
+
+        {
+            path: path.join(GAME_ASSETS_DIR, 'styles', 'base.css'),
+            template: 'base.css'
+        }
+    ];
     for (let i = 0, l = PROJECT_TREE.length; i < l; ++i) {
         await runTemplateItem(PROJECT_TREE[i]);
     }

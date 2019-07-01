@@ -46,9 +46,9 @@ function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
 
-    app.use('/game/assets', express.static(path.resolve(AppRootPath.path, CONFIG.game_path, 'assets')));
-    app.use('/game/dist', express.static(path.resolve(AppRootPath.path, CONFIG.game_path, 'dist')));
-    persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.vault_path));
+    app.use('/game/assets', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'assets')));
+    app.use('/game/dist', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'dist')));
+    persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.getVariable('vault_path')));
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -107,9 +107,9 @@ function initMapEditor() {
             const name = req.params.name;
             const data = await persist.load(name);
             await LZ.exportLevel(name, data, {
-                textures: CONFIG.texture_path,
-                level: CONFIG.level_path,
-                game: path.resolve(AppRootPath.path, CONFIG.game_path)
+                textures: CONFIG.getVariable('texture_path'),
+                level: CONFIG.getVariable('level_path'),
+                game: path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'))
             });
             res.json({status: 'done'});
         } catch (e) {
@@ -188,7 +188,7 @@ function initGameProject() {
     });
 
     app.get('/game/index.html', (req, res) => {
-        res.sendFile(path.resolve(AppRootPath.path, CONFIG.game_path, 'index.html'));
+        res.sendFile(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'index.html'));
     });
 
     pm.run(AppRootPath.path);
@@ -203,26 +203,30 @@ function run(options) {
     print('---------------------------------');
     print(' ');
     if ('port' in options) {
-        CONFIG.port = options.port;
+        CONFIG.setVariable('port', options.port);
     }
 
     if ('vault_path' in options) {
-        CONFIG.vault_path = options.vault_path;
+        CONFIG.setVariable('vault_path', options.vault_path);
     }
 
+    if ('game_path' in options) {
+        CONFIG.setVariable('game_path', options.game_path);
+    }
+
+    initGameProject();
     initFavicon();
     initMapEditor();
     initExamples();
     initDist();
     initWebSite();
-    initGameProject();
 
-    app.listen(CONFIG.port);
+    app.listen(CONFIG.getVariable('port'));
     print('base location', AppRootPath.path);
-    print('vault location :', CONFIG.vault_path);
-    print('game project location :', CONFIG.game_path);
-    print('server port :', CONFIG.port);
-    print('website url : http://localhost:' + CONFIG.port + '/');
+    print('vault location :', CONFIG.getVariable('vault_path'));
+    print('game project location :', CONFIG.getVariable('game_path'));
+    print('server port :', CONFIG.getVariable('port'));
+    print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
     print('service is now listening...')
 }
 

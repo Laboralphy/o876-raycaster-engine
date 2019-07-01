@@ -1,4 +1,4 @@
-import GameAbstract from '../../lib/src/GameAbstract';
+import GameAbstract from '../../lib/src/game-abstract';
 import FadeOut from '../../lib/src/engine/filters/FadeOut';
 import Halo from '../../lib/src/engine/filters/Halo';
 import FadeIn from "../../lib/src/engine/filters/FadeIn";
