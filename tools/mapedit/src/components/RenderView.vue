@@ -92,6 +92,7 @@
                     context.fillStyle = 'white';
                     context.fillText('Could not render level', 8, 8);
                     context.fillStyle = 'red';
+                    console.error(e);
                     context.fillText(e.message, 8, 24);
                 }
             }

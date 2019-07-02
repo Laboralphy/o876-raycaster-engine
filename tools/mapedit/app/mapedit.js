@@ -1929,19 +1929,21 @@ class Engine {
         }
     }
 
+    /**
+     * Creates a new instance of a specified thinker class
+     * @param sThinker {string} thinker class name to be instanciated, the class must have been previously register with
+     * either the method useThinker(), or the method useThinkers() (with an "s")
+     * @returns {Thinker}
+     */
     createThinkerInstance(sThinker) {
         if (!sThinker) {
             sThinker = 'Thinker';
         }
         const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
-        if (!pThinker) {
-            throw new Error('this thinker does not exists (has not been "used") : ' + sThinker);
-        }
         const oThinker = new pThinker();
         oThinker.engine = this;
         return oThinker;
     }
-
 
     /**
      * Loads a tileset
@@ -3696,6 +3698,15 @@ class Thinker {
         this._lastState = '';
     }
 
+    _emit(sEvent, payload) {
+        if (this.engine) {
+            this.engine.events.emit('think.' + sEvent, {
+                ...payload,
+                emitter: this._entity
+            });
+        }
+    }
+
     get entity() {
         return this._entity;
     }
@@ -3754,6 +3765,7 @@ class Thinker {
      */
     set state(value) {
         this.next('idle');
+        this._emit('state', {value});
         this._state = value;
     }
 
@@ -6286,7 +6298,7 @@ class MapHelper {
         const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
-            const m = this.getMaterial(cell);
+            const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
@@ -43217,13 +43229,24 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             let oLowerCvs = null;
             let oUpperCvs = null;
 
-            window.BC = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"];
             if (!!cell.block) {
                 oLowerCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.block);
             }
 
             if (!!cell.upperblock) {
                 oUpperCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.upperblock);
+            }
+
+            if (!oLowerCvs && !oUpperCvs) {
+                //ctx.save();
+                ctx.fillStyle = 'red';
+                ctx.fillRect(
+                    (canvas.width >> 1) - 2,
+                    (canvas.height >> 1) - 2,
+                    4,
+                    4,
+                );
+                //ctx.restore();
             }
 
 
@@ -44724,6 +44747,7 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                 context.fillStyle = 'white';
                 context.fillText('Could not render level', 8, 8);
                 context.fillStyle = 'red';
+                console.error(e);
                 context.fillText(e.message, 8, 24);
             }
         }

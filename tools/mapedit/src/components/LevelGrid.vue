@@ -433,13 +433,24 @@
                 let oLowerCvs = null;
                 let oUpperCvs = null;
 
-                window.BC = BlockCache;
                 if (!!cell.block) {
                     oLowerCvs = BlockCache.load(cell.block);
                 }
 
                 if (!!cell.upperblock) {
                     oUpperCvs = BlockCache.load(cell.upperblock);
+                }
+
+                if (!oLowerCvs && !oUpperCvs) {
+                    //ctx.save();
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(
+                        (canvas.width >> 1) - 2,
+                        (canvas.height >> 1) - 2,
+                        4,
+                        4,
+                    );
+                    //ctx.restore();
                 }
 
 
