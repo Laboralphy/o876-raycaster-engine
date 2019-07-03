@@ -6319,7 +6319,7 @@ class MapHelper {
             const storey = renderer.createStorey();
             const mapUpperData = upperMap.map(rowProcess);
             mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
-                const m = this._materials[cell];
+                const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
                 storey.setCellMaterial(x, y, cell);
                 storey.setCellPhys(x, y, m.phys);
                 storey.setCellOffset(x, y, m.offset);
@@ -9063,7 +9063,12 @@ module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"ob
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../grid */ "./lib/src/grid/index.js");
 /* harmony import */ var _painting__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../painting */ "./lib/src/painting/index.js");
-// a grid of tags
+/**
+ * @class TagGrid
+ * this class manages a grid, each cell has a list of tags (string)
+ * you can add, remove tag to/from cells
+ * you can "visit" each cell of the grid, the tag list of the cell you are currently on, will change, and you will be warned when so.
+ */
 
 
 
@@ -43491,7 +43496,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         },
 
 
-        resizeEvent() {
+        resizeEvent: function() {
             this.$nextTick(() => {
                 const oCanvas = this.$refs.levelgrid;
                 const oScrollZone = this.$refs.scrollzone;
@@ -43505,14 +43510,15 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             });
         },
 
-        pixelToCell(x, y) {
+        pixelToCell: function(x, y) {
             const nCellSize = this.getCellSize;
             const xc = Math.floor(x / nCellSize);
             const yc = Math.floor(y / nCellSize);
             return {x: xc, y: yc};
         },
 
-        mousedownEvent(event) {
+
+        mousedownEvent: function(event) {
             const x = event.layerX;
             const y = event.layerY;
             const {x: xc, y: yc} = this.pixelToCell(x, y);
@@ -43526,7 +43532,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.select.y = yc;
         },
 
-        mouseupEvent(event) {
+        mouseupEvent: function(event) {
             const x = event.layerX;
             const y = event.layerY;
             this.selecting = false;
@@ -43578,15 +43584,48 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         },
 
 
-        mousemoveEvent(event) {
+        /**
+         * invalidates the difference between two region
+         * @param oPrevRegion {{x1, y1, x2, y2}} previous region
+         * @param oNewRegion {{x1, y1, x2, y2}} new region
+         */
+        invalidateDiffRegion: function(oPrevRegion, oNewRegion) {
+            const mr = new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__["default"]();
+            let ymin = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+            let ymax = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+            let xmin = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+            let xmax = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+            for (let y = ymin; y <= ymax; ++y) {
+                for (let x = xmin; x <= xmax; ++x) {
+                    mr.mark(x, y);
+                }
+            }
+            ymin = Math.min(oNewRegion.y1, oNewRegion.y2);
+            ymax = Math.min(oNewRegion.y1, oNewRegion.y2);
+            xmin = Math.min(oNewRegion.x1, oNewRegion.x2);
+            xmax = Math.min(oNewRegion.x1, oNewRegion.x2);
+            for (let y = ymin; y <= ymax; ++y) {
+                for (let x = xmin; x <= xmax; ++x) {
+                    if (mr.isMarked(x, y)) {
+                        mr.unmark(x, y);
+                    } else {
+                        mr.mark(x, y);
+                    }
+                }
+            }
+            mr.iterate((x, y) => this.modifications.mark(x, y));
+        },
+
+        mousemoveEvent: function(event) {
             if (this.selecting) {
                 const x = event.layerX;
                 const y = event.layerY;
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 const oPrevRegion = this.getLevelGridSelectedRegion;
                 if (xc !== oPrevRegion.x2 || yc !== oPrevRegion.y2) {
+                    const oNewRegion = {x1: this.select.x, y1: this.select.y, x2: xc, y2: yc};
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
-                    this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
+                    this.selectRegion(oNewRegion);
                     this.invalidateRect(this.select.x, this.select.y, xc, yc);
                     this.redraw();
                 }
@@ -43607,7 +43646,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
         },
 
-        getThingCoords(x, y) {
+        getThingCoords: function(x, y) {
             const {x: xc, y: yc} = this.pixelToCell(x, y);
             const cs = this.getCellSize;
             const xm = x % cs;
@@ -43676,18 +43715,36 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.$router.push('/list-levels');
         },
 
+
+        otherGridSize: function() {
+            const n = prompt('Enter the new grid size (between 1 and 256).');
+            if (n > 0 && n <= 256) {
+                this.setGridSize({value: n});
+            } else {
+                alert('This value is invalid.');
+            }
+        },
+
         /**
          * Grid shrinks : loses one row and one column
          */
         smallerGridClick: function () {
-            this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+            if (this.getGridSize > 40) {
+                this.otherGridSize();
+            } else {
+                this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+            }
         },
 
         /**
          * Grid grows : gain one row and one column
          */
         largerGridClick: function () {
-            this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+            if (this.getGridSize > 40) {
+                this.otherGridSize();
+            } else {
+                this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+            }
         },
 
         /**
