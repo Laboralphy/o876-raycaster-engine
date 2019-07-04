@@ -443,6 +443,14 @@ class CanvasHelper {
 			image.src = sUrl;
 		});
 	}
+
+	static resize(oCanvas, width, height) {
+		const oNewCanvas = this.createCanvas(width, height);
+		CanvasHelper.setImageSmoothing(oNewCanvas, CanvasHelper.getImageSmoothing(oCanvas));
+		const ctx = oNewCanvas.getContext('2d');
+		ctx.drawImage(oCanvas, 0, 0, oCanvas.width, oCanvas.height, 0, 0, oNewCanvas.width, oNewCanvas.height);
+		return oNewCanvas;
+	}
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (CanvasHelper);
@@ -6589,6 +6597,11 @@ class Renderer {
                     this.transmitOptionToStorey(opt);
                     break;
 
+
+                case 'shading.factor':
+                    this.transmitOptionToStorey('shading.factor');
+                    break;
+
                 case 'shading-settings':
                     this.setShadingSettings(
                         SHADING.shades,
@@ -6596,6 +6609,10 @@ class Renderer {
                         SHADING.filter,
                         SHADING.brightness
                     );
+                    if (this.storey) {
+                        window.TEST = {rc: this, storey: this.storey};
+                    }
+                    this.transmitOptionToStorey(opt);
                     break;
 
                 case 'textures.files.walls':
@@ -6627,7 +6644,6 @@ class Renderer {
                 case 'textures.files.background':
                     if (o.textures.files.background !== '') {
                         const bgImage = await _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].loadCanvas(o.textures.files.background);
-                        _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].setImageSmoothing(bgImage, false);
                         this.setBackground(bgImage);
                     }
                     break;
@@ -6721,7 +6737,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param oImage
      */
     setBackground(oImage) {
-        this._background = oImage;
+        const h = this._options.screen.height;
+        const r = h / oImage.height;
+        const wNew = oImage.width * r;
+        this._background = r === 1 ? oImage : _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].resize(oImage, wNew, h);
     }
 
     /**
@@ -8052,7 +8071,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         }
         this.renderFlats(scene);
         Renderer.renderScreenSliceBuffer(scene, renderContext);
-        this.red
         this.renderDebug(renderContext);
         if (vr) {
             renderContext.restore();
@@ -41897,9 +41915,9 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
 
         deleteClicked() {
             if (confirm('Delete this block ?')) {
+                this.deleteBlock({id: this.selected});
                 this.selected = null;
                 this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_1__["BLOCKBROWSER_SET_SELECTED"]]({value: null});
-                this.deleteBlock({id: this.selected});
             }
         },
 
@@ -71587,7 +71605,7 @@ function generateShading(input) {
     return {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
-        brightness: a.brightness | 0, // base brightness
+        brightness: (a.brightness | 0) / 100, // base brightness
         filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
     };
 }
@@ -71625,7 +71643,7 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
-                    z: 0,
+                    z: (oTile.height >> 1) - 48,
                     angle: 0,
                     blueprint: idThingTemplate,
                     animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null

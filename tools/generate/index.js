@@ -321,7 +321,7 @@ function generateShading(input) {
     return {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
-        brightness: a.brightness | 0, // base brightness
+        brightness: (a.brightness | 0) / 100, // base brightness
         filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
     };
 }
@@ -359,7 +359,7 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
-                    z: 0,
+                    z: (oTile.height >> 1) - 48,
                     angle: 0,
                     blueprint: idThingTemplate,
                     animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
