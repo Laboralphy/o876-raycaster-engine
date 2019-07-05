@@ -110,7 +110,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 

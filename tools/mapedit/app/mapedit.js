@@ -2114,10 +2114,11 @@ class Engine {
             }
         }
         const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
-        const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
+        const DECAL_COUNT = Object.keys(data.decals).length;
+        const LS_COUNT = Object.keys(data.lightsources).length;
         const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT + LS_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
@@ -2225,27 +2226,23 @@ class Engine {
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
         // static objects
-        if ('objects' in data) {
-            data.objects.forEach(o => {
-                const entity = this.createEntity(o.blueprint, o);
-                if ('animation' in o && o.animation !== false && o.animation !== null) {
-                    entity.sprite.setCurrentAnimation(o.animation, 0);
-                }
-                entity.visible = true;
-            })
-        }
+        data.objects.forEach(o => {
+            const entity = this.createEntity(o.blueprint, o);
+            if ('animation' in o && o.animation !== false && o.animation !== null) {
+                entity.sprite.setCurrentAnimation(o.animation, 0);
+            }
+            entity.visible = true;
+        });
 
-        if ('camera' in data) {
-            // sets initial camera location, and orientation
-            const {x, y, z, angle} = data.camera;
-            this.camera.location.set({
-                x: x * ps + (ps >> 1), // camera coordinates (x-axis)
-                y: y * ps + (ps >> 1), // camera coordinates (y-axis)
-                angle, // looking angle
-                z: z // camera altitude (1 is the default object)
-            });
-            this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
-        }
+        // CAMERA : sets initial camera location, and orientation
+        const {x, y, z, angle} = data.camera;
+        this.camera.location.set({
+            x: x * ps + (ps >> 1), // camera coordinates (x-axis)
+            y: y * ps + (ps >> 1), // camera coordinates (y-axis)
+            angle, // looking angle
+            z: z // camera altitude (1 is the default object)
+        });
+        this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
 
 
         const FACES = 'wsenfc';
@@ -2342,25 +2339,30 @@ class Engine {
             }
         };
 
-        if ('decals' in data) {
-            for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
-                const decal = data.decals[iDecal];
-                await installDecal(decal, 'n');
-                await installDecal(decal, 'e');
-                await installDecal(decal, 'w');
-                await installDecal(decal, 's');
-                await installDecal(decal, 'f');
-                await installDecal(decal, 'c');
-                showProgress('applying decals');
-            }
+        // DECALS
+        for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
+            const decal = data.decals[iDecal];
+            await installDecal(decal, 'n');
+            await installDecal(decal, 'e');
+            await installDecal(decal, 'w');
+            await installDecal(decal, 's');
+            await installDecal(decal, 'f');
+            await installDecal(decal, 'c');
+            showProgress('applying decals');
         }
 
+        // LIGHTSOURCES
+        for (let iLS = 0, nLS = data.lightsources.length; iLS < nLS; ++iLS) {
+            const ls = data.lightsources[iLS];
+            this.createLightSource(ls.x, ls.y, ls.r0, ls.r1, ls.v);
+            showProgress('creating lightsources');
+        }
+
+        // TAGS
         showProgress('analyzing tags');
-        if ('tags' in data) {
-            for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
-                const tagEntry = data.tags[iTag];
-                tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
-            }
+        for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
+            const tagEntry = data.tags[iTag];
+            tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
         }
 
         feedback('done', 1);
@@ -6310,6 +6312,7 @@ class MapHelper {
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
+            // add a light source in the block ?
             if ('light' in m && !!m.light) {
                 renderer.addLightSource(
                     ps * x + (ps >> 1),
@@ -9069,7 +9072,7 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*! exports provided: $schema, type, description, properties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["x","y","r0","r1","v"]}]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","lightsources","camera"]};
 
 /***/ }),
 
@@ -45566,10 +45569,11 @@ const {mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../consts */ "./tools/mapedit/src/consts/index.js");
-/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
+/* harmony import */ var _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../lib/src/raycaster/consts */ "./lib/src/raycaster/consts/index.js");
+/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
 //
 //
 //
@@ -45639,6 +45643,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -45653,7 +45670,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "ThingBuilder",
-    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_3__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_5__["default"]},
+    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_6__["default"]},
 
     props: {
         id: {
@@ -45676,12 +45693,18 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
             content: '',
             saved: false,
             CONSTS: _consts__WEBPACK_IMPORTED_MODULE_1__,
+            RC_CONSTS: _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__,
             value: {
                 tile: 0,
                 tangible: false,
                 size: 1,
                 opacity: 0,
-                light: false,
+                light: {
+                    enabled: false,
+                    value: 0,
+                    inner: 0,
+                    outer: 0
+                },
                 ghost: false,
                 ref: ''
             }
@@ -45704,8 +45727,8 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
     methods: {
 
         ...levelMapActions({
-            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["CREATE_THING"],
-            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["MODIFY_THING"]
+            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["CREATE_THING"],
+            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["MODIFY_THING"]
         }),
 
         importThing: function(id) {
@@ -54006,19 +54029,19 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.value.light,
-                            expression: "value.light"
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
                           }
                         ],
                         attrs: { type: "checkbox" },
                         domProps: {
-                          checked: Array.isArray(_vm.value.light)
-                            ? _vm._i(_vm.value.light, null) > -1
-                            : _vm.value.light
+                          checked: Array.isArray(_vm.value.light.enabled)
+                            ? _vm._i(_vm.value.light.enabled, null) > -1
+                            : _vm.value.light.enabled
                         },
                         on: {
                           change: function($event) {
-                            var $$a = _vm.value.light,
+                            var $$a = _vm.value.light.enabled,
                               $$el = $event.target,
                               $$c = $$el.checked ? true : false
                             if (Array.isArray($$a)) {
@@ -54027,20 +54050,20 @@ var render = function() {
                               if ($$el.checked) {
                                 $$i < 0 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.concat([$$v])
                                   )
                               } else {
                                 $$i > -1 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                                   )
                               }
                             } else {
-                              _vm.$set(_vm.value, "light", $$c)
+                              _vm.$set(_vm.value.light, "enabled", $$c)
                             }
                           }
                         }
@@ -54051,7 +54074,119 @@ var render = function() {
                       _vm._v(
                         "If checked, the thing will emit its own light and will never get darker when going afar from the point of view."
                       )
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "fieldset",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
+                          }
+                        ]
+                      },
+                      [
+                        _c("legend", [_vm._v("Light source properties")]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Intensity: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.value,
+                                  expression: "value.light.value"
+                                }
+                              ],
+                              attrs: {
+                                type: "number",
+                                min: "0",
+                                max: "1",
+                                step: "0.01"
+                              },
+                              domProps: { value: _vm.value.light.value },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "value",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("In.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.inner,
+                                  expression: "value.light.inner"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.inner },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "inner",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Out.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.outer,
+                                  expression: "value.light.outer"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.outer },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "outer",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", [
@@ -71398,7 +71533,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 
