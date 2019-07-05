@@ -82,6 +82,7 @@
                         context.fillStyle = grad;
                         context.fillRect(x, y, progress * w | 0, h);
                     });
+                    window.GAME = engine;
                     setTimeout(() => !!engine && engine.startDoomLoop(), 200);
                 } catch (e) {
                     engine = null;

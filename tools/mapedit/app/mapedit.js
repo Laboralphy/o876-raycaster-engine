@@ -6398,7 +6398,7 @@ function zBufferCompare(a, b) {
 }
 
 
-
+const MAGIC_DIST_RATIO = 1.14734748441786;
 
 class Renderer {
 	
@@ -6609,9 +6609,6 @@ class Renderer {
                         SHADING.filter,
                         SHADING.brightness
                     );
-                    if (this.storey) {
-                        window.TEST = {rc: this, storey: this.storey};
-                    }
                     this.transmitOptionToStorey(opt);
                     break;
 
@@ -7259,7 +7256,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         while (done === 0) {
             if (xt < yt) {
                 xi += dxi;
-                if (xi >= 0 && xi < nMapSize) {
+                if (xi >= 0 && xi < nMapSize) { // on est toujour dans la map
                     nText = map[yi][xi];
                     nPhys = (nText >> 12) & 0xF; // **code12** phys
 
@@ -7302,15 +7299,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         }
                         xt += dxt;
                     } else {
-                        t = xt + nTOfs;
+                        t = xt + nTOfs; // block solide rencontré, distance = xt + offset
                         xint = x + xScale * t;
                         yint = y + yScale * t;
                         done = 1;
                         side = 1;
                         bStillVisible = false;
                     }
-                } else {
-                    t = xt;
+                } else { // on sort de la map
+                    t = xt; // sortie de map, distance = xt
                     c = cmax;
                 }
             } else {
@@ -7392,8 +7389,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
             scene.xCell = xi;
             scene.yCell = yi;
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786; // bizarre mais cette distance là est 1.47347484 fois trop grande
             scene.exterior = false;
+            scene.dx = dx;
+            scene.dy = dy;
+            scene.x = x;
+            scene.y = y;
+            scene.xint = xint;
+            scene.yint = yint;
             if (this.isWallTransparent(scene.xCell, scene.yCell)) {
                 resume.b = true;
                 resume.xi = xi;
@@ -7402,7 +7405,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 resume.b = false;
             }
         } else {
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786;
             scene.exterior = true;
             resume.b = false;
         }
@@ -8255,7 +8258,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 dy | 0,                                         // 6: dy
                 dw | 0,                                         // 7: dw
                 dh | 0,                                         // 8: dh
-                z,                                              // 9: z indication
+                f * MAGIC_DIST_RATIO,                                              // 9: z indication
                 oSprite.flags                                   // flags
             ];
             scene.zbuffer.push(data);
@@ -44812,6 +44815,7 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                     context.fillStyle = grad;
                     context.fillRect(x, y, progress * w | 0, h);
                 });
+                window.GAME = engine;
                 setTimeout(() => !!engine && engine.startDoomLoop(), 200);
             } catch (e) {
                 engine = null;
