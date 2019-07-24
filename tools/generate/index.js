@@ -140,7 +140,7 @@ function generateBlueprint(things, id) {
     }
     if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
-
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
         output.lightsource = {
             r0: parseFloat(thing.light.inner),
             r1: parseFloat(thing.light.outer),
