@@ -138,8 +138,14 @@ function generateBlueprint(things, id) {
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
-    if (thing.light) {
+    if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
+
+        output.lightsource = {
+            r0: parseFloat(thing.light.inner),
+            r1: parseFloat(thing.light.outer),
+            v: parseFloat(thing.light.value)
+        };
     }
     switch (thing.opacity) {
         case 0: // 100%
@@ -210,9 +216,9 @@ function generateMap(input) {
     // déterminer s'il y a un uppermap
     const grid = input.grid;
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
-    output.map = grid.map(row => row.map(cell => cell.block));
+    output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
     }
     return output;
 }
@@ -448,6 +454,10 @@ function generateTags(input) {
     return aTags;
 }
 
+function generateLightsources(input) {
+    return [];
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
@@ -462,6 +472,7 @@ async function generate(input, imageAppender) {
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
         tags: generateTags(input),
+        lightsources: generateLightsources(input),
         preview: input.preview
     };
 }

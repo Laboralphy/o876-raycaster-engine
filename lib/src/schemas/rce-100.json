@@ -127,6 +127,29 @@
                   ]
                 }
               ]
+            },
+            "lightsource": {
+              "type": "object",
+              "description": "Definition of the light emitted by the thing",
+              "properties": {
+                "r0": {
+                  "type": "number",
+                  "description": "inner radius value, below the value, the light is at its maximum intensity"
+                },
+                "r1": {
+                  "type": "number",
+                  "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
+                },
+                "v": {
+                  "type": "integer",
+                  "description": "light maximum intensity"
+                }
+              },
+              "required": [
+                "r0",
+                "r1",
+                "v"
+              ]
             }
           },
           "required": [
@@ -333,7 +356,7 @@
                   }
                 }
               },
-              "light": {
+              "lightsource": {
                 "type": "object",
                 "description": "Definition of the light emitted by the block",
                 "properties": {

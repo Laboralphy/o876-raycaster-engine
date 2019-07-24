@@ -1040,7 +1040,7 @@
                     xy.push({x, y})
                 });
                 await this.setGridCells({
-                    xy, floor: this.selectedFloor, block: null
+                    xy, floor: this.selectedFloor, block: undefined
                 });
                 await this.pushUndo({undo: aUndo});
                 this.$nextTick(() => this.redraw());
