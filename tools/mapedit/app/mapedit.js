@@ -2146,6 +2146,7 @@ class Engine {
         entity.thinker = this.createThinkerInstance(bp.thinker);
         entity.sprite = sprite;
         entity.size = bp.size;
+        entity.data.resref = resref;
 
         // dynamic light
         if (!!bp.lightsource) {
