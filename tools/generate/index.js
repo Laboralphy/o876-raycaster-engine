@@ -133,7 +133,6 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
@@ -289,7 +288,7 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
         phys: PHYS[block.phys],
         offset: block.offs | 0,
@@ -300,13 +299,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -328,7 +332,7 @@ function generateShading(input) {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
         brightness: (a.brightness | 0) / 100, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -354,10 +358,6 @@ function generateObjectsAndDecals(input) {
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
                 const size = (oTile.width >> 1) | 0;
-                if (size < 4) {
-                    console.log(oTile);
-                    throw new Error('xxx');
-                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];

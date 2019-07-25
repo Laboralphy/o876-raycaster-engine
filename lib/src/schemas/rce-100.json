@@ -76,6 +76,7 @@
               ]
             }
           },
+          "additionalProperties": false,
           "required": [
             "id",
             "src",
@@ -152,6 +153,7 @@
               ]
             }
           },
+          "additionalProperties": false,
           "required": [
             "id",
             "tileset",
@@ -160,6 +162,38 @@
           ]
         }
       ]
+    },
+    "shading": {
+      "type": "object",
+      "description": "shading parameter to tweak ambiance",
+      "properties": {
+        "color": {
+          "type": "string",
+          "description": "the shading color at its maximum intensity"
+        },
+        "factor": {
+          "type": "number",
+          "description": "number of texels needed to increase fog intensity by one rank"
+        },
+        "brightness": {
+          "type": "number",
+          "description": "additional fog negative instensity on all surface : if value is 0, the fog intensity is normally applied, if value is 0.5 the fog instensity is halved on all surfaces"
+        },
+        "filter": {
+          "anyOf": [
+            {
+              "type": "string",
+              "description": "a color balance applied on sprite to help ambiance integration"
+            },
+            {
+              "type": "null",
+              "description": "no color filter for this level"
+            }
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": ["color", "factor", "brightness", "filter"]
     },
     "level": {
       "type": "object",
@@ -178,6 +212,7 @@
               "description": "the height of a cell, in texels"
             }
           },
+          "additionalProperties": false,
           "required": [
             "spacing",
             "height"
@@ -208,6 +243,7 @@
               "description": "If true then all texture will be stretched x2 along their height, this is useful when designing tall building"
             }
           },
+          "additionalProperties": false,
           "required": [
             "flats",
             "walls",
@@ -276,6 +312,10 @@
                     "@PHYS_INVISIBLE_BLOCK",
                     "@PHYS_OFFSET_BLOCK"
                   ]
+                },
+                "offset": {
+                  "type": "number",
+                  "description": "wall offset (depth)"
                 },
                 "faces": {
                   "type": "object",
@@ -354,31 +394,33 @@
                       ]
                     }
                   }
+                },
+                "lightsource": {
+                  "type": "object",
+                  "description": "Definition of the light emitted by the block",
+                  "properties": {
+                    "r0": {
+                      "type": "number",
+                      "description": "inner radius value, below the value, the light is at its maximum intensity"
+                    },
+                    "r1": {
+                      "type": "number",
+                      "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
+                    },
+                    "v": {
+                      "type": "integer",
+                      "description": "light maximum intensity"
+                    }
+                  },
+                  "additionalProperties": false,
+                  "required": [
+                    "r0",
+                    "r1",
+                    "v"
+                  ]
                 }
               },
-              "lightsource": {
-                "type": "object",
-                "description": "Definition of the light emitted by the block",
-                "properties": {
-                  "r0": {
-                    "type": "number",
-                    "description": "inner radius value, below the value, the light is at its maximum intensity"
-                  },
-                  "r1": {
-                    "type": "number",
-                    "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
-                  },
-                  "v": {
-                    "type": "integer",
-                    "description": "light maximum intensity"
-                  }
-                },
-                "required": [
-                  "r0",
-                  "r1",
-                  "v"
-                ]
-              },
+              "additionalProperties": false,
               "required": [
                 "code",
                 "phys",
@@ -393,6 +435,35 @@
         "textures",
         "map",
         "legend"
+      ]
+    },
+    "tags": {
+      "type": "array",
+      "description": "a list of tags, each cell can hold several tags",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "x": {
+              "type": "number",
+              "description": "tag position (x axis)"
+            },
+            "y": {
+              "type": "number",
+              "description": "tag position (y axis)"
+            },
+            "tags": {
+              "type": "array",
+              "description": "a list of tag associated with this cell",
+              "items": {
+                "type": "string",
+                "description": "a tag"
+              }
+            }
+          },
+          "additionalProperties": false,
+          "required": ["x", "y", "tags"]
+        }
       ]
     },
     "lightsources": {
@@ -423,6 +494,7 @@
               "description": "light maximum intensity"
             }
           },
+          "additionalProperties": false,
           "required": [
             "x",
             "y",
@@ -473,6 +545,7 @@
               ]
             }
           },
+          "additionalProperties": false,
           "required": [
             "x",
             "y",
@@ -519,7 +592,8 @@
           "s": {
             "type": "integer",
             "description": "indicates that the decal will be put on the south face"
-          }
+          },
+          "additionalProperties": false
         }
       ]
     },
@@ -543,14 +617,20 @@
           "type": "number"
         }
       },
+      "additionalProperties" : false,
       "required": [
         "x",
         "y",
         "z",
         "angle"
       ]
+    },
+    "preview": {
+      "type": "string",
+      "description": "a url or data-url of an image (preview thumbnail)"
     }
   },
+  "additionalProperties" : false,
   "required": [
     "version",
     "tilesets",

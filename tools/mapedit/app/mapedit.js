@@ -444,12 +444,107 @@ class CanvasHelper {
 		});
 	}
 
+	/**
+	 * resize a canvas
+	 *
+	 * @param oCanvas
+	 * @param width
+	 * @param height
+	 * @return {HTMLCanvasElement}
+	 */
 	static resize(oCanvas, width, height) {
 		const oNewCanvas = this.createCanvas(width, height);
 		CanvasHelper.setImageSmoothing(oNewCanvas, CanvasHelper.getImageSmoothing(oCanvas));
 		const ctx = oNewCanvas.getContext('2d');
 		ctx.drawImage(oCanvas, 0, 0, oCanvas.width, oCanvas.height, 0, 0, oNewCanvas.width, oNewCanvas.height);
 		return oNewCanvas;
+	}
+
+
+	/**
+	 * Draw a multiline text in a canvas
+	 * @example text(canvas, text, x, y, {stroke: true}, 250, 16)
+	 * will draw text using fillStyle and strokeStyle properties (at current values)
+	 *
+	 * @example text(canvas, text, x, y, {fill: false, stroke: 'red'}, 250, 16)
+	 * will draw text using ONLY "red" strokeStyle property
+	 *
+	 * @param oCanvas
+	 * @param sText
+	 * @param x
+	 * @param y
+	 * @param oStyles
+	 * @param wMax
+	 * @param h
+	 */
+	static text(oCanvas, sText, x, y, oStyles, wMax, h) {
+		// white space as a cesure
+		const CESURE = ' ';
+		// specified gradient or plain string in styles ?
+		const bGradient = oStyles instanceof CanvasGradient;
+		// specified an object with multiple properties ?
+		const bObject = !bGradient && (oStyles !== null && (typeof oStyles === 'object'));
+		const oContext = oCanvas.getContext("2d");
+		// for gradient and plain styles : fill style only
+		if (oStyles instanceof CanvasGradient || typeof oStyles === 'string') {
+			oContext.fillStyle = oStyles;
+		}
+		// multiple style properties
+		let bFill = true; // if true : we will use fillText
+		let bStroke = false; // if true : we will use strokeText
+
+		if (bObject && ('fill' in oStyles)) {
+			if (oStyles.fill === false) {
+				// if oStyle.fill is false, we cancel default value : no text will be filled
+				bFill = false;
+			} else {
+				oContext.fillStyle = oStyles.fill;
+			}
+		}
+		if (bObject && ('stroke' in oStyles)) {
+			if (oStyles.stroke === true) {
+				// if oStyle.stroke is true, we cancel default value : text will be stroke
+				bStroke = true;
+			} else {
+				bStroke = true;
+				oContext.fillStyle = oStyles.stroke;
+			}
+			// if oStyle.stroke is false, we keep default false value : text will not be stroke
+		}
+		if (bObject && ('font' in oStyles)) {
+			oContext.font = oStyles.font;
+		}
+
+		const aText = sText
+			.replace(/\n/g, '\n ')
+			.split(CESURE)
+			.filter(s => s.length > 0);
+		let xCurs = 0, yCurs = 0;
+		let aLine = [];
+
+		const commitText = () => {
+			const sLine = aLine.join('');
+			if (bStroke) {
+				oContext.strokeText(sLine, x + xCurs, y + yCurs, wMax);
+			}
+			if (bFill) {
+				oContext.fillText(sLine, x, y + yCurs, wMax);
+			}
+			xCurs = 0;
+			yCurs += h;
+			aLine = [];
+		};
+		while (aText.length) {
+			const sWord = aText.shift() + CESURE;
+			const mt = oContext.measureText(sWord);
+			if (sWord.endsWith('\n') || (xCurs + mt.width) > wMax) {
+				commitText();
+			} else {
+				xCurs += mt.width;
+			}
+			aLine.push(sWord);
+		}
+		commitText();
 	}
 }
 
@@ -2054,12 +2149,11 @@ class Engine {
 
         // dynamic light
         if (!!bp.lightsource) {
-            entity.lightsource = this.createLightSource(
-                location.x,
-                location.y,
-                bp.lightsource.r0,
-                bp.lightsource.r1,
-                bp.lightsource.v
+            this.linkEntityLightsource(
+                entity,
+                parseFloat(bp.lightsource.v),
+                parseFloat(bp.lightsource.r0),
+                parseFloat(bp.lightsource.r1)
             );
         }
 
@@ -2077,6 +2171,24 @@ class Engine {
             this._horde.unlinkEntity(e);
             this.events.emit('entitydestroyed', {entity: e});
         }
+    }
+
+    /**
+     * Adds a lightsource to an entity
+     * @param entity {Entity}
+     * @param intensity {number} light source intensity
+     * @param innerRadius {number} light source inner radius
+     * @param outerRadius {number} light source outer radius
+     */
+    linkEntityLightsource(entity, intensity, innerRadius, outerRadius) {
+        const location = entity.location;
+        entity.lightsource = this.createLightSource(
+            location.x,
+            location.y,
+            innerRadius,
+            outerRadius,
+            intensity
+        );
     }
 
 
@@ -8578,7 +8690,7 @@ class ShadedTileSet {
 	shadeImage(oImage, fFactor, sColorFog, sColorFilter) {
 		const oShaded = _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_0__["default"].cloneCanvas(oImage);
 		const oCtx = oShaded.getContext('2d');
-		if (sColorFilter !== false) {
+		if (!!sColorFilter) {
 			let oColorFilter = _rainbow__WEBPACK_IMPORTED_MODULE_1__["default"].parse(sColorFilter);
 			oColorFilter.r /= 128;
 			oColorFilter.g /= 128;
@@ -9120,10 +9232,10 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*!**************************************!*\
   !*** ./lib/src/schemas/rce-100.json ***!
   \**************************************/
-/*! exports provided: $schema, type, description, properties, required, default */
+/*! exports provided: $schema, type, description, properties, additionalProperties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]},"lightsource":{"type":"object","description":"Definition of the light emitted by the thing","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"lightsource":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["x","y","r0","r1","v"]}]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","lightsources","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"additionalProperties":false,"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]},"lightsource":{"type":"object","description":"Definition of the light emitted by the thing","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]}},"additionalProperties":false,"required":["id","tileset","thinker","size"]}]},"shading":{"type":"object","description":"shading parameter to tweak ambiance","properties":{"color":{"type":"string","description":"the shading color at its maximum intensity"},"factor":{"type":"number","description":"number of texels needed to increase fog intensity by one rank"},"brightness":{"type":"number","description":"additional fog negative instensity on all surface : if value is 0, the fog intensity is normally applied, if value is 0.5 the fog instensity is halved on all surfaces"},"filter":{"anyOf":[{"type":"string","description":"a color balance applied on sprite to help ambiance integration"},{"type":"null","description":"no color filter for this level"}]}},"additionalProperties":false,"required":["color","factor","brightness","filter"]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"additionalProperties":false,"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"additionalProperties":false,"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"offset":{"type":"number","description":"wall offset (depth)"},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}},"lightsource":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["r0","r1","v"]}},"additionalProperties":false,"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"tags":{"type":"array","description":"a list of tags, each cell can hold several tags","items":[{"type":"object","properties":{"x":{"type":"number","description":"tag position (x axis)"},"y":{"type":"number","description":"tag position (y axis)"},"tags":{"type":"array","description":"a list of tag associated with this cell","items":{"type":"string","description":"a tag"}}},"additionalProperties":false,"required":["x","y","tags"]}]},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["x","y","r0","r1","v"]}]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"additionalProperties":false,"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"},"additionalProperties":false}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"additionalProperties":false,"required":["x","y","z","angle"]},"preview":{"type":"string","description":"a url or data-url of an image (preview thumbnail)"}},"additionalProperties":false,"required":["version","tilesets","blueprints","level","objects","decals","lightsources","camera"]};
 
 /***/ }),
 
@@ -44785,6 +44897,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _libraries_generate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../libraries/generate */ "./tools/mapedit/src/libraries/generate/index.js");
 /* harmony import */ var _libraries_append_images__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../libraries/append-images */ "./tools/mapedit/src/libraries/append-images/index.js");
 /* harmony import */ var _lib_src_engine_Engine__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../lib/src/engine/Engine */ "./lib/src/engine/Engine.js");
+/* harmony import */ var _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../lib/src/canvas-helper */ "./lib/src/canvas-helper/index.js");
 //
 //
 //
@@ -44797,6 +44910,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -44879,9 +44993,8 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                 context.textBaseline = 'top';
                 context.fillStyle = 'white';
                 context.fillText('Could not render level', 8, 8);
-                context.fillStyle = 'red';
                 console.error(e);
-                context.fillText(e.message, 8, 24);
+                _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__["default"].text(canvas, e.message, 8, 24, 'red', canvas.width - 8, 16);
             }
         }
     },
@@ -71607,14 +71720,13 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
     if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
-
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
         output.lightsource = {
             r0: parseFloat(thing.light.inner),
             r1: parseFloat(thing.light.outer),
@@ -71763,7 +71875,7 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
         phys: PHYS[block.phys],
         offset: block.offs | 0,
@@ -71774,13 +71886,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -71802,7 +71919,7 @@ function generateShading(input) {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
         brightness: (a.brightness | 0) / 100, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -71828,10 +71945,6 @@ function generateObjectsAndDecals(input) {
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
                 const size = (oTile.width >> 1) | 0;
-                if (size < 4) {
-                    console.log(oTile);
-                    throw new Error('xxx');
-                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -71952,6 +72065,7 @@ async function generate(input, imageAppender) {
 }
 
 module.exports = generate;
+
 
 /***/ }),
 
