@@ -110,7 +110,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 
@@ -133,13 +133,18 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
-    if (thing.light) {
+    if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
+        output.lightsource = {
+            r0: parseFloat(thing.light.inner),
+            r1: parseFloat(thing.light.outer),
+            v: parseFloat(thing.light.value)
+        };
     }
     switch (thing.opacity) {
         case 0: // 100%
@@ -210,9 +215,9 @@ function generateMap(input) {
     // déterminer s'il y a un uppermap
     const grid = input.grid;
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
-    output.map = grid.map(row => row.map(cell => cell.block));
+    output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
     }
     return output;
 }
@@ -283,7 +288,7 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
         phys: PHYS[block.phys],
         offset: block.offs | 0,
@@ -294,13 +299,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -322,7 +332,7 @@ function generateShading(input) {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
         brightness: (a.brightness | 0) / 100, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -348,10 +358,6 @@ function generateObjectsAndDecals(input) {
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
                 const size = (oTile.width >> 1) | 0;
-                if (size < 4) {
-                    console.log(oTile);
-                    throw new Error('xxx');
-                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -448,6 +454,10 @@ function generateTags(input) {
     return aTags;
 }
 
+function generateLightsources(input) {
+    return [];
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
@@ -462,6 +472,7 @@ async function generate(input, imageAppender) {
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
         tags: generateTags(input),
+        lightsources: generateLightsources(input),
         preview: input.preview
     };
 }

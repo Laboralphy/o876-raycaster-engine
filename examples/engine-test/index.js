@@ -226,7 +226,7 @@ function getLevel() {
                     "f": 0,
                     "c": 1
                 },
-                "light": {
+                "lightsource": {
                     "r0": 512,
                     "r1": 768,
                     "v": 0.3

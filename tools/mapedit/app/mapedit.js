@@ -444,12 +444,107 @@ class CanvasHelper {
 		});
 	}
 
+	/**
+	 * resize a canvas
+	 *
+	 * @param oCanvas
+	 * @param width
+	 * @param height
+	 * @return {HTMLCanvasElement}
+	 */
 	static resize(oCanvas, width, height) {
 		const oNewCanvas = this.createCanvas(width, height);
 		CanvasHelper.setImageSmoothing(oNewCanvas, CanvasHelper.getImageSmoothing(oCanvas));
 		const ctx = oNewCanvas.getContext('2d');
 		ctx.drawImage(oCanvas, 0, 0, oCanvas.width, oCanvas.height, 0, 0, oNewCanvas.width, oNewCanvas.height);
 		return oNewCanvas;
+	}
+
+
+	/**
+	 * Draw a multiline text in a canvas
+	 * @example text(canvas, text, x, y, {stroke: true}, 250, 16)
+	 * will draw text using fillStyle and strokeStyle properties (at current values)
+	 *
+	 * @example text(canvas, text, x, y, {fill: false, stroke: 'red'}, 250, 16)
+	 * will draw text using ONLY "red" strokeStyle property
+	 *
+	 * @param oCanvas
+	 * @param sText
+	 * @param x
+	 * @param y
+	 * @param oStyles
+	 * @param wMax
+	 * @param h
+	 */
+	static text(oCanvas, sText, x, y, oStyles, wMax, h) {
+		// white space as a cesure
+		const CESURE = ' ';
+		// specified gradient or plain string in styles ?
+		const bGradient = oStyles instanceof CanvasGradient;
+		// specified an object with multiple properties ?
+		const bObject = !bGradient && (oStyles !== null && (typeof oStyles === 'object'));
+		const oContext = oCanvas.getContext("2d");
+		// for gradient and plain styles : fill style only
+		if (oStyles instanceof CanvasGradient || typeof oStyles === 'string') {
+			oContext.fillStyle = oStyles;
+		}
+		// multiple style properties
+		let bFill = true; // if true : we will use fillText
+		let bStroke = false; // if true : we will use strokeText
+
+		if (bObject && ('fill' in oStyles)) {
+			if (oStyles.fill === false) {
+				// if oStyle.fill is false, we cancel default value : no text will be filled
+				bFill = false;
+			} else {
+				oContext.fillStyle = oStyles.fill;
+			}
+		}
+		if (bObject && ('stroke' in oStyles)) {
+			if (oStyles.stroke === true) {
+				// if oStyle.stroke is true, we cancel default value : text will be stroke
+				bStroke = true;
+			} else {
+				bStroke = true;
+				oContext.fillStyle = oStyles.stroke;
+			}
+			// if oStyle.stroke is false, we keep default false value : text will not be stroke
+		}
+		if (bObject && ('font' in oStyles)) {
+			oContext.font = oStyles.font;
+		}
+
+		const aText = sText
+			.replace(/\n/g, '\n ')
+			.split(CESURE)
+			.filter(s => s.length > 0);
+		let xCurs = 0, yCurs = 0;
+		let aLine = [];
+
+		const commitText = () => {
+			const sLine = aLine.join('');
+			if (bStroke) {
+				oContext.strokeText(sLine, x + xCurs, y + yCurs, wMax);
+			}
+			if (bFill) {
+				oContext.fillText(sLine, x, y + yCurs, wMax);
+			}
+			xCurs = 0;
+			yCurs += h;
+			aLine = [];
+		};
+		while (aText.length) {
+			const sWord = aText.shift() + CESURE;
+			const mt = oContext.measureText(sWord);
+			if (sWord.endsWith('\n') || (xCurs + mt.width) > wMax) {
+				commitText();
+			} else {
+				xCurs += mt.width;
+			}
+			aLine.push(sWord);
+		}
+		commitText();
 	}
 }
 
@@ -2004,6 +2099,7 @@ class Engine {
             bp.animations = bpa;
         }
         bp.size = bpDef.size;
+        bp.lightsource = bpDef.lightsource;
         bp.fx = bpDef.fx || [];
         return this._blueprints[resref] = bp;
     }
@@ -2027,9 +2123,17 @@ class Engine {
         const rc = this._rc;
         const bp = this._blueprints[resref];
         const entity = new _Entity__WEBPACK_IMPORTED_MODULE_7__["default"]();
+
+        // location
         entity.location.set(location);
+
+        // sprite
         const sprite = rc.buildSprite(bp.tileset);
+
+        // visual effects
         bp.fx.forEach(fx => sprite.addFlag(fx));
+
+        // animations
         const animations = bp.animations;
         if (animations) {
             // instantiates animations
@@ -2037,9 +2141,22 @@ class Engine {
                 sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
+
+        // thinker
         entity.thinker = this.createThinkerInstance(bp.thinker);
         entity.sprite = sprite;
         entity.size = bp.size;
+
+        // dynamic light
+        if (!!bp.lightsource) {
+            this.linkEntityLightsource(
+                entity,
+                parseFloat(bp.lightsource.v),
+                parseFloat(bp.lightsource.r0),
+                parseFloat(bp.lightsource.r1)
+            );
+        }
+
         this._horde.linkEntity(entity);
         this.events.emit('entitycreated', {entity});
         return entity;
@@ -2047,10 +2164,31 @@ class Engine {
 
     destroyEntity(e) {
         if (this._horde.isEntityLinked(e)) {
+            if (e.lightsource) {
+                e.lightsource.remove();
+            }
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
             this.events.emit('entitydestroyed', {entity: e});
         }
+    }
+
+    /**
+     * Adds a lightsource to an entity
+     * @param entity {Entity}
+     * @param intensity {number} light source intensity
+     * @param innerRadius {number} light source inner radius
+     * @param outerRadius {number} light source outer radius
+     */
+    linkEntityLightsource(entity, intensity, innerRadius, outerRadius) {
+        const location = entity.location;
+        entity.lightsource = this.createLightSource(
+            location.x,
+            location.y,
+            innerRadius,
+            outerRadius,
+            intensity
+        );
     }
 
 
@@ -2114,10 +2252,11 @@ class Engine {
             }
         }
         const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
-        const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
+        const DECAL_COUNT = Object.keys(data.decals).length;
+        const LS_COUNT = Object.keys(data.lightsources).length;
         const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT + LS_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
@@ -2225,27 +2364,23 @@ class Engine {
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
         // static objects
-        if ('objects' in data) {
-            data.objects.forEach(o => {
-                const entity = this.createEntity(o.blueprint, o);
-                if ('animation' in o && o.animation !== false && o.animation !== null) {
-                    entity.sprite.setCurrentAnimation(o.animation, 0);
-                }
-                entity.visible = true;
-            })
-        }
+        data.objects.forEach(o => {
+            const entity = this.createEntity(o.blueprint, o);
+            if ('animation' in o && o.animation !== false && o.animation !== null) {
+                entity.sprite.setCurrentAnimation(o.animation, 0);
+            }
+            entity.visible = true;
+        });
 
-        if ('camera' in data) {
-            // sets initial camera location, and orientation
-            const {x, y, z, angle} = data.camera;
-            this.camera.location.set({
-                x: x * ps + (ps >> 1), // camera coordinates (x-axis)
-                y: y * ps + (ps >> 1), // camera coordinates (y-axis)
-                angle, // looking angle
-                z: z // camera altitude (1 is the default object)
-            });
-            this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
-        }
+        // CAMERA : sets initial camera location, and orientation
+        const {x, y, z, angle} = data.camera;
+        this.camera.location.set({
+            x: x * ps + (ps >> 1), // camera coordinates (x-axis)
+            y: y * ps + (ps >> 1), // camera coordinates (y-axis)
+            angle, // looking angle
+            z: z // camera altitude (1 is the default object)
+        });
+        this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
 
 
         const FACES = 'wsenfc';
@@ -2342,25 +2477,30 @@ class Engine {
             }
         };
 
-        if ('decals' in data) {
-            for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
-                const decal = data.decals[iDecal];
-                await installDecal(decal, 'n');
-                await installDecal(decal, 'e');
-                await installDecal(decal, 'w');
-                await installDecal(decal, 's');
-                await installDecal(decal, 'f');
-                await installDecal(decal, 'c');
-                showProgress('applying decals');
-            }
+        // DECALS
+        for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
+            const decal = data.decals[iDecal];
+            await installDecal(decal, 'n');
+            await installDecal(decal, 'e');
+            await installDecal(decal, 'w');
+            await installDecal(decal, 's');
+            await installDecal(decal, 'f');
+            await installDecal(decal, 'c');
+            showProgress('applying decals');
         }
 
+        // LIGHTSOURCES
+        for (let iLS = 0, nLS = data.lightsources.length; iLS < nLS; ++iLS) {
+            const ls = data.lightsources[iLS];
+            this.createLightSource(ls.x, ls.y, ls.r0, ls.r1, ls.v);
+            showProgress('creating lightsources');
+        }
+
+        // TAGS
         showProgress('analyzing tags');
-        if ('tags' in data) {
-            for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
-                const tagEntry = data.tags[iTag];
-                tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
-            }
+        for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
+            const tagEntry = data.tags[iTag];
+            tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
         }
 
         feedback('done', 1);
@@ -2452,7 +2592,16 @@ class Entity {
         this._size = 0;
         this._inertia = new _geometry_Vector__WEBPACK_IMPORTED_MODULE_1__["default"]();
         this._dead = false;
+        this._lightsource = null;
         this.data = {};
+    }
+
+    get lightsource() {
+        return this._lightsource;
+    }
+
+    set lightsource(value) {
+        this._lightsource = value;
     }
 
     get id() {
@@ -2616,15 +2765,34 @@ class Horde {
 
     process(engine) {
         const entities = this._entities;
+        const rc = engine.raycaster;
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
             const s = e.sprite;
             const eloc = e.location;
             this.updateLookingAngle(e, engine.camera);
             e.think(engine);
-            s.x = eloc.x;
-            s.y = eloc.y;
-            s.h = eloc.z;
+            let bChangeLoc = false;
+            if (s.x !== eloc.x) {
+                s.x = eloc.x;
+                bChangeLoc = true;
+            }
+            if (s.y !== eloc.y) {
+                s.y = eloc.y;
+                bChangeLoc = true;
+            }
+            if (s.z !== eloc.z) {
+                s.h = eloc.z;
+                bChangeLoc = true;
+            }
+            if (bChangeLoc) {
+                // update light source
+                if (!!e.lightsource) {
+                    const ls = e.lightsource;
+                    ls.x = eloc.x;
+                    ls.y = eloc.y;
+                }
+            }
             // compute animation from angle
         }
     }
@@ -2666,6 +2834,7 @@ class Location {
     }
 
     set({x = null, y = null, z = null, angle = null}) {
+        let bChange = false;
         if (x !== null) {
             this.x = x;
         }
@@ -6310,6 +6479,7 @@ class MapHelper {
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
+            // add a light source in the block ?
             if ('light' in m && !!m.light) {
                 renderer.addLightSource(
                     ps * x + (ps >> 1),
@@ -6398,7 +6568,7 @@ function zBufferCompare(a, b) {
 }
 
 
-
+const MAGIC_DIST_RATIO = 1.14734748441786;
 
 class Renderer {
 	
@@ -6609,9 +6779,6 @@ class Renderer {
                         SHADING.filter,
                         SHADING.brightness
                     );
-                    if (this.storey) {
-                        window.TEST = {rc: this, storey: this.storey};
-                    }
                     this.transmitOptionToStorey(opt);
                     break;
 
@@ -7259,7 +7426,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         while (done === 0) {
             if (xt < yt) {
                 xi += dxi;
-                if (xi >= 0 && xi < nMapSize) {
+                if (xi >= 0 && xi < nMapSize) { // on est toujour dans la map
                     nText = map[yi][xi];
                     nPhys = (nText >> 12) & 0xF; // **code12** phys
 
@@ -7302,15 +7469,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         }
                         xt += dxt;
                     } else {
-                        t = xt + nTOfs;
+                        t = xt + nTOfs; // block solide rencontré, distance = xt + offset
                         xint = x + xScale * t;
                         yint = y + yScale * t;
                         done = 1;
                         side = 1;
                         bStillVisible = false;
                     }
-                } else {
-                    t = xt;
+                } else { // on sort de la map
+                    t = xt; // sortie de map, distance = xt
                     c = cmax;
                 }
             } else {
@@ -7392,8 +7559,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
             scene.xCell = xi;
             scene.yCell = yi;
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786; // bizarre mais cette distance là est 1.47347484 fois trop grande
             scene.exterior = false;
+            scene.dx = dx;
+            scene.dy = dy;
+            scene.x = x;
+            scene.y = y;
+            scene.xint = xint;
+            scene.yint = yint;
             if (this.isWallTransparent(scene.xCell, scene.yCell)) {
                 resume.b = true;
                 resume.xi = xi;
@@ -7402,7 +7575,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 resume.b = false;
             }
         } else {
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786;
             scene.exterior = true;
             resume.b = false;
         }
@@ -8255,7 +8428,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 dy | 0,                                         // 6: dy
                 dw | 0,                                         // 7: dw
                 dh | 0,                                         // 8: dh
-                z,                                              // 9: z indication
+                f * MAGIC_DIST_RATIO,                                              // 9: z indication
                 oSprite.flags                                   // flags
             ];
             scene.zbuffer.push(data);
@@ -8517,7 +8690,7 @@ class ShadedTileSet {
 	shadeImage(oImage, fFactor, sColorFog, sColorFilter) {
 		const oShaded = _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_0__["default"].cloneCanvas(oImage);
 		const oCtx = oShaded.getContext('2d');
-		if (sColorFilter !== false) {
+		if (!!sColorFilter) {
 			let oColorFilter = _rainbow__WEBPACK_IMPORTED_MODULE_1__["default"].parse(sColorFilter);
 			oColorFilter.r /= 128;
 			oColorFilter.g /= 128;
@@ -8578,10 +8751,8 @@ class Sprite {
         this.x = 0;
         this.y = 0;
         this.h = 0;
-
         this._visible = true;
         this._scale = 1;
-
         this._animations = {};
         this._animation = null;
         this._currentAnim = {
@@ -8589,9 +8760,7 @@ class Sprite {
             dir: 0
         };
         this._tileset = null;
-
         this._children = []; // these sprites will be rendered above the current sprite
-
         this._flags = 0;
     }
 
@@ -9063,10 +9232,10 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 /*!**************************************!*\
   !*** ./lib/src/schemas/rce-100.json ***!
   \**************************************/
-/*! exports provided: $schema, type, description, properties, required, default */
+/*! exports provided: $schema, type, description, properties, additionalProperties, required, default */
 /***/ (function(module) {
 
-module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]}},"required":["id","tileset","thinker","size"]}]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}}},"light":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]},"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"}}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"required":["x","y","z","angle"]}},"required":["version","tilesets","blueprints","level","objects","decals","camera"]};
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"type":"integer","description":"The tileset id, referenced by blueprints, and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"additionalProperties":false,"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"type":"integer","description":"The blueprint id, referenced by objects"},"tileset":{"type":"integer","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]},"lightsource":{"type":"object","description":"Definition of the light emitted by the thing","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]}},"additionalProperties":false,"required":["id","tileset","thinker","size"]}]},"shading":{"type":"object","description":"shading parameter to tweak ambiance","properties":{"color":{"type":"string","description":"the shading color at its maximum intensity"},"factor":{"type":"number","description":"number of texels needed to increase fog intensity by one rank"},"brightness":{"type":"number","description":"additional fog negative instensity on all surface : if value is 0, the fog intensity is normally applied, if value is 0.5 the fog instensity is halved on all surfaces"},"filter":{"anyOf":[{"type":"string","description":"a color balance applied on sprite to help ambiance integration"},{"type":"null","description":"no color filter for this level"}]}},"additionalProperties":false,"required":["color","factor","brightness","filter"]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"additionalProperties":false,"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"additionalProperties":false,"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"offset":{"type":"number","description":"wall offset (depth)"},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"anyOf":[{"type":"integer","description":"the floor face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"c":{"anyOf":[{"type":"integer","description":"the ceiling face, a flat face"},{"type":"null","description":"no texture defined on this face"}]},"n":{"anyOf":[{"type":"integer","description":"the north face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"e":{"anyOf":[{"type":"integer","description":"the east face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"w":{"anyOf":[{"type":"integer","description":"the west face, a wall face"},{"type":"null","description":"no texture defined on this face"}]},"s":{"anyOf":[{"type":"integer","description":"the south face, a wall face"},{"type":"null","description":"no texture defined on this face"}]}}},"lightsource":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["r0","r1","v"]}},"additionalProperties":false,"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"tags":{"type":"array","description":"a list of tags, each cell can hold several tags","items":[{"type":"object","properties":{"x":{"type":"number","description":"tag position (x axis)"},"y":{"type":"number","description":"tag position (y axis)"},"tags":{"type":"array","description":"a list of tag associated with this cell","items":{"type":"string","description":"a tag"}}},"additionalProperties":false,"required":["x","y","tags"]}]},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["x","y","r0","r1","v"]}]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"type":"integer","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"additionalProperties":false,"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"x":{"type":"number","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"number","description":"Cell coordinates where the decal is located (y axis)"},"f":{"type":"integer","description":"indicates that the decal will be put on the floor face"},"c":{"type":"integer","description":"indicates that the decal will be put on the ceiling face"},"n":{"type":"integer","description":"indicates that the decal will be put on the north face"},"e":{"type":"integer","description":"indicates that the decal will be put on the east face"},"w":{"type":"integer","description":"indicates that the decal will be put on the west face"},"s":{"type":"integer","description":"indicates that the decal will be put on the south face"},"additionalProperties":false}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"additionalProperties":false,"required":["x","y","z","angle"]},"preview":{"type":"string","description":"a url or data-url of an image (preview thumbnail)"}},"additionalProperties":false,"required":["version","tilesets","blueprints","level","objects","decals","lightsources","camera"]};
 
 /***/ }),
 
@@ -43859,7 +44028,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
                 xy.push({x, y})
             });
             await this.setGridCells({
-                xy, floor: this.selectedFloor, block: null
+                xy, floor: this.selectedFloor, block: undefined
             });
             await this.pushUndo({undo: aUndo});
             this.$nextTick(() => this.redraw());
@@ -44728,6 +44897,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _libraries_generate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../libraries/generate */ "./tools/mapedit/src/libraries/generate/index.js");
 /* harmony import */ var _libraries_append_images__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../libraries/append-images */ "./tools/mapedit/src/libraries/append-images/index.js");
 /* harmony import */ var _lib_src_engine_Engine__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../lib/src/engine/Engine */ "./lib/src/engine/Engine.js");
+/* harmony import */ var _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../lib/src/canvas-helper */ "./lib/src/canvas-helper/index.js");
 //
 //
 //
@@ -44740,6 +44910,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -44812,6 +44983,7 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                     context.fillStyle = grad;
                     context.fillRect(x, y, progress * w | 0, h);
                 });
+                window.GAME = engine;
                 setTimeout(() => !!engine && engine.startDoomLoop(), 200);
             } catch (e) {
                 engine = null;
@@ -44821,9 +44993,8 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                 context.textBaseline = 'top';
                 context.fillStyle = 'white';
                 context.fillText('Could not render level', 8, 8);
-                context.fillStyle = 'red';
                 console.error(e);
-                context.fillText(e.message, 8, 24);
+                _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__["default"].text(canvas, e.message, 8, 24, 'red', canvas.width - 8, 16);
             }
         }
     },
@@ -45562,10 +45733,11 @@ const {mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../consts */ "./tools/mapedit/src/consts/index.js");
-/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
+/* harmony import */ var _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../lib/src/raycaster/consts */ "./lib/src/raycaster/consts/index.js");
+/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
 //
 //
 //
@@ -45635,6 +45807,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -45649,7 +45834,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "ThingBuilder",
-    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_3__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_5__["default"]},
+    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_6__["default"]},
 
     props: {
         id: {
@@ -45672,12 +45857,18 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
             content: '',
             saved: false,
             CONSTS: _consts__WEBPACK_IMPORTED_MODULE_1__,
+            RC_CONSTS: _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__,
             value: {
                 tile: 0,
                 tangible: false,
                 size: 1,
                 opacity: 0,
-                light: false,
+                light: {
+                    enabled: false,
+                    value: 0,
+                    inner: 0,
+                    outer: 0
+                },
                 ghost: false,
                 ref: ''
             }
@@ -45700,8 +45891,8 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
     methods: {
 
         ...levelMapActions({
-            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["CREATE_THING"],
-            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["MODIFY_THING"]
+            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["CREATE_THING"],
+            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["MODIFY_THING"]
         }),
 
         importThing: function(id) {
@@ -54002,19 +54193,19 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.value.light,
-                            expression: "value.light"
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
                           }
                         ],
                         attrs: { type: "checkbox" },
                         domProps: {
-                          checked: Array.isArray(_vm.value.light)
-                            ? _vm._i(_vm.value.light, null) > -1
-                            : _vm.value.light
+                          checked: Array.isArray(_vm.value.light.enabled)
+                            ? _vm._i(_vm.value.light.enabled, null) > -1
+                            : _vm.value.light.enabled
                         },
                         on: {
                           change: function($event) {
-                            var $$a = _vm.value.light,
+                            var $$a = _vm.value.light.enabled,
                               $$el = $event.target,
                               $$c = $$el.checked ? true : false
                             if (Array.isArray($$a)) {
@@ -54023,20 +54214,20 @@ var render = function() {
                               if ($$el.checked) {
                                 $$i < 0 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.concat([$$v])
                                   )
                               } else {
                                 $$i > -1 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                                   )
                               }
                             } else {
-                              _vm.$set(_vm.value, "light", $$c)
+                              _vm.$set(_vm.value.light, "enabled", $$c)
                             }
                           }
                         }
@@ -54047,7 +54238,119 @@ var render = function() {
                       _vm._v(
                         "If checked, the thing will emit its own light and will never get darker when going afar from the point of view."
                       )
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "fieldset",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
+                          }
+                        ]
+                      },
+                      [
+                        _c("legend", [_vm._v("Light source properties")]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Intensity: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.value,
+                                  expression: "value.light.value"
+                                }
+                              ],
+                              attrs: {
+                                type: "number",
+                                min: "0",
+                                max: "1",
+                                step: "0.01"
+                              },
+                              domProps: { value: _vm.value.light.value },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "value",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("In.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.inner,
+                                  expression: "value.light.inner"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.inner },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "inner",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Out.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.outer,
+                                  expression: "value.light.outer"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.outer },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "outer",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", [
@@ -71394,7 +71697,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 
@@ -71417,13 +71720,18 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
-    if (thing.light) {
+    if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
+        output.lightsource = {
+            r0: parseFloat(thing.light.inner),
+            r1: parseFloat(thing.light.outer),
+            v: parseFloat(thing.light.value)
+        };
     }
     switch (thing.opacity) {
         case 0: // 100%
@@ -71494,9 +71802,9 @@ function generateMap(input) {
     // déterminer s'il y a un uppermap
     const grid = input.grid;
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
-    output.map = grid.map(row => row.map(cell => cell.block));
+    output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
     }
     return output;
 }
@@ -71567,7 +71875,7 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
         phys: PHYS[block.phys],
         offset: block.offs | 0,
@@ -71578,13 +71886,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -71606,7 +71919,7 @@ function generateShading(input) {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
         brightness: (a.brightness | 0) / 100, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -71632,10 +71945,6 @@ function generateObjectsAndDecals(input) {
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
                 const size = (oTile.width >> 1) | 0;
-                if (size < 4) {
-                    console.log(oTile);
-                    throw new Error('xxx');
-                }
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -71732,6 +72041,10 @@ function generateTags(input) {
     return aTags;
 }
 
+function generateLightsources(input) {
+    return [];
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
@@ -71746,11 +72059,13 @@ async function generate(input, imageAppender) {
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
         tags: generateTags(input),
+        lightsources: generateLightsources(input),
         preview: input.preview
     };
 }
 
 module.exports = generate;
+
 
 /***/ }),
 

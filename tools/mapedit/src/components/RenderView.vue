@@ -18,6 +18,7 @@
     import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
     import Engine from "../../../../lib/src/engine/Engine";
+    import CanvasHelper from "../../../../lib/src/canvas-helper";
 
 
     let engine = null;
@@ -82,6 +83,7 @@
                         context.fillStyle = grad;
                         context.fillRect(x, y, progress * w | 0, h);
                     });
+                    window.GAME = engine;
                     setTimeout(() => !!engine && engine.startDoomLoop(), 200);
                 } catch (e) {
                     engine = null;
@@ -91,9 +93,8 @@
                     context.textBaseline = 'top';
                     context.fillStyle = 'white';
                     context.fillText('Could not render level', 8, 8);
-                    context.fillStyle = 'red';
                     console.error(e);
-                    context.fillText(e.message, 8, 24);
+                    CanvasHelper.text(canvas, e.message, 8, 24, 'red', canvas.width - 8, 16);
                 }
             }
         },
