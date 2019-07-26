@@ -18,6 +18,7 @@
     import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
     import Engine from "../../../../lib/src/engine/Engine";
+    import CanvasHelper from "../../../../lib/src/canvas-helper";
 
 
     let engine = null;
@@ -51,7 +52,6 @@
             }),
 
             run: async function(level, canvas) {
-                console.log(generate);
                 const context = canvas.getContext('2d');
                 try {
                     context.font = '16px monospace';
@@ -83,6 +83,7 @@
                         context.fillStyle = grad;
                         context.fillRect(x, y, progress * w | 0, h);
                     });
+                    window.GAME = engine;
                     setTimeout(() => !!engine && engine.startDoomLoop(), 200);
                 } catch (e) {
                     engine = null;
@@ -92,8 +93,8 @@
                     context.textBaseline = 'top';
                     context.fillStyle = 'white';
                     context.fillText('Could not render level', 8, 8);
-                    context.fillStyle = 'red';
-                    context.fillText(e.message, 8, 24);
+                    console.error(e);
+                    CanvasHelper.text(canvas, e.message, 8, 24, 'red', canvas.width - 8, 16);
                 }
             }
         },

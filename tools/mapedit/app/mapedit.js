@@ -443,6 +443,109 @@ class CanvasHelper {
 			image.src = sUrl;
 		});
 	}
+
+	/**
+	 * resize a canvas
+	 *
+	 * @param oCanvas
+	 * @param width
+	 * @param height
+	 * @return {HTMLCanvasElement}
+	 */
+	static resize(oCanvas, width, height) {
+		const oNewCanvas = this.createCanvas(width, height);
+		CanvasHelper.setImageSmoothing(oNewCanvas, CanvasHelper.getImageSmoothing(oCanvas));
+		const ctx = oNewCanvas.getContext('2d');
+		ctx.drawImage(oCanvas, 0, 0, oCanvas.width, oCanvas.height, 0, 0, oNewCanvas.width, oNewCanvas.height);
+		return oNewCanvas;
+	}
+
+
+	/**
+	 * Draw a multiline text in a canvas
+	 * @example text(canvas, text, x, y, {stroke: true}, 250, 16)
+	 * will draw text using fillStyle and strokeStyle properties (at current values)
+	 *
+	 * @example text(canvas, text, x, y, {fill: false, stroke: 'red'}, 250, 16)
+	 * will draw text using ONLY "red" strokeStyle property
+	 *
+	 * @param oCanvas
+	 * @param sText
+	 * @param x
+	 * @param y
+	 * @param oStyles
+	 * @param wMax
+	 * @param h
+	 */
+	static text(oCanvas, sText, x, y, oStyles, wMax, h) {
+		// white space as a cesure
+		const CESURE = ' ';
+		// specified gradient or plain string in styles ?
+		const bGradient = oStyles instanceof CanvasGradient;
+		// specified an object with multiple properties ?
+		const bObject = !bGradient && (oStyles !== null && (typeof oStyles === 'object'));
+		const oContext = oCanvas.getContext("2d");
+		// for gradient and plain styles : fill style only
+		if (oStyles instanceof CanvasGradient || typeof oStyles === 'string') {
+			oContext.fillStyle = oStyles;
+		}
+		// multiple style properties
+		let bFill = true; // if true : we will use fillText
+		let bStroke = false; // if true : we will use strokeText
+
+		if (bObject && ('fill' in oStyles)) {
+			if (oStyles.fill === false) {
+				// if oStyle.fill is false, we cancel default value : no text will be filled
+				bFill = false;
+			} else {
+				oContext.fillStyle = oStyles.fill;
+			}
+		}
+		if (bObject && ('stroke' in oStyles)) {
+			if (oStyles.stroke === true) {
+				// if oStyle.stroke is true, we cancel default value : text will be stroke
+				bStroke = true;
+			} else {
+				bStroke = true;
+				oContext.fillStyle = oStyles.stroke;
+			}
+			// if oStyle.stroke is false, we keep default false value : text will not be stroke
+		}
+		if (bObject && ('font' in oStyles)) {
+			oContext.font = oStyles.font;
+		}
+
+		const aText = sText
+			.replace(/\n/g, '\n ')
+			.split(CESURE)
+			.filter(s => s.length > 0);
+		let xCurs = 0, yCurs = 0;
+		let aLine = [];
+
+		const commitText = () => {
+			const sLine = aLine.join('');
+			if (bStroke) {
+				oContext.strokeText(sLine, x + xCurs, y + yCurs, wMax);
+			}
+			if (bFill) {
+				oContext.fillText(sLine, x, y + yCurs, wMax);
+			}
+			xCurs = 0;
+			yCurs += h;
+			aLine = [];
+		};
+		while (aText.length) {
+			const sWord = aText.shift() + CESURE;
+			const mt = oContext.measureText(sWord);
+			if (sWord.endsWith('\n') || (xCurs + mt.width) > wMax) {
+				commitText();
+			} else {
+				xCurs += mt.width;
+			}
+			aLine.push(sWord);
+		}
+		commitText();
+	}
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (CanvasHelper);
@@ -844,13 +947,40 @@ class Easing {
     static get SINE() { return SINE; }
     static get COSINE() { return COSINE; }
 
-    constructor() {
-        this._yFrom = 0;       // starting value of y
-        this._yTo = 0;         // ending value of y
+    constructor(options = undefined) {
+        if (options === undefined) {
+            options = {};
+        }
+        this._yFrom = options.from || 0;         // starting value of y
+        this._yTo = options.to || 1;             // ending value of y
         this._y = 0;                // y value computed as interpolator(x)
         this._x = 0;
-        this._xMax = 0;             // maximum value of x
-        this._f = null;
+        this._xMax = options.steps || 10;             // maximum value of x
+        this._f = this[options.use] || Easing.LINEAR;
+    }
+
+    from(y) {
+        this._yFrom = y;
+        return this;
+    }
+
+    to(y) {
+        this._yTo = y;
+        return this;
+    }
+
+    steps(x) {
+        this._xMax = x;
+        return this;
+    }
+
+    use(f) {
+        this.setFunction(f);
+        return this;
+    }
+
+    reset() {
+        this._x = 0;
     }
 
     setOutputRange(y0, y1) {
@@ -874,11 +1004,19 @@ class Easing {
         return this._y;
     }
 
+    get x() {
+        return this._x;
+    }
+
+    set x(value) {
+        this.compute(value);
+    }
+
     compute(x) {
         if (x === undefined) {
             x = ++this._x;
         } else {
-            this._x = x;
+            x = this._x = Math.max(0, Math.min(this._xMax, x));
         }
         const f = this._f;
         if (f) {
@@ -1313,10 +1451,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Camera__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./Camera */ "./lib/src/engine/Camera.js");
 /* harmony import */ var _thinkers__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./thinkers */ "./lib/src/engine/thinkers/index.js");
 /* harmony import */ var _levenshtein__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../levenshtein */ "./lib/src/levenshtein/index.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
-/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_17___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_17__);
-/* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
-/* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
+/* harmony import */ var _fetch_json__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../fetch-json */ "./lib/src/fetch-json/index.js");
+/* harmony import */ var _json_validate__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../json-validate */ "./lib/src/json-validate/index.js");
+/* harmony import */ var _schemas_rce_100_json__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../schemas/rce-100.json */ "./lib/src/schemas/rce-100.json");
+var _schemas_rce_100_json__WEBPACK_IMPORTED_MODULE_19___namespace = /*#__PURE__*/__webpack_require__.t(/*! ../schemas/rce-100.json */ "./lib/src/schemas/rce-100.json", 1);
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! events */ "./node_modules/events/events.js");
+/* harmony import */ var events__WEBPACK_IMPORTED_MODULE_20___default = /*#__PURE__*/__webpack_require__.n(events__WEBPACK_IMPORTED_MODULE_20__);
+/* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
+/* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
+/* harmony import */ var _filters_FilterManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../filters/FilterManager */ "./lib/src/filters/FilterManager.js");
+
+
+
+
 
 
 
@@ -1357,15 +1504,32 @@ class Engine {
         // instanciate at construct
         this._thinkers = {};
         this.useThinkers(_thinkers__WEBPACK_IMPORTED_MODULE_15__["default"]);
-        this._collider = new _collider_Collider__WEBPACK_IMPORTED_MODULE_18__["default"](); // this collider is freely used by certain thinkers
+        this._collider = new _collider_Collider__WEBPACK_IMPORTED_MODULE_21__["default"](); // this collider is freely used by certain thinkers
         this._collider.setCellWidth(_consts__WEBPACK_IMPORTED_MODULE_0__["METRIC_COLLIDER_SECTOR_SIZE"]);
         this._collider.setCellHeight(_consts__WEBPACK_IMPORTED_MODULE_0__["METRIC_COLLIDER_SECTOR_SIZE"]);
 
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
+        this._filters = new _filters_FilterManager__WEBPACK_IMPORTED_MODULE_23__["default"]();
+        this._events = new events__WEBPACK_IMPORTED_MODULE_20___default.a();
 
-        this._events = new events__WEBPACK_IMPORTED_MODULE_17___default.a();
+        this._config = {
+            urls: {
+                FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
+                FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
+            },
+            cameraThinker: 'FPSControlThinker'
+
+        };
+    }
+
+    /**
+     * returns the filter manager instance
+     * @returns {FilterManager}
+     */
+    get filters() {
+        return this._filters;
     }
 
     get events() {
@@ -1378,7 +1542,7 @@ class Engine {
     initializeRenderer() {
         this._rc = new _raycaster_Renderer__WEBPACK_IMPORTED_MODULE_12__["default"]();
         this._dm = new _DoorManager__WEBPACK_IMPORTED_MODULE_2__["default"]();
-        this._tm = new _TagManager__WEBPACK_IMPORTED_MODULE_19__["default"]();
+        this._tm = new _TagManager__WEBPACK_IMPORTED_MODULE_22__["default"]();
         this._scheduler = new _Scheduler__WEBPACK_IMPORTED_MODULE_4__["default"]();
         this._horde = new _Horde__WEBPACK_IMPORTED_MODULE_5__["default"]();
         this.initializeCamera();
@@ -1632,6 +1796,7 @@ class Engine {
         const nTimes = Math.min(10, tm / tp | 0);
         this._timeMod = tm % tp;
         let bRender = false;
+        this._filters.process(this._time);
         for (let i = 0; i < nTimes; ++i) {
             // logic doom loop here
             this._scheduler.schedule(this._time);
@@ -1654,6 +1819,10 @@ class Engine {
     }
 
     _render() {
+        /**
+         * The raycaster instance
+         * @type {Renderer}
+         */
         const rend = this._rc;
         // recompute all texture/sprite animation with a time-delta of 40ms
         rend.computeAnimations(this._TIME_INTERVAL);
@@ -1663,6 +1832,7 @@ class Engine {
             const loc = camera.location;
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(loc.x, loc.y, loc.angle, loc.z);
+            this._filters.render(rend._renderCanvas);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {
@@ -1679,6 +1849,7 @@ class Engine {
     setRenderingCanvas(oCanvas) {
         this._renderCanvas = oCanvas;
         this._renderContext = oCanvas.getContext('2d');
+        return this;
     }
 
     /**
@@ -1861,19 +2032,21 @@ class Engine {
         }
     }
 
+    /**
+     * Creates a new instance of a specified thinker class
+     * @param sThinker {string} thinker class name to be instanciated, the class must have been previously register with
+     * either the method useThinker(), or the method useThinkers() (with an "s")
+     * @returns {Thinker}
+     */
     createThinkerInstance(sThinker) {
         if (!sThinker) {
             sThinker = 'Thinker';
         }
         const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
-        if (!pThinker) {
-            throw new Error('this thinker does not exists (has not been "used") : ' + sThinker);
-        }
         const oThinker = new pThinker();
         oThinker.engine = this;
         return oThinker;
     }
-
 
     /**
      * Loads a tileset
@@ -1915,9 +2088,18 @@ class Engine {
             bp.thinker = bpDef.thinker; // state object : should not be instanciate yet
         }
         if ('animations' in tsDef) {
-            bp.animations = tsDef.animations
+            const bpa = {};
+            tsDef.animations.forEach(a => {
+                bpa[a.id] = {
+                    start: a.start,
+                    length: a.length,
+                    loop: a.loop
+                };
+            });
+            bp.animations = bpa;
         }
         bp.size = bpDef.size;
+        bp.lightsource = bpDef.lightsource;
         bp.fx = bpDef.fx || [];
         return this._blueprints[resref] = bp;
     }
@@ -1934,15 +2116,24 @@ class Engine {
      * Will create a new Entity, but will not link it into the engine entity collection
      * You must do this with linkEntity()
      * @param resref {string} resource reference of the blueprint, to create the entity
+     * @param location {Location}
      * @returns {Entity}
      */
     createEntity(resref, location) {
         const rc = this._rc;
         const bp = this._blueprints[resref];
         const entity = new _Entity__WEBPACK_IMPORTED_MODULE_7__["default"]();
+
+        // location
         entity.location.set(location);
+
+        // sprite
         const sprite = rc.buildSprite(bp.tileset);
+
+        // visual effects
         bp.fx.forEach(fx => sprite.addFlag(fx));
+
+        // animations
         const animations = bp.animations;
         if (animations) {
             // instantiates animations
@@ -1950,9 +2141,23 @@ class Engine {
                 sprite.buildAnimation(animations[iAnim], iAnim);
             }
         }
+
+        // thinker
         entity.thinker = this.createThinkerInstance(bp.thinker);
         entity.sprite = sprite;
         entity.size = bp.size;
+        entity.data.resref = resref;
+
+        // dynamic light
+        if (!!bp.lightsource) {
+            this.linkEntityLightsource(
+                entity,
+                parseFloat(bp.lightsource.v),
+                parseFloat(bp.lightsource.r0),
+                parseFloat(bp.lightsource.r1)
+            );
+        }
+
         this._horde.linkEntity(entity);
         this.events.emit('entitycreated', {entity});
         return entity;
@@ -1960,10 +2165,31 @@ class Engine {
 
     destroyEntity(e) {
         if (this._horde.isEntityLinked(e)) {
+            if (e.lightsource) {
+                e.lightsource.remove();
+            }
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
             this.events.emit('entitydestroyed', {entity: e});
         }
+    }
+
+    /**
+     * Adds a lightsource to an entity
+     * @param entity {Entity}
+     * @param intensity {number} light source intensity
+     * @param innerRadius {number} light source inner radius
+     * @param outerRadius {number} light source outer radius
+     */
+    linkEntityLightsource(entity, intensity, innerRadius, outerRadius) {
+        const location = entity.location;
+        entity.lightsource = this.createLightSource(
+            location.x,
+            location.y,
+            innerRadius,
+            outerRadius,
+            intensity
+        );
     }
 
 
@@ -2014,7 +2240,10 @@ class Engine {
      * @param extra {null|{blueprints: [], tilesets: []}} common blueprints and tilesets definition
      * @return {Promise<void>}
      */
-    async buildLevel(data, monitor, extra = null) {
+    async buildLevel(data, monitor, extra) {
+        // validation json
+        Object(_json_validate__WEBPACK_IMPORTED_MODULE_18__["jsonValidate"])(data, _schemas_rce_100_json__WEBPACK_IMPORTED_MODULE_19__);
+
         if (typeof extra === 'object' && extra !== null) {
             if ('blueprints' in extra) {
                 extra.blueprints.forEach(bp => data.blueprints.push(bp));
@@ -2024,10 +2253,11 @@ class Engine {
             }
         }
         const BLUEPRINT_COUNT = data.blueprints.length; // Object.keys(data.blueprints).length;
-        const DECAL_COUNT = data.decals ? Object.keys(data.decals).length : 0;
+        const DECAL_COUNT = Object.keys(data.decals).length;
+        const LS_COUNT = Object.keys(data.lightsources).length;
         const TAG_COUNT = data.tags ? 1 : 0;
         const TEXTURE_COUNT = 3;
-        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT;
+        const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT + LS_COUNT;
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
@@ -2135,27 +2365,23 @@ class Engine {
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
         // static objects
-        if ('objects' in data) {
-            data.objects.forEach(o => {
-                const entity = this.createEntity(o.blueprint, o);
-                if ('animation' in o && o.animation !== false && o.animation !== null) {
-                    entity.sprite.setCurrentAnimation(o.animation, 0);
-                }
-                entity.visible = true;
-            })
-        }
+        data.objects.forEach(o => {
+            const entity = this.createEntity(o.blueprint, o);
+            if ('animation' in o && o.animation !== false && o.animation !== null) {
+                entity.sprite.setCurrentAnimation(o.animation, 0);
+            }
+            entity.visible = true;
+        });
 
-        if ('camera' in data) {
-            // sets initial camera location, and orientation
-            const {x, y, z, angle} = data.camera;
-            this.camera.location.set({
-                x: x * ps + (ps >> 1), // camera coordinates (x-axis)
-                y: y * ps + (ps >> 1), // camera coordinates (y-axis)
-                angle, // looking angle
-                z: 1 // camera altitude (1 is the default object)
-            });
-            this.camera.thinker = this.createThinkerInstance(data.camera.thinker);
-        }
+        // CAMERA : sets initial camera location, and orientation
+        const {x, y, z, angle} = data.camera;
+        this.camera.location.set({
+            x: x * ps + (ps >> 1), // camera coordinates (x-axis)
+            y: y * ps + (ps >> 1), // camera coordinates (y-axis)
+            angle, // looking angle
+            z: z // camera altitude (1 is the default object)
+        });
+        this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
 
 
         const FACES = 'wsenfc';
@@ -2187,7 +2413,7 @@ class Engine {
             const yCell = decal.y;
             if (face in decal) {
                 const iFace = FACES.indexOf(face);
-                const {align, tileset} = decal[face];
+                const {align, tileset, tile = 0} = decal[face];
                 const ts = await autoLoadTileSet(tileset, data);
                 this._rc.paintSurface(xCell, yCell, iFace, (xCell, yCell, iFace, oCanvas) => {
                     const wCvs = oCanvas.width;
@@ -2247,34 +2473,93 @@ class Engine {
                             yd = yBottom;
                             break;
                     }
-                    oCanvas.getContext('2d').drawImage(ts._originalImage, xd, yd);
+                    oCanvas
+                        .getContext('2d')
+                        .drawImage(
+                            ts._originalImage,
+                            tile * wTile,
+                            0,
+                            wTile,
+                            hTile,
+                            xd,
+                            yd,
+                            wTile,
+                            hTile
+                        );
                 })
             }
         };
 
-        if ('decals' in data) {
-            for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
-                const decal = data.decals[iDecal];
-                await installDecal(decal, 'n');
-                await installDecal(decal, 'e');
-                await installDecal(decal, 'w');
-                await installDecal(decal, 's');
-                await installDecal(decal, 'f');
-                await installDecal(decal, 'c');
-                showProgress('applying decals');
-            }
+        // DECALS
+        for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
+            const decal = data.decals[iDecal];
+            await installDecal(decal, 'n');
+            await installDecal(decal, 'e');
+            await installDecal(decal, 'w');
+            await installDecal(decal, 's');
+            await installDecal(decal, 'f');
+            await installDecal(decal, 'c');
+            showProgress('applying decals');
         }
 
+        // LIGHTSOURCES
+        for (let iLS = 0, nLS = data.lightsources.length; iLS < nLS; ++iLS) {
+            const ls = data.lightsources[iLS];
+            this.createLightSource(ls.x, ls.y, ls.r0, ls.r1, ls.v);
+            showProgress('creating lightsources');
+        }
+
+        // TAGS
         showProgress('analyzing tags');
-        if ('tags' in data) {
-            for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
-                const tagEntry = data.tags[iTag];
-                tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
-            }
+        for (let iTag = 0, nTagLength = data.tags.length; iTag < nTagLength; ++iTag) {
+            const tagEntry = data.tags[iTag];
+            tagEntry.tags.forEach(t => this.addTag(tagEntry.x, tagEntry.y, t));
         }
 
         feedback('done', 1);
         this.events.emit('levelbuilt');
+    }
+
+
+
+//    _                    __      _       _
+//   (_)___  ___  _ __    / _| ___| |_ ___| |__
+//   | / __|/ _ \| '_ \  | |_ / _ \ __/ __| '_ \
+//   | \__ \ (_) | | | | |  _|  __/ || (__| | | |
+//  _/ |___/\___/|_| |_| |_|  \___|\__\___|_| |_|
+// |__/
+
+    /**
+     * This will fetch a level asset. You just have to specify the name, without path and without the .json extension.
+     * @example fetchLevel('the-hangar') will fetch a level file named "./assets/levels/the-hangar.json" (by default)
+     * @param sName {string} asset name
+     * @return {*} the loaded json (a promise in fact)
+     */
+    fetchLevel(sName) {
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_LEVEL.replace(/:name/, sName));
+    }
+
+    /**
+     * This will fetch a data asset. Works exactly as fetchLevel, by with data
+     * @param sName {string} asset name
+     * @return {*} the loaded json (a promise in fact)
+     */
+    fetchData(sName) {
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_DATA.replace(/:name/, sName));
+    }
+
+
+    /**
+     * Loads a level
+     * @param sName {string}
+     * @param pMonitor {function}S
+     * @return {Promise<void>}
+     */
+    async loadLevel(sName, pMonitor) {
+        const data = await this.fetchLevel(sName);
+        const tilesets = await this.fetchData('tilesets');
+        const blueprints = await this.fetchData('blueprints');
+        return this.buildLevel(data, pMonitor, { tilesets, blueprints });
     }
 
 }
@@ -2320,7 +2605,16 @@ class Entity {
         this._size = 0;
         this._inertia = new _geometry_Vector__WEBPACK_IMPORTED_MODULE_1__["default"]();
         this._dead = false;
+        this._lightsource = null;
         this.data = {};
+    }
+
+    get lightsource() {
+        return this._lightsource;
+    }
+
+    set lightsource(value) {
+        this._lightsource = value;
     }
 
     get id() {
@@ -2484,15 +2778,34 @@ class Horde {
 
     process(engine) {
         const entities = this._entities;
+        const rc = engine.raycaster;
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
             const s = e.sprite;
             const eloc = e.location;
             this.updateLookingAngle(e, engine.camera);
             e.think(engine);
-            s.x = eloc.x;
-            s.y = eloc.y;
-            s.h = eloc.z;
+            let bChangeLoc = false;
+            if (s.x !== eloc.x) {
+                s.x = eloc.x;
+                bChangeLoc = true;
+            }
+            if (s.y !== eloc.y) {
+                s.y = eloc.y;
+                bChangeLoc = true;
+            }
+            if (s.z !== eloc.z) {
+                s.h = eloc.z;
+                bChangeLoc = true;
+            }
+            if (bChangeLoc) {
+                // update light source
+                if (!!e.lightsource) {
+                    const ls = e.lightsource;
+                    ls.x = eloc.x;
+                    ls.y = eloc.y;
+                }
+            }
             // compute animation from angle
         }
     }
@@ -2534,6 +2847,7 @@ class Location {
     }
 
     set({x = null, y = null, z = null, angle = null}) {
+        let bChange = false;
         if (x !== null) {
             this.x = x;
         }
@@ -2749,7 +3063,7 @@ class TagManager {
 /*!****************************************!*\
   !*** ./lib/src/engine/consts/index.js ***!
   \****************************************/
-/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT */
+/*! exports provided: CELL_NEIGHBOR_SIDE, CELL_NEIGHBOR_CORNER, CELL_NEIGHBOR_SELF, DOOR_PHASE_CLOSE, DOOR_PHASE_OPENING, DOOR_PHASE_OPEN, DOOR_PHASE_CLOSING, DOOR_PHASE_DONE, DOOR_SLIDING_DURATION, DOOR_MAINTAIN_DURATION, DOOR_SECURITY_INTERVAL, METRIC_CAMERA_DEFAULT_SIZE, METRIC_COLLIDER_SECTOR_SIZE, METRIC_PUSH_DISTANCE, SPRITE_DIRECTION_COUNT, COLLISION_CHANNEL_CREATURE, COLLISION_CHANNEL_MISSILE, DECAL_ALIGN_TOP_LEFT, DECAL_ALIGN_TOP, DECAL_ALIGN_TOP_RIGHT, DECAL_ALIGN_LEFT, DECAL_ALIGN_CENTER, DECAL_ALIGN_RIGHT, DECAL_ALIGN_BOTTOM_LEFT, DECAL_ALIGN_BOTTOM, DECAL_ALIGN_BOTTOM_RIGHT, FETCH_LEVEL_URL, FETCH_DATA_URL, FETCH_LEVEL_LIST_URL */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -2780,6 +3094,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_LEFT", function() { return DECAL_ALIGN_BOTTOM_LEFT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM", function() { return DECAL_ALIGN_BOTTOM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DECAL_ALIGN_BOTTOM_RIGHT", function() { return DECAL_ALIGN_BOTTOM_RIGHT; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_LEVEL_URL", function() { return FETCH_LEVEL_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_DATA_URL", function() { return FETCH_DATA_URL; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FETCH_LEVEL_LIST_URL", function() { return FETCH_LEVEL_LIST_URL; });
 // used with forEachNeighbor function
 const CELL_NEIGHBOR_SIDE = 1;        // selects cells that share a common side with a given cell
 const CELL_NEIGHBOR_CORNER = 2;      // selects cells that share a common corner with a given cell
@@ -2804,10 +3121,13 @@ const METRIC_PUSH_DISTANCE = 48; // distance of pushing action
 
 const SPRITE_DIRECTION_COUNT = 8;
 
+// These are collision channels... for example if an entity has a
+// collision mask of 3, it can hit creatures and missiles
+// if an entity has a collision of 1, hit can only hit creatures, not missiles.
 const COLLISION_CHANNEL_CREATURE = 1;  // collision channel for normal tangible creature
 const COLLISION_CHANNEL_MISSILE = 2;   // collision channel for normal exploding missile of any type
 
-
+// decal position alignnement presets
 const DECAL_ALIGN_TOP_LEFT = 7;
 const DECAL_ALIGN_TOP = 8;
 const DECAL_ALIGN_TOP_RIGHT = 9;
@@ -2818,12 +3138,18 @@ const DECAL_ALIGN_BOTTOM_LEFT = 1;
 const DECAL_ALIGN_BOTTOM = 2;
 const DECAL_ALIGN_BOTTOM_RIGHT = 3;
 
+// built in path values
+const FETCH_LEVEL_URL = '/game/assets/levels/:name.json';
+const FETCH_DATA_URL = '/game/assets/data/:name.json';
+const FETCH_LEVEL_LIST_URL = '/game/levels';
+
+
 /***/ }),
 
-/***/ "./lib/src/engine/thinkers/KeyboardControlThinker.js":
-/*!***********************************************************!*\
-  !*** ./lib/src/engine/thinkers/KeyboardControlThinker.js ***!
-  \***********************************************************/
+/***/ "./lib/src/engine/thinkers/FPSControlThinker.js":
+/*!******************************************************!*\
+  !*** ./lib/src/engine/thinkers/FPSControlThinker.js ***!
+  \******************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -2832,6 +3158,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _easing__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../easing */ "./lib/src/easing/index.js");
 /* harmony import */ var _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TangibleThinker */ "./lib/src/engine/thinkers/TangibleThinker.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../consts */ "./lib/src/engine/consts/index.js");
+/* harmony import */ var _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../geometry/Vector */ "./lib/src/geometry/Vector.js");
+
 
 
 
@@ -2840,8 +3168,9 @@ const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;
 const ANGLE_INT_MAX_VALUE = 0.1;
 const SPEED = 6;
+const STRAFE_SPEED = 0.8;
 
-class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
+class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     constructor() {
         super();
@@ -2853,20 +3182,26 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         this._keys = {};
         this.SPEED = SPEED;
         this.setupKeys({
-            "forward": "ArrowUp",
-            "backward": "ArrowDown",
-            "steerright": "ArrowRight",
-            "steerleft": "ArrowLeft",
-            "use": " "
+            forward: ["ArrowUp", "w", "z"],       // going forward
+            backward: ["ArrowDown", "s"],         // going backward
+            turnright: "ArrowRight",              // turn right
+            turnleft: "ArrowLeft",                // turn left
+            straferight: ["a", "q"],              // side step to the right, looking angle does not change
+            strafeleft: "d",                      // side step to the left, looking angle does not change
+            use: " "                              // use something in front of...
         });
+        this._lookAmount = 0;
 
         this._lastTime = 0;
     }
 
-    setupKeys(oKeys) {
+    setupKeys(oKeys, bReset = false) {
+        if (bReset) {
+            this._keys = {};
+        }
         for (let sKey in oKeys) {
             this._keys[sKey] = {
-                code: oKeys[sKey],
+                code: Array.isArray(oKeys[sKey]) ? oKeys[sKey] : [oKeys[sKey]],
                 state: false
             };
         }
@@ -2876,7 +3211,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const k = this._keys;
         for (let sKey in k) {
             const ik = k[sKey];
-            if (ik.code === key) {
+            if (ik.code.indexOf(key) >= 0) {
                 return ik;
             }
         }
@@ -2897,12 +3232,40 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         }
     }
 
+    look(x) {
+        this._lookAmount += x;
+    }
+
     computeAngleSpeed(nTime) {
         if (nTime > ANGLE_INT_MAX_TIME) {
             return ANGLE_INT_MAX_VALUE;
         } else {
             return this._easing.compute(nTime).y;
         }
+    }
+
+    /**
+     * Compute forward vector
+     * @param fAngle
+     * @return {Vector}
+     */
+    getVectorForward(fAngle, fSpeed) {
+        return new _geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"](
+            fSpeed * Math.cos(fAngle),
+            fSpeed * Math.sin(fAngle)
+        );
+    }
+
+    getVectorBackward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI, fSpeed);
+    }
+
+    getVectorLeftward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle + Math.PI / 2, fSpeed);
+    }
+
+    getVectorRightward(fAngle, fSpeed) {
+        return this.getVectorForward(fAngle - Math.PI / 2, fSpeed);
     }
 
     computeSpeedVector() {
@@ -2913,35 +3276,94 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
         const oEntLoc = this.entity.location;
+        const PI = Math.PI;
+        const PI2 = Math.PI / 2;
+        const PI4 = Math.PI / 4;
 
-        const forw = (k.forward.state !== false ? 1 : 0) | (k.backward.state !== false ? 2 : 0);
-        switch (forw) {
-            case 1:
+        if (k.turnright.state !== false) {
+            oEntLoc.angle += this.computeAngleSpeed(t - k.turnright.state);
+        }
+        if (k.turnleft.state !== false) {
+            oEntLoc.angle -= this.computeAngleSpeed(t - k.turnleft.state);
+        }
+
+        oEntLoc.angle += this._lookAmount;
+        this._lookAmount = 0;
+
+        const nDirMask =
+            (k.forward.state !== false ? 1 : 0) |
+            (k.backward.state !== false ? 2 : 0) |
+            (k.strafeleft.state !== false ? 4 : 0) |
+            (k.straferight.state !== false ? 8 : 0)
+        ;
+
+        let fAngleQuant = oEntLoc.angle;
+        let speed = this.SPEED;
+
+        switch (nDirMask) {
+            case 1: // forward only
+            case 13: // straferight and strafeleft and forward
+                // result : FORWARD
+                this.setSpeed(this.getVectorForward(fAngleQuant, speed));
+                break;
+
+            case 2: // backward only
+            case 14: // straferight and strafeleft and backward
+                // result : BACKWARD
+                this.setSpeed(this.getVectorBackward(fAngleQuant, speed));
+                break;
+
+            case 0: // nothing
+            case 3: // forward and backward
+            case 12: // straferight and strafeleft
+            case 15: // straferight and strafeleft and forward and backward
+                // result : NO MOVE
+                this.setSpeed(_geometry_Vector__WEBPACK_IMPORTED_MODULE_3__["default"].zero());
+                break;
+
+            case 4: // strafeleft only
+            case 7: // strafeleft and forward and backward
+                // result : FULL LEFT
+                this.setSpeed(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 8: // straferight only
+            case 11: // straferight and forward and backward
+                // result : FULL RIGHT
+                this.setSpeed(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed));
+                break;
+
+            case 5: // strafeleft and forward
+                // result : DIAG FORWARD+LEFT
                 this.setSpeed(
-                    this.SPEED * Math.cos(oEntLoc.angle),
-                    this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 2:
+            case 6: // strafeleft and backward
+                // result : DIAG BACKWARD+LEFT
                 this.setSpeed(
-                    -this.SPEED * Math.cos(oEntLoc.angle),
-                    -this.SPEED * Math.sin(oEntLoc.angle)
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorLeftward(fAngleQuant, STRAFE_SPEED * speed))
                 );
                 break;
 
-            case 0:
-            case 3:
-                // no move
-                this.setSpeed(0, 0);
+            case 9: // straferight and forward
+                // result : DIAG FORWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorForward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
                 break;
-        }
 
-        if (k.steerright.state !== false) {
-            oEntLoc.angle += this.computeAngleSpeed(t - k.steerright.state);
-        }
-        if (k.steerleft.state !== false) {
-            oEntLoc.angle -= this.computeAngleSpeed(t - k.steerleft.state);
+            case 10: // straferight and backward
+                // result : DIAG BACKWARD+RIGHT
+                this.setSpeed(
+                    this.getVectorBackward(fAngleQuant, speed)
+                        .add(this.getVectorRightward(fAngleQuant, STRAFE_SPEED * speed))
+                );
+                break;
         }
 
         if (k.use.state !== false) {
@@ -2969,7 +3391,7 @@ class KeyboardControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1
     }
 }
 
-/* harmony default export */ __webpack_exports__["default"] = (KeyboardControlThinker);
+/* harmony default export */ __webpack_exports__["default"] = (FPSControlThinker);
 
 /***/ }),
 
@@ -3466,6 +3888,15 @@ class Thinker {
         this._lastState = '';
     }
 
+    _emit(sEvent, payload) {
+        if (this.engine) {
+            this.engine.events.emit('think.' + sEvent, {
+                ...payload,
+                emitter: this._entity
+            });
+        }
+    }
+
     get entity() {
         return this._entity;
     }
@@ -3524,6 +3955,7 @@ class Thinker {
      */
     set state(value) {
         this.next('idle');
+        this._emit('state', {value});
         this._state = value;
     }
 
@@ -3566,7 +3998,7 @@ class Thinker {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Thinker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Thinker */ "./lib/src/engine/thinkers/Thinker.js");
-/* harmony import */ var _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./KeyboardControlThinker */ "./lib/src/engine/thinkers/KeyboardControlThinker.js");
+/* harmony import */ var _FPSControlThinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FPSControlThinker */ "./lib/src/engine/thinkers/FPSControlThinker.js");
 /* harmony import */ var _MissileThinker__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./MissileThinker */ "./lib/src/engine/thinkers/MissileThinker.js");
 /* harmony import */ var _MoverThinker__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./MoverThinker */ "./lib/src/engine/thinkers/MoverThinker.js");
 /* harmony import */ var _StaticThinker__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./StaticThinker */ "./lib/src/engine/thinkers/StaticThinker.js");
@@ -3587,7 +4019,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     Thinker: _Thinker__WEBPACK_IMPORTED_MODULE_0__["default"],
-    KeyboardControlThinker: _KeyboardControlThinker__WEBPACK_IMPORTED_MODULE_1__["default"],
+    FPSControlThinker: _FPSControlThinker__WEBPACK_IMPORTED_MODULE_1__["default"],
     MissileThinker: _MissileThinker__WEBPACK_IMPORTED_MODULE_2__["default"],
     MoverThinker: _MoverThinker__WEBPACK_IMPORTED_MODULE_3__["default"],
     StaticThinker: _StaticThinker__WEBPACK_IMPORTED_MODULE_4__["default"],
@@ -3649,6 +4081,61 @@ async function deleteJSON(url) {
     }
     return oJSON;
 }
+
+/***/ }),
+
+/***/ "./lib/src/filters/FilterManager.js":
+/*!******************************************!*\
+  !*** ./lib/src/filters/FilterManager.js ***!
+  \******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+class FilterManager {
+
+    constructor() {
+        this._filters = [];
+    }
+
+    /**
+     * Adds a new filter to the list
+     * @param oFilter {AbstractFilter} the new filter
+     */
+    link(oFilter) {
+        this._filters.push(oFilter);
+    }
+
+    /**
+     * run process method for all filters
+     * removes dead filters
+     * @param time {number} advancement time
+     */
+    process(time) {
+        this._filters = this
+            ._filters
+            .filter(f => !f.over())
+            .map(f => {
+                f.computeClock(time);
+                f.process();
+                return f;
+            });
+    }
+
+    /**
+     * run render method for all filters
+     * updates the specified canvas
+     * @param canvas {HTMLCanvasElement}
+     */
+    render(canvas) {
+        this._filters.forEach(f => f.render(canvas));
+    }
+
+}
+
+
+/* harmony default export */ __webpack_exports__["default"] = (FilterManager);
 
 /***/ }),
 
@@ -4238,6 +4725,32 @@ __webpack_require__.r(__webpack_exports__);
 function linear(v, x1, y1, x3, y3) {
     return ((v - x1) * (y3 - y1)) / (x3 - x1) + y1;
 }
+
+/***/ }),
+
+/***/ "./lib/src/json-validate/index.js":
+/*!****************************************!*\
+  !*** ./lib/src/json-validate/index.js ***!
+  \****************************************/
+/*! exports provided: jsonValidate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "jsonValidate", function() { return jsonValidate; });
+/* harmony import */ var jsonschema__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jsonschema */ "./node_modules/jsonschema/lib/index.js");
+/* harmony import */ var jsonschema__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jsonschema__WEBPACK_IMPORTED_MODULE_0__);
+
+const validator = new jsonschema__WEBPACK_IMPORTED_MODULE_0__["Validator"]();
+
+function jsonValidate(data, schema) {
+    let result = validator.validate(data, schema);
+    if (result.errors.length) {
+        throw new Error(result.errors[0]);
+    }
+    return true;
+}
+
 
 /***/ }),
 
@@ -5975,10 +6488,11 @@ class MapHelper {
         const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
-            const m = this.getMaterial(cell);
+            const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
+            // add a light source in the block ?
             if ('light' in m && !!m.light) {
                 renderer.addLightSource(
                     ps * x + (ps >> 1),
@@ -5996,7 +6510,7 @@ class MapHelper {
             const storey = renderer.createStorey();
             const mapUpperData = upperMap.map(rowProcess);
             mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
-                const m = this._materials[cell];
+                const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
                 storey.setCellMaterial(x, y, cell);
                 storey.setCellPhys(x, y, m.phys);
                 storey.setCellOffset(x, y, m.offset);
@@ -6067,7 +6581,7 @@ function zBufferCompare(a, b) {
 }
 
 
-
+const MAGIC_DIST_RATIO = 1.14734748441786;
 
 class Renderer {
 	
@@ -6112,6 +6626,8 @@ class Renderer {
         this._offsetTop = 50; // Y offset of rendering
         this._scanSectors = null;
         this._firstFloor = true; // if false then this instance is second story
+        this._filters = [];
+        this._bCheckFilters = false;
     }
 
 
@@ -6175,6 +6691,10 @@ class Renderer {
 
     get options() {
 	    return this._options;
+    }
+
+    get renderCanvas() {
+	    return this._renderCanvas;
     }
 
     adaptFocal() {
@@ -6260,6 +6780,11 @@ class Renderer {
                     this.transmitOptionToStorey(opt);
                     break;
 
+
+                case 'shading.factor':
+                    this.transmitOptionToStorey('shading.factor');
+                    break;
+
                 case 'shading-settings':
                     this.setShadingSettings(
                         SHADING.shades,
@@ -6267,6 +6792,7 @@ class Renderer {
                         SHADING.filter,
                         SHADING.brightness
                     );
+                    this.transmitOptionToStorey(opt);
                     break;
 
                 case 'textures.files.walls':
@@ -6298,7 +6824,6 @@ class Renderer {
                 case 'textures.files.background':
                     if (o.textures.files.background !== '') {
                         const bgImage = await _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].loadCanvas(o.textures.files.background);
-                        _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].setImageSmoothing(bgImage, false);
                         this.setBackground(bgImage);
                     }
                     break;
@@ -6392,7 +6917,10 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param oImage
      */
     setBackground(oImage) {
-        this._background = oImage;
+        const h = this._options.screen.height;
+        const r = h / oImage.height;
+        const wNew = oImage.width * r;
+        this._background = r === 1 ? oImage : _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].resize(oImage, wNew, h);
     }
 
     /**
@@ -6911,7 +7439,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         while (done === 0) {
             if (xt < yt) {
                 xi += dxi;
-                if (xi >= 0 && xi < nMapSize) {
+                if (xi >= 0 && xi < nMapSize) { // on est toujour dans la map
                     nText = map[yi][xi];
                     nPhys = (nText >> 12) & 0xF; // **code12** phys
 
@@ -6954,15 +7482,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         }
                         xt += dxt;
                     } else {
-                        t = xt + nTOfs;
+                        t = xt + nTOfs; // block solide rencontré, distance = xt + offset
                         xint = x + xScale * t;
                         yint = y + yScale * t;
                         done = 1;
                         side = 1;
                         bStillVisible = false;
                     }
-                } else {
-                    t = xt;
+                } else { // on sort de la map
+                    t = xt; // sortie de map, distance = xt
                     c = cmax;
                 }
             } else {
@@ -7044,8 +7572,14 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
             scene.xCell = xi;
             scene.yCell = yi;
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786; // bizarre mais cette distance là est 1.47347484 fois trop grande
             scene.exterior = false;
+            scene.dx = dx;
+            scene.dy = dy;
+            scene.x = x;
+            scene.y = y;
+            scene.xint = xint;
+            scene.yint = yint;
             if (this.isWallTransparent(scene.xCell, scene.yCell)) {
                 resume.b = true;
                 resume.xi = xi;
@@ -7054,7 +7588,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 resume.b = false;
             }
         } else {
-            scene.distance = t * nScale;
+            scene.distance = t * nScale; // / 1.14734748441786;
             scene.exterior = true;
             resume.b = false;
         }
@@ -7907,7 +8441,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 dy | 0,                                         // 6: dy
                 dw | 0,                                         // 7: dw
                 dh | 0,                                         // 8: dh
-                z,                                              // 9: z indication
+                f * MAGIC_DIST_RATIO,                                              // 9: z indication
                 oSprite.flags                                   // flags
             ];
             scene.zbuffer.push(data);
@@ -8028,6 +8562,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             }
         }
     }
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Renderer);
@@ -8168,7 +8703,7 @@ class ShadedTileSet {
 	shadeImage(oImage, fFactor, sColorFog, sColorFilter) {
 		const oShaded = _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_0__["default"].cloneCanvas(oImage);
 		const oCtx = oShaded.getContext('2d');
-		if (sColorFilter !== false) {
+		if (!!sColorFilter) {
 			let oColorFilter = _rainbow__WEBPACK_IMPORTED_MODULE_1__["default"].parse(sColorFilter);
 			oColorFilter.r /= 128;
 			oColorFilter.g /= 128;
@@ -8229,10 +8764,8 @@ class Sprite {
         this.x = 0;
         this.y = 0;
         this.h = 0;
-
         this._visible = true;
         this._scale = 1;
-
         this._animations = {};
         this._animation = null;
         this._currentAnim = {
@@ -8240,9 +8773,7 @@ class Sprite {
             dir: 0
         };
         this._tileset = null;
-
         this._children = []; // these sprites will be rendered above the current sprite
-
         this._flags = 0;
     }
 
@@ -8710,6 +9241,17 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 
 /***/ }),
 
+/***/ "./lib/src/schemas/rce-100.json":
+/*!**************************************!*\
+  !*** ./lib/src/schemas/rce-100.json ***!
+  \**************************************/
+/*! exports provided: $schema, type, description, definitions, properties, additionalProperties, required, default */
+/***/ (function(module) {
+
+module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","definitions":{"id":{"description":"an id which can be either integer or string","anyOf":[{"type":"integer"},{"type":"string"}]},"tile":{"description":"this is an index to a tile in the wall or flat tileset. it can be null (no tile).","anyOf":[{"type":"integer"},{"type":"null"}]},"decal":{"description":"a decal face definition","type":"object","properties":{"align":{"type":"string","description":"the alignement value","enum":["@DECAL_ALIGN_TOP_LEFT","@DECAL_ALIGN_TOP","@DECAL_ALIGN_TOP_RIGHT","@DECAL_ALIGN_LEFT","@DECAL_ALIGN_CENTER","@DECAL_ALIGN_RIGHT","@DECAL_ALIGN_BOTTOM_LEFT","@DECAL_ALIGN_BOTTOM","@DECAL_ALIGN_BOTTOM_RIGHT"]},"tileset":{"$ref":"#/definitions/id","description":"the tileset id used to paint the decal"},"tile":{"$ref":"#/definitions/tile","description":"the tile index used to paint the decal, if not specified default value is 0 (the first tile)"}},"additionalProperties":false,"required":["align","tileset"]}},"properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":[{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"$ref":"#/definitions/id","description":"the tileset id, can be referenced by blueprints and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":[{"type":"object","description":"An animation definition","properties":{"start":{"type":"array","description":"All starting frames","items":[{"type":"integer","description":"One starting frame index"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}]}},"additionalProperties":false,"required":["id","src","width","height","animations"]}]},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":[{"type":"object","description":"Definition of a blueprint","properties":{"id":{"$ref":"#/definitions/id","description":"the blueprint id, can be referenced by objects"},"tileset":{"$ref":"#/definitions/id","description":"A reference to a tileset"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":[{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}]},"lightsource":{"type":"object","description":"Definition of the light emitted by the thing","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"required":["r0","r1","v"]}},"additionalProperties":false,"required":["id","tileset","thinker","size"]}]},"shading":{"type":"object","description":"shading parameter to tweak ambiance","properties":{"color":{"type":"string","description":"the shading color at its maximum intensity"},"factor":{"type":"number","description":"number of texels needed to increase fog intensity by one rank"},"brightness":{"type":"number","description":"additional fog negative instensity on all surface : if value is 0, the fog intensity is normally applied, if value is 0.5 the fog instensity is halved on all surfaces"},"filter":{"anyOf":[{"type":"string","description":"a color balance applied on sprite to help ambiance integration"},{"type":"null","description":"no color filter for this level"}]}},"additionalProperties":false,"required":["color","factor","brightness","filter"]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"additionalProperties":false,"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"additionalProperties":false,"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":[{"anyOf":[{"type":"array","items":[{"type":"integer","description":"A cell value, references of of the legend item code"}]},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}]},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":[{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"offset":{"type":"number","description":"wall offset (depth)"},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"description":"floor flat tile","$ref":"#/definitions/tile"},"c":{"description":"ceiling flat tile","$ref":"#/definitions/tile"},"n":{"description":"north wall tile","$ref":"#/definitions/tile"},"e":{"description":"east wall tile","$ref":"#/definitions/tile"},"w":{"description":"west wall tile","$ref":"#/definitions/tile"},"s":{"description":"south wall tile","$ref":"#/definitions/tile"}}},"lightsource":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["r0","r1","v"]}},"additionalProperties":false,"required":["code","phys","faces"]}]}},"required":["metrics","textures","map","legend"]},"tags":{"type":"array","description":"a list of tags, each cell can hold several tags","items":[{"type":"object","properties":{"x":{"type":"number","description":"tag position (x axis)"},"y":{"type":"number","description":"tag position (y axis)"},"tags":{"type":"array","description":"a list of tag associated with this cell","items":{"type":"string","description":"a tag"}}},"additionalProperties":false,"required":["x","y","tags"]}]},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"integer","description":"light maximum intensity"}},"additionalProperties":false,"required":["x","y","r0","r1","v"]}]},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":[{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"$ref":"#/definitions/id","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"additionalProperties":false,"required":["x","y","z","angle","blueprint"]}]},"decals":{"type":"array","description":"A collection of decal definitions","items":[{"type":"object","description":"decal parameters","properties":{"x":{"type":"integer","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"integer","description":"Cell coordinates where the decal is located (y axis)"},"f":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the floor face"},"c":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the ceiling face"},"n":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the north face"},"e":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the east face"},"w":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the west face"},"s":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the south face"}},"additionalProperties":false,"required":["x","y"]}]},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"additionalProperties":false,"required":["x","y","z","angle"]},"preview":{"type":"string","description":"a url or data-url of an image (preview thumbnail)"}},"additionalProperties":false,"required":["version","tilesets","blueprints","level","objects","decals","lightsources","tags","camera"]};
+
+/***/ }),
+
 /***/ "./lib/src/tag-grid/TagGrid.js":
 /*!*************************************!*\
   !*** ./lib/src/tag-grid/TagGrid.js ***!
@@ -8721,7 +9263,12 @@ const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../grid */ "./lib/src/grid/index.js");
 /* harmony import */ var _painting__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../painting */ "./lib/src/painting/index.js");
-// a grid of tags
+/**
+ * @class TagGrid
+ * this class manages a grid, each cell has a list of tags (string)
+ * you can add, remove tag to/from cells
+ * you can "visit" each cell of the grid, the tag list of the cell you are currently on, will change, and you will be warned when so.
+ */
 
 
 
@@ -18922,7 +19469,7 @@ exports.push([module.i, "\ndiv.canvas-container canvas[data-v-073f5d27] {\n    p
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\nfigure.level-thumbnail[data-v-6fbefe4a] {\n    display: inline-block;\n    border: outset #AAA 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #AAA;\n    margin: 1.5em;\n    cursor: pointer;\n}\nfigure.level-thumbnail img[data-v-6fbefe4a] {\n    border: solid thin #000;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-6fbefe4a] {\n}\nfigure.level-thumbnail[data-v-6fbefe4a]:hover {\n    filter: brightness(140%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a] {\n    border-color: lime;\n    filter: brightness(120%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-6fbefe4a] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
+exports.push([module.i, "\nfigure.level-thumbnail[data-v-6fbefe4a] {\n    display: inline-block;\n    border: outset #AAA 0.2em;\n    border-radius: 0.3em;\n    padding: 0.4em;\n    background-color: #AAA;\n    margin: 1.5em;\n    cursor: pointer;\n}\nfigure.level-thumbnail img[data-v-6fbefe4a] {\n    border: solid thin #000;\n    padding: 0;\n}\nfigure.level-thumbnail figcaption span.filename[data-v-6fbefe4a] {\n}\nfigure.level-thumbnail[data-v-6fbefe4a]:hover {\n    filter: brightness(140%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a] {\n    border-color: lime;\n    filter: brightness(120%);\n}\nfigure.level-thumbnail.selected[data-v-6fbefe4a]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\nfigure.level-thumbnail figcaption span.datestring[data-v-6fbefe4a] {\n    font-style: italic;\n    font-size: 0.8em;\n    color: #333;\n}\n\n", ""]);
 
 
 
@@ -26624,6 +27171,1618 @@ module.exports = Array.isArray || function (arr) {
 
 /***/ }),
 
+/***/ "./node_modules/jsonschema/lib/attribute.js":
+/*!**************************************************!*\
+  !*** ./node_modules/jsonschema/lib/attribute.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var helpers = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js");
+
+/** @type ValidatorResult */
+var ValidatorResult = helpers.ValidatorResult;
+/** @type SchemaError */
+var SchemaError = helpers.SchemaError;
+
+var attribute = {};
+
+attribute.ignoreProperties = {
+  // informative properties
+  'id': true,
+  'default': true,
+  'description': true,
+  'title': true,
+  // arguments to other properties
+  'exclusiveMinimum': true,
+  'exclusiveMaximum': true,
+  'additionalItems': true,
+  // special-handled properties
+  '$schema': true,
+  '$ref': true,
+  'extends': true
+};
+
+/**
+ * @name validators
+ */
+var validators = attribute.validators = {};
+
+/**
+ * Validates whether the instance if of a certain type
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {ValidatorResult|null}
+ */
+validators.type = function validateType (instance, schema, options, ctx) {
+  // Ignore undefined instances
+  if (instance === undefined) {
+    return null;
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var types = Array.isArray(schema.type) ? schema.type : [schema.type];
+  if (!types.some(this.testType.bind(this, instance, schema, options, ctx))) {
+    var list = types.map(function (v) {
+      return v.id && ('<' + v.id + '>') || (v+'');
+    });
+    result.addError({
+      name: 'type',
+      argument: list,
+      message: "is not of a type(s) " + list,
+    });
+  }
+  return result;
+};
+
+function testSchemaNoThrow(instance, options, ctx, callback, schema){
+  var throwError = options.throwError;
+  options.throwError = false;
+  var res = this.validateSchema(instance, schema, options, ctx);
+  options.throwError = throwError;
+
+  if (! res.valid && callback instanceof Function) {
+    callback(res);
+  }
+  return res.valid;
+}
+
+/**
+ * Validates whether the instance matches some of the given schemas
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {ValidatorResult|null}
+ */
+validators.anyOf = function validateAnyOf (instance, schema, options, ctx) {
+  // Ignore undefined instances
+  if (instance === undefined) {
+    return null;
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var inner = new ValidatorResult(instance, schema, options, ctx);
+  if (!Array.isArray(schema.anyOf)){
+    throw new SchemaError("anyOf must be an array");
+  }
+  if (!schema.anyOf.some(
+    testSchemaNoThrow.bind(
+      this, instance, options, ctx, function(res){inner.importErrors(res);}
+      ))) {
+    var list = schema.anyOf.map(function (v, i) {
+      return (v.id && ('<' + v.id + '>')) || (v.title && JSON.stringify(v.title)) || (v['$ref'] && ('<' + v['$ref'] + '>')) || '[subschema '+i+']';
+    });
+    if (options.nestedErrors) {
+      result.importErrors(inner);
+    }
+    result.addError({
+      name: 'anyOf',
+      argument: list,
+      message: "is not any of " + list.join(','),
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance matches every given schema
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null}
+ */
+validators.allOf = function validateAllOf (instance, schema, options, ctx) {
+  // Ignore undefined instances
+  if (instance === undefined) {
+    return null;
+  }
+  if (!Array.isArray(schema.allOf)){
+    throw new SchemaError("allOf must be an array");
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var self = this;
+  schema.allOf.forEach(function(v, i){
+    var valid = self.validateSchema(instance, v, options, ctx);
+    if(!valid.valid){
+      var msg = (v.id && ('<' + v.id + '>')) || (v.title && JSON.stringify(v.title)) || (v['$ref'] && ('<' + v['$ref'] + '>')) || '[subschema '+i+']';
+      result.addError({
+        name: 'allOf',
+        argument: { id: msg, length: valid.errors.length, valid: valid },
+        message: 'does not match allOf schema ' + msg + ' with ' + valid.errors.length + ' error[s]:',
+      });
+      result.importErrors(valid);
+    }
+  });
+  return result;
+};
+
+/**
+ * Validates whether the instance matches exactly one of the given schemas
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null}
+ */
+validators.oneOf = function validateOneOf (instance, schema, options, ctx) {
+  // Ignore undefined instances
+  if (instance === undefined) {
+    return null;
+  }
+  if (!Array.isArray(schema.oneOf)){
+    throw new SchemaError("oneOf must be an array");
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var inner = new ValidatorResult(instance, schema, options, ctx);
+  var count = schema.oneOf.filter(
+    testSchemaNoThrow.bind(
+      this, instance, options, ctx, function(res) {inner.importErrors(res);}
+      ) ).length;
+  var list = schema.oneOf.map(function (v, i) {
+    return (v.id && ('<' + v.id + '>')) || (v.title && JSON.stringify(v.title)) || (v['$ref'] && ('<' + v['$ref'] + '>')) || '[subschema '+i+']';
+  });
+  if (count!==1) {
+    if (options.nestedErrors) {
+      result.importErrors(inner);
+    }
+    result.addError({
+      name: 'oneOf',
+      argument: list,
+      message: "is not exactly one from " + list.join(','),
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates properties
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null|ValidatorResult}
+ */
+validators.properties = function validateProperties (instance, schema, options, ctx) {
+  if(!this.types.object(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var properties = schema.properties || {};
+  for (var property in properties) {
+    if (typeof options.preValidateProperty == 'function') {
+      options.preValidateProperty(instance, property, properties[property], options, ctx);
+    }
+
+    var prop = Object.hasOwnProperty.call(instance, property) ? instance[property] : undefined;
+    var res = this.validateSchema(prop, properties[property], options, ctx.makeChild(properties[property], property));
+    if(res.instance !== result.instance[property]) result.instance[property] = res.instance;
+    result.importErrors(res);
+  }
+  return result;
+};
+
+/**
+ * Test a specific property within in instance against the additionalProperties schema attribute
+ * This ignores properties with definitions in the properties schema attribute, but no other attributes.
+ * If too many more types of property-existance tests pop up they may need their own class of tests (like `type` has)
+ * @private
+ * @return {boolean}
+ */
+function testAdditionalProperty (instance, schema, options, ctx, property, result) {
+  if(!this.types.object(instance)) return;
+  if (schema.properties && schema.properties[property] !== undefined) {
+    return;
+  }
+  if (schema.additionalProperties === false) {
+    result.addError({
+      name: 'additionalProperties',
+      argument: property,
+      message: "additionalProperty " + JSON.stringify(property) + " exists in instance when not allowed",
+    });
+  } else {
+    var additionalProperties = schema.additionalProperties || {};
+
+    if (typeof options.preValidateProperty == 'function') {
+      options.preValidateProperty(instance, property, additionalProperties, options, ctx);
+    }
+
+    var res = this.validateSchema(instance[property], additionalProperties, options, ctx.makeChild(additionalProperties, property));
+    if(res.instance !== result.instance[property]) result.instance[property] = res.instance;
+    result.importErrors(res);
+  }
+}
+
+/**
+ * Validates patternProperties
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null|ValidatorResult}
+ */
+validators.patternProperties = function validatePatternProperties (instance, schema, options, ctx) {
+  if(!this.types.object(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var patternProperties = schema.patternProperties || {};
+
+  for (var property in instance) {
+    var test = true;
+    for (var pattern in patternProperties) {
+      var expr = new RegExp(pattern);
+      if (!expr.test(property)) {
+        continue;
+      }
+      test = false;
+
+      if (typeof options.preValidateProperty == 'function') {
+        options.preValidateProperty(instance, property, patternProperties[pattern], options, ctx);
+      }
+
+      var res = this.validateSchema(instance[property], patternProperties[pattern], options, ctx.makeChild(patternProperties[pattern], property));
+      if(res.instance !== result.instance[property]) result.instance[property] = res.instance;
+      result.importErrors(res);
+    }
+    if (test) {
+      testAdditionalProperty.call(this, instance, schema, options, ctx, property, result);
+    }
+  }
+
+  return result;
+};
+
+/**
+ * Validates additionalProperties
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null|ValidatorResult}
+ */
+validators.additionalProperties = function validateAdditionalProperties (instance, schema, options, ctx) {
+  if(!this.types.object(instance)) return;
+  // if patternProperties is defined then we'll test when that one is called instead
+  if (schema.patternProperties) {
+    return null;
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  for (var property in instance) {
+    testAdditionalProperty.call(this, instance, schema, options, ctx, property, result);
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is at least of a certain length, when the instance value is a string.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.minProperties = function validateMinProperties (instance, schema, options, ctx) {
+  if (!this.types.object(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var keys = Object.keys(instance);
+  if (!(keys.length >= schema.minProperties)) {
+    result.addError({
+      name: 'minProperties',
+      argument: schema.minProperties,
+      message: "does not meet minimum property length of " + schema.minProperties,
+    })
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is at most of a certain length, when the instance value is a string.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.maxProperties = function validateMaxProperties (instance, schema, options, ctx) {
+  if (!this.types.object(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var keys = Object.keys(instance);
+  if (!(keys.length <= schema.maxProperties)) {
+    result.addError({
+      name: 'maxProperties',
+      argument: schema.maxProperties,
+      message: "does not meet maximum property length of " + schema.maxProperties,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates items when instance is an array
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null|ValidatorResult}
+ */
+validators.items = function validateItems (instance, schema, options, ctx) {
+  var self = this;
+  if (!this.types.array(instance)) return;
+  if (!schema.items) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  instance.every(function (value, i) {
+    var items = Array.isArray(schema.items) ? (schema.items[i] || schema.additionalItems) : schema.items;
+    if (items === undefined) {
+      return true;
+    }
+    if (items === false) {
+      result.addError({
+        name: 'items',
+        message: "additionalItems not permitted",
+      });
+      return false;
+    }
+    var res = self.validateSchema(value, items, options, ctx.makeChild(items, i));
+    if(res.instance !== result.instance[i]) result.instance[i] = res.instance;
+    result.importErrors(res);
+    return true;
+  });
+  return result;
+};
+
+/**
+ * Validates minimum and exclusiveMinimum when the type of the instance value is a number.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.minimum = function validateMinimum (instance, schema, options, ctx) {
+  if (!this.types.number(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var valid = true;
+  if (schema.exclusiveMinimum && schema.exclusiveMinimum === true) {
+    valid = instance > schema.minimum;
+  } else {
+    valid = instance >= schema.minimum;
+  }
+  if (!valid) {
+    result.addError({
+      name: 'minimum',
+      argument: schema.minimum,
+      message: "must have a minimum value of " + schema.minimum,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates maximum and exclusiveMaximum when the type of the instance value is a number.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.maximum = function validateMaximum (instance, schema, options, ctx) {
+  if (!this.types.number(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var valid;
+  if (schema.exclusiveMaximum && schema.exclusiveMaximum === true) {
+    valid = instance < schema.maximum;
+  } else {
+    valid = instance <= schema.maximum;
+  }
+  if (!valid) {
+    result.addError({
+      name: 'maximum',
+      argument: schema.maximum,
+      message: "must have a maximum value of " + schema.maximum,
+    });
+  }
+  return result;
+};
+
+/**
+ * Perform validation for multipleOf and divisibleBy, which are essentially the same.
+ * @param instance
+ * @param schema
+ * @param validationType
+ * @param errorMessage
+ * @returns {String|null}
+ */
+var validateMultipleOfOrDivisbleBy = function validateMultipleOfOrDivisbleBy (instance, schema, options, ctx, validationType, errorMessage) {
+  if (!this.types.number(instance)) return;
+
+  var validationArgument = schema[validationType];
+  if (validationArgument == 0) {
+    throw new SchemaError(validationType + " cannot be zero");
+  }
+
+  var result = new ValidatorResult(instance, schema, options, ctx);
+
+  var instanceDecimals = helpers.getDecimalPlaces(instance);
+  var divisorDecimals = helpers.getDecimalPlaces(validationArgument);
+
+  var maxDecimals = Math.max(instanceDecimals , divisorDecimals);
+  var multiplier = Math.pow(10, maxDecimals);
+
+  if (Math.round(instance * multiplier) % Math.round(validationArgument * multiplier) !== 0) {
+    result.addError({
+      name: validationType,
+      argument:  validationArgument,
+      message: errorMessage + JSON.stringify(validationArgument)
+    });
+  }
+
+  return result;
+};
+
+/**
+ * Validates divisibleBy when the type of the instance value is a number.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.multipleOf = function validateMultipleOf (instance, schema, options, ctx) {
+ return validateMultipleOfOrDivisbleBy.call(this, instance, schema, options, ctx, "multipleOf", "is not a multiple of (divisible by) ");
+};
+
+/**
+ * Validates multipleOf when the type of the instance value is a number.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.divisibleBy = function validateDivisibleBy (instance, schema, options, ctx) {
+  return validateMultipleOfOrDivisbleBy.call(this, instance, schema, options, ctx, "divisibleBy", "is not divisible by (multiple of) ");
+};
+
+/**
+ * Validates whether the instance value is present.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.required = function validateRequired (instance, schema, options, ctx) {
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (instance === undefined && schema.required === true) {
+    // A boolean form is implemented for reverse-compatability with schemas written against older drafts
+    result.addError({
+      name: 'required',
+      message: "is required"
+    });
+  } else if (this.types.object(instance) && Array.isArray(schema.required)) {
+    schema.required.forEach(function(n){
+      if(instance[n]===undefined){
+        result.addError({
+          name: 'required',
+          argument: n,
+          message: "requires property " + JSON.stringify(n),
+        });
+      }
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value matches the regular expression, when the instance value is a string.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.pattern = function validatePattern (instance, schema, options, ctx) {
+  if (!this.types.string(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!instance.match(schema.pattern)) {
+    result.addError({
+      name: 'pattern',
+      argument: schema.pattern,
+      message: "does not match pattern " + JSON.stringify(schema.pattern),
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is of a certain defined format or a custom
+ * format.
+ * The following formats are supported for string types:
+ *   - date-time
+ *   - date
+ *   - time
+ *   - ip-address
+ *   - ipv6
+ *   - uri
+ *   - color
+ *   - host-name
+ *   - alpha
+ *   - alpha-numeric
+ *   - utc-millisec
+ * @param instance
+ * @param schema
+ * @param [options]
+ * @param [ctx]
+ * @return {String|null}
+ */
+validators.format = function validateFormat (instance, schema, options, ctx) {
+  if (instance===undefined) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!result.disableFormat && !helpers.isFormat(instance, schema.format, this)) {
+    result.addError({
+      name: 'format',
+      argument: schema.format,
+      message: "does not conform to the " + JSON.stringify(schema.format) + " format",
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is at least of a certain length, when the instance value is a string.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.minLength = function validateMinLength (instance, schema, options, ctx) {
+  if (!this.types.string(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var hsp = instance.match(/[\uDC00-\uDFFF]/g);
+  var length = instance.length - (hsp ? hsp.length : 0);
+  if (!(length >= schema.minLength)) {
+    result.addError({
+      name: 'minLength',
+      argument: schema.minLength,
+      message: "does not meet minimum length of " + schema.minLength,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is at most of a certain length, when the instance value is a string.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.maxLength = function validateMaxLength (instance, schema, options, ctx) {
+  if (!this.types.string(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  // TODO if this was already computed in "minLength", use that value instead of re-computing
+  var hsp = instance.match(/[\uDC00-\uDFFF]/g);
+  var length = instance.length - (hsp ? hsp.length : 0);
+  if (!(length <= schema.maxLength)) {
+    result.addError({
+      name: 'maxLength',
+      argument: schema.maxLength,
+      message: "does not meet maximum length of " + schema.maxLength,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether instance contains at least a minimum number of items, when the instance is an Array.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.minItems = function validateMinItems (instance, schema, options, ctx) {
+  if (!this.types.array(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!(instance.length >= schema.minItems)) {
+    result.addError({
+      name: 'minItems',
+      argument: schema.minItems,
+      message: "does not meet minimum length of " + schema.minItems,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether instance contains no more than a maximum number of items, when the instance is an Array.
+ * @param instance
+ * @param schema
+ * @return {String|null}
+ */
+validators.maxItems = function validateMaxItems (instance, schema, options, ctx) {
+  if (!this.types.array(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!(instance.length <= schema.maxItems)) {
+    result.addError({
+      name: 'maxItems',
+      argument: schema.maxItems,
+      message: "does not meet maximum length of " + schema.maxItems,
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates that every item in an instance array is unique, when instance is an array
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {String|null|ValidatorResult}
+ */
+validators.uniqueItems = function validateUniqueItems (instance, schema, options, ctx) {
+  if (!this.types.array(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  function testArrays (v, i, a) {
+    for (var j = i + 1; j < a.length; j++) if (helpers.deepCompareStrict(v, a[j])) {
+      return false;
+    }
+    return true;
+  }
+  if (!instance.every(testArrays)) {
+    result.addError({
+      name: 'uniqueItems',
+      message: "contains duplicate item",
+    });
+  }
+  return result;
+};
+
+/**
+ * Deep compares arrays for duplicates
+ * @param v
+ * @param i
+ * @param a
+ * @private
+ * @return {boolean}
+ */
+function testArrays (v, i, a) {
+  var j, len = a.length;
+  for (j = i + 1, len; j < len; j++) {
+    if (helpers.deepCompareStrict(v, a[j])) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/**
+ * Validates whether there are no duplicates, when the instance is an Array.
+ * @param instance
+ * @return {String|null}
+ */
+validators.uniqueItems = function validateUniqueItems (instance, schema, options, ctx) {
+  if (!this.types.array(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!instance.every(testArrays)) {
+    result.addError({
+      name: 'uniqueItems',
+      message: "contains duplicate item",
+    });
+  }
+  return result;
+};
+
+/**
+ * Validate for the presence of dependency properties, if the instance is an object.
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {null|ValidatorResult}
+ */
+validators.dependencies = function validateDependencies (instance, schema, options, ctx) {
+  if (!this.types.object(instance)) return;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  for (var property in schema.dependencies) {
+    if (instance[property] === undefined) {
+      continue;
+    }
+    var dep = schema.dependencies[property];
+    var childContext = ctx.makeChild(dep, property);
+    if (typeof dep == 'string') {
+      dep = [dep];
+    }
+    if (Array.isArray(dep)) {
+      dep.forEach(function (prop) {
+        if (instance[prop] === undefined) {
+          result.addError({
+            // FIXME there's two different "dependencies" errors here with slightly different outputs
+            // Can we make these the same? Or should we create different error types?
+            name: 'dependencies',
+            argument: childContext.propertyPath,
+            message: "property " + prop + " not found, required by " + childContext.propertyPath,
+          });
+        }
+      });
+    } else {
+      var res = this.validateSchema(instance, dep, options, childContext);
+      if(result.instance !== res.instance) result.instance = res.instance;
+      if (res && res.errors.length) {
+        result.addError({
+          name: 'dependencies',
+          argument: childContext.propertyPath,
+          message: "does not meet dependency required by " + childContext.propertyPath,
+        });
+        result.importErrors(res);
+      }
+    }
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance value is one of the enumerated values.
+ *
+ * @param instance
+ * @param schema
+ * @return {ValidatorResult|null}
+ */
+validators['enum'] = function validateEnum (instance, schema, options, ctx) {
+  if (instance === undefined) {
+    return null;
+  }
+  if (!Array.isArray(schema['enum'])) {
+    throw new SchemaError("enum expects an array", schema);
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!schema['enum'].some(helpers.deepCompareStrict.bind(null, instance))) {
+    result.addError({
+      name: 'enum',
+      argument: schema['enum'],
+      message: "is not one of enum values: " + schema['enum'].map(String).join(','),
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance exactly matches a given value
+ *
+ * @param instance
+ * @param schema
+ * @return {ValidatorResult|null}
+ */
+validators['const'] = function validateEnum (instance, schema, options, ctx) {
+  if (instance === undefined) {
+    return null;
+  }
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  if (!helpers.deepCompareStrict(schema['const'], instance)) {
+    result.addError({
+      name: 'const',
+      argument: schema['const'],
+      message: "does not exactly match expected constant: " + schema['const'],
+    });
+  }
+  return result;
+};
+
+/**
+ * Validates whether the instance if of a prohibited type.
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @return {null|ValidatorResult}
+ */
+validators.not = validators.disallow = function validateNot (instance, schema, options, ctx) {
+  var self = this;
+  if(instance===undefined) return null;
+  var result = new ValidatorResult(instance, schema, options, ctx);
+  var notTypes = schema.not || schema.disallow;
+  if(!notTypes) return null;
+  if(!Array.isArray(notTypes)) notTypes=[notTypes];
+  notTypes.forEach(function (type) {
+    if (self.testType(instance, schema, options, ctx, type)) {
+      var schemaId = type && type.id && ('<' + type.id + '>') || type;
+      result.addError({
+        name: 'not',
+        argument: schemaId,
+        message: "is of prohibited type " + schemaId,
+      });
+    }
+  });
+  return result;
+};
+
+module.exports = attribute;
+
+
+/***/ }),
+
+/***/ "./node_modules/jsonschema/lib/helpers.js":
+/*!************************************************!*\
+  !*** ./node_modules/jsonschema/lib/helpers.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var uri = __webpack_require__(/*! url */ "./node_modules/url/url.js");
+
+var ValidationError = exports.ValidationError = function ValidationError (message, instance, schema, propertyPath, name, argument) {
+  if (propertyPath) {
+    this.property = propertyPath;
+  }
+  if (message) {
+    this.message = message;
+  }
+  if (schema) {
+    if (schema.id) {
+      this.schema = schema.id;
+    } else {
+      this.schema = schema;
+    }
+  }
+  if (instance) {
+    this.instance = instance;
+  }
+  this.name = name;
+  this.argument = argument;
+  this.stack = this.toString();
+};
+
+ValidationError.prototype.toString = function toString() {
+  return this.property + ' ' + this.message;
+};
+
+var ValidatorResult = exports.ValidatorResult = function ValidatorResult(instance, schema, options, ctx) {
+  this.instance = instance;
+  this.schema = schema;
+  this.propertyPath = ctx.propertyPath;
+  this.errors = [];
+  this.throwError = options && options.throwError;
+  this.disableFormat = options && options.disableFormat === true;
+};
+
+ValidatorResult.prototype.addError = function addError(detail) {
+  var err;
+  if (typeof detail == 'string') {
+    err = new ValidationError(detail, this.instance, this.schema, this.propertyPath);
+  } else {
+    if (!detail) throw new Error('Missing error detail');
+    if (!detail.message) throw new Error('Missing error message');
+    if (!detail.name) throw new Error('Missing validator type');
+    err = new ValidationError(detail.message, this.instance, this.schema, this.propertyPath, detail.name, detail.argument);
+  }
+
+  if (this.throwError) {
+    throw err;
+  }
+  this.errors.push(err);
+  return err;
+};
+
+ValidatorResult.prototype.importErrors = function importErrors(res) {
+  if (typeof res == 'string' || (res && res.validatorType)) {
+    this.addError(res);
+  } else if (res && res.errors) {
+    Array.prototype.push.apply(this.errors, res.errors);
+  }
+};
+
+function stringizer (v,i){
+  return i+': '+v.toString()+'\n';
+}
+ValidatorResult.prototype.toString = function toString(res) {
+  return this.errors.map(stringizer).join('');
+};
+
+Object.defineProperty(ValidatorResult.prototype, "valid", { get: function() {
+  return !this.errors.length;
+} });
+
+/**
+ * Describes a problem with a Schema which prevents validation of an instance
+ * @name SchemaError
+ * @constructor
+ */
+var SchemaError = exports.SchemaError = function SchemaError (msg, schema) {
+  this.message = msg;
+  this.schema = schema;
+  Error.call(this, msg);
+  Error.captureStackTrace(this, SchemaError);
+};
+SchemaError.prototype = Object.create(Error.prototype,
+  { constructor: {value: SchemaError, enumerable: false}
+  , name: {value: 'SchemaError', enumerable: false}
+  });
+
+var SchemaContext = exports.SchemaContext = function SchemaContext (schema, options, propertyPath, base, schemas) {
+  this.schema = schema;
+  this.options = options;
+  this.propertyPath = propertyPath;
+  this.base = base;
+  this.schemas = schemas;
+};
+
+SchemaContext.prototype.resolve = function resolve (target) {
+  return uri.resolve(this.base, target);
+};
+
+SchemaContext.prototype.makeChild = function makeChild(schema, propertyName){
+  var propertyPath = (propertyName===undefined) ? this.propertyPath : this.propertyPath+makeSuffix(propertyName);
+  var base = uri.resolve(this.base, schema.id||'');
+  var ctx = new SchemaContext(schema, this.options, propertyPath, base, Object.create(this.schemas));
+  if(schema.id && !ctx.schemas[base]){
+    ctx.schemas[base] = schema;
+  }
+  return ctx;
+}
+
+var FORMAT_REGEXPS = exports.FORMAT_REGEXPS = {
+  'date-time': /^\d{4}-(?:0[0-9]{1}|1[0-2]{1})-(3[01]|0[1-9]|[12][0-9])[tT ](2[0-4]|[01][0-9]):([0-5][0-9]):(60|[0-5][0-9])(\.\d+)?([zZ]|[+-]([0-5][0-9]):(60|[0-5][0-9]))$/,
+  'date': /^\d{4}-(?:0[0-9]{1}|1[0-2]{1})-(3[01]|0[1-9]|[12][0-9])$/,
+  'time': /^(2[0-4]|[01][0-9]):([0-5][0-9]):(60|[0-5][0-9])$/,
+
+  'email': /^(?:[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+\.)*[\w\!\#\$\%\&\'\*\+\-\/\=\?\^\`\{\|\}\~]+@(?:(?:(?:[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!\.)){0,61}[a-zA-Z0-9]?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9\-](?!$)){0,61}[a-zA-Z0-9]?)|(?:\[(?:(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}(?:[01]?\d{1,2}|2[0-4]\d|25[0-5])\]))$/,
+  'ip-address': /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/,
+  'ipv6': /^\s*((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?\s*$/,
+  'uri': /^[a-zA-Z][a-zA-Z0-9+-.]*:[^\s]*$/,
+
+  'color': /^(#?([0-9A-Fa-f]{3}){1,2}\b|aqua|black|blue|fuchsia|gray|green|lime|maroon|navy|olive|orange|purple|red|silver|teal|white|yellow|(rgb\(\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*,\s*\b([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])\b\s*\))|(rgb\(\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*,\s*(\d?\d%|100%)+\s*\)))$/,
+
+  // hostname regex from: http://stackoverflow.com/a/1420225/5628
+  'hostname': /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$/,
+  'host-name': /^(?=.{1,255}$)[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?(?:\.[0-9A-Za-z](?:(?:[0-9A-Za-z]|-){0,61}[0-9A-Za-z])?)*\.?$/,
+
+  'alpha': /^[a-zA-Z]+$/,
+  'alphanumeric': /^[a-zA-Z0-9]+$/,
+  'utc-millisec': function (input) {
+    return (typeof input === 'string') && parseFloat(input) === parseInt(input, 10) && !isNaN(input);
+  },
+  'regex': function (input) {
+    var result = true;
+    try {
+      new RegExp(input);
+    } catch (e) {
+      result = false;
+    }
+    return result;
+  },
+  'style': /\s*(.+?):\s*([^;]+);?/g,
+  'phone': /^\+(?:[0-9] ?){6,14}[0-9]$/
+};
+
+FORMAT_REGEXPS.regexp = FORMAT_REGEXPS.regex;
+FORMAT_REGEXPS.pattern = FORMAT_REGEXPS.regex;
+FORMAT_REGEXPS.ipv4 = FORMAT_REGEXPS['ip-address'];
+
+exports.isFormat = function isFormat (input, format, validator) {
+  if (typeof input === 'string' && FORMAT_REGEXPS[format] !== undefined) {
+    if (FORMAT_REGEXPS[format] instanceof RegExp) {
+      return FORMAT_REGEXPS[format].test(input);
+    }
+    if (typeof FORMAT_REGEXPS[format] === 'function') {
+      return FORMAT_REGEXPS[format](input);
+    }
+  } else if (validator && validator.customFormats &&
+      typeof validator.customFormats[format] === 'function') {
+    return validator.customFormats[format](input);
+  }
+  return true;
+};
+
+var makeSuffix = exports.makeSuffix = function makeSuffix (key) {
+  key = key.toString();
+  // This function could be capable of outputting valid a ECMAScript string, but the
+  // resulting code for testing which form to use would be tens of thousands of characters long
+  // That means this will use the name form for some illegal forms
+  if (!key.match(/[.\s\[\]]/) && !key.match(/^[\d]/)) {
+    return '.' + key;
+  }
+  if (key.match(/^\d+$/)) {
+    return '[' + key + ']';
+  }
+  return '[' + JSON.stringify(key) + ']';
+};
+
+exports.deepCompareStrict = function deepCompareStrict (a, b) {
+  if (typeof a !== typeof b) {
+    return false;
+  }
+  if (a instanceof Array) {
+    if (!(b instanceof Array)) {
+      return false;
+    }
+    if (a.length !== b.length) {
+      return false;
+    }
+    return a.every(function (v, i) {
+      return deepCompareStrict(a[i], b[i]);
+    });
+  }
+  if (typeof a === 'object') {
+    if (!a || !b) {
+      return a === b;
+    }
+    var aKeys = Object.keys(a);
+    var bKeys = Object.keys(b);
+    if (aKeys.length !== bKeys.length) {
+      return false;
+    }
+    return aKeys.every(function (v) {
+      return deepCompareStrict(a[v], b[v]);
+    });
+  }
+  return a === b;
+};
+
+function deepMerger (target, dst, e, i) {
+  if (typeof e === 'object') {
+    dst[i] = deepMerge(target[i], e)
+  } else {
+    if (target.indexOf(e) === -1) {
+      dst.push(e)
+    }
+  }
+}
+
+function copyist (src, dst, key) {
+  dst[key] = src[key];
+}
+
+function copyistWithDeepMerge (target, src, dst, key) {
+  if (typeof src[key] !== 'object' || !src[key]) {
+    dst[key] = src[key];
+  }
+  else {
+    if (!target[key]) {
+      dst[key] = src[key];
+    } else {
+      dst[key] = deepMerge(target[key], src[key])
+    }
+  }
+}
+
+function deepMerge (target, src) {
+  var array = Array.isArray(src);
+  var dst = array && [] || {};
+
+  if (array) {
+    target = target || [];
+    dst = dst.concat(target);
+    src.forEach(deepMerger.bind(null, target, dst));
+  } else {
+    if (target && typeof target === 'object') {
+      Object.keys(target).forEach(copyist.bind(null, target, dst));
+    }
+    Object.keys(src).forEach(copyistWithDeepMerge.bind(null, target, src, dst));
+  }
+
+  return dst;
+};
+
+module.exports.deepMerge = deepMerge;
+
+/**
+ * Validates instance against the provided schema
+ * Implements URI+JSON Pointer encoding, e.g. "%7e"="~0"=>"~", "~1"="%2f"=>"/"
+ * @param o
+ * @param s The path to walk o along
+ * @return any
+ */
+exports.objectGetPath = function objectGetPath(o, s) {
+  var parts = s.split('/').slice(1);
+  var k;
+  while (typeof (k=parts.shift()) == 'string') {
+    var n = decodeURIComponent(k.replace(/~0/,'~').replace(/~1/g,'/'));
+    if (!(n in o)) return;
+    o = o[n];
+  }
+  return o;
+};
+
+function pathEncoder (v) {
+  return '/'+encodeURIComponent(v).replace(/~/g,'%7E');
+}
+/**
+ * Accept an Array of property names and return a JSON Pointer URI fragment
+ * @param Array a
+ * @return {String}
+ */
+exports.encodePath = function encodePointer(a){
+	// ~ must be encoded explicitly because hacks
+	// the slash is encoded by encodeURIComponent
+	return a.map(pathEncoder).join('');
+};
+
+
+/**
+ * Calculate the number of decimal places a number uses
+ * We need this to get correct results out of multipleOf and divisibleBy
+ * when either figure is has decimal places, due to IEEE-754 float issues.
+ * @param number
+ * @returns {number}
+ */
+exports.getDecimalPlaces = function getDecimalPlaces(number) {
+
+  var decimalPlaces = 0;
+  if (isNaN(number)) return decimalPlaces;
+
+  if (typeof number !== 'number') {
+    number = Number(number);
+  }
+
+  var parts = number.toString().split('e');
+  if (parts.length === 2) {
+    if (parts[1][0] !== '-') {
+      return decimalPlaces;
+    } else {
+      decimalPlaces = Number(parts[1].slice(1));
+    }
+  }
+
+  var decimalParts = parts[0].split('.');
+  if (decimalParts.length === 2) {
+    decimalPlaces += decimalParts[1].length;
+  }
+
+  return decimalPlaces;
+};
+
+
+
+/***/ }),
+
+/***/ "./node_modules/jsonschema/lib/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/jsonschema/lib/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var Validator = module.exports.Validator = __webpack_require__(/*! ./validator */ "./node_modules/jsonschema/lib/validator.js");
+
+module.exports.ValidatorResult = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js").ValidatorResult;
+module.exports.ValidationError = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js").ValidationError;
+module.exports.SchemaError = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js").SchemaError;
+module.exports.SchemaScanResult = __webpack_require__(/*! ./scan */ "./node_modules/jsonschema/lib/scan.js").SchemaScanResult;
+module.exports.scan = __webpack_require__(/*! ./scan */ "./node_modules/jsonschema/lib/scan.js").scan;
+
+module.exports.validate = function (instance, schema, options) {
+  var v = new Validator();
+  return v.validate(instance, schema, options);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/jsonschema/lib/scan.js":
+/*!*********************************************!*\
+  !*** ./node_modules/jsonschema/lib/scan.js ***!
+  \*********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var urilib = __webpack_require__(/*! url */ "./node_modules/url/url.js");
+var helpers = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js");
+
+module.exports.SchemaScanResult = SchemaScanResult;
+function SchemaScanResult(found, ref){
+  this.id = found;
+  this.ref = ref;
+}
+
+/**
+ * Adds a schema with a certain urn to the Validator instance.
+ * @param string uri
+ * @param object schema
+ * @return {Object}
+ */
+module.exports.scan = function scan(base, schema){
+  function scanSchema(baseuri, schema){
+    if(!schema || typeof schema!='object') return;
+    // Mark all referenced schemas so we can tell later which schemas are referred to, but never defined
+    if(schema.$ref){
+      var resolvedUri = urilib.resolve(baseuri, schema.$ref);
+      ref[resolvedUri] = ref[resolvedUri] ? ref[resolvedUri]+1 : 0;
+      return;
+    }
+    var ourBase = schema.id ? urilib.resolve(baseuri, schema.id) : baseuri;
+    if (ourBase) {
+      // If there's no fragment, append an empty one
+      if(ourBase.indexOf('#')<0) ourBase += '#';
+      if(found[ourBase]){
+        if(!helpers.deepCompareStrict(found[ourBase], schema)){
+          throw new Error('Schema <'+schema+'> already exists with different definition');
+        }
+        return found[ourBase];
+      }
+      found[ourBase] = schema;
+      // strip trailing fragment
+      if(ourBase[ourBase.length-1]=='#'){
+        found[ourBase.substring(0, ourBase.length-1)] = schema;
+      }
+    }
+    scanArray(ourBase+'/items', ((schema.items instanceof Array)?schema.items:[schema.items]));
+    scanArray(ourBase+'/extends', ((schema.extends instanceof Array)?schema.extends:[schema.extends]));
+    scanSchema(ourBase+'/additionalItems', schema.additionalItems);
+    scanObject(ourBase+'/properties', schema.properties);
+    scanSchema(ourBase+'/additionalProperties', schema.additionalProperties);
+    scanObject(ourBase+'/definitions', schema.definitions);
+    scanObject(ourBase+'/patternProperties', schema.patternProperties);
+    scanObject(ourBase+'/dependencies', schema.dependencies);
+    scanArray(ourBase+'/disallow', schema.disallow);
+    scanArray(ourBase+'/allOf', schema.allOf);
+    scanArray(ourBase+'/anyOf', schema.anyOf);
+    scanArray(ourBase+'/oneOf', schema.oneOf);
+    scanSchema(ourBase+'/not', schema.not);
+  }
+  function scanArray(baseuri, schemas){
+    if(!(schemas instanceof Array)) return;
+    for(var i=0; i<schemas.length; i++){
+      scanSchema(baseuri+'/'+i, schemas[i]);
+    }
+  }
+  function scanObject(baseuri, schemas){
+    if(!schemas || typeof schemas!='object') return;
+    for(var p in schemas){
+      scanSchema(baseuri+'/'+p, schemas[p]);
+    }
+  }
+
+  var found = {};
+  var ref = {};
+  var schemaUri = base;
+  scanSchema(base, schema);
+  return new SchemaScanResult(found, ref);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/jsonschema/lib/validator.js":
+/*!**************************************************!*\
+  !*** ./node_modules/jsonschema/lib/validator.js ***!
+  \**************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+var urilib = __webpack_require__(/*! url */ "./node_modules/url/url.js");
+
+var attribute = __webpack_require__(/*! ./attribute */ "./node_modules/jsonschema/lib/attribute.js");
+var helpers = __webpack_require__(/*! ./helpers */ "./node_modules/jsonschema/lib/helpers.js");
+var scanSchema = __webpack_require__(/*! ./scan */ "./node_modules/jsonschema/lib/scan.js").scan;
+var ValidatorResult = helpers.ValidatorResult;
+var SchemaError = helpers.SchemaError;
+var SchemaContext = helpers.SchemaContext;
+//var anonymousBase = 'vnd.jsonschema:///';
+var anonymousBase = '/';
+
+/**
+ * Creates a new Validator object
+ * @name Validator
+ * @constructor
+ */
+var Validator = function Validator () {
+  // Allow a validator instance to override global custom formats or to have their
+  // own custom formats.
+  this.customFormats = Object.create(Validator.prototype.customFormats);
+  this.schemas = {};
+  this.unresolvedRefs = [];
+
+  // Use Object.create to make this extensible without Validator instances stepping on each other's toes.
+  this.types = Object.create(types);
+  this.attributes = Object.create(attribute.validators);
+};
+
+// Allow formats to be registered globally.
+Validator.prototype.customFormats = {};
+
+// Hint at the presence of a property
+Validator.prototype.schemas = null;
+Validator.prototype.types = null;
+Validator.prototype.attributes = null;
+Validator.prototype.unresolvedRefs = null;
+
+/**
+ * Adds a schema with a certain urn to the Validator instance.
+ * @param schema
+ * @param urn
+ * @return {Object}
+ */
+Validator.prototype.addSchema = function addSchema (schema, base) {
+  var self = this;
+  if (!schema) {
+    return null;
+  }
+  var scan = scanSchema(base||anonymousBase, schema);
+  var ourUri = base || schema.id;
+  for(var uri in scan.id){
+    this.schemas[uri] = scan.id[uri];
+  }
+  for(var uri in scan.ref){
+    this.unresolvedRefs.push(uri);
+  }
+  this.unresolvedRefs = this.unresolvedRefs.filter(function(uri){
+    return typeof self.schemas[uri]==='undefined';
+  });
+  return this.schemas[ourUri];
+};
+
+Validator.prototype.addSubSchemaArray = function addSubSchemaArray(baseuri, schemas) {
+  if(!(schemas instanceof Array)) return;
+  for(var i=0; i<schemas.length; i++){
+    this.addSubSchema(baseuri, schemas[i]);
+  }
+};
+
+Validator.prototype.addSubSchemaObject = function addSubSchemaArray(baseuri, schemas) {
+  if(!schemas || typeof schemas!='object') return;
+  for(var p in schemas){
+    this.addSubSchema(baseuri, schemas[p]);
+  }
+};
+
+
+
+/**
+ * Sets all the schemas of the Validator instance.
+ * @param schemas
+ */
+Validator.prototype.setSchemas = function setSchemas (schemas) {
+  this.schemas = schemas;
+};
+
+/**
+ * Returns the schema of a certain urn
+ * @param urn
+ */
+Validator.prototype.getSchema = function getSchema (urn) {
+  return this.schemas[urn];
+};
+
+/**
+ * Validates instance against the provided schema
+ * @param instance
+ * @param schema
+ * @param [options]
+ * @param [ctx]
+ * @return {Array}
+ */
+Validator.prototype.validate = function validate (instance, schema, options, ctx) {
+  if (!options) {
+    options = {};
+  }
+  var propertyName = options.propertyName || 'instance';
+  // This will work so long as the function at uri.resolve() will resolve a relative URI to a relative URI
+  var base = urilib.resolve(options.base||anonymousBase, schema.id||'');
+  if(!ctx){
+    ctx = new SchemaContext(schema, options, propertyName, base, Object.create(this.schemas));
+    if (!ctx.schemas[base]) {
+      ctx.schemas[base] = schema;
+    }
+    var found = scanSchema(base, schema);
+    for(var n in found.id){
+      var sch = found.id[n];
+      ctx.schemas[n] = sch;
+    }
+  }
+  if (schema) {
+    var result = this.validateSchema(instance, schema, options, ctx);
+    if (!result) {
+      throw new Error('Result undefined');
+    }
+    return result;
+  }
+  throw new SchemaError('no schema specified', schema);
+};
+
+/**
+* @param Object schema
+* @return mixed schema uri or false
+*/
+function shouldResolve(schema) {
+  var ref = (typeof schema === 'string') ? schema : schema.$ref;
+  if (typeof ref=='string') return ref;
+  return false;
+}
+
+/**
+ * Validates an instance against the schema (the actual work horse)
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @private
+ * @return {ValidatorResult}
+ */
+Validator.prototype.validateSchema = function validateSchema (instance, schema, options, ctx) {
+  var result = new ValidatorResult(instance, schema, options, ctx);
+
+    // Support for the true/false schemas
+  if(typeof schema==='boolean') {
+    if(schema===true){
+      // `true` is always valid
+      schema = {};
+    }else if(schema===false){
+      // `false` is always invalid
+      schema = {type: []};
+    }
+  }else if(!schema){
+    // This might be a string
+    throw new Error("schema is undefined");
+  }
+
+  if (schema['extends']) {
+    if (schema['extends'] instanceof Array) {
+      var schemaobj = {schema: schema, ctx: ctx};
+      schema['extends'].forEach(this.schemaTraverser.bind(this, schemaobj));
+      schema = schemaobj.schema;
+      schemaobj.schema = null;
+      schemaobj.ctx = null;
+      schemaobj = null;
+    } else {
+      schema = helpers.deepMerge(schema, this.superResolve(schema['extends'], ctx));
+    }
+  }
+
+  // If passed a string argument, load that schema URI
+  var switchSchema;
+  if (switchSchema = shouldResolve(schema)) {
+    var resolved = this.resolve(schema, switchSchema, ctx);
+    var subctx = new SchemaContext(resolved.subschema, options, ctx.propertyPath, resolved.switchSchema, ctx.schemas);
+    return this.validateSchema(instance, resolved.subschema, options, subctx);
+  }
+
+  var skipAttributes = options && options.skipAttributes || [];
+  // Validate each schema attribute against the instance
+  for (var key in schema) {
+    if (!attribute.ignoreProperties[key] && skipAttributes.indexOf(key) < 0) {
+      var validatorErr = null;
+      var validator = this.attributes[key];
+      if (validator) {
+        validatorErr = validator.call(this, instance, schema, options, ctx);
+      } else if (options.allowUnknownAttributes === false) {
+        // This represents an error with the schema itself, not an invalid instance
+        throw new SchemaError("Unsupported attribute: " + key, schema);
+      }
+      if (validatorErr) {
+        result.importErrors(validatorErr);
+      }
+    }
+  }
+
+  if (typeof options.rewrite == 'function') {
+    var value = options.rewrite.call(this, instance, schema, options, ctx);
+    result.instance = value;
+  }
+  return result;
+};
+
+/**
+* @private
+* @param Object schema
+* @param SchemaContext ctx
+* @returns Object schema or resolved schema
+*/
+Validator.prototype.schemaTraverser = function schemaTraverser (schemaobj, s) {
+  schemaobj.schema = helpers.deepMerge(schemaobj.schema, this.superResolve(s, schemaobj.ctx));
+}
+
+/**
+* @private
+* @param Object schema
+* @param SchemaContext ctx
+* @returns Object schema or resolved schema
+*/
+Validator.prototype.superResolve = function superResolve (schema, ctx) {
+  var ref;
+  if(ref = shouldResolve(schema)) {
+    return this.resolve(schema, ref, ctx).subschema;
+  }
+  return schema;
+}
+
+/**
+* @private
+* @param Object schema
+* @param Object switchSchema
+* @param SchemaContext ctx
+* @return Object resolved schemas {subschema:String, switchSchema: String}
+* @throws SchemaError
+*/
+Validator.prototype.resolve = function resolve (schema, switchSchema, ctx) {
+  switchSchema = ctx.resolve(switchSchema);
+  // First see if the schema exists under the provided URI
+  if (ctx.schemas[switchSchema]) {
+    return {subschema: ctx.schemas[switchSchema], switchSchema: switchSchema};
+  }
+  // Else try walking the property pointer
+  var parsed = urilib.parse(switchSchema);
+  var fragment = parsed && parsed.hash;
+  var document = fragment && fragment.length && switchSchema.substr(0, switchSchema.length - fragment.length);
+  if (!document || !ctx.schemas[document]) {
+    throw new SchemaError("no such schema <" + switchSchema + ">", schema);
+  }
+  var subschema = helpers.objectGetPath(ctx.schemas[document], fragment.substr(1));
+  if(subschema===undefined){
+    throw new SchemaError("no such schema " + fragment + " located in <" + document + ">", schema);
+  }
+  return {subschema: subschema, switchSchema: switchSchema};
+};
+
+/**
+ * Tests whether the instance if of a certain type.
+ * @private
+ * @param instance
+ * @param schema
+ * @param options
+ * @param ctx
+ * @param type
+ * @return {boolean}
+ */
+Validator.prototype.testType = function validateType (instance, schema, options, ctx, type) {
+  if (typeof this.types[type] == 'function') {
+    return this.types[type].call(this, instance);
+  }
+  if (type && typeof type == 'object') {
+    var res = this.validateSchema(instance, type, options, ctx);
+    return res === undefined || !(res && res.errors.length);
+  }
+  // Undefined or properties not on the list are acceptable, same as not being defined
+  return true;
+};
+
+var types = Validator.prototype.types = {};
+types.string = function testString (instance) {
+  return typeof instance == 'string';
+};
+types.number = function testNumber (instance) {
+  // isFinite returns false for NaN, Infinity, and -Infinity
+  return typeof instance == 'number' && isFinite(instance);
+};
+types.integer = function testInteger (instance) {
+  return (typeof instance == 'number') && instance % 1 === 0;
+};
+types.boolean = function testBoolean (instance) {
+  return typeof instance == 'boolean';
+};
+types.array = function testArray (instance) {
+  return Array.isArray(instance);
+};
+types['null'] = function testNull (instance) {
+  return instance === null;
+};
+types.date = function testDate (instance) {
+  return instance instanceof Date;
+};
+types.any = function testAny (instance) {
+  return true;
+};
+types.object = function testObject (instance) {
+  // TODO: fix this - see #15
+  return instance && (typeof instance) === 'object' && !(instance instanceof Array) && !(instance instanceof Date);
+};
+
+module.exports = Validator;
+
+
+/***/ }),
+
 /***/ "./node_modules/md5.js/index.js":
 /*!**************************************!*\
   !*** ./node_modules/md5.js/index.js ***!
@@ -26997,6 +29156,537 @@ utils.encode = function encode(arr, enc) {
     return arr;
 };
 
+
+/***/ }),
+
+/***/ "./node_modules/node-libs-browser/node_modules/punycode/punycode.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/node-libs-browser/node_modules/punycode/punycode.js ***!
+  \**************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/* WEBPACK VAR INJECTION */(function(module, global) {var __WEBPACK_AMD_DEFINE_RESULT__;/*! https://mths.be/punycode v1.4.1 by @mathias */
+;(function(root) {
+
+	/** Detect free variables */
+	var freeExports =  true && exports &&
+		!exports.nodeType && exports;
+	var freeModule =  true && module &&
+		!module.nodeType && module;
+	var freeGlobal = typeof global == 'object' && global;
+	if (
+		freeGlobal.global === freeGlobal ||
+		freeGlobal.window === freeGlobal ||
+		freeGlobal.self === freeGlobal
+	) {
+		root = freeGlobal;
+	}
+
+	/**
+	 * The `punycode` object.
+	 * @name punycode
+	 * @type Object
+	 */
+	var punycode,
+
+	/** Highest positive signed 32-bit float value */
+	maxInt = 2147483647, // aka. 0x7FFFFFFF or 2^31-1
+
+	/** Bootstring parameters */
+	base = 36,
+	tMin = 1,
+	tMax = 26,
+	skew = 38,
+	damp = 700,
+	initialBias = 72,
+	initialN = 128, // 0x80
+	delimiter = '-', // '\x2D'
+
+	/** Regular expressions */
+	regexPunycode = /^xn--/,
+	regexNonASCII = /[^\x20-\x7E]/, // unprintable ASCII chars + non-ASCII chars
+	regexSeparators = /[\x2E\u3002\uFF0E\uFF61]/g, // RFC 3490 separators
+
+	/** Error messages */
+	errors = {
+		'overflow': 'Overflow: input needs wider integers to process',
+		'not-basic': 'Illegal input >= 0x80 (not a basic code point)',
+		'invalid-input': 'Invalid input'
+	},
+
+	/** Convenience shortcuts */
+	baseMinusTMin = base - tMin,
+	floor = Math.floor,
+	stringFromCharCode = String.fromCharCode,
+
+	/** Temporary variable */
+	key;
+
+	/*--------------------------------------------------------------------------*/
+
+	/**
+	 * A generic error utility function.
+	 * @private
+	 * @param {String} type The error type.
+	 * @returns {Error} Throws a `RangeError` with the applicable error message.
+	 */
+	function error(type) {
+		throw new RangeError(errors[type]);
+	}
+
+	/**
+	 * A generic `Array#map` utility function.
+	 * @private
+	 * @param {Array} array The array to iterate over.
+	 * @param {Function} callback The function that gets called for every array
+	 * item.
+	 * @returns {Array} A new array of values returned by the callback function.
+	 */
+	function map(array, fn) {
+		var length = array.length;
+		var result = [];
+		while (length--) {
+			result[length] = fn(array[length]);
+		}
+		return result;
+	}
+
+	/**
+	 * A simple `Array#map`-like wrapper to work with domain name strings or email
+	 * addresses.
+	 * @private
+	 * @param {String} domain The domain name or email address.
+	 * @param {Function} callback The function that gets called for every
+	 * character.
+	 * @returns {Array} A new string of characters returned by the callback
+	 * function.
+	 */
+	function mapDomain(string, fn) {
+		var parts = string.split('@');
+		var result = '';
+		if (parts.length > 1) {
+			// In email addresses, only the domain name should be punycoded. Leave
+			// the local part (i.e. everything up to `@`) intact.
+			result = parts[0] + '@';
+			string = parts[1];
+		}
+		// Avoid `split(regex)` for IE8 compatibility. See #17.
+		string = string.replace(regexSeparators, '\x2E');
+		var labels = string.split('.');
+		var encoded = map(labels, fn).join('.');
+		return result + encoded;
+	}
+
+	/**
+	 * Creates an array containing the numeric code points of each Unicode
+	 * character in the string. While JavaScript uses UCS-2 internally,
+	 * this function will convert a pair of surrogate halves (each of which
+	 * UCS-2 exposes as separate characters) into a single code point,
+	 * matching UTF-16.
+	 * @see `punycode.ucs2.encode`
+	 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+	 * @memberOf punycode.ucs2
+	 * @name decode
+	 * @param {String} string The Unicode input string (UCS-2).
+	 * @returns {Array} The new array of code points.
+	 */
+	function ucs2decode(string) {
+		var output = [],
+		    counter = 0,
+		    length = string.length,
+		    value,
+		    extra;
+		while (counter < length) {
+			value = string.charCodeAt(counter++);
+			if (value >= 0xD800 && value <= 0xDBFF && counter < length) {
+				// high surrogate, and there is a next character
+				extra = string.charCodeAt(counter++);
+				if ((extra & 0xFC00) == 0xDC00) { // low surrogate
+					output.push(((value & 0x3FF) << 10) + (extra & 0x3FF) + 0x10000);
+				} else {
+					// unmatched surrogate; only append this code unit, in case the next
+					// code unit is the high surrogate of a surrogate pair
+					output.push(value);
+					counter--;
+				}
+			} else {
+				output.push(value);
+			}
+		}
+		return output;
+	}
+
+	/**
+	 * Creates a string based on an array of numeric code points.
+	 * @see `punycode.ucs2.decode`
+	 * @memberOf punycode.ucs2
+	 * @name encode
+	 * @param {Array} codePoints The array of numeric code points.
+	 * @returns {String} The new Unicode string (UCS-2).
+	 */
+	function ucs2encode(array) {
+		return map(array, function(value) {
+			var output = '';
+			if (value > 0xFFFF) {
+				value -= 0x10000;
+				output += stringFromCharCode(value >>> 10 & 0x3FF | 0xD800);
+				value = 0xDC00 | value & 0x3FF;
+			}
+			output += stringFromCharCode(value);
+			return output;
+		}).join('');
+	}
+
+	/**
+	 * Converts a basic code point into a digit/integer.
+	 * @see `digitToBasic()`
+	 * @private
+	 * @param {Number} codePoint The basic numeric code point value.
+	 * @returns {Number} The numeric value of a basic code point (for use in
+	 * representing integers) in the range `0` to `base - 1`, or `base` if
+	 * the code point does not represent a value.
+	 */
+	function basicToDigit(codePoint) {
+		if (codePoint - 48 < 10) {
+			return codePoint - 22;
+		}
+		if (codePoint - 65 < 26) {
+			return codePoint - 65;
+		}
+		if (codePoint - 97 < 26) {
+			return codePoint - 97;
+		}
+		return base;
+	}
+
+	/**
+	 * Converts a digit/integer into a basic code point.
+	 * @see `basicToDigit()`
+	 * @private
+	 * @param {Number} digit The numeric value of a basic code point.
+	 * @returns {Number} The basic code point whose value (when used for
+	 * representing integers) is `digit`, which needs to be in the range
+	 * `0` to `base - 1`. If `flag` is non-zero, the uppercase form is
+	 * used; else, the lowercase form is used. The behavior is undefined
+	 * if `flag` is non-zero and `digit` has no uppercase form.
+	 */
+	function digitToBasic(digit, flag) {
+		//  0..25 map to ASCII a..z or A..Z
+		// 26..35 map to ASCII 0..9
+		return digit + 22 + 75 * (digit < 26) - ((flag != 0) << 5);
+	}
+
+	/**
+	 * Bias adaptation function as per section 3.4 of RFC 3492.
+	 * https://tools.ietf.org/html/rfc3492#section-3.4
+	 * @private
+	 */
+	function adapt(delta, numPoints, firstTime) {
+		var k = 0;
+		delta = firstTime ? floor(delta / damp) : delta >> 1;
+		delta += floor(delta / numPoints);
+		for (/* no initialization */; delta > baseMinusTMin * tMax >> 1; k += base) {
+			delta = floor(delta / baseMinusTMin);
+		}
+		return floor(k + (baseMinusTMin + 1) * delta / (delta + skew));
+	}
+
+	/**
+	 * Converts a Punycode string of ASCII-only symbols to a string of Unicode
+	 * symbols.
+	 * @memberOf punycode
+	 * @param {String} input The Punycode string of ASCII-only symbols.
+	 * @returns {String} The resulting string of Unicode symbols.
+	 */
+	function decode(input) {
+		// Don't use UCS-2
+		var output = [],
+		    inputLength = input.length,
+		    out,
+		    i = 0,
+		    n = initialN,
+		    bias = initialBias,
+		    basic,
+		    j,
+		    index,
+		    oldi,
+		    w,
+		    k,
+		    digit,
+		    t,
+		    /** Cached calculation results */
+		    baseMinusT;
+
+		// Handle the basic code points: let `basic` be the number of input code
+		// points before the last delimiter, or `0` if there is none, then copy
+		// the first basic code points to the output.
+
+		basic = input.lastIndexOf(delimiter);
+		if (basic < 0) {
+			basic = 0;
+		}
+
+		for (j = 0; j < basic; ++j) {
+			// if it's not a basic code point
+			if (input.charCodeAt(j) >= 0x80) {
+				error('not-basic');
+			}
+			output.push(input.charCodeAt(j));
+		}
+
+		// Main decoding loop: start just after the last delimiter if any basic code
+		// points were copied; start at the beginning otherwise.
+
+		for (index = basic > 0 ? basic + 1 : 0; index < inputLength; /* no final expression */) {
+
+			// `index` is the index of the next character to be consumed.
+			// Decode a generalized variable-length integer into `delta`,
+			// which gets added to `i`. The overflow checking is easier
+			// if we increase `i` as we go, then subtract off its starting
+			// value at the end to obtain `delta`.
+			for (oldi = i, w = 1, k = base; /* no condition */; k += base) {
+
+				if (index >= inputLength) {
+					error('invalid-input');
+				}
+
+				digit = basicToDigit(input.charCodeAt(index++));
+
+				if (digit >= base || digit > floor((maxInt - i) / w)) {
+					error('overflow');
+				}
+
+				i += digit * w;
+				t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+
+				if (digit < t) {
+					break;
+				}
+
+				baseMinusT = base - t;
+				if (w > floor(maxInt / baseMinusT)) {
+					error('overflow');
+				}
+
+				w *= baseMinusT;
+
+			}
+
+			out = output.length + 1;
+			bias = adapt(i - oldi, out, oldi == 0);
+
+			// `i` was supposed to wrap around from `out` to `0`,
+			// incrementing `n` each time, so we'll fix that now:
+			if (floor(i / out) > maxInt - n) {
+				error('overflow');
+			}
+
+			n += floor(i / out);
+			i %= out;
+
+			// Insert `n` at position `i` of the output
+			output.splice(i++, 0, n);
+
+		}
+
+		return ucs2encode(output);
+	}
+
+	/**
+	 * Converts a string of Unicode symbols (e.g. a domain name label) to a
+	 * Punycode string of ASCII-only symbols.
+	 * @memberOf punycode
+	 * @param {String} input The string of Unicode symbols.
+	 * @returns {String} The resulting Punycode string of ASCII-only symbols.
+	 */
+	function encode(input) {
+		var n,
+		    delta,
+		    handledCPCount,
+		    basicLength,
+		    bias,
+		    j,
+		    m,
+		    q,
+		    k,
+		    t,
+		    currentValue,
+		    output = [],
+		    /** `inputLength` will hold the number of code points in `input`. */
+		    inputLength,
+		    /** Cached calculation results */
+		    handledCPCountPlusOne,
+		    baseMinusT,
+		    qMinusT;
+
+		// Convert the input in UCS-2 to Unicode
+		input = ucs2decode(input);
+
+		// Cache the length
+		inputLength = input.length;
+
+		// Initialize the state
+		n = initialN;
+		delta = 0;
+		bias = initialBias;
+
+		// Handle the basic code points
+		for (j = 0; j < inputLength; ++j) {
+			currentValue = input[j];
+			if (currentValue < 0x80) {
+				output.push(stringFromCharCode(currentValue));
+			}
+		}
+
+		handledCPCount = basicLength = output.length;
+
+		// `handledCPCount` is the number of code points that have been handled;
+		// `basicLength` is the number of basic code points.
+
+		// Finish the basic string - if it is not empty - with a delimiter
+		if (basicLength) {
+			output.push(delimiter);
+		}
+
+		// Main encoding loop:
+		while (handledCPCount < inputLength) {
+
+			// All non-basic code points < n have been handled already. Find the next
+			// larger one:
+			for (m = maxInt, j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
+				if (currentValue >= n && currentValue < m) {
+					m = currentValue;
+				}
+			}
+
+			// Increase `delta` enough to advance the decoder's <n,i> state to <m,0>,
+			// but guard against overflow
+			handledCPCountPlusOne = handledCPCount + 1;
+			if (m - n > floor((maxInt - delta) / handledCPCountPlusOne)) {
+				error('overflow');
+			}
+
+			delta += (m - n) * handledCPCountPlusOne;
+			n = m;
+
+			for (j = 0; j < inputLength; ++j) {
+				currentValue = input[j];
+
+				if (currentValue < n && ++delta > maxInt) {
+					error('overflow');
+				}
+
+				if (currentValue == n) {
+					// Represent delta as a generalized variable-length integer
+					for (q = delta, k = base; /* no condition */; k += base) {
+						t = k <= bias ? tMin : (k >= bias + tMax ? tMax : k - bias);
+						if (q < t) {
+							break;
+						}
+						qMinusT = q - t;
+						baseMinusT = base - t;
+						output.push(
+							stringFromCharCode(digitToBasic(t + qMinusT % baseMinusT, 0))
+						);
+						q = floor(qMinusT / baseMinusT);
+					}
+
+					output.push(stringFromCharCode(digitToBasic(q, 0)));
+					bias = adapt(delta, handledCPCountPlusOne, handledCPCount == basicLength);
+					delta = 0;
+					++handledCPCount;
+				}
+			}
+
+			++delta;
+			++n;
+
+		}
+		return output.join('');
+	}
+
+	/**
+	 * Converts a Punycode string representing a domain name or an email address
+	 * to Unicode. Only the Punycoded parts of the input will be converted, i.e.
+	 * it doesn't matter if you call it on a string that has already been
+	 * converted to Unicode.
+	 * @memberOf punycode
+	 * @param {String} input The Punycoded domain name or email address to
+	 * convert to Unicode.
+	 * @returns {String} The Unicode representation of the given Punycode
+	 * string.
+	 */
+	function toUnicode(input) {
+		return mapDomain(input, function(string) {
+			return regexPunycode.test(string)
+				? decode(string.slice(4).toLowerCase())
+				: string;
+		});
+	}
+
+	/**
+	 * Converts a Unicode string representing a domain name or an email address to
+	 * Punycode. Only the non-ASCII parts of the domain name will be converted,
+	 * i.e. it doesn't matter if you call it with a domain that's already in
+	 * ASCII.
+	 * @memberOf punycode
+	 * @param {String} input The domain name or email address to convert, as a
+	 * Unicode string.
+	 * @returns {String} The Punycode representation of the given domain name or
+	 * email address.
+	 */
+	function toASCII(input) {
+		return mapDomain(input, function(string) {
+			return regexNonASCII.test(string)
+				? 'xn--' + encode(string)
+				: string;
+		});
+	}
+
+	/*--------------------------------------------------------------------------*/
+
+	/** Define the public API */
+	punycode = {
+		/**
+		 * A string representing the current Punycode.js version number.
+		 * @memberOf punycode
+		 * @type String
+		 */
+		'version': '1.4.1',
+		/**
+		 * An object of methods to convert from JavaScript's internal character
+		 * representation (UCS-2) to Unicode code points, and back.
+		 * @see <https://mathiasbynens.be/notes/javascript-encoding>
+		 * @memberOf punycode
+		 * @type Object
+		 */
+		'ucs2': {
+			'decode': ucs2decode,
+			'encode': ucs2encode
+		},
+		'decode': decode,
+		'encode': encode,
+		'toASCII': toASCII,
+		'toUnicode': toUnicode
+	};
+
+	/** Expose `punycode` */
+	// Some AMD build optimizers, like r.js, check for specific condition patterns
+	// like the following:
+	if (
+		true
+	) {
+		!(__WEBPACK_AMD_DEFINE_RESULT__ = (function() {
+			return punycode;
+		}).call(exports, __webpack_require__, exports, module),
+				__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	} else {}
+
+}(this));
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../webpack/buildin/module.js */ "./node_modules/webpack/buildin/module.js")(module), __webpack_require__(/*! ./../../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -28264,6 +30954,215 @@ module.exports = function xor (a, b) {
   }
   return a
 }
+
+
+/***/ }),
+
+/***/ "./node_modules/querystring-es3/decode.js":
+/*!************************************************!*\
+  !*** ./node_modules/querystring-es3/decode.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+// If obj.hasOwnProperty has been overridden, then calling
+// obj.hasOwnProperty(prop) will break.
+// See: https://github.com/joyent/node/issues/1707
+function hasOwnProperty(obj, prop) {
+  return Object.prototype.hasOwnProperty.call(obj, prop);
+}
+
+module.exports = function(qs, sep, eq, options) {
+  sep = sep || '&';
+  eq = eq || '=';
+  var obj = {};
+
+  if (typeof qs !== 'string' || qs.length === 0) {
+    return obj;
+  }
+
+  var regexp = /\+/g;
+  qs = qs.split(sep);
+
+  var maxKeys = 1000;
+  if (options && typeof options.maxKeys === 'number') {
+    maxKeys = options.maxKeys;
+  }
+
+  var len = qs.length;
+  // maxKeys <= 0 means that we should not limit keys count
+  if (maxKeys > 0 && len > maxKeys) {
+    len = maxKeys;
+  }
+
+  for (var i = 0; i < len; ++i) {
+    var x = qs[i].replace(regexp, '%20'),
+        idx = x.indexOf(eq),
+        kstr, vstr, k, v;
+
+    if (idx >= 0) {
+      kstr = x.substr(0, idx);
+      vstr = x.substr(idx + 1);
+    } else {
+      kstr = x;
+      vstr = '';
+    }
+
+    k = decodeURIComponent(kstr);
+    v = decodeURIComponent(vstr);
+
+    if (!hasOwnProperty(obj, k)) {
+      obj[k] = v;
+    } else if (isArray(obj[k])) {
+      obj[k].push(v);
+    } else {
+      obj[k] = [obj[k], v];
+    }
+  }
+
+  return obj;
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/querystring-es3/encode.js":
+/*!************************************************!*\
+  !*** ./node_modules/querystring-es3/encode.js ***!
+  \************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var stringifyPrimitive = function(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};
+
+module.exports = function(obj, sep, eq, name) {
+  sep = sep || '&';
+  eq = eq || '=';
+  if (obj === null) {
+    obj = undefined;
+  }
+
+  if (typeof obj === 'object') {
+    return map(objectKeys(obj), function(k) {
+      var ks = encodeURIComponent(stringifyPrimitive(k)) + eq;
+      if (isArray(obj[k])) {
+        return map(obj[k], function(v) {
+          return ks + encodeURIComponent(stringifyPrimitive(v));
+        }).join(sep);
+      } else {
+        return ks + encodeURIComponent(stringifyPrimitive(obj[k]));
+      }
+    }).join(sep);
+
+  }
+
+  if (!name) return '';
+  return encodeURIComponent(stringifyPrimitive(name)) + eq +
+         encodeURIComponent(stringifyPrimitive(obj));
+};
+
+var isArray = Array.isArray || function (xs) {
+  return Object.prototype.toString.call(xs) === '[object Array]';
+};
+
+function map (xs, f) {
+  if (xs.map) return xs.map(f);
+  var res = [];
+  for (var i = 0; i < xs.length; i++) {
+    res.push(f(xs[i], i));
+  }
+  return res;
+}
+
+var objectKeys = Object.keys || function (obj) {
+  var res = [];
+  for (var key in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, key)) res.push(key);
+  }
+  return res;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/querystring-es3/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/querystring-es3/index.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.decode = exports.parse = __webpack_require__(/*! ./decode */ "./node_modules/querystring-es3/decode.js");
+exports.encode = exports.stringify = __webpack_require__(/*! ./encode */ "./node_modules/querystring-es3/encode.js");
 
 
 /***/ }),
@@ -33847,6 +36746,778 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 
 /***/ }),
 
+/***/ "./node_modules/url/url.js":
+/*!*********************************!*\
+  !*** ./node_modules/url/url.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+// Copyright Joyent, Inc. and other Node contributors.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a
+// copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to permit
+// persons to whom the Software is furnished to do so, subject to the
+// following conditions:
+//
+// The above copyright notice and this permission notice shall be included
+// in all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+// OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN
+// NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM,
+// DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+// OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE
+// USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
+
+var punycode = __webpack_require__(/*! punycode */ "./node_modules/node-libs-browser/node_modules/punycode/punycode.js");
+var util = __webpack_require__(/*! ./util */ "./node_modules/url/util.js");
+
+exports.parse = urlParse;
+exports.resolve = urlResolve;
+exports.resolveObject = urlResolveObject;
+exports.format = urlFormat;
+
+exports.Url = Url;
+
+function Url() {
+  this.protocol = null;
+  this.slashes = null;
+  this.auth = null;
+  this.host = null;
+  this.port = null;
+  this.hostname = null;
+  this.hash = null;
+  this.search = null;
+  this.query = null;
+  this.pathname = null;
+  this.path = null;
+  this.href = null;
+}
+
+// Reference: RFC 3986, RFC 1808, RFC 2396
+
+// define these here so at least they only have to be
+// compiled once on the first module load.
+var protocolPattern = /^([a-z0-9.+-]+:)/i,
+    portPattern = /:[0-9]*$/,
+
+    // Special case for a simple path URL
+    simplePathPattern = /^(\/\/?(?!\/)[^\?\s]*)(\?[^\s]*)?$/,
+
+    // RFC 2396: characters reserved for delimiting URLs.
+    // We actually just auto-escape these.
+    delims = ['<', '>', '"', '`', ' ', '\r', '\n', '\t'],
+
+    // RFC 2396: characters not allowed for various reasons.
+    unwise = ['{', '}', '|', '\\', '^', '`'].concat(delims),
+
+    // Allowed by RFCs, but cause of XSS attacks.  Always escape these.
+    autoEscape = ['\''].concat(unwise),
+    // Characters that are never ever allowed in a hostname.
+    // Note that any invalid chars are also handled, but these
+    // are the ones that are *expected* to be seen, so we fast-path
+    // them.
+    nonHostChars = ['%', '/', '?', ';', '#'].concat(autoEscape),
+    hostEndingChars = ['/', '?', '#'],
+    hostnameMaxLen = 255,
+    hostnamePartPattern = /^[+a-z0-9A-Z_-]{0,63}$/,
+    hostnamePartStart = /^([+a-z0-9A-Z_-]{0,63})(.*)$/,
+    // protocols that can allow "unsafe" and "unwise" chars.
+    unsafeProtocol = {
+      'javascript': true,
+      'javascript:': true
+    },
+    // protocols that never have a hostname.
+    hostlessProtocol = {
+      'javascript': true,
+      'javascript:': true
+    },
+    // protocols that always contain a // bit.
+    slashedProtocol = {
+      'http': true,
+      'https': true,
+      'ftp': true,
+      'gopher': true,
+      'file': true,
+      'http:': true,
+      'https:': true,
+      'ftp:': true,
+      'gopher:': true,
+      'file:': true
+    },
+    querystring = __webpack_require__(/*! querystring */ "./node_modules/querystring-es3/index.js");
+
+function urlParse(url, parseQueryString, slashesDenoteHost) {
+  if (url && util.isObject(url) && url instanceof Url) return url;
+
+  var u = new Url;
+  u.parse(url, parseQueryString, slashesDenoteHost);
+  return u;
+}
+
+Url.prototype.parse = function(url, parseQueryString, slashesDenoteHost) {
+  if (!util.isString(url)) {
+    throw new TypeError("Parameter 'url' must be a string, not " + typeof url);
+  }
+
+  // Copy chrome, IE, opera backslash-handling behavior.
+  // Back slashes before the query string get converted to forward slashes
+  // See: https://code.google.com/p/chromium/issues/detail?id=25916
+  var queryIndex = url.indexOf('?'),
+      splitter =
+          (queryIndex !== -1 && queryIndex < url.indexOf('#')) ? '?' : '#',
+      uSplit = url.split(splitter),
+      slashRegex = /\\/g;
+  uSplit[0] = uSplit[0].replace(slashRegex, '/');
+  url = uSplit.join(splitter);
+
+  var rest = url;
+
+  // trim before proceeding.
+  // This is to support parse stuff like "  http://foo.com  \n"
+  rest = rest.trim();
+
+  if (!slashesDenoteHost && url.split('#').length === 1) {
+    // Try fast path regexp
+    var simplePath = simplePathPattern.exec(rest);
+    if (simplePath) {
+      this.path = rest;
+      this.href = rest;
+      this.pathname = simplePath[1];
+      if (simplePath[2]) {
+        this.search = simplePath[2];
+        if (parseQueryString) {
+          this.query = querystring.parse(this.search.substr(1));
+        } else {
+          this.query = this.search.substr(1);
+        }
+      } else if (parseQueryString) {
+        this.search = '';
+        this.query = {};
+      }
+      return this;
+    }
+  }
+
+  var proto = protocolPattern.exec(rest);
+  if (proto) {
+    proto = proto[0];
+    var lowerProto = proto.toLowerCase();
+    this.protocol = lowerProto;
+    rest = rest.substr(proto.length);
+  }
+
+  // figure out if it's got a host
+  // user@server is *always* interpreted as a hostname, and url
+  // resolution will treat //foo/bar as host=foo,path=bar because that's
+  // how the browser resolves relative URLs.
+  if (slashesDenoteHost || proto || rest.match(/^\/\/[^@\/]+@[^@\/]+/)) {
+    var slashes = rest.substr(0, 2) === '//';
+    if (slashes && !(proto && hostlessProtocol[proto])) {
+      rest = rest.substr(2);
+      this.slashes = true;
+    }
+  }
+
+  if (!hostlessProtocol[proto] &&
+      (slashes || (proto && !slashedProtocol[proto]))) {
+
+    // there's a hostname.
+    // the first instance of /, ?, ;, or # ends the host.
+    //
+    // If there is an @ in the hostname, then non-host chars *are* allowed
+    // to the left of the last @ sign, unless some host-ending character
+    // comes *before* the @-sign.
+    // URLs are obnoxious.
+    //
+    // ex:
+    // http://a@b@c/ => user:a@b host:c
+    // http://a@b?@c => user:a host:c path:/?@c
+
+    // v0.12 TODO(isaacs): This is not quite how Chrome does things.
+    // Review our test case against browsers more comprehensively.
+
+    // find the first instance of any hostEndingChars
+    var hostEnd = -1;
+    for (var i = 0; i < hostEndingChars.length; i++) {
+      var hec = rest.indexOf(hostEndingChars[i]);
+      if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
+        hostEnd = hec;
+    }
+
+    // at this point, either we have an explicit point where the
+    // auth portion cannot go past, or the last @ char is the decider.
+    var auth, atSign;
+    if (hostEnd === -1) {
+      // atSign can be anywhere.
+      atSign = rest.lastIndexOf('@');
+    } else {
+      // atSign must be in auth portion.
+      // http://a@b/c@d => host:b auth:a path:/c@d
+      atSign = rest.lastIndexOf('@', hostEnd);
+    }
+
+    // Now we have a portion which is definitely the auth.
+    // Pull that off.
+    if (atSign !== -1) {
+      auth = rest.slice(0, atSign);
+      rest = rest.slice(atSign + 1);
+      this.auth = decodeURIComponent(auth);
+    }
+
+    // the host is the remaining to the left of the first non-host char
+    hostEnd = -1;
+    for (var i = 0; i < nonHostChars.length; i++) {
+      var hec = rest.indexOf(nonHostChars[i]);
+      if (hec !== -1 && (hostEnd === -1 || hec < hostEnd))
+        hostEnd = hec;
+    }
+    // if we still have not hit it, then the entire thing is a host.
+    if (hostEnd === -1)
+      hostEnd = rest.length;
+
+    this.host = rest.slice(0, hostEnd);
+    rest = rest.slice(hostEnd);
+
+    // pull out port.
+    this.parseHost();
+
+    // we've indicated that there is a hostname,
+    // so even if it's empty, it has to be present.
+    this.hostname = this.hostname || '';
+
+    // if hostname begins with [ and ends with ]
+    // assume that it's an IPv6 address.
+    var ipv6Hostname = this.hostname[0] === '[' &&
+        this.hostname[this.hostname.length - 1] === ']';
+
+    // validate a little.
+    if (!ipv6Hostname) {
+      var hostparts = this.hostname.split(/\./);
+      for (var i = 0, l = hostparts.length; i < l; i++) {
+        var part = hostparts[i];
+        if (!part) continue;
+        if (!part.match(hostnamePartPattern)) {
+          var newpart = '';
+          for (var j = 0, k = part.length; j < k; j++) {
+            if (part.charCodeAt(j) > 127) {
+              // we replace non-ASCII char with a temporary placeholder
+              // we need this to make sure size of hostname is not
+              // broken by replacing non-ASCII by nothing
+              newpart += 'x';
+            } else {
+              newpart += part[j];
+            }
+          }
+          // we test again with ASCII char only
+          if (!newpart.match(hostnamePartPattern)) {
+            var validParts = hostparts.slice(0, i);
+            var notHost = hostparts.slice(i + 1);
+            var bit = part.match(hostnamePartStart);
+            if (bit) {
+              validParts.push(bit[1]);
+              notHost.unshift(bit[2]);
+            }
+            if (notHost.length) {
+              rest = '/' + notHost.join('.') + rest;
+            }
+            this.hostname = validParts.join('.');
+            break;
+          }
+        }
+      }
+    }
+
+    if (this.hostname.length > hostnameMaxLen) {
+      this.hostname = '';
+    } else {
+      // hostnames are always lower case.
+      this.hostname = this.hostname.toLowerCase();
+    }
+
+    if (!ipv6Hostname) {
+      // IDNA Support: Returns a punycoded representation of "domain".
+      // It only converts parts of the domain name that
+      // have non-ASCII characters, i.e. it doesn't matter if
+      // you call it with a domain that already is ASCII-only.
+      this.hostname = punycode.toASCII(this.hostname);
+    }
+
+    var p = this.port ? ':' + this.port : '';
+    var h = this.hostname || '';
+    this.host = h + p;
+    this.href += this.host;
+
+    // strip [ and ] from the hostname
+    // the host field still retains them, though
+    if (ipv6Hostname) {
+      this.hostname = this.hostname.substr(1, this.hostname.length - 2);
+      if (rest[0] !== '/') {
+        rest = '/' + rest;
+      }
+    }
+  }
+
+  // now rest is set to the post-host stuff.
+  // chop off any delim chars.
+  if (!unsafeProtocol[lowerProto]) {
+
+    // First, make 100% sure that any "autoEscape" chars get
+    // escaped, even if encodeURIComponent doesn't think they
+    // need to be.
+    for (var i = 0, l = autoEscape.length; i < l; i++) {
+      var ae = autoEscape[i];
+      if (rest.indexOf(ae) === -1)
+        continue;
+      var esc = encodeURIComponent(ae);
+      if (esc === ae) {
+        esc = escape(ae);
+      }
+      rest = rest.split(ae).join(esc);
+    }
+  }
+
+
+  // chop off from the tail first.
+  var hash = rest.indexOf('#');
+  if (hash !== -1) {
+    // got a fragment string.
+    this.hash = rest.substr(hash);
+    rest = rest.slice(0, hash);
+  }
+  var qm = rest.indexOf('?');
+  if (qm !== -1) {
+    this.search = rest.substr(qm);
+    this.query = rest.substr(qm + 1);
+    if (parseQueryString) {
+      this.query = querystring.parse(this.query);
+    }
+    rest = rest.slice(0, qm);
+  } else if (parseQueryString) {
+    // no query string, but parseQueryString still requested
+    this.search = '';
+    this.query = {};
+  }
+  if (rest) this.pathname = rest;
+  if (slashedProtocol[lowerProto] &&
+      this.hostname && !this.pathname) {
+    this.pathname = '/';
+  }
+
+  //to support http.request
+  if (this.pathname || this.search) {
+    var p = this.pathname || '';
+    var s = this.search || '';
+    this.path = p + s;
+  }
+
+  // finally, reconstruct the href based on what has been validated.
+  this.href = this.format();
+  return this;
+};
+
+// format a parsed object into a url string
+function urlFormat(obj) {
+  // ensure it's an object, and not a string url.
+  // If it's an obj, this is a no-op.
+  // this way, you can call url_format() on strings
+  // to clean up potentially wonky urls.
+  if (util.isString(obj)) obj = urlParse(obj);
+  if (!(obj instanceof Url)) return Url.prototype.format.call(obj);
+  return obj.format();
+}
+
+Url.prototype.format = function() {
+  var auth = this.auth || '';
+  if (auth) {
+    auth = encodeURIComponent(auth);
+    auth = auth.replace(/%3A/i, ':');
+    auth += '@';
+  }
+
+  var protocol = this.protocol || '',
+      pathname = this.pathname || '',
+      hash = this.hash || '',
+      host = false,
+      query = '';
+
+  if (this.host) {
+    host = auth + this.host;
+  } else if (this.hostname) {
+    host = auth + (this.hostname.indexOf(':') === -1 ?
+        this.hostname :
+        '[' + this.hostname + ']');
+    if (this.port) {
+      host += ':' + this.port;
+    }
+  }
+
+  if (this.query &&
+      util.isObject(this.query) &&
+      Object.keys(this.query).length) {
+    query = querystring.stringify(this.query);
+  }
+
+  var search = this.search || (query && ('?' + query)) || '';
+
+  if (protocol && protocol.substr(-1) !== ':') protocol += ':';
+
+  // only the slashedProtocols get the //.  Not mailto:, xmpp:, etc.
+  // unless they had them to begin with.
+  if (this.slashes ||
+      (!protocol || slashedProtocol[protocol]) && host !== false) {
+    host = '//' + (host || '');
+    if (pathname && pathname.charAt(0) !== '/') pathname = '/' + pathname;
+  } else if (!host) {
+    host = '';
+  }
+
+  if (hash && hash.charAt(0) !== '#') hash = '#' + hash;
+  if (search && search.charAt(0) !== '?') search = '?' + search;
+
+  pathname = pathname.replace(/[?#]/g, function(match) {
+    return encodeURIComponent(match);
+  });
+  search = search.replace('#', '%23');
+
+  return protocol + host + pathname + search + hash;
+};
+
+function urlResolve(source, relative) {
+  return urlParse(source, false, true).resolve(relative);
+}
+
+Url.prototype.resolve = function(relative) {
+  return this.resolveObject(urlParse(relative, false, true)).format();
+};
+
+function urlResolveObject(source, relative) {
+  if (!source) return relative;
+  return urlParse(source, false, true).resolveObject(relative);
+}
+
+Url.prototype.resolveObject = function(relative) {
+  if (util.isString(relative)) {
+    var rel = new Url();
+    rel.parse(relative, false, true);
+    relative = rel;
+  }
+
+  var result = new Url();
+  var tkeys = Object.keys(this);
+  for (var tk = 0; tk < tkeys.length; tk++) {
+    var tkey = tkeys[tk];
+    result[tkey] = this[tkey];
+  }
+
+  // hash is always overridden, no matter what.
+  // even href="" will remove it.
+  result.hash = relative.hash;
+
+  // if the relative url is empty, then there's nothing left to do here.
+  if (relative.href === '') {
+    result.href = result.format();
+    return result;
+  }
+
+  // hrefs like //foo/bar always cut to the protocol.
+  if (relative.slashes && !relative.protocol) {
+    // take everything except the protocol from relative
+    var rkeys = Object.keys(relative);
+    for (var rk = 0; rk < rkeys.length; rk++) {
+      var rkey = rkeys[rk];
+      if (rkey !== 'protocol')
+        result[rkey] = relative[rkey];
+    }
+
+    //urlParse appends trailing / to urls like http://www.example.com
+    if (slashedProtocol[result.protocol] &&
+        result.hostname && !result.pathname) {
+      result.path = result.pathname = '/';
+    }
+
+    result.href = result.format();
+    return result;
+  }
+
+  if (relative.protocol && relative.protocol !== result.protocol) {
+    // if it's a known url protocol, then changing
+    // the protocol does weird things
+    // first, if it's not file:, then we MUST have a host,
+    // and if there was a path
+    // to begin with, then we MUST have a path.
+    // if it is file:, then the host is dropped,
+    // because that's known to be hostless.
+    // anything else is assumed to be absolute.
+    if (!slashedProtocol[relative.protocol]) {
+      var keys = Object.keys(relative);
+      for (var v = 0; v < keys.length; v++) {
+        var k = keys[v];
+        result[k] = relative[k];
+      }
+      result.href = result.format();
+      return result;
+    }
+
+    result.protocol = relative.protocol;
+    if (!relative.host && !hostlessProtocol[relative.protocol]) {
+      var relPath = (relative.pathname || '').split('/');
+      while (relPath.length && !(relative.host = relPath.shift()));
+      if (!relative.host) relative.host = '';
+      if (!relative.hostname) relative.hostname = '';
+      if (relPath[0] !== '') relPath.unshift('');
+      if (relPath.length < 2) relPath.unshift('');
+      result.pathname = relPath.join('/');
+    } else {
+      result.pathname = relative.pathname;
+    }
+    result.search = relative.search;
+    result.query = relative.query;
+    result.host = relative.host || '';
+    result.auth = relative.auth;
+    result.hostname = relative.hostname || relative.host;
+    result.port = relative.port;
+    // to support http.request
+    if (result.pathname || result.search) {
+      var p = result.pathname || '';
+      var s = result.search || '';
+      result.path = p + s;
+    }
+    result.slashes = result.slashes || relative.slashes;
+    result.href = result.format();
+    return result;
+  }
+
+  var isSourceAbs = (result.pathname && result.pathname.charAt(0) === '/'),
+      isRelAbs = (
+          relative.host ||
+          relative.pathname && relative.pathname.charAt(0) === '/'
+      ),
+      mustEndAbs = (isRelAbs || isSourceAbs ||
+                    (result.host && relative.pathname)),
+      removeAllDots = mustEndAbs,
+      srcPath = result.pathname && result.pathname.split('/') || [],
+      relPath = relative.pathname && relative.pathname.split('/') || [],
+      psychotic = result.protocol && !slashedProtocol[result.protocol];
+
+  // if the url is a non-slashed url, then relative
+  // links like ../.. should be able
+  // to crawl up to the hostname, as well.  This is strange.
+  // result.protocol has already been set by now.
+  // Later on, put the first path part into the host field.
+  if (psychotic) {
+    result.hostname = '';
+    result.port = null;
+    if (result.host) {
+      if (srcPath[0] === '') srcPath[0] = result.host;
+      else srcPath.unshift(result.host);
+    }
+    result.host = '';
+    if (relative.protocol) {
+      relative.hostname = null;
+      relative.port = null;
+      if (relative.host) {
+        if (relPath[0] === '') relPath[0] = relative.host;
+        else relPath.unshift(relative.host);
+      }
+      relative.host = null;
+    }
+    mustEndAbs = mustEndAbs && (relPath[0] === '' || srcPath[0] === '');
+  }
+
+  if (isRelAbs) {
+    // it's absolute.
+    result.host = (relative.host || relative.host === '') ?
+                  relative.host : result.host;
+    result.hostname = (relative.hostname || relative.hostname === '') ?
+                      relative.hostname : result.hostname;
+    result.search = relative.search;
+    result.query = relative.query;
+    srcPath = relPath;
+    // fall through to the dot-handling below.
+  } else if (relPath.length) {
+    // it's relative
+    // throw away the existing file, and take the new path instead.
+    if (!srcPath) srcPath = [];
+    srcPath.pop();
+    srcPath = srcPath.concat(relPath);
+    result.search = relative.search;
+    result.query = relative.query;
+  } else if (!util.isNullOrUndefined(relative.search)) {
+    // just pull out the search.
+    // like href='?foo'.
+    // Put this after the other two cases because it simplifies the booleans
+    if (psychotic) {
+      result.hostname = result.host = srcPath.shift();
+      //occationaly the auth can get stuck only in host
+      //this especially happens in cases like
+      //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
+      var authInHost = result.host && result.host.indexOf('@') > 0 ?
+                       result.host.split('@') : false;
+      if (authInHost) {
+        result.auth = authInHost.shift();
+        result.host = result.hostname = authInHost.shift();
+      }
+    }
+    result.search = relative.search;
+    result.query = relative.query;
+    //to support http.request
+    if (!util.isNull(result.pathname) || !util.isNull(result.search)) {
+      result.path = (result.pathname ? result.pathname : '') +
+                    (result.search ? result.search : '');
+    }
+    result.href = result.format();
+    return result;
+  }
+
+  if (!srcPath.length) {
+    // no path at all.  easy.
+    // we've already handled the other stuff above.
+    result.pathname = null;
+    //to support http.request
+    if (result.search) {
+      result.path = '/' + result.search;
+    } else {
+      result.path = null;
+    }
+    result.href = result.format();
+    return result;
+  }
+
+  // if a url ENDs in . or .., then it must get a trailing slash.
+  // however, if it ends in anything else non-slashy,
+  // then it must NOT get a trailing slash.
+  var last = srcPath.slice(-1)[0];
+  var hasTrailingSlash = (
+      (result.host || relative.host || srcPath.length > 1) &&
+      (last === '.' || last === '..') || last === '');
+
+  // strip single dots, resolve double dots to parent dir
+  // if the path tries to go above the root, `up` ends up > 0
+  var up = 0;
+  for (var i = srcPath.length; i >= 0; i--) {
+    last = srcPath[i];
+    if (last === '.') {
+      srcPath.splice(i, 1);
+    } else if (last === '..') {
+      srcPath.splice(i, 1);
+      up++;
+    } else if (up) {
+      srcPath.splice(i, 1);
+      up--;
+    }
+  }
+
+  // if the path is allowed to go above the root, restore leading ..s
+  if (!mustEndAbs && !removeAllDots) {
+    for (; up--; up) {
+      srcPath.unshift('..');
+    }
+  }
+
+  if (mustEndAbs && srcPath[0] !== '' &&
+      (!srcPath[0] || srcPath[0].charAt(0) !== '/')) {
+    srcPath.unshift('');
+  }
+
+  if (hasTrailingSlash && (srcPath.join('/').substr(-1) !== '/')) {
+    srcPath.push('');
+  }
+
+  var isAbsolute = srcPath[0] === '' ||
+      (srcPath[0] && srcPath[0].charAt(0) === '/');
+
+  // put the host back
+  if (psychotic) {
+    result.hostname = result.host = isAbsolute ? '' :
+                                    srcPath.length ? srcPath.shift() : '';
+    //occationaly the auth can get stuck only in host
+    //this especially happens in cases like
+    //url.resolveObject('mailto:local1@domain1', 'local2@domain2')
+    var authInHost = result.host && result.host.indexOf('@') > 0 ?
+                     result.host.split('@') : false;
+    if (authInHost) {
+      result.auth = authInHost.shift();
+      result.host = result.hostname = authInHost.shift();
+    }
+  }
+
+  mustEndAbs = mustEndAbs || (result.host && srcPath.length);
+
+  if (mustEndAbs && !isAbsolute) {
+    srcPath.unshift('');
+  }
+
+  if (!srcPath.length) {
+    result.pathname = null;
+    result.path = null;
+  } else {
+    result.pathname = srcPath.join('/');
+  }
+
+  //to support request.http
+  if (!util.isNull(result.pathname) || !util.isNull(result.search)) {
+    result.path = (result.pathname ? result.pathname : '') +
+                  (result.search ? result.search : '');
+  }
+  result.auth = relative.auth || result.auth;
+  result.slashes = result.slashes || relative.slashes;
+  result.href = result.format();
+  return result;
+};
+
+Url.prototype.parseHost = function() {
+  var host = this.host;
+  var port = portPattern.exec(host);
+  if (port) {
+    port = port[0];
+    if (port !== ':') {
+      this.port = port.substr(1);
+    }
+    host = host.substr(0, host.length - port.length);
+  }
+  if (host) this.hostname = host;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/url/util.js":
+/*!**********************************!*\
+  !*** ./node_modules/url/util.js ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+module.exports = {
+  isString: function(arg) {
+    return typeof(arg) === 'string';
+  },
+  isObject: function(arg) {
+    return typeof(arg) === 'object' && arg !== null;
+  },
+  isNull: function(arg) {
+    return arg === null;
+  },
+  isNullOrUndefined: function(arg) {
+    return arg == null;
+  }
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/util-deprecate/browser.js":
 /*!************************************************!*\
   !*** ./node_modules/util-deprecate/browser.js ***!
@@ -34893,59 +38564,6 @@ __webpack_require__.r(__webpack_exports__);
     title: {
       type: String,
       default: "Animation Play icon"
-    },
-    decorative: {
-      type: Boolean,
-      default: false
-    },
-    fillColor: {
-      type: String,
-      default: "currentColor"
-    },
-    size: {
-      type: Number,
-      default: 24
-    }
-  }
-});
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&":
-/*!***************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js& ***!
-  \***************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "ArchiveIcon",
-  props: {
-    title: {
-      type: String,
-      default: "Archive icon"
     },
     decorative: {
       type: Boolean,
@@ -36926,6 +40544,59 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PublishIcon",
+  props: {
+    title: {
+      type: String,
+      default: "Publish icon"
+    },
+    decorative: {
+      type: Boolean,
+      default: false
+    },
+    fillColor: {
+      type: String,
+      default: "currentColor"
+    },
+    size: {
+      type: Number,
+      default: 24
+    }
+  }
+});
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Rhombus.vue?vue&type=script&lang=js&":
 /*!***************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Rhombus.vue?vue&type=script&lang=js& ***!
@@ -38426,9 +42097,9 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
 
         deleteClicked() {
             if (confirm('Delete this block ?')) {
+                this.deleteBlock({id: this.selected});
                 this.selected = null;
                 this[_store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_1__["BLOCKBROWSER_SET_SELECTED"]]({value: null});
-                this.deleteBlock({id: this.selected});
             }
         },
 
@@ -39302,31 +42973,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _store_modules_level_mutation_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/mutation-types */ "./tools/mapedit/src/store/modules/level/mutation-types.js");
 /* harmony import */ var _store_modules_editor_mutation_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/modules/editor/mutation-types */ "./tools/mapedit/src/store/modules/editor/mutation-types.js");
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/Map.vue */ "./node_modules/vue-material-design-icons/Map.vue");
-/* harmony import */ var vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/OfficeBuilding.vue */ "./node_modules/vue-material-design-icons/OfficeBuilding.vue");
-/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
-/* harmony import */ var _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../libraries/grid-renderer */ "./tools/mapedit/src/libraries/grid-renderer/index.js");
-/* harmony import */ var vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! vue-material-design-icons/ArrowCollapse.vue */ "./node_modules/vue-material-design-icons/ArrowCollapse.vue");
-/* harmony import */ var vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/ArrowExpand.vue */ "./node_modules/vue-material-design-icons/ArrowExpand.vue");
-/* harmony import */ var vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/MagnifyPlus.vue */ "./node_modules/vue-material-design-icons/MagnifyPlus.vue");
-/* harmony import */ var vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/MagnifyMinus.vue */ "./node_modules/vue-material-design-icons/MagnifyMinus.vue");
-/* harmony import */ var vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/ContentSave.vue */ "./node_modules/vue-material-design-icons/ContentSave.vue");
-/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
-/* harmony import */ var _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../../../../lib/src/marker-registry */ "./lib/src/marker-registry/index.js");
-/* harmony import */ var _Siblings_vue__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ./Siblings.vue */ "./tools/mapedit/src/components/Siblings.vue");
-/* harmony import */ var _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./SiblingButton.vue */ "./tools/mapedit/src/components/SiblingButton.vue");
-/* harmony import */ var vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! vue-material-design-icons/Select.vue */ "./node_modules/vue-material-design-icons/Select.vue");
-/* harmony import */ var vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! vue-material-design-icons/Pencil.vue */ "./node_modules/vue-material-design-icons/Pencil.vue");
-/* harmony import */ var vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! vue-material-design-icons/ArrowUpBold.vue */ "./node_modules/vue-material-design-icons/ArrowUpBold.vue");
-/* harmony import */ var vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! vue-material-design-icons/ArrowDownBold.vue */ "./node_modules/vue-material-design-icons/ArrowDownBold.vue");
-/* harmony import */ var _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../libraries/block-cache */ "./tools/mapedit/src/libraries/block-cache/index.js");
-/* harmony import */ var vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! vue-material-design-icons/Undo.vue */ "./node_modules/vue-material-design-icons/Undo.vue");
-/* harmony import */ var vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! vue-material-design-icons/ContentCopy.vue */ "./node_modules/vue-material-design-icons/ContentCopy.vue");
-/* harmony import */ var vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! vue-material-design-icons/ContentPaste.vue */ "./node_modules/vue-material-design-icons/ContentPaste.vue");
-/* harmony import */ var vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! vue-material-design-icons/Close.vue */ "./node_modules/vue-material-design-icons/Close.vue");
-/* harmony import */ var _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! ../libraries/silly-canvas-factory */ "./tools/mapedit/src/libraries/silly-canvas-factory/index.js");
+/* harmony import */ var _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../libraries/fetch-helper */ "./tools/mapedit/src/libraries/fetch-helper/index.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Map.vue */ "./node_modules/vue-material-design-icons/Map.vue");
+/* harmony import */ var vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/OfficeBuilding.vue */ "./node_modules/vue-material-design-icons/OfficeBuilding.vue");
+/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
+/* harmony import */ var _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../libraries/grid-renderer */ "./tools/mapedit/src/libraries/grid-renderer/index.js");
+/* harmony import */ var vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/ArrowCollapse.vue */ "./node_modules/vue-material-design-icons/ArrowCollapse.vue");
+/* harmony import */ var vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/ArrowExpand.vue */ "./node_modules/vue-material-design-icons/ArrowExpand.vue");
+/* harmony import */ var vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/MagnifyPlus.vue */ "./node_modules/vue-material-design-icons/MagnifyPlus.vue");
+/* harmony import */ var vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/MagnifyMinus.vue */ "./node_modules/vue-material-design-icons/MagnifyMinus.vue");
+/* harmony import */ var vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! vue-material-design-icons/ContentSave.vue */ "./node_modules/vue-material-design-icons/ContentSave.vue");
+/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
+/* harmony import */ var _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../../../../lib/src/marker-registry */ "./lib/src/marker-registry/index.js");
+/* harmony import */ var _Siblings_vue__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ./Siblings.vue */ "./tools/mapedit/src/components/Siblings.vue");
+/* harmony import */ var _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ./SiblingButton.vue */ "./tools/mapedit/src/components/SiblingButton.vue");
+/* harmony import */ var vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! vue-material-design-icons/Select.vue */ "./node_modules/vue-material-design-icons/Select.vue");
+/* harmony import */ var vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! vue-material-design-icons/Pencil.vue */ "./node_modules/vue-material-design-icons/Pencil.vue");
+/* harmony import */ var vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! vue-material-design-icons/ArrowUpBold.vue */ "./node_modules/vue-material-design-icons/ArrowUpBold.vue");
+/* harmony import */ var vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! vue-material-design-icons/ArrowDownBold.vue */ "./node_modules/vue-material-design-icons/ArrowDownBold.vue");
+/* harmony import */ var _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! ../libraries/block-cache */ "./tools/mapedit/src/libraries/block-cache/index.js");
+/* harmony import */ var vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! vue-material-design-icons/Undo.vue */ "./node_modules/vue-material-design-icons/Undo.vue");
+/* harmony import */ var vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_27__ = __webpack_require__(/*! vue-material-design-icons/ContentCopy.vue */ "./node_modules/vue-material-design-icons/ContentCopy.vue");
+/* harmony import */ var vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_28__ = __webpack_require__(/*! vue-material-design-icons/ContentPaste.vue */ "./node_modules/vue-material-design-icons/ContentPaste.vue");
+/* harmony import */ var vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_29__ = __webpack_require__(/*! vue-material-design-icons/Close.vue */ "./node_modules/vue-material-design-icons/Close.vue");
+/* harmony import */ var _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_30__ = __webpack_require__(/*! ../libraries/silly-canvas-factory */ "./tools/mapedit/src/libraries/silly-canvas-factory/index.js");
 //
 //
 //
@@ -39505,6 +43177,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -39541,7 +43214,7 @@ __webpack_require__.r(__webpack_exports__);
 const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = Object(vuex__WEBPACK_IMPORTED_MODULE_4__["createNamespacedHelpers"])('level');
 const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_4__["createNamespacedHelpers"])('editor');
 
-const SCF = new _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_29__["default"]();
+const SCF = new _libraries_silly_canvas_factory__WEBPACK_IMPORTED_MODULE_30__["default"]();
 
 
 const OBJECT_TYPE_BLOCK = 'OBJECT_TYPE_BLOCK';
@@ -39552,27 +43225,27 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "LevelGrid",
     components: {
-        CloseIcon: vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
-        ContentPasteIcon: vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
-        ContentCopyIcon: vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
-        UndoIcon: vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_25__["default"],
-        ArrowDownBoldIcon: vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_23__["default"],
-        ArrowUpBoldIcon: vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_22__["default"],
-        PencilIcon: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_21__["default"],
-        SelectIcon: vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_20__["default"],
-        SiblingButton: _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
-        Siblings: _Siblings_vue__WEBPACK_IMPORTED_MODULE_18__["default"],
-        FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
-        ContentSaveIcon: vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
-        MagnifyMinusIcon: vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
-        MagnifyPlusIcon: vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
-        ArrowExpandIcon: vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
-        ArrowCollapseIcon: vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-        Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
-        MapIcon: vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
-        OfficeBuildingIcon: vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
-        MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"],
-        Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+        CloseIcon: vue_material_design_icons_Close_vue__WEBPACK_IMPORTED_MODULE_29__["default"],
+        ContentPasteIcon: vue_material_design_icons_ContentPaste_vue__WEBPACK_IMPORTED_MODULE_28__["default"],
+        ContentCopyIcon: vue_material_design_icons_ContentCopy_vue__WEBPACK_IMPORTED_MODULE_27__["default"],
+        UndoIcon: vue_material_design_icons_Undo_vue__WEBPACK_IMPORTED_MODULE_26__["default"],
+        ArrowDownBoldIcon: vue_material_design_icons_ArrowDownBold_vue__WEBPACK_IMPORTED_MODULE_24__["default"],
+        ArrowUpBoldIcon: vue_material_design_icons_ArrowUpBold_vue__WEBPACK_IMPORTED_MODULE_23__["default"],
+        PencilIcon: vue_material_design_icons_Pencil_vue__WEBPACK_IMPORTED_MODULE_22__["default"],
+        SelectIcon: vue_material_design_icons_Select_vue__WEBPACK_IMPORTED_MODULE_21__["default"],
+        SiblingButton: _SiblingButton_vue__WEBPACK_IMPORTED_MODULE_20__["default"],
+        Siblings: _Siblings_vue__WEBPACK_IMPORTED_MODULE_19__["default"],
+        FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_17__["default"],
+        ContentSaveIcon: vue_material_design_icons_ContentSave_vue__WEBPACK_IMPORTED_MODULE_16__["default"],
+        MagnifyMinusIcon: vue_material_design_icons_MagnifyMinus_vue__WEBPACK_IMPORTED_MODULE_15__["default"],
+        MagnifyPlusIcon: vue_material_design_icons_MagnifyPlus_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
+        ArrowExpandIcon: vue_material_design_icons_ArrowExpand_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+        ArrowCollapseIcon: vue_material_design_icons_ArrowCollapse_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
+        Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_10__["default"],
+        MapIcon: vue_material_design_icons_Map_vue__WEBPACK_IMPORTED_MODULE_8__["default"],
+        OfficeBuildingIcon: vue_material_design_icons_OfficeBuilding_vue__WEBPACK_IMPORTED_MODULE_9__["default"],
+        MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_7__["default"],
+        Window: _Window_vue__WEBPACK_IMPORTED_MODULE_6__["default"]
     },
 
     computed: {
@@ -39580,7 +43253,9 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             'getGridSize',
             'getGrid',
             'getBlocks',
-            'getStartpoint'
+            'getStartpoint',
+            'getLevel',
+            'getFlagExport'
         ]),
 
         ...editorMapGetters([
@@ -39639,9 +43314,9 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
 
     data: function () {
         return {
-            gridRenderer: new _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_10__["default"](),
+            gridRenderer: new _libraries_grid_renderer__WEBPACK_IMPORTED_MODULE_11__["default"](),
             containerWidth: 0,
-            modifications: new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_17__["default"](),
+            modifications: new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__["default"](),
             selecting: false,
             selectedFloor: 0,
             selectedTool: 0,
@@ -39681,12 +43356,10 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
     methods: {
         ...levelMapActions({
             setGridSize: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_SIZE"],
-            saveLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SAVE_LEVEL"],
             setGridCell: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELL"],
             setGridCells: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELLS"],
             setCellProps: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_CELL_PROPS"]
         }),
-
 
         ...editorMapActions({
             setStatusBarText: _store_modules_editor_action_types__WEBPACK_IMPORTED_MODULE_1__["SET_STATUSBAR_TEXT"],
@@ -39761,13 +43434,24 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             let oLowerCvs = null;
             let oUpperCvs = null;
 
-            window.BC = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"];
             if (!!cell.block) {
-                oLowerCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"].load(cell.block);
+                oLowerCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.block);
             }
 
             if (!!cell.upperblock) {
-                oUpperCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_24__["default"].load(cell.upperblock);
+                oUpperCvs = _libraries_block_cache__WEBPACK_IMPORTED_MODULE_25__["default"].load(cell.upperblock);
+            }
+
+            if (!oLowerCvs && !oUpperCvs) {
+                //ctx.save();
+                ctx.fillStyle = 'red';
+                ctx.fillRect(
+                    (canvas.width >> 1) - 2,
+                    (canvas.height >> 1) - 2,
+                    4,
+                    4,
+                );
+                //ctx.restore();
             }
 
 
@@ -40012,7 +43696,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         },
 
 
-        resizeEvent() {
+        resizeEvent: function() {
             this.$nextTick(() => {
                 const oCanvas = this.$refs.levelgrid;
                 const oScrollZone = this.$refs.scrollzone;
@@ -40026,14 +43710,15 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             });
         },
 
-        pixelToCell(x, y) {
+        pixelToCell: function(x, y) {
             const nCellSize = this.getCellSize;
             const xc = Math.floor(x / nCellSize);
             const yc = Math.floor(y / nCellSize);
             return {x: xc, y: yc};
         },
 
-        mousedownEvent(event) {
+
+        mousedownEvent: function(event) {
             const x = event.layerX;
             const y = event.layerY;
             const {x: xc, y: yc} = this.pixelToCell(x, y);
@@ -40047,7 +43732,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.select.y = yc;
         },
 
-        mouseupEvent(event) {
+        mouseupEvent: function(event) {
             const x = event.layerX;
             const y = event.layerY;
             this.selecting = false;
@@ -40099,15 +43784,48 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         },
 
 
-        mousemoveEvent(event) {
+        /**
+         * invalidates the difference between two region
+         * @param oPrevRegion {{x1, y1, x2, y2}} previous region
+         * @param oNewRegion {{x1, y1, x2, y2}} new region
+         */
+        invalidateDiffRegion: function(oPrevRegion, oNewRegion) {
+            const mr = new _lib_src_marker_registry__WEBPACK_IMPORTED_MODULE_18__["default"]();
+            let ymin = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+            let ymax = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+            let xmin = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+            let xmax = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+            for (let y = ymin; y <= ymax; ++y) {
+                for (let x = xmin; x <= xmax; ++x) {
+                    mr.mark(x, y);
+                }
+            }
+            ymin = Math.min(oNewRegion.y1, oNewRegion.y2);
+            ymax = Math.min(oNewRegion.y1, oNewRegion.y2);
+            xmin = Math.min(oNewRegion.x1, oNewRegion.x2);
+            xmax = Math.min(oNewRegion.x1, oNewRegion.x2);
+            for (let y = ymin; y <= ymax; ++y) {
+                for (let x = xmin; x <= xmax; ++x) {
+                    if (mr.isMarked(x, y)) {
+                        mr.unmark(x, y);
+                    } else {
+                        mr.mark(x, y);
+                    }
+                }
+            }
+            mr.iterate((x, y) => this.modifications.mark(x, y));
+        },
+
+        mousemoveEvent: function(event) {
             if (this.selecting) {
                 const x = event.layerX;
                 const y = event.layerY;
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 const oPrevRegion = this.getLevelGridSelectedRegion;
                 if (xc !== oPrevRegion.x2 || yc !== oPrevRegion.y2) {
+                    const oNewRegion = {x1: this.select.x, y1: this.select.y, x2: xc, y2: yc};
                     this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
-                    this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
+                    this.selectRegion(oNewRegion);
                     this.invalidateRect(this.select.x, this.select.y, xc, yc);
                     this.redraw();
                 }
@@ -40128,7 +43846,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
         },
 
-        getThingCoords(x, y) {
+        getThingCoords: function(x, y) {
             const {x: xc, y: yc} = this.pixelToCell(x, y);
             const cs = this.getCellSize;
             const xm = x % cs;
@@ -40172,11 +43890,22 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
         /**
          * Save the level
          */
-        saveClick: function () {
+        saveClick: async function () {
+            if (this.getFlagExport) {
+                if (!confirm('As the auto-publish flag is "on". You must confirm the level auto-publication during saving process.')) {
+                    this.setStatusBarText({text: 'Level NOT saved'});
+                    return false;
+                }
+            }
             const sFileName = prompt('Enter a filename', this.getLevelName);
             if (!!sFileName) {
-                this.saveLevel({name: sFileName});
-                this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["saveLevel"](sFileName, this.getLevel);
+                if (this.getFlagExport) {
+                    await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_5__["exportLevel"](sFileName);
+                    this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
+                } else {
+                    this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                }
             } else {
                 this.setStatusBarText({text: 'Level NOT saved'});
             }
@@ -40186,18 +43915,36 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
             this.$router.push('/list-levels');
         },
 
+
+        otherGridSize: function() {
+            const n = prompt('Enter the new grid size (between 1 and 256).');
+            if (n > 0 && n <= 256) {
+                this.setGridSize({value: n});
+            } else {
+                alert('This value is invalid.');
+            }
+        },
+
         /**
          * Grid shrinks : loses one row and one column
          */
         smallerGridClick: function () {
-            this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+            if (this.getGridSize > 40) {
+                this.otherGridSize();
+            } else {
+                this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+            }
         },
 
         /**
          * Grid grows : gain one row and one column
          */
         largerGridClick: function () {
-            this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+            if (this.getGridSize > 40) {
+                this.otherGridSize();
+            } else {
+                this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+            }
         },
 
         /**
@@ -40294,7 +44041,7 @@ const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
                 xy.push({x, y})
             });
             await this.setGridCells({
-                xy, floor: this.selectedFloor, block: null
+                xy, floor: this.selectedFloor, block: undefined
             });
             await this.pushUndo({undo: aUndo});
             this.$nextTick(() => this.redraw());
@@ -40377,12 +44124,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _store_modules_editor_action_types__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../store/modules/editor/action-types */ "./tools/mapedit/src/store/modules/editor/action-types.js");
 /* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
-/* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/mapedit/src/components/LevelThumbnail.vue");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
-/* harmony import */ var vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/Delete.vue */ "./node_modules/vue-material-design-icons/Delete.vue");
-/* harmony import */ var vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Archive.vue */ "./node_modules/vue-material-design-icons/Archive.vue");
+/* harmony import */ var _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../libraries/fetch-helper */ "./tools/mapedit/src/libraries/fetch-helper/index.js");
+/* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/mapedit/src/components/LevelThumbnail.vue");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/FolderOpen.vue */ "./node_modules/vue-material-design-icons/FolderOpen.vue");
+/* harmony import */ var vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-material-design-icons/Delete.vue */ "./node_modules/vue-material-design-icons/Delete.vue");
+/* harmony import */ var vue_material_design_icons_Publish_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-material-design-icons/Publish.vue */ "./node_modules/vue-material-design-icons/Publish.vue");
 //
 //
 //
@@ -40412,6 +44160,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -40428,7 +44177,7 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "LevelList",
-    components: {ArchiveIcon: vue_material_design_icons_Archive_vue__WEBPACK_IMPORTED_MODULE_8__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_7__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_6__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_4__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_3__["default"]},
+    components: {PublishIcon: vue_material_design_icons_Publish_vue__WEBPACK_IMPORTED_MODULE_9__["default"], DeleteIcon: vue_material_design_icons_Delete_vue__WEBPACK_IMPORTED_MODULE_8__["default"], FolderOpenIcon: vue_material_design_icons_FolderOpen_vue__WEBPACK_IMPORTED_MODULE_7__["default"], MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_6__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_5__["default"], LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_4__["default"]},
 
     data: function() {
         return {
@@ -40451,14 +44200,14 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
         }),
 
         ...levelMapActions({
-            loadLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["LOAD_LEVEL"],
-            deleteLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["DELETE_LEVEL"]
+            loadLevel: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["LOAD_LEVEL"]
         }),
 
         loadAndExit: async function() {
-            await this.loadLevel({name: this.selectedLevel});
+            const name = this.selectedLevel;
+            await this.loadLevel({name});
             await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
-            await this.setLevelName({name: this.selectedLevel});
+            await this.setLevelName({name});
             this.$router.push('/level/blocks');
         },
 
@@ -40472,10 +44221,23 @@ const {mapActions: levelMapActions} = Object(vuex__WEBPACK_IMPORTED_MODULE_0__["
         },
 
         erase: async function() {
-            if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                await this.deleteLevel({name: this.selectedLevel});
+            const name = this.selectedLevel;
+            if (confirm('Do you want to delete this level : ' + name + ' ? (this operation is definitive)')) {
+                await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["deleteLevel"](name);
                 await this.setStatusBarText({text: 'Level delete : ' + name});
                 await this.listLevels();
+            }
+        },
+
+        exportToGame: async function() {
+            const name = this.selectedLevel;
+            const result = await _libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_3__["exportLevel"](name);
+            if (result.status === 'done') {
+                await this.setStatusBarText({text: 'Level successfully published : ' + name});
+                alert('Level successfully published : ' + name)
+            } else {
+                await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
+                alert('Error while publishing level : ' + name + ' - ' + result.error)
             }
         }
     },
@@ -40583,6 +44345,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_material_design_icons_Settings_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! vue-material-design-icons/Settings.vue */ "./node_modules/vue-material-design-icons/Settings.vue");
 /* harmony import */ var vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! vue-material-design-icons/Information.vue */ "./node_modules/vue-material-design-icons/Information.vue");
 /* harmony import */ var vue_material_design_icons_Toolbox_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! vue-material-design-icons/Toolbox.vue */ "./node_modules/vue-material-design-icons/Toolbox.vue");
+/* harmony import */ var vue_material_design_icons_Home_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! vue-material-design-icons/Home.vue */ "./node_modules/vue-material-design-icons/Home.vue");
+//
 //
 //
 //
@@ -40596,6 +44360,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // icons
+
 
 
 
@@ -40626,7 +44391,8 @@ __webpack_require__.r(__webpack_exports__);
         SettingsIcon: vue_material_design_icons_Settings_vue__WEBPACK_IMPORTED_MODULE_12__["default"],
         ToolboxIcon: vue_material_design_icons_Toolbox_vue__WEBPACK_IMPORTED_MODULE_14__["default"],
         GamepadVariantIcon: vue_material_design_icons_GamepadVariant_vue__WEBPACK_IMPORTED_MODULE_11__["default"],
-        InformationIcon: vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__["default"]
+        InformationIcon: vue_material_design_icons_Information_vue__WEBPACK_IMPORTED_MODULE_13__["default"],
+        HomeIcon: vue_material_design_icons_Home_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
     },
     data: function() {
         return {
@@ -40714,6 +44480,14 @@ __webpack_require__.r(__webpack_exports__);
             },
         }
     },
+
+    methods: {
+        goHome: function() {
+            if (confirm('You are about to LEAVE the Map Editor, make sure you have saved all your work before leaving.\n(Press "Cancel" to stay in the Map Editor).')) {
+                window.location.href = '/';
+            }
+        }
+    }
 
 });
 
@@ -41136,6 +44910,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _libraries_generate__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../libraries/generate */ "./tools/mapedit/src/libraries/generate/index.js");
 /* harmony import */ var _libraries_append_images__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../libraries/append-images */ "./tools/mapedit/src/libraries/append-images/index.js");
 /* harmony import */ var _lib_src_engine_Engine__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../../../lib/src/engine/Engine */ "./lib/src/engine/Engine.js");
+/* harmony import */ var _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../../../../lib/src/canvas-helper */ "./lib/src/canvas-helper/index.js");
 //
 //
 //
@@ -41148,6 +44923,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -41189,7 +44965,6 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
         }),
 
         run: async function(level, canvas) {
-            console.log(_libraries_generate__WEBPACK_IMPORTED_MODULE_4__["default"]);
             const context = canvas.getContext('2d');
             try {
                 context.font = '16px monospace';
@@ -41221,6 +44996,7 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                     context.fillStyle = grad;
                     context.fillRect(x, y, progress * w | 0, h);
                 });
+                window.GAME = engine;
                 setTimeout(() => !!engine && engine.startDoomLoop(), 200);
             } catch (e) {
                 engine = null;
@@ -41230,8 +45006,8 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                 context.textBaseline = 'top';
                 context.fillStyle = 'white';
                 context.fillText('Could not render level', 8, 8);
-                context.fillStyle = 'red';
-                context.fillText(e.message, 8, 24);
+                console.error(e);
+                _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_7__["default"].text(canvas, e.message, 8, 24, 'red', canvas.width - 8, 16);
             }
         }
     },
@@ -41326,6 +45102,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -41347,7 +45139,8 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
                 tileWidth: 64,
                 tileHeight: 96,
                 flagSmooth: false,
-                flagStretch: false
+                flagStretch: false,
+                flagExport: false
             },
 
             indicator: ''
@@ -41360,6 +45153,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
             'getTileHeight',
             'getFlagSmooth',
             'getFlagStretch',
+            'getFlagExport',
             'getTiles'
         ])
     },
@@ -41407,6 +45201,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
             }
             await this.setFlag({flag: 'smooth', value: !!this.value.flagSmooth});
             await this.setFlag({flag: 'stretch', value: !!this.value.flagStretch});
+            await this.setFlag({flag: 'export', value: !!this.value.flagExport});
             this.indicator = '';
             this.$router.push('/level/blocks');
         }
@@ -41417,6 +45212,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapAction} = Object(vuex__W
         this.value.tileHeight = this.getTileHeight;
         this.value.flagSmooth = this.getFlagSmooth;
         this.value.flagStretch = this.getFlagStretch;
+        this.value.flagExport = this.getFlagExport;
     }
 });
 
@@ -41889,11 +45685,12 @@ const {mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_
             this.$router.push('/build-thing/' + this.selected);
         },
 
-        deleteClicked: function() {
+        deleteClicked: async function() {
             // effacer le thing
             const id = this.selected;
             if (!!id && confirm('Delete this block ?')) {
-                this.deleteThing({id});
+                await this.deleteThing({id});
+                this.somethingHasChanged({value: true});
                 this.selected = null;
             }
         },
@@ -41949,10 +45746,11 @@ const {mapMutations: editorMapMutations} = Object(vuex__WEBPACK_IMPORTED_MODULE_
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuex */ "./node_modules/vuex/dist/vuex.esm.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../consts */ "./tools/mapedit/src/consts/index.js");
-/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
-/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
-/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
-/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
+/* harmony import */ var _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../lib/src/raycaster/consts */ "./lib/src/raycaster/consts/index.js");
+/* harmony import */ var _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../store/modules/level/action-types */ "./tools/mapedit/src/store/modules/level/action-types.js");
+/* harmony import */ var _Window_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Window.vue */ "./tools/mapedit/src/components/Window.vue");
+/* harmony import */ var _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./MyButton.vue */ "./tools/mapedit/src/components/MyButton.vue");
+/* harmony import */ var _Tile_vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./Tile.vue */ "./tools/mapedit/src/components/Tile.vue");
 //
 //
 //
@@ -42022,6 +45820,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -42036,7 +45847,7 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "ThingBuilder",
-    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_3__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_5__["default"]},
+    components: {MyButton: _MyButton_vue__WEBPACK_IMPORTED_MODULE_5__["default"], Window: _Window_vue__WEBPACK_IMPORTED_MODULE_4__["default"], Tile: _Tile_vue__WEBPACK_IMPORTED_MODULE_6__["default"]},
 
     props: {
         id: {
@@ -42059,12 +45870,18 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
             content: '',
             saved: false,
             CONSTS: _consts__WEBPACK_IMPORTED_MODULE_1__,
+            RC_CONSTS: _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_2__,
             value: {
                 tile: 0,
                 tangible: false,
                 size: 1,
                 opacity: 0,
-                light: false,
+                light: {
+                    enabled: false,
+                    value: 0,
+                    inner: 0,
+                    outer: 0
+                },
                 ghost: false,
                 ref: ''
             }
@@ -42087,8 +45904,8 @@ const {mapGetters: levelMapGetters, mapActions: levelMapActions} = Object(vuex__
     methods: {
 
         ...levelMapActions({
-            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["CREATE_THING"],
-            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_2__["MODIFY_THING"]
+            createThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["CREATE_THING"],
+            modifyThing: _store_modules_level_action_types__WEBPACK_IMPORTED_MODULE_3__["MODIFY_THING"]
         }),
 
         importThing: function(id) {
@@ -43364,71 +47181,6 @@ var render = function() {
               attrs: {
                 d:
                   "M4,2H14V4H4V14H2V4C2,2.89 2.89,2 4,2M8,6H18V8H8V18H6V8C6,6.89 6.89,6 8,6M12,10H20C21.11,10 22,10.89 22,12V20C22,21.11 21.11,22 20,22H12C10.89,22 10,21.11 10,20V12C10,10.89 10.89,10 12,10M14,12V20L20,16L14,12Z"
-              }
-            },
-            [_c("title", [_vm._v(_vm._s(_vm.title))])]
-          )
-        ]
-      )
-    ]
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&":
-/*!*************************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374& ***!
-  \*************************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "span",
-    {
-      staticClass: "material-design-icon archive-icon",
-      attrs: {
-        "aria-hidden": _vm.decorative,
-        "aria-label": _vm.title,
-        role: "img"
-      },
-      on: {
-        click: function($event) {
-          return _vm.$emit("click", $event)
-        }
-      }
-    },
-    [
-      _c(
-        "svg",
-        {
-          staticClass: "material-design-icon__svg",
-          attrs: {
-            fill: _vm.fillColor,
-            width: _vm.size,
-            height: _vm.size,
-            viewBox: "0 0 24 24"
-          }
-        },
-        [
-          _c(
-            "path",
-            {
-              attrs: {
-                d:
-                  "M3,3H21V7H3V3M4,8H20V21H4V8M9.5,11C9.22,11 9,11.22 9,11.5V13H15V11.5C15,11.22 14.78,11 14.5,11H9.5Z"
               }
             },
             [_c("title", [_vm._v(_vm._s(_vm.title))])]
@@ -45816,6 +49568,66 @@ var render = function() {
           _c(
             "path",
             { attrs: { d: "M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" } },
+            [_c("title", [_vm._v(_vm._s(_vm.title))])]
+          )
+        ]
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&":
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413& ***!
+  \*************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "span",
+    {
+      staticClass: "material-design-icon publish-icon",
+      attrs: {
+        "aria-hidden": _vm.decorative,
+        "aria-label": _vm.title,
+        role: "img"
+      },
+      on: {
+        click: function($event) {
+          return _vm.$emit("click", $event)
+        }
+      }
+    },
+    [
+      _c(
+        "svg",
+        {
+          staticClass: "material-design-icon__svg",
+          attrs: {
+            fill: _vm.fillColor,
+            width: _vm.size,
+            height: _vm.size,
+            viewBox: "0 0 24 24"
+          }
+        },
+        [
+          _c(
+            "path",
+            { attrs: { d: "M5,4V6H19V4H5M5,14H9V20H15V14H19L12,7L5,14Z" } },
             [_c("title", [_vm._v(_vm._s(_vm.title))])]
           )
         ]
@@ -48759,20 +52571,20 @@ var render = function() {
                 {
                   attrs: {
                     disabled: !_vm.selectedLevel,
-                    href: "/vault/" + _vm.selectedLevel + ".zip",
                     title:
-                      "download level as .json and all textures as .png, all packed in a .zip archive"
-                  }
+                      "Publishes the level and its textures into the game project asset directories"
+                  },
+                  on: { click: _vm.exportToGame }
                 },
                 [
-                  _c("ArchiveIcon", {
+                  _c("PublishIcon", {
                     attrs: {
                       title:
-                        "download level as .json and all textures as .png, all packed in a .zip archive",
+                        "Publishes the level and its textures into the game project asset directories",
                       decorative: ""
                     }
                   }),
-                  _vm._v(" Download as .zip")
+                  _vm._v(" Publish")
                 ],
                 1
               )
@@ -48792,7 +52604,7 @@ var render = function() {
             attrs: {
               name: l.name,
               date: l.date,
-              preview: l.preview,
+              preview: "/vault/" + l.name + ".jpg",
               selected: l.name === _vm.selectedLevel
             },
             on: {
@@ -48880,6 +52692,13 @@ var render = function() {
   return _c(
     "StatusBar",
     [
+      _c(
+        "MyButton",
+        { on: { click: _vm.goHome } },
+        [_c("HomeIcon", { attrs: { decorative: "" } })],
+        1
+      ),
+      _vm._v(" "),
       _c("SimpleMenu", { attrs: { routes: _vm.routes.main } }),
       _vm._v(" "),
       _c("SimpleMenu", {
@@ -49609,167 +53428,233 @@ var render = function() {
     [
       _vm._v(" "),
       _c("form", [
-        _c("div", [
-          _c("label", [
-            _vm._v("Tile width:\n                    "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.tileWidth,
-                  expression: "value.tileWidth"
-                }
-              ],
-              attrs: { type: "number", min: "1" },
-              domProps: { value: _vm.value.tileWidth },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
-                  }
-                  _vm.$set(_vm.value, "tileWidth", $event.target.value)
-                }
-              }
-            })
-          ]),
+        _c("fieldset", [
+          _c("legend", [_vm._v("Tile size")]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [_vm._v("Tile width in pixels")])
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Tile height:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.tileHeight,
-                  expression: "value.tileHeight"
-                }
-              ],
-              attrs: { type: "number", min: "1" },
-              domProps: { value: _vm.value.tileHeight },
-              on: {
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+          _c("div", [
+            _c("label", [
+              _vm._v("Tile width:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.tileWidth,
+                    expression: "value.tileWidth"
                   }
-                  _vm.$set(_vm.value, "tileHeight", $event.target.value)
-                }
-              }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v("Tile height in pixels, from floor to ceiling")
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Texture smoothing:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.flagSmooth,
-                  expression: "value.flagSmooth"
-                }
-              ],
-              attrs: { type: "checkbox" },
-              domProps: {
-                checked: Array.isArray(_vm.value.flagSmooth)
-                  ? _vm._i(_vm.value.flagSmooth, null) > -1
-                  : _vm.value.flagSmooth
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.value.flagSmooth,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 &&
-                        _vm.$set(_vm.value, "flagSmooth", $$a.concat([$$v]))
-                    } else {
-                      $$i > -1 &&
-                        _vm.$set(
-                          _vm.value,
-                          "flagSmooth",
-                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                        )
+                ],
+                attrs: { type: "number", min: "1" },
+                domProps: { value: _vm.value.tileWidth },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
                     }
-                  } else {
-                    _vm.$set(_vm.value, "flagSmooth", $$c)
+                    _vm.$set(_vm.value, "tileWidth", $event.target.value)
                   }
                 }
-              }
-            })
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [_vm._v("Tile width in pixels")])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v(
-              "If checked, the wall texture rendering will be smoothed, else, it will be pixelated"
-            )
+          _c("div", [
+            _c("label", [
+              _vm._v("Tile height:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.tileHeight,
+                    expression: "value.tileHeight"
+                  }
+                ],
+                attrs: { type: "number", min: "1" },
+                domProps: { value: _vm.value.tileHeight },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.value, "tileHeight", $event.target.value)
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v("Tile height in pixels, from floor to ceiling")
+            ])
           ])
         ]),
         _vm._v(" "),
-        _c("div", [
-          _c("label", [
-            _vm._v("Second story texture stretching:\n                "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.value.flagStretch,
-                  expression: "value.flagStretch"
-                }
-              ],
-              attrs: { type: "checkbox" },
-              domProps: {
-                checked: Array.isArray(_vm.value.flagStretch)
-                  ? _vm._i(_vm.value.flagStretch, null) > -1
-                  : _vm.value.flagStretch
-              },
-              on: {
-                change: function($event) {
-                  var $$a = _vm.value.flagStretch,
-                    $$el = $event.target,
-                    $$c = $$el.checked ? true : false
-                  if (Array.isArray($$a)) {
-                    var $$v = null,
-                      $$i = _vm._i($$a, $$v)
-                    if ($$el.checked) {
-                      $$i < 0 &&
-                        _vm.$set(_vm.value, "flagStretch", $$a.concat([$$v]))
+        _c("fieldset", [
+          _c("legend", [_vm._v("Texture flags")]),
+          _vm._v(" "),
+          _c("div", [
+            _c("label", [
+              _vm._v("Texture smoothing:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagSmooth,
+                    expression: "value.flagSmooth"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagSmooth)
+                    ? _vm._i(_vm.value.flagSmooth, null) > -1
+                    : _vm.value.flagSmooth
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagSmooth,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagSmooth", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagSmooth",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
                     } else {
-                      $$i > -1 &&
-                        _vm.$set(
-                          _vm.value,
-                          "flagStretch",
-                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
-                        )
+                      _vm.$set(_vm.value, "flagSmooth", $$c)
                     }
-                  } else {
-                    _vm.$set(_vm.value, "flagStretch", $$c)
                   }
                 }
-              }
-            })
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, the wall texture rendering will be smoothed, else, it will be pixelated"
+              )
+            ])
           ]),
           _vm._v(" "),
-          _c("div", { staticClass: "hint" }, [
-            _vm._v(
-              "If checked, the second story wall textures will be stretched, and will appear twice taller."
-            )
+          _c("div", [
+            _c("label", [
+              _vm._v("Second story texture stretching:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagStretch,
+                    expression: "value.flagStretch"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagStretch)
+                    ? _vm._i(_vm.value.flagStretch, null) > -1
+                    : _vm.value.flagStretch
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagStretch,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagStretch", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagStretch",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.value, "flagStretch", $$c)
+                    }
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, the second story wall textures will be stretched, and will appear twice taller."
+              )
+            ])
           ])
         ]),
+        _vm._v(" "),
+        _c("fieldset", [
+          _c("legend", [_vm._v("Level publication")]),
+          _vm._v(" "),
+          _c("div", [
+            _c("label", [
+              _vm._v("Auto-publish this level:\n                    "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.value.flagExport,
+                    expression: "value.flagExport"
+                  }
+                ],
+                attrs: { type: "checkbox" },
+                domProps: {
+                  checked: Array.isArray(_vm.value.flagExport)
+                    ? _vm._i(_vm.value.flagExport, null) > -1
+                    : _vm.value.flagExport
+                },
+                on: {
+                  change: function($event) {
+                    var $$a = _vm.value.flagExport,
+                      $$el = $event.target,
+                      $$c = $$el.checked ? true : false
+                    if (Array.isArray($$a)) {
+                      var $$v = null,
+                        $$i = _vm._i($$a, $$v)
+                      if ($$el.checked) {
+                        $$i < 0 &&
+                          _vm.$set(_vm.value, "flagExport", $$a.concat([$$v]))
+                      } else {
+                        $$i > -1 &&
+                          _vm.$set(
+                            _vm.value,
+                            "flagExport",
+                            $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                          )
+                      }
+                    } else {
+                      _vm.$set(_vm.value, "flagExport", $$c)
+                    }
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "hint" }, [
+              _vm._v(
+                "If checked, each time you save the level, it will also be published to the local game project."
+              )
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("br"),
         _vm._v(" "),
         _c(
           "div",
@@ -49780,7 +53665,7 @@ var render = function() {
                 attrs: { disabled: _vm.indicator.length > 0 },
                 on: { click: _vm.applyClicked }
               },
-              [_vm._v("Apply")]
+              [_vm._v("Apply changes")]
             ),
             _vm._v(" " + _vm._s(_vm.indicator) + "\n        ")
           ],
@@ -49791,13 +53676,13 @@ var render = function() {
         _vm._v(" "),
         _c("p", { staticStyle: { color: "darkred", "font-weight": "bold" } }, [
           _vm._v(
-            "\n            Changing tile width will resize all existing tiles and affect texture resolution and quality.\n            It will also modify all metrics, block light radius values, block offsets, and thing physical size.\n        "
+            "\n            Changing tile width or height, will resize all existing tiles and affect texture resolution and quality.\n            It will also modify all metrics, block light radius values, block offsets, and thing physical size.\n        "
           )
         ]),
         _vm._v(" "),
         _c("p", [
           _vm._v(
-            "\n            Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.\n        "
+            "\n            Hint : Setting tile width (and height) should be the very first operation you do just after starting a new level from scratch.\n        "
           )
         ])
       ])
@@ -50321,19 +54206,19 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.value.light,
-                            expression: "value.light"
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
                           }
                         ],
                         attrs: { type: "checkbox" },
                         domProps: {
-                          checked: Array.isArray(_vm.value.light)
-                            ? _vm._i(_vm.value.light, null) > -1
-                            : _vm.value.light
+                          checked: Array.isArray(_vm.value.light.enabled)
+                            ? _vm._i(_vm.value.light.enabled, null) > -1
+                            : _vm.value.light.enabled
                         },
                         on: {
                           change: function($event) {
-                            var $$a = _vm.value.light,
+                            var $$a = _vm.value.light.enabled,
                               $$el = $event.target,
                               $$c = $$el.checked ? true : false
                             if (Array.isArray($$a)) {
@@ -50342,20 +54227,20 @@ var render = function() {
                               if ($$el.checked) {
                                 $$i < 0 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.concat([$$v])
                                   )
                               } else {
                                 $$i > -1 &&
                                   _vm.$set(
-                                    _vm.value,
-                                    "light",
+                                    _vm.value.light,
+                                    "enabled",
                                     $$a.slice(0, $$i).concat($$a.slice($$i + 1))
                                   )
                               }
                             } else {
-                              _vm.$set(_vm.value, "light", $$c)
+                              _vm.$set(_vm.value.light, "enabled", $$c)
                             }
                           }
                         }
@@ -50366,7 +54251,119 @@ var render = function() {
                       _vm._v(
                         "If checked, the thing will emit its own light and will never get darker when going afar from the point of view."
                       )
-                    ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "fieldset",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.value.light.enabled,
+                            expression: "value.light.enabled"
+                          }
+                        ]
+                      },
+                      [
+                        _c("legend", [_vm._v("Light source properties")]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Intensity: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.value,
+                                  expression: "value.light.value"
+                                }
+                              ],
+                              attrs: {
+                                type: "number",
+                                min: "0",
+                                max: "1",
+                                step: "0.01"
+                              },
+                              domProps: { value: _vm.value.light.value },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "value",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("In.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.inner,
+                                  expression: "value.light.inner"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.inner },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "inner",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", [
+                          _c("label", [
+                            _vm._v("Out.rad.: "),
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.value.light.outer,
+                                  expression: "value.light.outer"
+                                }
+                              ],
+                              attrs: { type: "number", min: "0" },
+                              domProps: { value: _vm.value.light.outer },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.value.light,
+                                    "outer",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      ]
+                    )
                   ]),
                   _vm._v(" "),
                   _c("div", [
@@ -51620,75 +55617,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_AnimationPlay_vue_vue_type_template_id_669c325c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_AnimationPlay_vue_vue_type_template_id_669c325c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue":
-/*!************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue ***!
-  \************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Archive.vue?vue&type=template&id=ed321374& */ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&");
-/* harmony import */ var _Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Archive.vue?vue&type=script&lang=js& */ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  null,
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "node_modules/vue-material-design-icons/Archive.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&":
-/*!*************************************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js& ***!
-  \*************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib??vue-loader-options!./Archive.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&":
-/*!*******************************************************************************************!*\
-  !*** ./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374& ***!
-  \*******************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../vue-loader/lib??vue-loader-options!./Archive.vue?vue&type=template&id=ed321374& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Archive.vue?vue&type=template&id=ed321374&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Archive_vue_vue_type_template_id_ed321374___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -54242,6 +58170,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Plus_vue_vue_type_template_id_18bbb6c6___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Plus_vue_vue_type_template_id_18bbb6c6___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue":
+/*!************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue ***!
+  \************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Publish.vue?vue&type=template&id=25f5c413& */ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&");
+/* harmony import */ var _Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Publish.vue?vue&type=script&lang=js& */ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "node_modules/vue-material-design-icons/Publish.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib??vue-loader-options!./Publish.vue?vue&type=script&lang=js& */ "./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&":
+/*!*******************************************************************************************!*\
+  !*** ./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413& ***!
+  \*******************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../vue-loader/lib??vue-loader-options!./Publish.vue?vue&type=template&id=25f5c413& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./node_modules/vue-material-design-icons/Publish.vue?vue&type=template&id=25f5c413&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _vue_loader_lib_loaders_templateLoader_js_vue_loader_options_vue_loader_lib_index_js_vue_loader_options_Publish_vue_vue_type_template_id_25f5c413___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -67605,7 +71602,26 @@ module.exports = function(module) {
  * Generates an engine compliant JSON out of a MapEdit save file
  * this is a node.js module
  */
-const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
+const LOOPS = [
+    '@LOOP_NONE',
+    '@LOOP_FORWARD',
+    '@LOOP_YOYO'
+];
+const PHYS = [
+    "@PHYS_NONE",
+    "@PHYS_WALL",
+    "@PHYS_DOOR_UP",
+    "@PHYS_CURT_UP",
+    "@PHYS_DOOR_DOWN",
+    "@PHYS_CURT_DOWN",
+    "@PHYS_DOOR_LEFT",
+    "@PHYS_DOOR_RIGHT",
+    "@PHYS_DOOR_DOUBLE",
+    "@PHYS_SECRET_BLOCK",
+    "@PHYS_TRANSPARENT_BLOCK",
+    "@PHYS_INVISIBLE_BLOCK",
+    "@PHYS_OFFSET_BLOCK"
+];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 let combineTiles = async function() {};
@@ -67660,14 +71676,15 @@ async function generateTileset(tilesets, idTile) {
     output.src = src;
     output.width = width;
     output.height = height;
-    output.animations = nFrames > 1 ? {
-        [DEFAULT_ANIMATION_NAME]: {
+    output.animations = nFrames > 1 ? [
+        {
+            id: DEFAULT_ANIMATION_NAME,
             start: [0, 0, 0, 0, 0, 0, 0, 0],
             length: nFrames | 0,
             duration: tile.animation.duration | 0,
             loop: LOOPS[tile.animation.loop]
         }
-    } : null;
+    ] : [];
     return output;
 }
 
@@ -67693,7 +71710,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 
@@ -67716,13 +71733,18 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
-    if (thing.light) {
+    if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
+        output.lightsource = {
+            r0: parseFloat(thing.light.inner),
+            r1: parseFloat(thing.light.outer),
+            v: parseFloat(thing.light.value)
+        };
     }
     switch (thing.opacity) {
         case 0: // 100%
@@ -67793,9 +71815,9 @@ function generateMap(input) {
     // déterminer s'il y a un uppermap
     const grid = input.grid;
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
-    output.map = grid.map(row => row.map(cell => cell.block));
+    output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
     }
     return output;
 }
@@ -67866,9 +71888,9 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
-        phys: block.phys,
+        phys: PHYS[block.phys],
         offset: block.offs | 0,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
@@ -67877,13 +71899,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -67904,8 +71931,8 @@ function generateShading(input) {
     return {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
-        brightness: a.brightness | 0, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        brightness: (a.brightness | 0) / 100, // base brightness
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -67930,7 +71957,7 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size | 0;
+                const size = (oTile.width >> 1) | 0;
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -67938,9 +71965,10 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
+                    z: (oTile.height >> 1) - 48,
                     angle: 0,
                     blueprint: idThingTemplate,
-                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false
+                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
                 });
             } else {
                 // il s'agit d'un decal
@@ -68005,8 +72033,8 @@ function generateCamera(input) {
     return {
         x: input.startpoint.x,
         y: input.startpoint.y,
-        angle: input.startpoint.angle * Math.PI,
-        thinker: 'KeyboardControlThinker'
+        z: 1,
+        angle: input.startpoint.angle * Math.PI
     };
 }
 
@@ -68026,24 +72054,31 @@ function generateTags(input) {
     return aTags;
 }
 
+function generateLightsources(input) {
+    return [];
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
     }
     setImageAppender(imageAppender);
     return {
-        version: 'eng-100',
+        version: 'RCE-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),
         shading: generateShading(input),
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
-        tags: generateTags(input)
+        tags: generateTags(input),
+        lightsources: generateLightsources(input),
+        preview: input.preview
     };
 }
 
 module.exports = generate;
+
 
 /***/ }),
 
@@ -70855,7 +74890,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************!*\
   !*** ./tools/mapedit/src/consts/index.js ***!
   \*******************************************/
-/*! exports provided: TILE_TYPE_WALL, TILE_TYPE_FLAT, TILE_TYPE_SPRITE, BLOCK_WIDTH, BLOCK_HEIGHT, SERVICE_LEVEL, SERVICE_URL_SAVE, SERVICE_URL_LOAD, SERVICE_URL_LIST, SERVICE_URL_DELETE, SHAPE_NONE, SHAPE_CIRCLE, SHAPE_TRIANGLE, SHAPE_RHOMBUS, SHAPE_HEXAGON, SHAPE_SQUARE */
+/*! exports provided: TILE_TYPE_WALL, TILE_TYPE_FLAT, TILE_TYPE_SPRITE, BLOCK_WIDTH, BLOCK_HEIGHT, SERVICE_LEVEL, SERVICE_URL_SAVE, SERVICE_URL_LOAD, SERVICE_URL_LIST, SERVICE_URL_DELETE, SERVICE_URL_EXPORT, SHAPE_NONE, SHAPE_CIRCLE, SHAPE_TRIANGLE, SHAPE_RHOMBUS, SHAPE_HEXAGON, SHAPE_SQUARE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -70870,6 +74905,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_LOAD", function() { return SERVICE_URL_LOAD; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_LIST", function() { return SERVICE_URL_LIST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_DELETE", function() { return SERVICE_URL_DELETE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SERVICE_URL_EXPORT", function() { return SERVICE_URL_EXPORT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_NONE", function() { return SHAPE_NONE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_CIRCLE", function() { return SHAPE_CIRCLE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SHAPE_TRIANGLE", function() { return SHAPE_TRIANGLE; });
@@ -70889,6 +74925,7 @@ const SERVICE_URL_SAVE = '/vault/';
 const SERVICE_URL_LOAD = '/vault/';
 const SERVICE_URL_LIST = '/vault';
 const SERVICE_URL_DELETE = '/vault/';
+const SERVICE_URL_EXPORT = '/export/';
 
 const SHAPE_NONE = 0;
 const SHAPE_CIRCLE = 1;
@@ -71562,13 +75599,14 @@ const FRAME_WITH_PICTURE =   '\u{1F5BC}';
 /*!***********************************************************!*\
   !*** ./tools/mapedit/src/libraries/fetch-helper/index.js ***!
   \***********************************************************/
-/*! exports provided: saveLevel, loadLevel, deleteLevel, getLevelList */
+/*! exports provided: saveLevel, loadLevel, exportLevel, deleteLevel, getLevelList */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveLevel", function() { return saveLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "loadLevel", function() { return loadLevel; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exportLevel", function() { return exportLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteLevel", function() { return deleteLevel; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getLevelList", function() { return getLevelList; });
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../consts */ "./tools/mapedit/src/consts/index.js");
@@ -71583,15 +75621,19 @@ function saveLevel(name, data) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_SAVE"] + name, {data});
 }
 
-async function loadLevel (name) {
+function loadLevel (name) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_LOAD"] + name + '.json');
 }
 
-async function deleteLevel(name) {
+function exportLevel (name) {
+    return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_EXPORT"] + name);
+}
+
+function deleteLevel(name) {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_DELETE"] + name);
 }
 
-async function getLevelList() {
+function getLevelList() {
     return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(_consts__WEBPACK_IMPORTED_MODULE_0__["SERVICE_URL_LIST"]);
 }
 
@@ -72464,7 +76506,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!***************************************************************!*\
   !*** ./tools/mapedit/src/store/modules/level/action-types.js ***!
   \***************************************************************/
-/*! exports provided: LOAD_TILE, LOAD_TILES, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, REORDER_TILE, CREATE_BLOCK, MODIFY_BLOCK, DELETE_BLOCK, CREATE_THING, MODIFY_THING, DELETE_THING, REORDER_THING, SET_GRID_SIZE, SET_CELL_PROPS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_GRID_CELL, SET_GRID_CELLS, REMOVE_CELL_THING, SAVE_LEVEL, LOAD_LEVEL, DELETE_LEVEL, SETUP_AMBIANCE, SET_FLAG, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, FEEDBACK_TILE_WIDTH, SET_STARTING_POINT, SHIFT_GRID */
+/*! exports provided: LOAD_TILE, LOAD_TILES, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, REORDER_TILE, CREATE_BLOCK, MODIFY_BLOCK, DELETE_BLOCK, CREATE_THING, MODIFY_THING, DELETE_THING, REORDER_THING, SET_GRID_SIZE, SET_CELL_PROPS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_GRID_CELL, SET_GRID_CELLS, REMOVE_CELL_THING, LOAD_LEVEL, SETUP_AMBIANCE, SET_FLAG, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, FEEDBACK_TILE_WIDTH, SET_STARTING_POINT, SHIFT_GRID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -72490,9 +76532,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_GRID_CELL", function() { return SET_GRID_CELL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_GRID_CELLS", function() { return SET_GRID_CELLS; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "REMOVE_CELL_THING", function() { return REMOVE_CELL_THING; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SAVE_LEVEL", function() { return SAVE_LEVEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "LOAD_LEVEL", function() { return LOAD_LEVEL; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DELETE_LEVEL", function() { return DELETE_LEVEL; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SETUP_AMBIANCE", function() { return SETUP_AMBIANCE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG", function() { return SET_FLAG; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_WIDTH", function() { return SET_TILE_WIDTH; });
@@ -72529,9 +76569,7 @@ const SET_GRID_CELLS = 'SET_GRID_CELLS';
 const REMOVE_CELL_THING = 'REMOVE_CELL_THING';
 
 
-const SAVE_LEVEL = 'SAVE_LEVEL';
 const LOAD_LEVEL = 'LOAD_LEVEL';
-const DELETE_LEVEL = 'DELETE_LEVEL';
 
 const SETUP_AMBIANCE = 'SETUP_AMBIANCE';
 const SET_FLAG = 'SET_FLAG';
@@ -72611,8 +76649,9 @@ function renderAndStoreBlock(tiles, data) {
      * @param commit
      * @param content {string}
      */
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILE"]]: ({commit, getters, state}, {type, content}) => {
-        commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: getters.getMaxTileId + 1, type, content});
+    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILE"]]: async ({commit, getters, state}, {type, content}) => {
+        const oCvs = await _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_2__["default"].loadCanvas(content);
+        commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: getters.getMaxTileId + 1, type, content, width: oCvs.width, height: oCvs.height});
     },
 
     /**
@@ -72620,10 +76659,12 @@ function renderAndStoreBlock(tiles, data) {
      * @param commit
      * @param content {string}
      */
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILES"]]: ({commit, getters, state}, {type, contents}) => {
+    [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_TILES"]]: async ({commit, getters, state}, {type, contents}) => {
         let id = getters.getMaxTileId + 1;
         for (let i = 0, l = contents.length; i < l; ++i) {
-            commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: id + i, type, content: contents[i]});
+            const content = contents[i];
+            const oCvs = await _lib_src_canvas_helper__WEBPACK_IMPORTED_MODULE_2__["default"].loadCanvas(content);
+            commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["ADD_TILE"], {id: id + i, type, content, width: oCvs.width, height: oCvs.height});
         }
     },
 
@@ -72757,10 +76798,6 @@ function renderAndStoreBlock(tiles, data) {
         commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["REMOVE_CELL_TAG"], {x, y, value});
     },
 
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["SAVE_LEVEL"]]: async ({commit, getters}, {name}) => {
-        await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["saveLevel"])(name, getters.getLevel);
-    },
-
     [_action_types__WEBPACK_IMPORTED_MODULE_0__["LOAD_LEVEL"]]: async ({commit}, {name}) => {
         const content = await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["loadLevel"])(name);
         if (!content) {
@@ -72775,10 +76812,6 @@ function renderAndStoreBlock(tiles, data) {
             _libraries_block_cache__WEBPACK_IMPORTED_MODULE_3__["default"].store(b.id, oCanvas);
             commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_BLOCK_PREVIEW"], {id: b.id, content: sSrc});
         }
-    },
-
-    [_action_types__WEBPACK_IMPORTED_MODULE_0__["DELETE_LEVEL"]]: async ({commit}, {name}) => {
-        const response = await Object(_libraries_fetch_helper__WEBPACK_IMPORTED_MODULE_4__["deleteLevel"])(name);
     },
 
     [_action_types__WEBPACK_IMPORTED_MODULE_0__["SET_GRID_CELL"]]: ({commit}, {x, y, floor, block}) => {
@@ -72852,6 +76885,10 @@ function renderAndStoreBlock(tiles, data) {
 
             case 'stretch':
                 commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_FLAG_STRETCH"], {value});
+                break;
+
+            case 'export':
+                commit(_mutation_types__WEBPACK_IMPORTED_MODULE_1__["SET_FLAG_EXPORT"], {value});
                 break;
 
             default:
@@ -72944,7 +76981,8 @@ function redMaxId(prev, curr) {
     getThings: state => state.things,
     getAmbiance: state => state.ambiance,
     getFlagSmooth: state => state.flags.smooth,
-    getFlagStretch: state => state.flags.stretch
+    getFlagStretch: state => state.flags.stretch,
+    getFlagExport: state => state.flags.export
 });
 
 /***/ }),
@@ -72982,7 +77020,7 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************************!*\
   !*** ./tools/mapedit/src/store/modules/level/mutation-types.js ***!
   \*****************************************************************/
-/*! exports provided: ADD_TILE, MOVE_TILE, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, DEFINE_BLOCK, SET_BLOCK_PREVIEW, DESTROY_BLOCK, DEFINE_THING, DESTROY_THING, MOVE_THING, SET_GRID_SIZE, SET_CELL_BLOCK, SET_CELL_TAGS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_CELL_THING, SET_CELL_UPPER_BLOCK, REMOVE_CELL_THING, SETUP_AMBIANCE, SET_STATE_CONTENT, SET_FLAG_SMOOTH, SET_FLAG_STRETCH, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, REPLACE_BLOCK_OFFSET, SET_STARTING_POINT, SHIFT_GRID */
+/*! exports provided: ADD_TILE, MOVE_TILE, SET_TILE_ANIMATION, CLEAR_TILE_ANIMATION, DELETE_TILE, DEFINE_BLOCK, SET_BLOCK_PREVIEW, DESTROY_BLOCK, DEFINE_THING, DESTROY_THING, MOVE_THING, SET_GRID_SIZE, SET_CELL_BLOCK, SET_CELL_TAGS, ADD_CELL_TAG, REMOVE_CELL_TAG, SET_CELL_MARK, SET_CELL_THING, SET_CELL_UPPER_BLOCK, REMOVE_CELL_THING, SETUP_AMBIANCE, SET_STATE_CONTENT, SET_FLAG_SMOOTH, SET_FLAG_STRETCH, SET_FLAG_EXPORT, SET_TILE_WIDTH, SET_TILE_HEIGHT, SET_PREVIEW, REPLACE_TILE_CONTENT, REPLACE_BLOCK_OFFSET, SET_STARTING_POINT, SHIFT_GRID */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -73011,6 +77049,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_STATE_CONTENT", function() { return SET_STATE_CONTENT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_SMOOTH", function() { return SET_FLAG_SMOOTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_STRETCH", function() { return SET_FLAG_STRETCH; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_FLAG_EXPORT", function() { return SET_FLAG_EXPORT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_WIDTH", function() { return SET_TILE_WIDTH; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_TILE_HEIGHT", function() { return SET_TILE_HEIGHT; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SET_PREVIEW", function() { return SET_PREVIEW; });
@@ -73049,6 +77088,7 @@ const SET_STATE_CONTENT = 'SET_STATE_CONTENT';
 
 const SET_FLAG_SMOOTH = 'SET_FLAG_SMOOTH';
 const SET_FLAG_STRETCH = 'SET_FLAG_STRETCH';
+const SET_FLAG_EXPORT = 'SET_FLAG_EXPORT';
 const SET_TILE_WIDTH = 'SET_TILE_WIDTH';
 const SET_TILE_HEIGHT = 'SET_TILE_HEIGHT';
 
@@ -73098,7 +77138,7 @@ function getTileStructure(type, state) {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["ADD_TILE"]]: (state, {id, type, content}) => {
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["ADD_TILE"]]: (state, {id, type, content, width, height}) => {
         const tiles = getTileStructure(type, state);
         if (tiles.find(t => t.id === id)) {
             throw new Error('this id is already present in store');
@@ -73110,6 +77150,8 @@ function getTileStructure(type, state) {
             id,
             type,
             content,
+            width,
+            height,
             animation: null
         });
     },
@@ -73365,6 +77407,14 @@ function getTileStructure(type, state) {
         const iThing = state.things.findIndex(t => t.id === id);
         if (iThing >= 0) {
             state.things.splice(iThing, 1);
+            state.grid.forEach(row => row.forEach(cell => {
+                const things = cell.things;
+                for (let iTh = things.length - 1; iTh >= 0; --iTh) {
+                    if (things[iTh].id === id) {
+                        things.splice(iTh, 1);
+                    }
+                }
+            }));
         } else {
             throw new Error('could not find thing #' + id);
         }
@@ -73405,11 +77455,15 @@ function getTileStructure(type, state) {
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_STRETCH"]]: (state, {value}) => {
-        state.flags.stretch = value;
+        state.flags.stretch = !!value;
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_SMOOTH"]]: (state, {value}) => {
-        state.flags.smooth = value;
+        state.flags.smooth = !!value;
+    },
+
+    [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_FLAG_EXPORT"]]: (state, {value}) => {
+        state.flags.export = !!value;
     },
 
     [_mutation_types__WEBPACK_IMPORTED_MODULE_0__["SET_TILE_WIDTH"]]: (state, {value}) => {
@@ -73524,7 +77578,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     flags: {
         smooth: false,
-        stretch: false
+        stretch: false,
+        export: false
     },
     time: {
         interval: 40

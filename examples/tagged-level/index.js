@@ -6,6 +6,7 @@ const Engine = RCE.Engine;
  */
 
 const LEVEL = {
+    "version": "RCE-100",
 
     "tilesets": [],
     // there is no tilset in this example
@@ -22,7 +23,10 @@ const LEVEL = {
         },
         "textures": {
             "flats": "textures/flats.png",
-            "walls": "textures/walls.png"
+            "walls": "textures/walls.png",
+            "sky": "",
+            "smooth": false,
+            "stretch": false
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "##########",
@@ -83,7 +87,7 @@ const LEVEL = {
         }
     ],
     "camera": {
-        "thinker": "KeyboardControlThinker", // the control thinker
+        "thinker": "FPSControlThinker", // the control thinker
         "x": 2, // camera coordinates (x-axis)
         "y": 6, // camera coordinates (y-axis)
         "angle": -Math.PI / 2 - 0.4, // looking angle
@@ -92,7 +96,8 @@ const LEVEL = {
     "objects": [
         // there is no object
     ],
-    "decals": []
+    "decals": [],
+    "lightsources": []
 };
 
 // note that we use an "async" function, because we deal with promises when textures are loading

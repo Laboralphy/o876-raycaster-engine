@@ -23,8 +23,20 @@
                                     <div class="hint">Opacity 100% : the thing has full opacity. Opacity 25% : the thing is nearly transparent</div>
                                 </div>
                                 <div>
-                                    <label>Light emitter: <input v-model="value.light" type="checkbox" /></label>
+                                    <label>Light emitter: <input v-model="value.light.enabled" type="checkbox" /></label>
                                     <div class="hint">If checked, the thing will emit its own light and will never get darker when going afar from the point of view.</div>
+                                    <fieldset v-show="value.light.enabled">
+                                        <legend>Light source properties</legend>
+                                        <div>
+                                            <label>Intensity: <input v-model="value.light.value" type="number" min="0" max="1" step="0.01"/></label>
+                                        </div>
+                                        <div>
+                                            <label>In.rad.: <input v-model="value.light.inner" type="number" min="0"/></label>
+                                        </div>
+                                        <div>
+                                            <label>Out.rad.: <input v-model="value.light.outer" type="number" min="0"/></label>
+                                        </div>
+                                    </fieldset>
                                 </div>
                                 <div>
                                     <label>Ghost filter: <input v-model="value.ghost" type="checkbox" /></label>
@@ -70,6 +82,7 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
+    import * as RC_CONSTS from '../../../../lib/src/raycaster/consts';
 
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
 
@@ -104,12 +117,18 @@
                 content: '',
                 saved: false,
                 CONSTS,
+                RC_CONSTS,
                 value: {
                     tile: 0,
                     tangible: false,
                     size: 1,
                     opacity: 0,
-                    light: false,
+                    light: {
+                        enabled: false,
+                        value: 0,
+                        inner: 0,
+                        outer: 0
+                    },
                     ghost: false,
                     ref: ''
                 }

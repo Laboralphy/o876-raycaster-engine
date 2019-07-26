@@ -12,8 +12,7 @@
 
 
 const ArgumentParser = require('../tools/argument-parser');
-const Service = require('../tools/service/index');;
-
+const Service = require('../tools/service/index');
 
 
 function initArgumentParser() {

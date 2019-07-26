@@ -6,3 +6,6 @@ node_modules
 
 # webpack output folder
 dist
+
+#game project
+game

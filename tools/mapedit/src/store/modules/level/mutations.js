@@ -21,7 +21,7 @@ function getTileStructure(type, state) {
 }
 
 export default {
-    [MUTATION.ADD_TILE]: (state, {id, type, content}) => {
+    [MUTATION.ADD_TILE]: (state, {id, type, content, width, height}) => {
         const tiles = getTileStructure(type, state);
         if (tiles.find(t => t.id === id)) {
             throw new Error('this id is already present in store');
@@ -33,6 +33,8 @@ export default {
             id,
             type,
             content,
+            width,
+            height,
             animation: null
         });
     },
@@ -288,6 +290,14 @@ export default {
         const iThing = state.things.findIndex(t => t.id === id);
         if (iThing >= 0) {
             state.things.splice(iThing, 1);
+            state.grid.forEach(row => row.forEach(cell => {
+                const things = cell.things;
+                for (let iTh = things.length - 1; iTh >= 0; --iTh) {
+                    if (things[iTh].id === id) {
+                        things.splice(iTh, 1);
+                    }
+                }
+            }));
         } else {
             throw new Error('could not find thing #' + id);
         }
@@ -328,11 +338,15 @@ export default {
     },
 
     [MUTATION.SET_FLAG_STRETCH]: (state, {value}) => {
-        state.flags.stretch = value;
+        state.flags.stretch = !!value;
     },
 
     [MUTATION.SET_FLAG_SMOOTH]: (state, {value}) => {
-        state.flags.smooth = value;
+        state.flags.smooth = !!value;
+    },
+
+    [MUTATION.SET_FLAG_EXPORT]: (state, {value}) => {
+        state.flags.export = !!value;
     },
 
     [MUTATION.SET_TILE_WIDTH]: (state, {value}) => {

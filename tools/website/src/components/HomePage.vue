@@ -2,63 +2,108 @@
     <div>
         <div class="row">
             <div class="col lg-12">
-                <h3>Home</h3>
-                <p>The O876 Raycaster Engine is an open-source, free-to-use Raycasting framework, for building web browser games.</p>
-                <p>This project has been developped with some useful products and libraries.</p>
+                <h3>Local project status</h3>
+                <p>Welcome to your local game project management page.</p>
+                <h4>Run project</h4>
+                <p>Click here to <a href="/game"><b style="font-size: 1.3em">run your project</b></a>.</p>
             </div>
         </div>
         <div class="row">
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-webstorm.svg"
-                        href="https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet"
-                        title="Fast and powerful IDE that integrates Vue.js perfectly"
-                >Webstorm IDE</Logo>
+            <div class="col lg-12">
+                <h4>Published levels</h4>
+                <p>These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.
+                If you modify one of these levels via the Map Editor, you'll have to publish it again.</p>
+                <p v-if="getPublishedLevels.length === 0" style="color: #800">No published level.</p>
+                <!-- lists of level that are currently present -->
+                <LevelThumbnail
+                        v-for="l in getPublishedLevels"
+                        :key="l.name"
+                        :name="l.name"
+                        :date="l.date"
+                        :preview="l.preview"
+                        :exported="l.exported"
+                        :invault="l.invault"
+                        @unpublish="({name}) => unpublish(name)"
+                ></LevelThumbnail>
             </div>
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-jetbrains.svg"
-                        href="https://www.jetbrains.com/?from=javascript-raycasting-engine-raphael-marandet"
-                        title="Creators of Webstorm, Phpstorm and many more IDE that are essential for large and modern projects."
-                >Jetbrains</Logo>
-            </div>
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-vue-js.svg"
-                        href="https://vuejs.org/"
-                        title="A cutting edge framework which is actually very fun to work with. Everything is faster with Vue.js."
-                >Vue.js</Logo>
-            </div>
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-node-js-2.svg"
-                        href="https://nodejs.org/"
-                        title="A JavaScript runtime built on Chrome's V8 JavaScript engine."
-                >Node.js</Logo>
-            </div>
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-webpack.svg"
-                        href="https://webpack.js.org/"
-                        title="A module blunder. Essential when you write thousand of classes, files and assets."
-                >Webpack</Logo>
-            </div>
-            <div class="col lg-3 md-4 sm-6">
-                <Logo
-                        src="../../assets/logos/logo-jasmine.svg"
-                        href="https://jasmine.github.io/"
-                        title="I do test driven development !"
-                >Jasmine</Logo>
+        </div>
+        <div class="row">
+            <div class="col lg-12">
+                <h4>In vault levels</h4>
+                <p>These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.
+                To publish a level, click on "Publish" or use the Map Editor.</p>
+                <p v-if="getUnpublishedLevels.length === 0" style="color: #800">Nothing to publish.</p>
+                <LevelThumbnail
+                        v-for="l in getUnpublishedLevels"
+                        :key="l.name"
+                        :name="l.name"
+                        :date="l.date"
+                        :preview="l.preview"
+                        :exported="l.exported"
+                        :invault="l.invault"
+                        :publishable="true"
+                        @publish="({name}) => publish(name)"
+                ></LevelThumbnail>
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import Logo from "./Logo.vue";
+    import LevelThumbnail from "./LevelThumbnail.vue";
+    import {deleteJSON, fetchJSON} from "../../../../lib/src/fetch-json";
+
     export default {
         name: "HomePage",
-        components: {Logo}
+        components: {LevelThumbnail},
+        data: function() {
+            return {
+                levels: []
+            }
+        },
+
+        computed: {
+            getPublishedLevels: function() {
+                return this.levels.filter(l => l.exported);
+            },
+
+            getInVaultLevels: function() {
+                return this.levels.filter(l => !l.exported);
+            },
+
+            getUnpublishedLevels: function() {
+                const pl = this.getPublishedLevels.map(l => l.name);
+                return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+            },
+        },
+
+        methods: {
+            unpublish: async function(name) {
+                const aStr = [];
+                if (!this.getInVaultLevels.find(l => l.name === name)) {
+                    if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
+                        return;
+                    }
+                }
+                await deleteJSON('/game/level/' + name);
+                return this.fetchLevelData();
+            },
+
+            publish: async function(name) {
+                await fetchJSON('/export/' + name);
+                return this.fetchLevelData();
+            },
+
+            fetchLevelData: function() {
+                return fetchJSON('/game/levels').then(data => {
+                    this.levels.splice(0, this.levels.length, ...data);
+                });
+            }
+        },
+
+        mounted: function() {
+            this.fetchLevelData();
+        }
     }
 </script>
 

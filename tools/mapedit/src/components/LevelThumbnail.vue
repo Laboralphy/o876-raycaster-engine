@@ -71,6 +71,7 @@
 
     figure.level-thumbnail img {
         border: solid thin #000;
+        padding: 0;
     }
 
     figure.level-thumbnail figcaption span.filename {

@@ -2,7 +2,7 @@ import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
 import CanvasHelper from "../../../../../../lib/src/canvas-helper";
 import CACHE from "../../../libraries/block-cache";
-import {deleteLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
+import {deleteLevel, exportLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
 import * as CONSTS from "../../../consts";
 import {render} from "../../../libraries/block-renderer";
 
@@ -44,8 +44,9 @@ export default {
      * @param commit
      * @param content {string}
      */
-    [ACTION.LOAD_TILE]: ({commit, getters, state}, {type, content}) => {
-        commit(MUTATION.ADD_TILE, {id: getters.getMaxTileId + 1, type, content});
+    [ACTION.LOAD_TILE]: async ({commit, getters, state}, {type, content}) => {
+        const oCvs = await CanvasHelper.loadCanvas(content);
+        commit(MUTATION.ADD_TILE, {id: getters.getMaxTileId + 1, type, content, width: oCvs.width, height: oCvs.height});
     },
 
     /**
@@ -53,10 +54,12 @@ export default {
      * @param commit
      * @param content {string}
      */
-    [ACTION.LOAD_TILES]: ({commit, getters, state}, {type, contents}) => {
+    [ACTION.LOAD_TILES]: async ({commit, getters, state}, {type, contents}) => {
         let id = getters.getMaxTileId + 1;
         for (let i = 0, l = contents.length; i < l; ++i) {
-            commit(MUTATION.ADD_TILE, {id: id + i, type, content: contents[i]});
+            const content = contents[i];
+            const oCvs = await CanvasHelper.loadCanvas(content);
+            commit(MUTATION.ADD_TILE, {id: id + i, type, content, width: oCvs.width, height: oCvs.height});
         }
     },
 
@@ -190,10 +193,6 @@ export default {
         commit(MUTATION.REMOVE_CELL_TAG, {x, y, value});
     },
 
-    [ACTION.SAVE_LEVEL]: async ({commit, getters}, {name}) => {
-        await saveLevel(name, getters.getLevel);
-    },
-
     [ACTION.LOAD_LEVEL]: async ({commit}, {name}) => {
         const content = await loadLevel(name);
         if (!content) {
@@ -208,10 +207,6 @@ export default {
             CACHE.store(b.id, oCanvas);
             commit(MUTATION.SET_BLOCK_PREVIEW, {id: b.id, content: sSrc});
         }
-    },
-
-    [ACTION.DELETE_LEVEL]: async ({commit}, {name}) => {
-        const response = await deleteLevel(name);
     },
 
     [ACTION.SET_GRID_CELL]: ({commit}, {x, y, floor, block}) => {
@@ -285,6 +280,10 @@ export default {
 
             case 'stretch':
                 commit(MUTATION.SET_FLAG_STRETCH, {value});
+                break;
+
+            case 'export':
+                commit(MUTATION.SET_FLAG_EXPORT, {value});
                 break;
 
             default:

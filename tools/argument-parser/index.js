@@ -133,6 +133,9 @@ function buildArgumentStructure(oArgs, aArgDef) {
     checkRequiredArgumentValues(oArgs, aArgDef);
     const oOutput = {};
     for (let sArg in oArgs) {
+        if (sArg === '') {
+            continue;
+        }
         const value = oArgs[sArg].value;
         const oSearched = searchArgumentDefinition(sArg, aArgDef);
         if (oSearched) {

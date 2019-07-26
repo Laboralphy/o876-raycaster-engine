@@ -5,6 +5,7 @@ import RCE from "../../lib/src";
 const Engine = RCE.Engine;
 
 const LEVEL = {
+    "version": "RCE-100",
 
     "tilesets": [
         // we have several tileset for this example, but most of tilesets consist only in one frame
@@ -12,55 +13,64 @@ const LEVEL = {
             "id": "d1",
             "width": 32,
             "height": 32,
-            "src": "textures/d1.png"
+            "src": "textures/d1.png",
+            "animations": []
         },
         {
             "id": "d2",
             "width": 32,
             "height": 32,
-            "src": "textures/d2.png"
+            "src": "textures/d2.png",
+            "animations": []
         },
         {
             "id": "d3",
             "width": 32,
             "height": 32,
-            "src": "textures/d3.png"
+            "src": "textures/d3.png",
+            "animations": []
         },
         {
             "id": "d4",
             "width": 32,
             "height": 32,
-            "src": "textures/d4.png"
+            "src": "textures/d4.png",
+            "animations": []
         },
         {
             "id": "d5",
             "width": 32,
             "height": 32,
-            "src": "textures/d5.png"
+            "src": "textures/d5.png",
+            "animations": []
         },
         {
             "id": "d6",
             "width": 32,
             "height": 32,
-            "src": "textures/d6.png"
+            "src": "textures/d6.png",
+            "animations": []
         },
         {
             "id": "d7",
             "width": 32,
             "height": 32,
-            "src": "textures/d7.png"
+            "src": "textures/d7.png",
+            "animations": []
         },
         {
             "id": "d8",
             "width": 32,
             "height": 32,
-            "src": "textures/d8.png"
+            "src": "textures/d8.png",
+            "animations": []
         },
         {
             "id": "d9",
             "width": 32,
             "height": 32,
-            "src": "textures/d9.png"
+            "src": "textures/d9.png",
+            "animations": []
         },
     ],
 
@@ -75,7 +85,10 @@ const LEVEL = {
         },
         "textures": {
             "flats": "textures/flats.png", // floor and ceiling textures
-            "walls": "textures/walls.png"  // wall textures
+            "walls": "textures/walls.png",  // wall textures
+            "sky": "",
+            "smooth": false,
+            "stretch": false
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
             "########",
@@ -106,7 +119,7 @@ const LEVEL = {
         }]
     },
     "camera": {
-        "thinker": "KeyboardControlThinker", // the control thinker
+        "thinker": "FPSControlThinker", // the control thinker
         "x": 5, // camera coordinates (x-axis)
         "y": 6, // camera coordinates (y-axis)
         "angle": -Math.PI / 2 - 0.4, // looking angle
@@ -129,7 +142,9 @@ const LEVEL = {
         {"x": 1, "y": 0, "s": {"align": '@DECAL_ALIGN_BOTTOM_LEFT', "tileset": 'd7'}},
         {"x": 2, "y": 0, "s": {"align": '@DECAL_ALIGN_BOTTOM', "tileset": 'd8'}},
         {"x": 3, "y": 1, "w": {"align": '@DECAL_ALIGN_BOTTOM_RIGHT', "tileset": 'd9'}},
-    ]
+    ],
+    "tags": [],
+    "lightsources": []
 };
 
 // note that we use an "async" function, because we deal with promises when textures are loading

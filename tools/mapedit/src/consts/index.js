@@ -11,6 +11,7 @@ export const SERVICE_URL_SAVE = '/vault/';
 export const SERVICE_URL_LOAD = '/vault/';
 export const SERVICE_URL_LIST = '/vault';
 export const SERVICE_URL_DELETE = '/vault/';
+export const SERVICE_URL_EXPORT = '/export/';
 
 export const SHAPE_NONE = 0;
 export const SHAPE_CIRCLE = 1;

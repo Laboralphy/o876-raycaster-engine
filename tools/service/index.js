@@ -1,25 +1,41 @@
 /**
- * This service provides :
- * 1) access to the map editor and its persistance service
- * 2) access to examples
- * 3) access to scripts built in dist folder
+ * Service
+ *
+ * @description This is the main entry of the web service. This service offers pages that describes the project,
+ * gives access to the map editor program, manages the local game project...
+ *
+ * @author Raphaël Marandet
+ * @email raphael.marandet(at)gmail(dot)com
+ * @date 2019-06-13
  */
-const CONFIG = require('./config');
+
+
 const express = require('express');
 const path = require('path');
-const os = require('os');
 const persist = require('./persist');
-const buildZip = require('./level-zip');
+const LZ = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
+const AppRootPath = require('app-root-path');
+const pm = require('./project-mgr');
 
 const app = express();
-const ROOT = path.resolve(__dirname, '../../');
+
+const O876_RC_ROOT_PATH = path.resolve(__dirname, '../../');
+const CONFIG = require('./config');
 
 const readdir = util.promisify(fs.readdir);
 
 function print(...args) {
     console.log(...args);
+}
+
+
+function initFavicon() {
+    app.get('/favicon.ico', (req, res) => {
+        print('serving favicon');
+        res.sendFile(path.resolve(__dirname, 'favicon/favicon.png'));
+    });
 }
 
 /**
@@ -28,9 +44,11 @@ function print(...args) {
  */
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
-    app.use('/mapedit', express.static(path.resolve(ROOT, 'tools/mapedit')));
-    persist.setVaultPath(CONFIG.vault_path);
-    print('vault path : ', persist.getVaultPath());
+    app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
+
+    app.use('/game/assets', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'assets')));
+    app.use('/game/dist', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'dist')));
+    persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.getVariable('vault_path')));
 
     // list levels
     app.get('/vault', (req, res) => {
@@ -41,7 +59,6 @@ function initMapEditor() {
                 console.error(e);
             })
     });
-
     // load level
 
     app.get('/vault/:name.json', (req, res) => {
@@ -49,11 +66,17 @@ function initMapEditor() {
         persist.load(name).then(r => res.json(r));
     });
 
+    app.get('/vault/:name.jpg', (req, res) => {
+        const name = req.params.name;
+        const filename = path.resolve(persist.getVaultPath(), name, 'preview.jpg');
+        res.sendFile(filename);
+    });
+
     app.get('/vault/:name.zip', async (req, res) => {
         try {
             const name = req.params.name;
             const data = await persist.load(name);
-            const archive = await buildZip(name, data);
+            const archive = await LZ.buildZip(name, data);
             res.download(archive.filename);
         } catch (e) {
             res.json({status: 'error', error: e.message});
@@ -77,14 +100,29 @@ function initMapEditor() {
         const name = req.params.name;
         persist.rm(name).then(r => res.json(r));
     });
-}
 
+    // export this level to the game assets
+    app.get('/export/:name', async (req, res) => {
+        try {
+            const name = req.params.name;
+            const data = await persist.load(name);
+            await LZ.exportLevel(name, data, {
+                textures: CONFIG.getVariable('texture_path'),
+                level: CONFIG.getVariable('level_path'),
+                game: path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'))
+            });
+            res.json({status: 'done'});
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+}
 
 /**
  * inits the examples sub-service to give access to all examples and demos
  */
 function initExamples() {
-    const sExamplePath = path.resolve(ROOT, 'examples');
+    const sExamplePath = path.resolve(O876_RC_ROOT_PATH, 'examples');
     app.use('/examples', express.static(sExamplePath));
     app.get('/examples-list', async (req, res) => {
         // get a list of all example
@@ -101,8 +139,7 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/', express.static(path.resolve(ROOT, 'tools/website')));
-    print('website url : http://localhost:' + CONFIG.port + '/');
+    app.use('/', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/website')));
 }
 
 
@@ -111,30 +148,86 @@ function initWebSite() {
  * provides access to all packed scripts inside the DIST folder
  */
 function initDist() {
-    app.use('/dist', express.static(path.resolve(ROOT, 'dist')));
+    app.use('/dist', express.static(path.resolve(O876_RC_ROOT_PATH, 'dist')));
+}
+
+/**
+ * create the game project tree
+ */
+function initGameProject() {
+
+    // list of published levels
+    app.get('/game/levels', async (req, res) => {
+        try {
+            const aPublished = await pm.getPublishedLevels();
+            const aVault = await persist.ls();
+            aPublished.forEach(l => {
+                l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
+            });
+            aVault.forEach(l => {
+                l.exported = false;
+                l.preview = '/vault/' + l.name + '.jpg';
+                l.invault = true;
+            });
+            const aLevels = aPublished.concat(aVault);
+            res.json(aLevels);
+        } catch (e) {
+            res.json({status: 'error', error: e.message});
+        }
+    });
+
+    app.delete('/game/level/:name', (req, res) => {
+        pm
+            .unpublishLevel(req.params.name)
+            .then(() => res.json({status: 'done'}))
+            .catch(e => res.json({status: 'error', error: e.message}));
+    });
+
+    app.get('/game/', (req, res) => {
+        res.redirect(301, '/game/index.html');
+    });
+
+    app.get('/game/index.html', (req, res) => {
+        res.sendFile(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'index.html'));
+    });
+
+    pm.run(AppRootPath.path);
 }
 
 
 function run(options) {
+    print('---------------------------------');
+    print('O876 Raycaster Engine Web Service');
+    print('version: ' + process.env.npm_package_version);
+    print('Laboralphy');
+    print('---------------------------------');
+    print(' ');
     if ('port' in options) {
-        CONFIG.port = options.port;
+        CONFIG.setVariable('port', options.port);
     }
 
     if ('vault_path' in options) {
-        if (options.vault_path === '~' || options.vault_path.startsWith('~/')) {
-            options.vault_path = path.resolve(os.homedir(), options.vault_path.substr(2));
-        }
-        CONFIG.vault_path = options.vault_path;
+        CONFIG.setVariable('vault_path', options.vault_path);
     }
 
+    if ('game_path' in options) {
+        CONFIG.setVariable('game_path', options.game_path);
+    }
+
+    initGameProject();
+    initFavicon();
     initMapEditor();
     initExamples();
     initDist();
     initWebSite();
 
-    app.listen(CONFIG.port);
-    print('game path : ', CONFIG.game_path);
-    print('server port : ', CONFIG.port);
+    app.listen(CONFIG.getVariable('port'));
+    print('base location', AppRootPath.path);
+    print('vault location :', CONFIG.getVariable('vault_path'));
+    print('game project location :', CONFIG.getVariable('game_path'));
+    print('server port :', CONFIG.getVariable('port'));
+    print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
+    print('service is now listening...')
 }
 
 module.exports = {

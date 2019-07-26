@@ -79,9 +79,9 @@
 
             deleteClicked() {
                 if (confirm('Delete this block ?')) {
+                    this.deleteBlock({id: this.selected});
                     this.selected = null;
                     this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
-                    this.deleteBlock({id: this.selected});
                 }
             },
 

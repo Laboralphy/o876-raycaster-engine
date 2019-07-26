@@ -2,7 +2,26 @@
  * Generates an engine compliant JSON out of a MapEdit save file
  * this is a node.js module
  */
-const LOOPS = ['@LOOP_NONE', '@LOOP_FORWARD', '@LOOP_YOYO'];
+const LOOPS = [
+    '@LOOP_NONE',
+    '@LOOP_FORWARD',
+    '@LOOP_YOYO'
+];
+const PHYS = [
+    "@PHYS_NONE",
+    "@PHYS_WALL",
+    "@PHYS_DOOR_UP",
+    "@PHYS_CURT_UP",
+    "@PHYS_DOOR_DOWN",
+    "@PHYS_CURT_DOWN",
+    "@PHYS_DOOR_LEFT",
+    "@PHYS_DOOR_RIGHT",
+    "@PHYS_DOOR_DOUBLE",
+    "@PHYS_SECRET_BLOCK",
+    "@PHYS_TRANSPARENT_BLOCK",
+    "@PHYS_INVISIBLE_BLOCK",
+    "@PHYS_OFFSET_BLOCK"
+];
 const DEFAULT_ANIMATION_NAME = 'default';
 
 let combineTiles = async function() {};
@@ -57,14 +76,15 @@ async function generateTileset(tilesets, idTile) {
     output.src = src;
     output.width = width;
     output.height = height;
-    output.animations = nFrames > 1 ? {
-        [DEFAULT_ANIMATION_NAME]: {
+    output.animations = nFrames > 1 ? [
+        {
+            id: DEFAULT_ANIMATION_NAME,
             start: [0, 0, 0, 0, 0, 0, 0, 0],
             length: nFrames | 0,
             duration: tile.animation.duration | 0,
             loop: LOOPS[tile.animation.loop]
         }
-    } : null;
+    ] : [];
     return output;
 }
 
@@ -90,7 +110,7 @@ function generateBlueprint(things, id) {
             ghost: data.ghost,
             size: data.size,
             tangible: data.tangible,
-            light: data.light,
+            light: data.light, ???
             tile: data.tile
     }
 
@@ -113,13 +133,18 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
-    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
     }
-    if (thing.light) {
+    if (thing.light.enabled) {
         output.fx.push('@FX_LIGHT_SOURCE');
+        // TODO rendre ceci conditionnel, lorsque les paramètres sont > 0
+        output.lightsource = {
+            r0: parseFloat(thing.light.inner),
+            r1: parseFloat(thing.light.outer),
+            v: parseFloat(thing.light.value)
+        };
     }
     switch (thing.opacity) {
         case 0: // 100%
@@ -190,9 +215,9 @@ function generateMap(input) {
     // déterminer s'il y a un uppermap
     const grid = input.grid;
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
-    output.map = grid.map(row => row.map(cell => cell.block));
+    output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
     }
     return output;
 }
@@ -263,9 +288,9 @@ function generateLegend(input, block) {
 
 
     // ca ne marche pas
-    return {
+    const r = {
         code: block.id,
-        phys: block.phys,
+        phys: PHYS[block.phys],
         offset: block.offs | 0,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
@@ -274,13 +299,18 @@ function generateLegend(input, block) {
             s: generateFace(input, block.faces.s, 'wall'),
             f: generateFace(input, block.faces.f, 'flat'),
             c: generateFace(input, block.faces.c, 'flat'),
-        },
-        light: block.light.enabled ? {
+        }
+    };
+
+    if (block.light.enabled) {
+        r.lightsource = {
             r0: block.light.inner | 0,
             r1: block.light.outer | 0,
             v:  parseFloat(block.light.value)
-        } : null
-    };
+        };
+    }
+
+    return r;
 }
 
 function generateLegends(input) {
@@ -301,8 +331,8 @@ function generateShading(input) {
     return {
         color: a.fog.color,      // fog color
         factor: a.fog.distance | 0,     // distance (texels) where the texture shading increase by one unit
-        brightness: a.brightness | 0, // base brightness
-        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : false,    // color filter for sprites (ambient color)
+        brightness: (a.brightness | 0) / 100, // base brightness
+        filter: a.filter.enabled && a.filter.length > 0 ? a.filter.color : null,    // color filter for sprites (ambient color)
     };
 }
 
@@ -327,7 +357,7 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
-                const size = oTT.size | 0;
+                const size = (oTile.width >> 1) | 0;
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];
                 const yp = y * ps + zp[thing.y];
@@ -335,9 +365,10 @@ function generateObjectsAndDecals(input) {
                 aObjects.push({
                     x: xp,
                     y: yp,
+                    z: (oTile.height >> 1) - 48,
                     angle: 0,
                     blueprint: idThingTemplate,
-                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : false
+                    animation: !!oTile.animation ? DEFAULT_ANIMATION_NAME : null
                 });
             } else {
                 // il s'agit d'un decal
@@ -402,8 +433,8 @@ function generateCamera(input) {
     return {
         x: input.startpoint.x,
         y: input.startpoint.y,
-        angle: input.startpoint.angle * Math.PI,
-        thinker: 'KeyboardControlThinker'
+        z: 1,
+        angle: input.startpoint.angle * Math.PI
     };
 }
 
@@ -423,20 +454,26 @@ function generateTags(input) {
     return aTags;
 }
 
+function generateLightsources(input) {
+    return [];
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
     }
     setImageAppender(imageAppender);
     return {
-        version: 'eng-100',
+        version: 'RCE-100',
         tilesets: await generateTilesets(input),
         blueprints: generateBlueprints(input),
         level: await generateLevel(input),
         shading: generateShading(input),
         ...generateObjectsAndDecals(input),
         camera: generateCamera(input),
-        tags: generateTags(input)
+        tags: generateTags(input),
+        lightsources: generateLightsources(input),
+        preview: input.preview
     };
 }
 

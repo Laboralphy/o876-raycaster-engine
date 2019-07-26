@@ -1,0 +1,384 @@
+{
+  "version": "RCE-100",
+  "tilesets": [
+    {
+      "id": 9,
+      "src": "assets/textures/ac87902b2fe2661535c35c987eba3968.png",
+      "width": 27,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 10,
+      "src": "assets/textures/a33616df0afe5f80c430dc345bb9c78a.png",
+      "width": 12,
+      "height": 96,
+      "animations": [
+        {
+          "id": "default",
+          "start": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "length": 4,
+          "duration": 160,
+          "loop": "@LOOP_FORWARD"
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "src": "assets/textures/6412ce1e4b866669fc7d4359af9df7ac.png",
+      "width": 12,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 12,
+      "src": "assets/textures/fcd6f53aa5b730e15318f2ed5e6072be.png",
+      "width": 12,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 13,
+      "src": "assets/textures/2b7787f64e9b844d0c3bda6f2f8f379d.png",
+      "width": 12,
+      "height": 96,
+      "animations": []
+    }
+  ],
+  "blueprints": [
+    {
+      "id": 1,
+      "tileset": 9,
+      "thinker": "TangibleThinker",
+      "size": 10,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 2,
+      "tileset": 10,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": [
+        "@FX_LIGHT_SOURCE"
+      ]
+    }
+  ],
+  "level": {
+    "map": [
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        3
+      ],
+      [
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3
+      ],
+      [
+        3,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        1,
+        1,
+        1,
+        1,
+        3,
+        3,
+        3
+      ],
+      [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3
+      ]
+    ],
+    "legend": [
+      {
+        "code": 1,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 2,
+          "c": 0
+        },
+        "light": null
+      },
+      {
+        "code": 2,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 2,
+          "c": 0
+        },
+        "light": {
+          "r0": 64,
+          "r1": 128,
+          "v": 0.55
+        }
+      },
+      {
+        "code": 3,
+        "phys": "@PHYS_WALL",
+        "offset": 0,
+        "faces": {
+          "n": 4,
+          "e": 4,
+          "w": 4,
+          "s": 4,
+          "f": null,
+          "c": null
+        },
+        "light": null
+      }
+    ],
+    "textures": {
+      "flats": "assets/textures/f34e9fe7c8632189e7c241afb5479603.png",
+      "walls": "assets/textures/db96505e8c75ea3f8d394b2b5222b0d0.png",
+      "sky": "",
+      "smooth": false,
+      "stretch": false
+    },
+    "metrics": {
+      "spacing": 64,
+      "height": 96
+    }
+  },
+  "shading": {
+    "color": "black",
+    "factor": 50,
+    "brightness": 0,
+    "filter": false
+  },
+  "objects": [
+    {
+      "x": 352,
+      "y": 326,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 2,
+      "animation": "default"
+    },
+    {
+      "x": 762,
+      "y": 416,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 2,
+      "animation": "default"
+    },
+    {
+      "x": 224,
+      "y": 570,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 2,
+      "animation": "default"
+    },
+    {
+      "x": 672,
+      "y": 563,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 1,
+      "animation": null
+    }
+  ],
+  "decals": [],
+  "camera": {
+    "x": 1,
+    "y": 6,
+    "z": 1,
+    "angle": 0
+  },
+  "tags": [],
+  "preview": "assets/textures/17b3ddb3f0e2684cac8a2109f139962f.jpg"
+}

@@ -7,9 +7,9 @@
             <MyButton :disabled="!selectedLevel" @click="erase"><DeleteIcon decorative></DeleteIcon> Delete</MyButton> -
             <MyButton
                     :disabled="!selectedLevel"
-                    :href="'/vault/' + selectedLevel + '.zip'"
-                    title="download level as .json and all textures as .png, all packed in a .zip archive"
-            ><ArchiveIcon title="download level as .json and all textures as .png, all packed in a .zip archive" decorative></ArchiveIcon> Download as .zip</MyButton>
+                    @click="exportToGame"
+                    title="Publishes the level and its textures into the game project asset directories"
+            ><PublishIcon title="Publishes the level and its textures into the game project asset directories" decorative></PublishIcon> Publish</MyButton>
         </template>
         <div>
             <LevelThumbnail
@@ -17,7 +17,7 @@
                     :key="l.name"
                     :name="l.name"
                     :date="l.date"
-                    :preview="l.preview"
+                    :preview="'/vault/' + l.name + '.jpg'"
                     :selected="l.name === selectedLevel"
                     @click="() => onClick(l.name)"
                     @dblclick="() => onDblClick(l.name)"
@@ -31,19 +31,20 @@
     import {createNamespacedHelpers} from 'vuex';
     import * as EDITOR_ACTION from '../store/modules/editor/action-types';
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as FH from '../libraries/fetch-helper';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
-    import ArchiveIcon from "vue-material-design-icons/Archive.vue";
+    import PublishIcon from "vue-material-design-icons/Publish.vue";
 
     const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
     const {mapActions: levelMapActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
-        components: {ArchiveIcon, DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
+        components: {PublishIcon, DeleteIcon, FolderOpenIcon, MyButton, Window, LevelThumbnail},
 
         data: function() {
             return {
@@ -66,14 +67,14 @@
             }),
 
             ...levelMapActions({
-                loadLevel: LEVEL_ACTION.LOAD_LEVEL,
-                deleteLevel: LEVEL_ACTION.DELETE_LEVEL
+                loadLevel: LEVEL_ACTION.LOAD_LEVEL
             }),
 
             loadAndExit: async function() {
-                await this.loadLevel({name: this.selectedLevel});
+                const name = this.selectedLevel;
+                await this.loadLevel({name});
                 await this.setStatusBarText({text: 'Level successfully loaded : ' + name});
-                await this.setLevelName({name: this.selectedLevel});
+                await this.setLevelName({name});
                 this.$router.push('/level/blocks');
             },
 
@@ -87,10 +88,23 @@
             },
 
             erase: async function() {
-                if (confirm('Do you want to delete this level : ' + this.selectedLevel + ' ? (this operation is definitive)')) {
-                    await this.deleteLevel({name: this.selectedLevel});
+                const name = this.selectedLevel;
+                if (confirm('Do you want to delete this level : ' + name + ' ? (this operation is definitive)')) {
+                    await FH.deleteLevel(name);
                     await this.setStatusBarText({text: 'Level delete : ' + name});
                     await this.listLevels();
+                }
+            },
+
+            exportToGame: async function() {
+                const name = this.selectedLevel;
+                const result = await FH.exportLevel(name);
+                if (result.status === 'done') {
+                    await this.setStatusBarText({text: 'Level successfully published : ' + name});
+                    alert('Level successfully published : ' + name)
+                } else {
+                    await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
+                    alert('Error while publishing level : ' + name + ' - ' + result.error)
                 }
             }
         },

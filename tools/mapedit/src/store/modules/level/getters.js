@@ -42,5 +42,6 @@ export default {
     getThings: state => state.things,
     getAmbiance: state => state.ambiance,
     getFlagSmooth: state => state.flags.smooth,
-    getFlagStretch: state => state.flags.stretch
+    getFlagStretch: state => state.flags.stretch,
+    getFlagExport: state => state.flags.export
 }

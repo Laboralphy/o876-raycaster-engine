@@ -182,6 +182,7 @@
     import * as LEVEL_MUTATION from '../store/modules/level/mutation-types';
     import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
+    import * as FH from '../libraries/fetch-helper';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MapIcon from "vue-material-design-icons/Map.vue";
@@ -251,7 +252,9 @@
                 'getGridSize',
                 'getGrid',
                 'getBlocks',
-                'getStartpoint'
+                'getStartpoint',
+                'getLevel',
+                'getFlagExport'
             ]),
 
             ...editorMapGetters([
@@ -352,12 +355,10 @@
         methods: {
             ...levelMapActions({
                 setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
-                saveLevel: LEVEL_ACTION.SAVE_LEVEL,
                 setGridCell: LEVEL_ACTION.SET_GRID_CELL,
                 setGridCells: LEVEL_ACTION.SET_GRID_CELLS,
                 setCellProps: LEVEL_ACTION.SET_CELL_PROPS
             }),
-
 
             ...editorMapActions({
                 setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
@@ -432,13 +433,24 @@
                 let oLowerCvs = null;
                 let oUpperCvs = null;
 
-                window.BC = BlockCache;
                 if (!!cell.block) {
                     oLowerCvs = BlockCache.load(cell.block);
                 }
 
                 if (!!cell.upperblock) {
                     oUpperCvs = BlockCache.load(cell.upperblock);
+                }
+
+                if (!oLowerCvs && !oUpperCvs) {
+                    //ctx.save();
+                    ctx.fillStyle = 'red';
+                    ctx.fillRect(
+                        (canvas.width >> 1) - 2,
+                        (canvas.height >> 1) - 2,
+                        4,
+                        4,
+                    );
+                    //ctx.restore();
                 }
 
 
@@ -683,7 +695,7 @@
             },
 
 
-            resizeEvent() {
+            resizeEvent: function() {
                 this.$nextTick(() => {
                     const oCanvas = this.$refs.levelgrid;
                     const oScrollZone = this.$refs.scrollzone;
@@ -697,14 +709,15 @@
                 });
             },
 
-            pixelToCell(x, y) {
+            pixelToCell: function(x, y) {
                 const nCellSize = this.getCellSize;
                 const xc = Math.floor(x / nCellSize);
                 const yc = Math.floor(y / nCellSize);
                 return {x: xc, y: yc};
             },
 
-            mousedownEvent(event) {
+
+            mousedownEvent: function(event) {
                 const x = event.layerX;
                 const y = event.layerY;
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
@@ -718,7 +731,7 @@
                 this.select.y = yc;
             },
 
-            mouseupEvent(event) {
+            mouseupEvent: function(event) {
                 const x = event.layerX;
                 const y = event.layerY;
                 this.selecting = false;
@@ -770,15 +783,48 @@
             },
 
 
-            mousemoveEvent(event) {
+            /**
+             * invalidates the difference between two region
+             * @param oPrevRegion {{x1, y1, x2, y2}} previous region
+             * @param oNewRegion {{x1, y1, x2, y2}} new region
+             */
+            invalidateDiffRegion: function(oPrevRegion, oNewRegion) {
+                const mr = new MarkerRegistry();
+                let ymin = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+                let ymax = Math.min(oPrevRegion.y1, oPrevRegion.y2);
+                let xmin = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+                let xmax = Math.min(oPrevRegion.x1, oPrevRegion.x2);
+                for (let y = ymin; y <= ymax; ++y) {
+                    for (let x = xmin; x <= xmax; ++x) {
+                        mr.mark(x, y);
+                    }
+                }
+                ymin = Math.min(oNewRegion.y1, oNewRegion.y2);
+                ymax = Math.min(oNewRegion.y1, oNewRegion.y2);
+                xmin = Math.min(oNewRegion.x1, oNewRegion.x2);
+                xmax = Math.min(oNewRegion.x1, oNewRegion.x2);
+                for (let y = ymin; y <= ymax; ++y) {
+                    for (let x = xmin; x <= xmax; ++x) {
+                        if (mr.isMarked(x, y)) {
+                            mr.unmark(x, y);
+                        } else {
+                            mr.mark(x, y);
+                        }
+                    }
+                }
+                mr.iterate((x, y) => this.modifications.mark(x, y));
+            },
+
+            mousemoveEvent: function(event) {
                 if (this.selecting) {
                     const x = event.layerX;
                     const y = event.layerY;
                     const {x: xc, y: yc} = this.pixelToCell(x, y);
                     const oPrevRegion = this.getLevelGridSelectedRegion;
                     if (xc !== oPrevRegion.x2 || yc !== oPrevRegion.y2) {
+                        const oNewRegion = {x1: this.select.x, y1: this.select.y, x2: xc, y2: yc};
                         this.invalidateRect(oPrevRegion.x1, oPrevRegion.y1, oPrevRegion.x2, oPrevRegion.y2);
-                        this.selectRegion({x1: this.select.x, y1: this.select.y, x2: xc, y2: yc});
+                        this.selectRegion(oNewRegion);
                         this.invalidateRect(this.select.x, this.select.y, xc, yc);
                         this.redraw();
                     }
@@ -799,7 +845,7 @@
                 this.setGridCells({xy: aList, floor: this.selectedFloor, block: this.getBlockBrowserSelected});
             },
 
-            getThingCoords(x, y) {
+            getThingCoords: function(x, y) {
                 const {x: xc, y: yc} = this.pixelToCell(x, y);
                 const cs = this.getCellSize;
                 const xm = x % cs;
@@ -843,11 +889,22 @@
             /**
              * Save the level
              */
-            saveClick: function () {
+            saveClick: async function () {
+                if (this.getFlagExport) {
+                    if (!confirm('As the auto-publish flag is "on". You must confirm the level auto-publication during saving process.')) {
+                        this.setStatusBarText({text: 'Level NOT saved'});
+                        return false;
+                    }
+                }
                 const sFileName = prompt('Enter a filename', this.getLevelName);
                 if (!!sFileName) {
-                    this.saveLevel({name: sFileName});
-                    this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                    await FH.saveLevel(sFileName, this.getLevel);
+                    if (this.getFlagExport) {
+                        await FH.exportLevel(sFileName);
+                        this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
+                    } else {
+                        this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                    }
                 } else {
                     this.setStatusBarText({text: 'Level NOT saved'});
                 }
@@ -857,18 +914,36 @@
                 this.$router.push('/list-levels');
             },
 
+
+            otherGridSize: function() {
+                const n = prompt('Enter the new grid size (between 1 and 256).');
+                if (n > 0 && n <= 256) {
+                    this.setGridSize({value: n});
+                } else {
+                    alert('This value is invalid.');
+                }
+            },
+
             /**
              * Grid shrinks : loses one row and one column
              */
             smallerGridClick: function () {
-                this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+                if (this.getGridSize > 40) {
+                    this.otherGridSize();
+                } else {
+                    this.setGridSize({value: Math.max(1, this.getGridSize - 1)});
+                }
             },
 
             /**
              * Grid grows : gain one row and one column
              */
             largerGridClick: function () {
-                this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+                if (this.getGridSize > 40) {
+                    this.otherGridSize();
+                } else {
+                    this.setGridSize({value: Math.min(256, this.getGridSize + 1)});
+                }
             },
 
             /**
@@ -965,7 +1040,7 @@
                     xy.push({x, y})
                 });
                 await this.setGridCells({
-                    xy, floor: this.selectedFloor, block: null
+                    xy, floor: this.selectedFloor, block: undefined
                 });
                 await this.pushUndo({undo: aUndo});
                 this.$nextTick(() => this.redraw());

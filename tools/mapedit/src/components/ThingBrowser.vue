@@ -92,11 +92,12 @@
                 this.$router.push('/build-thing/' + this.selected);
             },
 
-            deleteClicked: function() {
+            deleteClicked: async function() {
                 // effacer le thing
                 const id = this.selected;
                 if (!!id && confirm('Delete this block ?')) {
-                    this.deleteThing({id});
+                    await this.deleteThing({id});
+                    this.somethingHasChanged({value: true});
                     this.selected = null;
                 }
             },

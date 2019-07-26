@@ -17,95 +17,101 @@ const THINKERS = {
 
 function getLevel() {
     return {
-
+        "version": "RCE-100",
         "tilesets": [
             {
                 "id": "m-warlock-b",
                 "src": "gfx/sprites/m_warlock_b.png",
                 "width": 64,
                 "height": 96,
-                "animations": {
-                    "stand": {
+                "animations": [
+                    {
+                        "id": "stand",
                         "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
-                    "walk": {
+                    {
+                        "id": "walk",
                         "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
                         "duration": 133
                     },
-                    "attack": {
+                    {
+                        "id": "attack",
                         "start": [8, 10, 12, 14, 0, 2, 4, 6],
                         "length": 2,
                         "loop": "@LOOP_FORWARD",
                         "duration": 40
                     },
-                    "death": {
+                    {
+                        "id": "death",
                         "start": 16,
                         "length": 11,
                         "loop": "@LOOP_FORWARD",
                         "duration": 80,
                         "iterations": 1
                     }
-                }
+                ]
             },
             {
                 "id": "p-magbolt-0",
                 "src": "gfx/sprites/p_magbolt.png",
                 "width": 48,
                 "height": 64,
-                "fx": "@FX_LIGHT_SOURCE",
-                "animations": {
-                    "fly": {
+                "animations": [
+                    {
+                        "id": "fly",
                         "start": [4, 5, 6, 7, 0, 1, 2, 3],
                         "length": 1,
                         "loop": "@LOOP_NONE"
                     },
-                    "explode": {
+                    {
+                        "id": "explode",
                         "start": 8,
                         "length": 6,
                         "loop": "@LOOP_FORWARD",
                         "duration": 80,
                         "iterations": 1
                     }
-                }
+                ]
             },
             {
                 "id": "o-bluedisc",
                 "src": "gfx/sprites/o_bluedisc.png",
                 "width": 32,
                 "height": 32,
-                "fx": "@FX_LIGHT_SOURCE",
-                "animations": {
-                    "normal": {
+                "animations": [
+                    {
+                        "id": "normal",
                         "start": 0,
                         "length": 5,
                         "loop": "@LOOP_YOYO"
                     }
-                }
+                ]
             },
             {
                 "id": "o-bluereddisc",
                 "src": "gfx/sprites/o_bluereddisc.png",
                 "width": 32,
                 "height": 32,
-                "fx": "@FX_NONE",
-                "animations": {
-                    "blue": {
+                "animations": [
+                    {
+                        "id": "blue",
                         "start": 0,
                         "length": 5,
                         "loop": "@LOOP_YOYO",
                         "duration": 160
                     },
-                    "red": {
+                    {
+                        "id": "red",
                         "start": 5,
                         "length": 5,
                         "loop": "@LOOP_YOYO",
                         "duration": 40
                     }
-                }
+                ]
             }
         ],
 
@@ -149,7 +155,8 @@ function getLevel() {
                 "flats": "gfx/textures/flats-1.png",
                 "walls": "gfx/textures/walls-2.png",
                 "sky": "gfx/textures/sky.png",
-                smooth: false
+                smooth: false,
+                stretch: false
             },
             "map": [
                 "####################",
@@ -219,7 +226,7 @@ function getLevel() {
                     "f": 0,
                     "c": 1
                 },
-                "light": {
+                "lightsource": {
                     "r0": 512,
                     "r1": 768,
                     "v": 0.3
@@ -231,6 +238,7 @@ function getLevel() {
             {
                 "x": 9 * 64 + 32,
                 "y": 13 * 64 + 32,
+                "z": 0,
                 "angle": 0,
                 "blueprint": "o-bluereddisc",
                 "animation": "blue"
@@ -238,6 +246,7 @@ function getLevel() {
             {
                 "x": 14 * 64 + 32,
                 "y": 13 * 64 + 32,
+                "z": 0,
                 "angle": 0,
                 "blueprint": "m-warlock-b",
                 "animation": "stand"
@@ -251,6 +260,8 @@ function getLevel() {
             angle: -1 * Math.PI / 2, // looking angle
             z: 1 // camera altitude (1 is the default object)
         },
+        "tags": [],
+        "lightsources": []
     };
 }
 // json de configuration
