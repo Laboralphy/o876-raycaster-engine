@@ -17,7 +17,7 @@ const THINKERS = {
 
 function getLevel() {
     return {
-        "version": "rce-100",
+        "version": "RCE-100",
         "tilesets": [
             {
                 "id": "m-warlock-b",
@@ -260,6 +260,8 @@ function getLevel() {
             angle: -1 * Math.PI / 2, // looking angle
             z: 1 // camera altitude (1 is the default object)
         },
+        "tags": [],
+        "lightsources": []
     };
 }
 // json de configuration

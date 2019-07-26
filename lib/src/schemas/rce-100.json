@@ -2,6 +2,64 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "description": "Object used for the O876-Raycaster-Engine level definition",
+  "definitions": {
+    "id": {
+      "description": "an id which can be either integer or string",
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "tile": {
+      "description": "this is an index to a tile in the wall or flat tileset. it can be null (no tile).",
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "decal": {
+      "description": "a decal face definition",
+      "type": "object",
+      "properties": {
+        "align": {
+          "type": "string",
+          "description": "the alignement value",
+          "enum": [
+            "@DECAL_ALIGN_TOP_LEFT",
+            "@DECAL_ALIGN_TOP",
+            "@DECAL_ALIGN_TOP_RIGHT",
+            "@DECAL_ALIGN_LEFT",
+            "@DECAL_ALIGN_CENTER",
+            "@DECAL_ALIGN_RIGHT",
+            "@DECAL_ALIGN_BOTTOM_LEFT",
+            "@DECAL_ALIGN_BOTTOM",
+            "@DECAL_ALIGN_BOTTOM_RIGHT"
+          ]
+        },
+        "tileset": {
+          "$ref": "#/definitions/id",
+          "description": "the tileset id used to paint the decal"
+        },
+        "tile": {
+          "$ref": "#/definitions/tile",
+          "description": "the tile index used to paint the decal, if not specified default value is 0 (the first tile)"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "align",
+        "tileset"
+      ]
+    }
+  },
   "properties": {
     "version": {
       "type": "string",
@@ -16,8 +74,8 @@
           "description": "A tileset is the definition of graphic item used by blueprints",
           "properties": {
             "id": {
-              "type": "integer",
-              "description": "The tileset id, referenced by blueprints, and decals"
+              "$ref": "#/definitions/id",
+              "description": "the tileset id, can be referenced by blueprints and decals"
             },
             "src": {
               "type": "string",
@@ -96,11 +154,11 @@
           "description": "Definition of a blueprint",
           "properties": {
             "id": {
-              "type": "integer",
-              "description": "The blueprint id, referenced by objects"
+              "$ref": "#/definitions/id",
+              "description": "the blueprint id, can be referenced by objects"
             },
             "tileset": {
-              "type": "integer",
+              "$ref": "#/definitions/id",
               "description": "A reference to a tileset"
             },
             "thinker": {
@@ -322,76 +380,28 @@
                   "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face",
                   "properties": {
                     "f": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the floor face, a flat face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "floor flat tile",
+                      "$ref": "#/definitions/tile"
                     },
                     "c": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the ceiling face, a flat face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "ceiling flat tile",
+                      "$ref": "#/definitions/tile"
                     },
                     "n": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the north face, a wall face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "north wall tile",
+                      "$ref": "#/definitions/tile"
                     },
                     "e": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the east face, a wall face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "east wall tile",
+                      "$ref": "#/definitions/tile"
                     },
                     "w": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the west face, a wall face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "west wall tile",
+                      "$ref": "#/definitions/tile"
                     },
                     "s": {
-                      "anyOf": [
-                        {
-                          "type": "integer",
-                          "description": "the south face, a wall face"
-                        },
-                        {
-                          "type": "null",
-                          "description": "no texture defined on this face"
-                        }
-                      ]
+                      "description": "south wall tile",
+                      "$ref": "#/definitions/tile"
                     }
                   }
                 },
@@ -529,7 +539,7 @@
               "description": "Object heading angle"
             },
             "blueprint": {
-              "type": "integer",
+              "$ref": "#/definitions/id",
               "description": "A reference to a blueprint"
             },
             "animation": {
@@ -561,39 +571,47 @@
       "description": "A collection of decal definitions",
       "items": [
         {
-          "x": {
-            "type": "number",
-            "description": "Cell coordinates where the decal is located (x axis)"
+          "type": "object",
+          "description": "decal parameters",
+          "properties": {
+            "x": {
+              "type": "integer",
+              "description": "Cell coordinates where the decal is located (x axis)"
+            },
+            "y": {
+              "type": "integer",
+              "description": "Cell coordinates where the decal is located (y axis)"
+            },
+            "f": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the floor face"
+            },
+            "c": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the ceiling face"
+            },
+            "n": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the north face"
+            },
+            "e": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the east face"
+            },
+            "w": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the west face"
+            },
+            "s": {
+              "$ref": "#/definitions/decal",
+              "description": "indicates that the decal will be put on the south face"
+            }
           },
-          "y": {
-            "type": "number",
-            "description": "Cell coordinates where the decal is located (y axis)"
-          },
-          "f": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the floor face"
-          },
-          "c": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the ceiling face"
-          },
-          "n": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the north face"
-          },
-          "e": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the east face"
-          },
-          "w": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the west face"
-          },
-          "s": {
-            "type": "integer",
-            "description": "indicates that the decal will be put on the south face"
-          },
-          "additionalProperties": false
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "y"
+          ]
         }
       ]
     },
@@ -639,6 +657,7 @@
     "objects",
     "decals",
     "lightsources",
+    "tags",
     "camera"
   ]
 }

@@ -57,7 +57,7 @@ const LEVEL = {
         }]
     },
     "camera": {
-        "thinker": "KeyboardControlThinker", // the control thinker
+        "thinker": "FPSControlThinker", // the control thinker
         x: 5, // camera coordinates (x-axis)
         y: 6, // camera coordinates (y-axis)
         angle: -Math.PI / 2 - 0.4, // looking angle
@@ -66,7 +66,9 @@ const LEVEL = {
     "objects": [
         // there is no object
     ],
-    "decals": []
+    "decals": [],
+    "tags": [],
+    "lightsources": []
 };
 
 // note that we use an "async" function, because we deal with promises when textures are loading
