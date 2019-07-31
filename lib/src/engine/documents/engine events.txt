@@ -39,7 +39,7 @@ Engine.screen events
 --------------------
 
 pointerlockenter
-This event is emitted when the user click on the game surface and takes controls of the camera.
+This event is emitted when the user click on the game surface and takes controls of the camera. No parameter.
 
 pointerlockexit
 This event is emitted when the user hit the "escape" key and exits pointer lock mode. No parameter.
