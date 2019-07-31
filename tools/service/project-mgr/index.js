@@ -198,6 +198,11 @@ async function run(sBaseDir) {
         },
 
         {
+            path: path.join(GAME_SRC_DIR, 'Game.js'),
+            template: 'Game.js'
+        },
+
+        {
             path: path.join(GAME_SRC_DIR, 'index.js'),
             template: 'index.js'
         },

@@ -131,7 +131,7 @@ function generateBlueprint(things, id) {
         throw new Error('blueprint referenced thing "' + id + '" which could not be found');
     }
     output.tileset = thing.tile;
-    output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
+    output.thinker = thing.tangible ? 'StaticTangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
     output.fx = [];
     if (thing.ghost) {

@@ -1,0 +1,45 @@
+Engine events
+-------------
+
+initialized
+This event is emitted when the engine is initialized. No parameter.
+
+update
+This event is emitted when an update occurs. This event is triggered many times per second, so only fast handler
+must be attached to this event, to avoid performance issues. No parameter.
+
+render
+This event is emitted when an image is rendered. Like the 'update' event, this event is triggered many times
+per second, so only fast handler must be attached to this event, to avoid performance issues. No parameter.
+
+tag.xxxx.enter
+This event is emitted when an entity enters a "xxxx" tagged zone.
+parameter :
+- entity : the entity that entered the tagged zone.
+- parameters : the tag parameters, defined during level design phase.
+- remove : if the event handler call this function, the tag is removed.
+
+tag.xxxx.leave
+This event is emitted when an entity leaves a "xxxx" tagged zone.
+parameter :
+- entity : the entity that left the tagged zone.
+- parameters : the tag parameters, defined during level design phase.
+- remove : if the event handler call this function, the tag is removed.
+
+tag.xxxx.push
+This event is emitted when an entity "pushes" a "xxxx" tagged block.
+parameter :
+- entity : the entity that pushed the tagged block.
+- parameters : the tag parameters, defined during level design phase.
+- remove : if the event handler call this function, the tag is removed.
+
+
+
+Engine.screen events
+--------------------
+
+pointerlockenter
+This event is emitted when the user click on the game surface and takes controls of the camera.
+
+pointerlockexit
+This event is emitted when the user hit the "escape" key and exits pointer lock mode. No parameter.

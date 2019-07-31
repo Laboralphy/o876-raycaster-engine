@@ -1,19 +1,10 @@
-import * as ASC from 'o876-raycaster-engine/lib/src/auto-stretch-canvas';
+import Game from './Game';
+import FadeIn from "../../lib/src/engine/filters/FadeIn";
 
-/**
- * Screen (canvas) initialization.
- * Will imbue specified canvas with auto-stretch capabilities.
- * @param oCanvas {HTMLCanvasElement}
- */
-function initScreen(oCanvas) {
-    ASC.setControlledCanvas(oCanvas);
+async function main() {
+    const g = new Game();
+    await g.run();
+    g.engine.filters.link(new FadeIn({duration: 600}));
 }
 
-
-function main() {
-    const oScreen = document.querySelector('div.game canvas.screen');
-    const oCtx = oScreen.getContext('2d');
-    oCtx.fillStyle = 'blue';
-    oCtx.fillRect(0, 0, 400, 250);
-    initScreen(oScreen);
-}
+window.addEventListener('load', main);

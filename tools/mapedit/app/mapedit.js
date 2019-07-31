@@ -1520,7 +1520,6 @@ class Engine {
                 FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
             },
             cameraThinker: 'FPSControlThinker'
-
         };
     }
 
@@ -3191,8 +3190,12 @@ class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["d
             use: " "                              // use something in front of...
         });
         this._lookAmount = 0;
-
         this._lastTime = 0;
+        this._lookFactor = 0.01;
+    }
+
+    setLookFactor(f) {
+        this._lookFactor = f;
     }
 
     setupKeys(oKeys, bReset = false) {
@@ -3233,7 +3236,7 @@ class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["d
     }
 
     look(x) {
-        this._lookAmount += x;
+        this._lookAmount += x * this._lookFactor;
     }
 
     computeAngleSpeed(nTime) {
@@ -3668,91 +3671,6 @@ class StaticTangibleThinker extends _MoverThinker__WEBPACK_IMPORTED_MODULE_1__["
     constructor() {
         super();
         this._dummy = new _collider_Dummy__WEBPACK_IMPORTED_MODULE_0__["default"]();
-        this._bUnderForceEffect = false;
-    }
-
-    get dummy() {
-        return this._dummy;
-    }
-
-    syncDummy() {
-        // synchronizing dummy position
-        const engine = this.engine;
-        const entity = this.entity;
-        const dummy = this._dummy;
-        const location = entity.location;
-        const collider = engine._collider;
-        dummy.radius = entity.size;
-        dummy.position.set(location.x, location.y);
-        collider.track(dummy);
-    }
-
-    /**
-     * retrieve a list of dummies that collides with this entity
-     * @returns {Dummy[]}
-     */
-    getCollidingDummies() {
-        return this.engine._collider.getCollidingDummies(this._dummy);
-    }
-
-    processForces() {
-        // synchronizing dummy position
-        const engine = this.engine;
-        const dummy = this._dummy;
-        const collider = engine._collider;
-        const forceField = dummy.forceField;
-        this.syncDummy();
-        const aHitters = this.getCollidingDummies();
-        if (aHitters.length > 0) {
-            collider.computeCollidingForces(dummy, aHitters);
-        }
-        const f = forceField.computeForces();
-        if (f.x !== 0 || f.y !==  0) {
-            this.slide(f);
-            this.changeMovement();
-            this._bUnderForceEffect = true;
-        } else if (this._bUnderForceEffect) {
-            // nous étions toujours sous influence de forces, mais celles ci viennent de retomber à zero
-            // indiquer néanmoins les changement un e dernière fois
-            this._bUnderForceEffect = false;
-            this.changeMovement();
-        }
-        forceField.reduceForces();
-    }
-
-
-    $move() {
-        // this.processForces();
-    }
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (StaticTangibleThinker);
-
-/***/ }),
-
-/***/ "./lib/src/engine/thinkers/StaticThinker.js":
-/*!**************************************************!*\
-  !*** ./lib/src/engine/thinkers/StaticThinker.js ***!
-  \**************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _collider_Dummy__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../collider/Dummy */ "./lib/src/collider/Dummy.js");
-/* harmony import */ var _Thinker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Thinker */ "./lib/src/engine/thinkers/Thinker.js");
-
-
-
-
-/**
- * this thinker is suitable for moving entities that can interact with other tangible entities
- * the collider and force field instances allows this thinker to properly react after any collision
- */
-class StaticThinker extends _Thinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
-    constructor() {
-        super();
-        this._dummy = new _collider_Dummy__WEBPACK_IMPORTED_MODULE_0__["default"]();
         this.state = 'standing'
     }
 
@@ -3770,6 +3688,50 @@ class StaticThinker extends _Thinker__WEBPACK_IMPORTED_MODULE_1__["default"] {
 
     $standing() {
         this.syncDummy();
+    }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (StaticTangibleThinker);
+
+/***/ }),
+
+/***/ "./lib/src/engine/thinkers/StaticThinker.js":
+/*!**************************************************!*\
+  !*** ./lib/src/engine/thinkers/StaticThinker.js ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Thinker__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Thinker */ "./lib/src/engine/thinkers/Thinker.js");
+//import Dummy from "../../collider/Dummy";
+
+
+
+/**
+ * this thinker is suitable for moving entities that do not interact with other tangible entities
+ */
+class StaticThinker extends _Thinker__WEBPACK_IMPORTED_MODULE_0__["default"] {
+    constructor() {
+        super();
+        //this._dummy = new Dummy();
+        this.state = 'standing'
+    }
+
+    syncDummy() {
+        // synchronizing dummy position
+        //const entity = this.entity;
+        //const dummy = this._dummy;
+        //const location = entity.location;
+        //const collider = engine._collider;
+        //dummy.radius = entity.size;
+        //dummy.position.set(location.x, location.y);
+        //collider.track(dummy);
+    }
+
+    $standing() {
+        //this.syncDummy();
     }
 }
 
@@ -5409,6 +5371,11 @@ class Extender {
      */
     static objectSet(oObj, sBranch, newValue) {
         const {node, key} = Extender.objectReachBranch(oObj, sBranch);
+        if (Object.isSealed(node) && !(key in node)) {
+            console.trace();
+            console.log(node);
+            throw new Error('cannot set ' + key + ' property : object is sealed');
+        }
         node[key] = newValue;
     }
 
@@ -5462,12 +5429,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+const REACTOR_PROP_NAME = '__reactor__';
+const REACTOR_CHANGED_EVENT_NAME = 'changed';
+
 /**
  * This class is use to observe all mutations against an object.
  */
 class Reactor {
     constructor(obj) {
         this._events = new events__WEBPACK_IMPORTED_MODULE_0___default.a();
+        this._log = [];
         this.clear();
         this.makeReactiveObject(obj, undefined, obj);
     }
@@ -5480,7 +5451,13 @@ class Reactor {
         return Object.keys(this._log);
     }
 
-
+    /**
+     * remove all event handler, and clears the log to save memory
+     */
+    dispose() {
+        this._events.removeAllListeners(REACTOR_CHANGED_EVENT_NAME);
+        this.clear();
+    }
 
     /**
      * clears the mutation log
@@ -5496,7 +5473,7 @@ class Reactor {
     notify(path, oRoot) {
         path = path.substr(1);
         this._log[path] = true;
-        this._events.emit('changed', {key: path, root: oRoot});
+        this._events.emit(REACTOR_CHANGED_EVENT_NAME, {key: path, root: oRoot});
     }
 
     /**
@@ -5597,6 +5574,7 @@ class Reactor {
                 this.makeReactiveItem(obj, key, path, oRoot);
             }
         }
+        Object.seal(obj);
     }
 }
 
@@ -6792,7 +6770,7 @@ class Renderer {
                         SHADING.filter,
                         SHADING.brightness
                     );
-                    this.transmitOptionToStorey(opt);
+                    //this.transmitOptionToStorey(opt);
                     break;
 
                 case 'textures.files.walls':
@@ -8137,16 +8115,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     addLightSource(x, y, r0, r1, v) {
         const r = _consts__WEBPACK_IMPORTED_MODULE_4__["METRIC_LIGHTMAP_SCALE"] / this._options.metrics.spacing;
         // the original values, in raycaster referential
-        const oRayCasterLightSource = {
-            x,
-            y,
-            r0,
-            r1,
-            v
-        };
         // the reactive raycaster light source
         const oLightMap = this._lightMap;
-        const oReactiveRCLS = new _object_helper_Reactor__WEBPACK_IMPORTED_MODULE_5__["default"](oRayCasterLightSource);
         const source = oLightMap.addSource(
             x * r | 0,
             y * r | 0,
@@ -8154,9 +8124,18 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             r1 * r | 0,
             v
         );
-        oRayCasterLightSource.remove = () => {
-            oLightMap.removeSource(source);
+        const oRayCasterLightSource = {
+            x,
+            y,
+            r0,
+            r1,
+            v,
+            remove: () => {
+                this._lightMap.removeSource(source);
+                oReactiveRCLS.dispose();
+            }
         };
+        const oReactiveRCLS = new _object_helper_Reactor__WEBPACK_IMPORTED_MODULE_5__["default"](oRayCasterLightSource);
         oReactiveRCLS.events.on('changed', ({key, root}) => {
             if (key === 'v') {
                 source.metrics[key] = oRayCasterLightSource[key];
@@ -54424,7 +54403,7 @@ var render = function() {
                   _vm._v(" "),
                   _c("div", [
                     _c("label", [
-                      _vm._v("Tangible flag: "),
+                      _vm._v("Obstacle flag: "),
                       _c("input", {
                         directives: [
                           {
@@ -54473,7 +54452,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "hint" }, [
                       _vm._v(
-                        "If checked, the thing will be tangible and will affect any colliding things."
+                        "If checked, the thing will be tangible and will affect (block) any colliding things."
                       )
                     ])
                   ]),
@@ -71731,7 +71710,7 @@ function generateBlueprint(things, id) {
         throw new Error('blueprint referenced thing "' + id + '" which could not be found');
     }
     output.tileset = thing.tile;
-    output.thinker = thing.tangible ? 'TangibleThinker' : 'StaticThinker';
+    output.thinker = thing.tangible ? 'StaticTangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
     output.fx = [];
     if (thing.ghost) {

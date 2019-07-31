@@ -43,8 +43,8 @@
                                     <div class="hint">Apply an "Add color" filter. The thing will appear like a ghost. The effect is more relevant in dark areas.</div>
                                 </div>
                                 <div>
-                                    <label>Tangible flag: <input v-model="value.tangible" type="checkbox" /></label>
-                                    <div class="hint">If checked, the thing will be tangible and will affect any colliding things.</div>
+                                    <label>Obstacle flag: <input v-model="value.tangible" type="checkbox" /></label>
+                                    <div class="hint">If checked, the thing will be tangible and will affect (block) any colliding things.</div>
                                 </div>
                                 <div v-if="value.tangible">
                                     <label>Physical size: <input v-model="value.size" type="number" min="1" /></label>
