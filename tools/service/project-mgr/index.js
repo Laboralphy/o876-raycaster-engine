@@ -96,7 +96,7 @@ async function getUnusedTextures() {
     for (let i = 0, l = aFiles.length; i < l; ++i) {
         const sFileName = path.resolve(GAME_LEVELS_DIR, aFiles[i].name + '.json');
         const content = await readFile(sFileName);
-        const data = JSON.parse(content);
+        const data = JSON.parse(content.toString());
         const aLocalTextures = _getLevelReferencedTextures(data);
         aFoundTextures = aFoundTextures.concat(aLocalTextures);
     }
@@ -130,7 +130,7 @@ async function getPublishedLevels() {
             const data = JSON.parse(content);
             const name = path.basename(f.name, JSON_EXT);
             const exported = true;
-            const preview = '/game/' + data.preview;
+            const preview = CONFIG.getVariable('game_action_prefix') + '/' + data.preview;
             const st = await stat(sFileName);
             const date = Math.floor(st.mtimeMs);
             aLevels.push({

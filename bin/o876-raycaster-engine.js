@@ -52,6 +52,17 @@ function initArgumentParser() {
             }
         },
         {
+            name: 'prefix',
+            desc: 'Sets the game fetching url prefix. By default this value is "/game"',
+            short: 'x',
+            long: 'prefix',
+            required: false,
+            value: {
+                required: true,
+                type: 'string'
+            }
+        },
+        {
             name: 'help',
             desc: 'Displays this help.',
             short: 'h',
@@ -80,6 +91,9 @@ function main() {
     }
     if ('game_dir' in r) {
         options.game_path = r.game_dir;
+    }
+    if ('prefix' in r) {
+        options.game_action_prefix = r.prefix;
     }
     Service.run(options);
 }

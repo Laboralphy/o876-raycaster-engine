@@ -26,6 +26,8 @@ const CONFIG = require('./config');
 
 const readdir = util.promisify(fs.readdir);
 
+
+
 function print(...args) {
     console.log(...args);
 }
@@ -45,9 +47,6 @@ function initFavicon() {
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
     app.use('/mapedit', express.static(path.resolve(O876_RC_ROOT_PATH, 'tools/mapedit')));
-
-    app.use('/game/assets', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'assets')));
-    app.use('/game/dist', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'dist')));
     persist.setVaultPath(path.resolve(AppRootPath.path, CONFIG.getVariable('vault_path')));
 
     // list levels
@@ -59,19 +58,21 @@ function initMapEditor() {
                 console.error(e);
             })
     });
-    // load level
 
+    // loads a level for the map editor
     app.get('/vault/:name.json', (req, res) => {
         const name = req.params.name;
         persist.load(name).then(r => res.json(r));
     });
 
+    // load a preview thumbnail of a level
     app.get('/vault/:name.jpg', (req, res) => {
         const name = req.params.name;
         const filename = path.resolve(persist.getVaultPath(), name, 'preview.jpg');
         res.sendFile(filename);
     });
 
+    // get the zipped version of a level
     app.get('/vault/:name.zip', async (req, res) => {
         try {
             const name = req.params.name;
@@ -83,7 +84,7 @@ function initMapEditor() {
         }
     });
 
-    // save level
+    // save level in the vault under a specified name
     app.post('/vault/:name', async (req, res) => {
         try {
             const name = req.params.name;
@@ -95,7 +96,7 @@ function initMapEditor() {
         }
     });
 
-    // delete level
+    // delete a specified level from the vault
     app.delete('/vault/:name', (req, res) => {
         const name = req.params.name;
         persist.rm(name).then(r => res.json(r));
@@ -155,9 +156,16 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
+    const GAME_ACTION_PREFIX = CONFIG.getVariable('game_action_prefix');
 
-    // list of published levels
-    app.get('/game/levels', async (req, res) => {
+    // declare the assets directory as static resources
+    app.use(GAME_ACTION_PREFIX + '/assets', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'assets')));
+
+    // declare the dist directory as static resources
+    app.use(GAME_ACTION_PREFIX + '/dist', express.static(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'dist')));
+
+    // get a list of published levels
+    app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
         try {
             const aPublished = await pm.getPublishedLevels();
             const aVault = await persist.ls();
@@ -176,18 +184,21 @@ function initGameProject() {
         }
     });
 
-    app.delete('/game/level/:name', (req, res) => {
+    // unpublish a specified level
+    app.delete(GAME_ACTION_PREFIX + '/level/:name', (req, res) => {
         pm
             .unpublishLevel(req.params.name)
             .then(() => res.json({status: 'done'}))
             .catch(e => res.json({status: 'error', error: e.message}));
     });
 
-    app.get('/game/', (req, res) => {
-        res.redirect(301, '/game/index.html');
+    // redirection -> launch the game
+    app.get(GAME_ACTION_PREFIX + '/', (req, res) => {
+        res.redirect(301, GAME_ACTION_PREFIX + '/index.html');
     });
 
-    app.get('/game/index.html', (req, res) => {
+    // launch the game
+    app.get(GAME_ACTION_PREFIX + '/index.html', (req, res) => {
         res.sendFile(path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'), 'index.html'));
     });
 
@@ -214,6 +225,10 @@ function run(options) {
         CONFIG.setVariable('game_path', options.game_path);
     }
 
+    if ('game_action_prefix' in options) {
+        CONFIG.setVariable('game_action_prefix', options.game_action_prefix);
+    }
+
     initGameProject();
     initFavicon();
     initMapEditor();
@@ -222,6 +237,7 @@ function run(options) {
     initWebSite();
 
     app.listen(CONFIG.getVariable('port'));
+    print('action prefix', CONFIG.getVariable('game_action_prefix'));
     print('base location', AppRootPath.path);
     print('vault location :', CONFIG.getVariable('vault_path'));
     print('game project location :', CONFIG.getVariable('game_path'));
