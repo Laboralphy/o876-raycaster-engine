@@ -199,7 +199,7 @@ async function buildZip(name, dataME) {
  * @param textures {string} directory where texture goes
  * @param level {string} directory where level go
  * @param game {string} game base directory
- * @returns {Promise<void>}
+ * @returns {Promise}
  */
 async function exportLevel(name, dataME, {textures, level, game}) {
     const dataENG = await generate(dataME, appendImages);

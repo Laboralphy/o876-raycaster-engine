@@ -1515,10 +1515,8 @@ class Engine {
         this._events = new events__WEBPACK_IMPORTED_MODULE_20___default.a();
 
         this._config = {
-            urls: {
-                FETCH_LEVEL: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
-                FETCH_DATA: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
-            },
+            fetchLevelAction: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_LEVEL_URL"],
+            fetchDataAction: _consts__WEBPACK_IMPORTED_MODULE_0__["FETCH_DATA_URL"],
             cameraThinker: 'FPSControlThinker'
         };
     }
@@ -2324,7 +2322,7 @@ class Engine {
             oRCOptions.shading = data.shading;
         }
 
-        rc.defineOptions(oRCOptions);
+        rc.config(oRCOptions);
 
         let PROGRESS = 0;
         const showProgress = sLabel => {
@@ -2535,7 +2533,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchLevel(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_LEVEL.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.fetchLevelAction.replace(/:name/, sName));
     }
 
     /**
@@ -2544,7 +2542,7 @@ class Engine {
      * @return {*} the loaded json (a promise in fact)
      */
     fetchData(sName) {
-        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.urls.FETCH_DATA.replace(/:name/, sName));
+        return Object(_fetch_json__WEBPACK_IMPORTED_MODULE_17__["fetchJSON"])(this._config.fetchDataAction.replace(/:name/, sName));
     }
 
 
@@ -3138,9 +3136,9 @@ const DECAL_ALIGN_BOTTOM = 2;
 const DECAL_ALIGN_BOTTOM_RIGHT = 3;
 
 // built in path values
-const FETCH_LEVEL_URL = '/game/assets/levels/:name.json';
-const FETCH_DATA_URL = '/game/assets/data/:name.json';
-const FETCH_LEVEL_LIST_URL = '/game/levels';
+const FETCH_LEVEL_URL = './assets/levels/:name.json';
+const FETCH_DATA_URL = './assets/data/:name.json';
+const FETCH_LEVEL_LIST_URL = './levels';
 
 
 /***/ }),
@@ -6822,7 +6820,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 */
 
-    defineOptions(opt) {
+    config(opt) {
         _object_helper_Extender__WEBPACK_IMPORTED_MODULE_10__["default"].objectExtends(this._options, opt);
     }
 

@@ -2139,6 +2139,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/website/src/components/LevelThumbnail.vue");
 /* harmony import */ var _lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../lib/src/fetch-json */ "./lib/src/fetch-json/index.js");
+/* harmony import */ var _service_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../service/config */ "./tools/service/config.js");
+/* harmony import */ var _service_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_service_config__WEBPACK_IMPORTED_MODULE_2__);
 //
 //
 //
@@ -2190,6 +2192,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -2199,7 +2202,8 @@ __webpack_require__.r(__webpack_exports__);
     components: {LevelThumbnail: _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__["default"]},
     data: function() {
         return {
-            levels: []
+            levels: [],
+            gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix')
         }
     },
 
@@ -2226,7 +2230,7 @@ __webpack_require__.r(__webpack_exports__);
                     return;
                 }
             }
-            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])('/game/level/' + name);
+            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])(this.gameActionPrefix + '/level/' + name);
             return this.fetchLevelData();
         },
 
@@ -2236,7 +2240,7 @@ __webpack_require__.r(__webpack_exports__);
         },
 
         fetchLevelData: function() {
-            return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/game/levels').then(data => {
+            return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(this.gameActionPrefix + '/levels').then(data => {
                 this.levels.splice(0, this.levels.length, ...data);
             });
         }
@@ -3783,7 +3787,27 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("Local project status")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Welcome to your local game project management page.")
+        ]),
+        _vm._v(" "),
+        _c("h4", [_vm._v("Run project")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("Click here to "),
+          _c("a", { attrs: { href: _vm.gameActionPrefix } }, [
+            _c("b", { staticStyle: { "font-size": "1.3em" } }, [
+              _vm._v("run your project")
+            ])
+          ]),
+          _vm._v(".")
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "row" }, [
       _c(
@@ -3873,34 +3897,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col lg-12" }, [
-        _c("h3", [_vm._v("Local project status")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Welcome to your local game project management page.")
-        ]),
-        _vm._v(" "),
-        _c("h4", [_vm._v("Run project")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Click here to "),
-          _c("a", { attrs: { href: "/game" } }, [
-            _c("b", { staticStyle: { "font-size": "1.3em" } }, [
-              _vm._v("run your project")
-            ])
-          ]),
-          _vm._v(".")
-        ])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -17067,6 +17064,47 @@ try {
 
 module.exports = g;
 
+
+/***/ }),
+
+/***/ "./tools/service/config.js":
+/*!*********************************!*\
+  !*** ./tools/service/config.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+const CONFIG = {
+    // not configurable by command line
+    texture_path: 'assets/textures',
+    level_path: 'assets/levels',
+    data_path: 'assets/data',
+
+    // configurable at launch by command line
+    game_action_prefix: '/game', // this value must be identical with your Engine configuration
+    port: 8080, // server listening port
+    vault_path: 'vault',    // the folder where all map editor levels are located
+    game_path: 'game',  // the game project folder
+
+};
+
+function getVariable(s) {
+    if (s in CONFIG) {
+        return CONFIG[s];
+    } else {
+        throw new Error('This config variable is unknown : ' + s);
+    }
+}
+
+function setVariable(s, v) {
+    CONFIG[s] = v;
+}
+
+
+
+module.exports = {
+    getVariable, setVariable
+};
 
 /***/ }),
 

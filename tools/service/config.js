@@ -1,12 +1,16 @@
 const CONFIG = {
-    port: 8080,
-    vault_path: 'vault',
-    game_path: 'game',
+    // not configurable by command line
     texture_path: 'assets/textures',
     level_path: 'assets/levels',
-    data_path: 'assets/data'
-};
+    data_path: 'assets/data',
 
+    // configurable at launch by command line
+    game_action_prefix: '/game', // this value must be identical with your Engine configuration
+    port: 8080, // server listening port
+    vault_path: 'vault',    // the folder where all map editor levels are located
+    game_path: 'game',  // the game project folder
+
+};
 
 function getVariable(s) {
     if (s in CONFIG) {

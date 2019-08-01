@@ -5,7 +5,7 @@
                 <h3>Local project status</h3>
                 <p>Welcome to your local game project management page.</p>
                 <h4>Run project</h4>
-                <p>Click here to <a href="/game"><b style="font-size: 1.3em">run your project</b></a>.</p>
+                <p>Click here to <a :href="gameActionPrefix"><b style="font-size: 1.3em">run your project</b></a>.</p>
             </div>
         </div>
         <div class="row">
@@ -52,13 +52,15 @@
 <script>
     import LevelThumbnail from "./LevelThumbnail.vue";
     import {deleteJSON, fetchJSON} from "../../../../lib/src/fetch-json";
+    import CONFIG from "../../../service/config";
 
     export default {
         name: "HomePage",
         components: {LevelThumbnail},
         data: function() {
             return {
-                levels: []
+                levels: [],
+                gameActionPrefix: CONFIG.getVariable('game_action_prefix')
             }
         },
 
@@ -85,7 +87,7 @@
                         return;
                     }
                 }
-                await deleteJSON('/game/level/' + name);
+                await deleteJSON(this.gameActionPrefix + '/level/' + name);
                 return this.fetchLevelData();
             },
 
@@ -95,7 +97,7 @@
             },
 
             fetchLevelData: function() {
-                return fetchJSON('/game/levels').then(data => {
+                return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
                     this.levels.splice(0, this.levels.length, ...data);
                 });
             }
