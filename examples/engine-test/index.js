@@ -78,6 +78,13 @@ function getLevel() {
                 ]
             },
             {
+                "id": "o-twisted",
+                "src": "gfx/sprites/w_twisted_novellist.png",
+                "width": 145,
+                "height": 192,
+                "animations": []
+            },
+            {
                 "id": "o-bluedisc",
                 "src": "gfx/sprites/o_bluedisc.png",
                 "width": 32,
@@ -134,8 +141,15 @@ function getLevel() {
             {
                 "id": "o-bluedisc",
                 "tileset": "o-bluedisc",
-                "thinker": null,
                 "size": 24
+            },
+
+            {
+                "id": "o-twisted",
+                "tileset": "o-twisted",
+                "scale": 2,
+                "size": 24,
+                "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
             },
 
             {
@@ -244,6 +258,14 @@ function getLevel() {
                 "animation": "blue"
             },
             {
+                "x": 7 * 64 + 32,
+                "y": 13 * 64 + 32,
+                "z": 0,
+                "angle": 0,
+                "blueprint": "o-twisted",
+                "animation": null
+            },
+            {
                 "x": 14 * 64 + 32,
                 "y": 13 * 64 + 32,
                 "z": 0,
@@ -283,7 +305,7 @@ async function main() {
     const ct = engine.camera.thinker;
 
     // retrieve the warlock which is the second entity created
-    const oWarlock = engine.horde.entities[1];
+    const oWarlock = engine.horde.entities[2];
 
 	// plugs keyboard events
     window.addEventListener('keydown', event => {
