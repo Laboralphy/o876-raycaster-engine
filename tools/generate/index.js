@@ -1,6 +1,12 @@
-/*
- * Generates an engine compliant JSON out of a MapEdit save file
+/**
+ * generate
+ *
+ * @description Generates an engine compliant JSON out of a MapEdit save file
  * this is a node.js module
+ *
+ * @author Raphaël Marandet
+ * @email raphael.marandet(at)gmail(dot)com
+ * @date 2019-06-12
  */
 const LOOPS = [
     '@LOOP_NONE',
@@ -357,6 +363,9 @@ function generateObjectsAndDecals(input) {
             }
             if (bWalkable) {
                 const oTile = tiles.find(t => t.id === oTT.tile);
+                if (!oTile) {
+                    throw new Error('this tile is undefined : "' + oTT.tile + '"');
+                }
                 const size = (oTile.width >> 1) | 0;
                 const zp = [size, ps >> 1, ps - size];
                 const xp = x * ps + zp[thing.x];

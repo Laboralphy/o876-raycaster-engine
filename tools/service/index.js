@@ -114,6 +114,7 @@ function initMapEditor() {
             });
             res.json({status: 'done'});
         } catch (e) {
+            console.error(e);
             res.json({status: 'error', error: e.message});
         }
     });
@@ -237,11 +238,11 @@ function run(options) {
     initWebSite();
 
     app.listen(CONFIG.getVariable('port'));
-    print('action prefix', CONFIG.getVariable('game_action_prefix'));
-    print('base location', AppRootPath.path);
+    print('base location :', AppRootPath.path);
     print('vault location :', CONFIG.getVariable('vault_path'));
     print('game project location :', CONFIG.getVariable('game_path'));
     print('server port :', CONFIG.getVariable('port'));
+    print('action prefix :', CONFIG.getVariable('game_action_prefix'));
     print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
     print('service is now listening...')
 }

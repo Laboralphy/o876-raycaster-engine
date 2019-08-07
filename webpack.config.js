@@ -1,7 +1,7 @@
 const path = require('path');
 const fs = require('fs');
-
-const gameConfig = require('./game/webpack.config');
+const GAME_FOLDER = 'game'; // game project directory
+const DEV_CONFIG = false; // include dev examples or not ?
 
 const devConfig = {
     mode: "development",
@@ -72,11 +72,24 @@ const exampleConfig = {
     target: 'web'
 };
 
-module.exports = [
-    //devConfig,
-    gameConfig,
+const gameConfigFile = path.resolve(__dirname, GAME_FOLDER, 'webpack.config.js');
+const gameConfig = !!fs.statSync(gameConfigFile)
+    ? require(gameConfigFile)
+    : null;
+
+const CONFIG = [
     testConfig,
     exampleConfig,
     mapeditConfig,
     websiteConfig
 ];
+
+if (!!gameConfig) {
+    CONFIG.push(gameConfig);
+}
+
+if (DEV_CONFIG) {
+    CONFIG.push(devConfig);
+}
+
+module.exports = CONFIG;
