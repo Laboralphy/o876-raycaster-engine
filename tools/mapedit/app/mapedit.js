@@ -7096,7 +7096,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     getSurfaceTileIndex(code, nSide) {
         const xTile = this._cellCodes[code][nSide];
-        return typeof xTile === 'object' ? xTile.frame() : xTile;
+        return typeof xTile === 'object' && xTile !== null ? xTile.frame() : xTile;
     }
 
 
@@ -7330,13 +7330,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         oTileSet = this._walls;
                         iTile = this.getSurfaceTileIndex(scene.cellCode & 0xFFF, scene.cellSide);
                     }
-                    zbuffer.push(this.createScreenSlice(
-                        scene,
-                    	xScreen,
-                        oTileSet,
-                        iTile,
-						oXBlock.lightMap[scene.wallColumn * CSM_LMC / ps | 0]
-					));
+                    if (iTile !== null) {
+                        zbuffer.push(this.createScreenSlice(
+                            scene,
+                            xScreen,
+                            oTileSet,
+                            iTile,
+                            oXBlock.lightMap[scene.wallColumn * CSM_LMC / ps | 0]
+                        ));
+                    }
                 }
                 if (scene.resume.b) {
                     exclusionRegistry.mark(scene.xCell, scene.yCell);
