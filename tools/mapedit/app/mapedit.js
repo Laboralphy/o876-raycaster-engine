@@ -6419,6 +6419,22 @@ class MapHelper {
         }
     }
 
+    buildNullMaterialItem() {
+        return {
+            code: 0,
+            phys: _consts__WEBPACK_IMPORTED_MODULE_1__["DEFAULT_PHYS_CODE"],
+            faces: {
+                n: null,
+                e: null,
+                w: null,
+                s: null,
+                f: null,
+                c: null
+            },
+            offset: 0,
+            light: null
+        }
+    }
 
     buildMaterialItem(renderer, m) {
         return {
@@ -6474,7 +6490,7 @@ class MapHelper {
         const ps = renderer.options.metrics.spacing;
         renderer.setMapSize(size);
         mapData.forEach((row, y) => row.forEach((cell, x) => {
-            const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
+            const m = !!cell ? this.getMaterial(cell) : this.buildNullMaterialItem();
             renderer.setCellMaterial(x, y, cell);
             renderer.setCellPhys(x, y, m.phys);
             renderer.setCellOffset(x, y, m.offset);
@@ -6496,7 +6512,7 @@ class MapHelper {
             const storey = renderer.createStorey();
             const mapUpperData = upperMap.map(rowProcess);
             mapUpperData.forEach((row, y) => row.forEach((cell, x) => {
-                const m = !!cell ? this.getMaterial(cell) : {phys: _consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_NONE"], offset: 0};
+                const m = !!cell ? this.getMaterial(cell) : this.buildNullMaterialItem();
                 storey.setCellMaterial(x, y, cell);
                 storey.setCellPhys(x, y, m.phys);
                 storey.setCellOffset(x, y, m.offset);
@@ -9079,7 +9095,7 @@ class TileAnimation {
 /*!*******************************************!*\
   !*** ./lib/src/raycaster/consts/index.js ***!
   \*******************************************/
-/*! exports provided: PHYS_NONE, PHYS_WALL, PHYS_FIRST_DOOR, PHYS_DOOR_UP, PHYS_CURT_UP, PHYS_DOOR_DOWN, PHYS_CURT_DOWN, PHYS_DOOR_LEFT, PHYS_DOOR_RIGHT, PHYS_DOOR_DOUBLE, PHYS_LAST_DOOR, PHYS_SECRET_BLOCK, PHYS_TRANSPARENT_BLOCK, PHYS_INVISIBLE_BLOCK, PHYS_OFFSET_BLOCK, PHYS_DOOR_D, PHYS_DOOR_E, PHYS_DOOR_F, METRIC_LIGHTMAP_SCALE, FACE_WEST, FACE_SOUTH, FACE_EAST, FACE_NORTH, FACE_FLOOR, FACE_CEILING, ANIM_LOOP_NONE, ANIM_LOOP_FORWARD, ANIM_LOOP_YOYO, FX_NONE, FX_LIGHT_ADD, FX_LIGHT_SOURCE, FX_ALPHA_75, FX_ALPHA_50, FX_ALPHA_25, FX_DIM0, FX_ALPHA */
+/*! exports provided: PHYS_NONE, PHYS_WALL, PHYS_FIRST_DOOR, PHYS_DOOR_UP, PHYS_CURT_UP, PHYS_DOOR_DOWN, PHYS_CURT_DOWN, PHYS_DOOR_LEFT, PHYS_DOOR_RIGHT, PHYS_DOOR_DOUBLE, PHYS_LAST_DOOR, PHYS_SECRET_BLOCK, PHYS_TRANSPARENT_BLOCK, PHYS_INVISIBLE_BLOCK, PHYS_OFFSET_BLOCK, PHYS_DOOR_D, PHYS_DOOR_E, PHYS_DOOR_F, METRIC_LIGHTMAP_SCALE, FACE_WEST, FACE_SOUTH, FACE_EAST, FACE_NORTH, FACE_FLOOR, FACE_CEILING, ANIM_LOOP_NONE, ANIM_LOOP_FORWARD, ANIM_LOOP_YOYO, FX_NONE, FX_LIGHT_ADD, FX_LIGHT_SOURCE, FX_ALPHA_75, FX_ALPHA_50, FX_ALPHA_25, FX_DIM0, FX_ALPHA, DEFAULT_PHYS_CODE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9120,6 +9136,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FX_ALPHA_25", function() { return FX_ALPHA_25; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FX_DIM0", function() { return FX_DIM0; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FX_ALPHA", function() { return FX_ALPHA; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "DEFAULT_PHYS_CODE", function() { return DEFAULT_PHYS_CODE; });
 
 // Laby Phys Properties
 
@@ -9229,6 +9246,9 @@ const FX_DIM0 = 0x10;
  */
 const FX_ALPHA = [1, 0.75, 0.50, 0.25, 0];
 
+
+
+const DEFAULT_PHYS_CODE = PHYS_NONE;
 
 /***/ }),
 
