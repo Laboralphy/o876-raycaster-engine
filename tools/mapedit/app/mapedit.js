@@ -1706,6 +1706,7 @@ class Engine {
         const data = context.data;
         const {x, y} = data;
         // TODO check with entity manager
+        const em = this.horde;
     }
 
     /**
@@ -2366,8 +2367,10 @@ class Engine {
 
         const nMapSize = this._rc.getMapSize();
         this._tm.setMapSize(nMapSize);
+        this.horde.setMapSize(nMapSize);
         // sync with tag grid
         const ps = this._rc.options.metrics.spacing;
+        this.horde.setSectorSize(ps);
         this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
@@ -2714,8 +2717,27 @@ const {SPRITE_DIRECTION_COUNT} = _consts__WEBPACK_IMPORTED_MODULE_1__;
 class Horde {
     constructor() {
         this._entities = [];
+        this._grid = new Grid();
+        this._grid.on('rebuild', this._rebuild);
+        this._nSectorSize = 0;
     }
 
+    _rebuild(data) {
+        data.cell = [];
+    }
+
+    setMapSize(w) {
+        this._grid.setWidth(w);
+        this._grid.setHeight(w);
+    }
+
+    setSectorSize(n) {
+        if (!this._nSectorSize) {
+            this._nSectorSize = n;
+        } else {
+            throw new Error('setting horde sector size twice : This property must be set once and for all at level construction.');
+        }
+    }
 
     /**
      * checks if an entity is linked into the engine.
@@ -2786,6 +2808,7 @@ class Horde {
     process(engine) {
         const entities = this._entities;
         const rc = engine.raycaster;
+        const ps = this._nSectorSize;
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
             const s = e.sprite;
@@ -2811,6 +2834,21 @@ class Horde {
                     const ls = e.lightsource;
                     ls.x = eloc.x;
                     ls.y = eloc.y;
+                }
+
+                // update grid sector
+                const xSector = eloc.x / ps | 0;
+                const ySector = eloc.y / ps | 0;
+                const eds = e.data.sector;
+                if (!eds) {
+                    e.data.sector = {x: xSector, y: ySector};
+                } else {
+                    const xPrev = eds.x;
+                    const yPrev = eds.y;
+                    if (xSector !== xPrev || ySector !== yPrev) {
+                        eds.x = xSector;
+                        eds.y = ySector;
+                    }
                 }
             }
             // compute animation from angle
