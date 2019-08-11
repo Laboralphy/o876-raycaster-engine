@@ -98,7 +98,7 @@ describe('#DoorContext', function() {
         });
         let ENTITY_ON_THE_WAY = true;
         let nTries = 0;
-        dc.event.on('check', function(event) {
+        dc.events.on('check', function(event) {
             ++nTries;
             event.cancel = ENTITY_ON_THE_WAY;
         });
