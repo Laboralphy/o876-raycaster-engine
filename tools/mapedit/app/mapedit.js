@@ -203,10 +203,34 @@ class ArrayHelper {
 		};
 	}
 
+
+	static remove(a, x) {
+		const i = a.indexOf(x);
+		if (i >= 0) {
+			a.splice(i, 1);
+		}
+	}
+
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (ArrayHelper);
 
+
+/***/ }),
+
+/***/ "./lib/src/array-helper/index.js":
+/*!***************************************!*\
+  !*** ./lib/src/array-helper/index.js ***!
+  \***************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ArrayHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ArrayHelper */ "./lib/src/array-helper/ArrayHelper.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_ArrayHelper__WEBPACK_IMPORTED_MODULE_0__["default"]);
 
 /***/ }),
 
@@ -579,9 +603,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _geometry_Vector__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../geometry/Vector */ "./lib/src/geometry/Vector.js");
-/* harmony import */ var _grid_Grid__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../grid/Grid */ "./lib/src/grid/Grid.js");
-/* harmony import */ var _Sector__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Sector */ "./lib/src/collider/Sector.js");
-/* harmony import */ var _geometry_GeometryHelper__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../geometry/GeometryHelper */ "./lib/src/geometry/GeometryHelper.js");
+/* harmony import */ var _geometry_GeometryHelper__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../geometry/GeometryHelper */ "./lib/src/geometry/GeometryHelper.js");
+/* harmony import */ var _sector_registry_SectorRegistry__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../sector-registry/SectorRegistry */ "./lib/src/sector-registry/SectorRegistry.js");
 /**
  * @class Collider
  * The collider computes collision between sprites.
@@ -593,57 +616,10 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-class Collider {
+class Collider extends _sector_registry_SectorRegistry__WEBPACK_IMPORTED_MODULE_2__["default"] {
 	constructor() {
+		super();
         this._origin = new _geometry_Vector__WEBPACK_IMPORTED_MODULE_0__["default"](); // vector origine du layer
-        this._grid = new _grid_Grid__WEBPACK_IMPORTED_MODULE_1__["default"]();
-        this._grid.on('rebuild', function(data) {
-            let oSector = new _Sector__WEBPACK_IMPORTED_MODULE_2__["default"]();
-            oSector.x = data.x;
-            oSector.y = data.y;
-            data.cell = oSector;
-        });
-        this._cellWidth = 0;
-        this._cellHeight = 0;
-	}
-
-    setCellWidth(w) {
-        this._cellWidth = w;
-        return this;
-    }
-
-    setCellHeight(h) {
-        this._cellHeight = h;
-        return this;
-    }
-
-    getCellWidth() {
-        return this._cellWidth;
-    }
-
-    getCellHeight() {
-        return this._cellHeight;
-    }
-
-    get grid() {
-		return this._grid;
-	}
-
-	/**
-	 * Return the sector corresponding to the given coordinates
-     * if the parameters are number, the real sector indices are used (0, 1, 2...)
-	 * if the parameter is a Vector, its components are int-divided by cell size before application
-	 * @param x {number} position x
-	 * @param y {number|undefined} position y
-	 * @return {*}
-	 */
-	sector(x, y) {
-		if (y === undefined) {
-			return this._grid.cell(x.x / this._cellWidth | 0, x.y / this._cellHeight | 0);
-		} else {
-			return this._grid.cell(x, y);
-		}
 	}
 
 	/**
@@ -689,10 +665,31 @@ class Collider {
 		let ix, iy;
 		for (iy = yMin; iy <= yMax; ++iy) {
 			for (ix = xMin; ix <= xMax; ++ix) {
-				a = a.concat(this.sector(ix, iy).collides(oDummy));
+				a = a.concat(
+					this
+						.sector(ix, iy)
+						.objects
+						.filter(oTest => Collider._entitiesAreHitting(oDummy, oTest))
+				);
 			}
 		}
 		return a;
+	}
+
+	/**
+	 * renvoie true si o1 et o2 se heurte (avec o1 != o2)
+	 * @param o1 {*} premier objet
+	 * @param o2 {*} second objet
+	 * @return {boolean}
+	 * @private
+	 * @static
+	 */
+	static _entitiesAreHitting(o1, o2) {
+		if (o1 === o2) {
+			return false;
+		} else {
+			return o1.hits(o2);
+		}
 	}
 
     /**
@@ -705,7 +702,7 @@ class Collider {
         let vPos = oDummy.position;
         let x = vPos.x;
         let y = vPos.y;
-        let dist = _geometry_GeometryHelper__WEBPACK_IMPORTED_MODULE_3__["default"].distance;
+        let dist = _geometry_GeometryHelper__WEBPACK_IMPORTED_MODULE_1__["default"].distance;
         return aHitters.map(m => {
             let mPos = m.position;
             let mx = mPos.x;
@@ -842,70 +839,6 @@ class Dummy {
 }
 
 /* harmony default export */ __webpack_exports__["default"] = (Dummy);
-
-/***/ }),
-
-/***/ "./lib/src/collider/Sector.js":
-/*!************************************!*\
-  !*** ./lib/src/collider/Sector.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/**
- * Classe enregistrant les mobile qui s'aventure dans un secteur particulier
- * du monde. LEs Mobile d'un même secteurs sont testé entre eux pour savoir
- * Qui entre en collision avec qui. */
-class Sector {
-    constructor() {
-        this._objects = [];
-        this.x = -1;
-        this.y = -1;
-    }
-
-    objects() {
-        return this._objects;
-    }
-
-    add(oObject) {
-        this._objects.push(oObject);
-    }
-
-    remove(oObject) {
-        let objects = this._objects;
-        let n = objects.indexOf(oObject);
-        if (n >= 0) {
-            objects.splice(n, 1);
-        }
-    }
-
-    /**
-     * Renvoie le nombre d'objet enregistrer dans le secteur
-     * @return int
-     */
-    count() {
-        return this._objects.length;
-    }
-
-    /** Renvoie l'objet désigné par son rang */
-    get(i) {
-        return this._objects[i] || null;
-    }
-
-    /** Renvoie les objets qui collisione avec l'objet spécifié */
-    collides(oObject) {
-        return this._objects
-            .filter(function(o) {
-                return o !== oObject &&
-                    oObject.hits(o)
-            });
-    }
-}
-
-/* harmony default export */ __webpack_exports__["default"] = (Sector);
-
 
 /***/ }),
 
@@ -1193,7 +1126,7 @@ class DoorContext {
         this._offsetMax = ofsmax;
         this._easing = new _easing__WEBPACK_IMPORTED_MODULE_0__["default"]();
         this._easing.setFunction(sfunc);
-        this.event = new events__WEBPACK_IMPORTED_MODULE_1___default.a();
+        this.events = new events__WEBPACK_IMPORTED_MODULE_1___default.a();
 
         // public properties
         // for information only (not used in this class)
@@ -1207,8 +1140,8 @@ class DoorContext {
     }
 
     setState({phase, time}) {
-        this.initPhase(phase);
         this._time = time;
+        this.initPhase(phase);
     }
 
     getState() {
@@ -1241,7 +1174,7 @@ class DoorContext {
     close() {
         if (this._phase < _consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]) {
             const checkEvent = {context: this, cancel: false};
-            this.event.emit('check', checkEvent);
+            this.events.emit('check', checkEvent);
             if (!checkEvent.cancel) {
                 this.initPhase(_consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]);
             }
@@ -1271,19 +1204,19 @@ class DoorContext {
                 easing.setOutputRange(0, this._offsetMax);
                 easing.setStepCount(this._slidingDuration);
                 this._time = 0;
-                this.event.emit('opening');
+                this.events.emit('opening');
                 break;
 
             // the door is currently opening
             case _consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_OPEN"]:
                 this._time = this._maintainDuration;
-                this.event.emit('open');
+                this.events.emit('open');
                 break;
 
             // the door is fully open, waiting for autoclose
             case _consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]:
                 const checkEvent = {context: this, cancel: false};
-                this.event.emit('check', checkEvent);
+                this.events.emit('check', checkEvent);
                 if (checkEvent.cancel) {
                     // the door closing has been cancel : something in the way ?
                     // back to phase OPEN with reduced maintain duration
@@ -1293,7 +1226,7 @@ class DoorContext {
                     easing.setOutputRange(this._offsetMax, 0);
                     easing.setStepCount(this._slidingDuration);
                     this._time = 0;
-                    this.event.emit('closing');
+                    this.events.emit('closing');
                 }
                 break;
 
@@ -1302,7 +1235,7 @@ class DoorContext {
             case _consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_DONE"]:
                 this._time = 0;
                 this._offset = 0;
-                this.event.emit('close');
+                this.events.emit('close');
                 break;
         }
     }
@@ -1561,6 +1494,7 @@ class Engine {
         camera.visible = false;
         camera.size = _consts__WEBPACK_IMPORTED_MODULE_0__["METRIC_CAMERA_DEFAULT_SIZE"];
         this._camera = camera;
+        this.horde.linkEntity(camera);
     }
 
     /**
@@ -1670,7 +1604,7 @@ class Engine {
         dc1.data.x = x;
         dc1.data.y = y;
         dc1.data.phys = nPhysCode;
-        dc1.event.on('check', event => this._checkDoorClosability(event));
+        dc1.events.on('check', event => this._checkDoorClosability(event));
         let nSecurityCheck = 0;
         this._forEachNeighbor(x, y, (xc, yc, phys) => {
             if (phys === _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_SECRET_BLOCK"]) {
@@ -1688,7 +1622,7 @@ class Engine {
                 dc2.data.x = xc;
                 dc2.data.y = yc;
                 dc2.data.phys = phys;
-                dc2.event.on('check', event => this._checkDoorClosability(event));
+                dc2.events.on('check', event => this._checkDoorClosability(event));
                 dc1.data.child = dc2;
                 dm.linkDoorContext(dc2);
             }
@@ -1698,14 +1632,13 @@ class Engine {
 
     /**
      * If the cell contains an entity it will cancel the given "door close event"
-     * @param context {DoorContext}
-     * @param cancel {boolean} will be turn to true if an entity blocks the way
+     * @param payload {*}
      * @private
      */
-    _checkDoorClosability({context, cancel}) {
-        const data = context.data;
-        const {x, y} = data;
+    _checkDoorClosability(payload) {
+        const {x, y} = payload.context.data;
         // TODO check with entity manager
+        payload.cancel = this.horde.getEntitiesAt(x, y).length > 0;
     }
 
     /**
@@ -1762,7 +1695,7 @@ class Engine {
         dc.data.x = x;
         dc.data.y = y;
         dc.data.phys = nPhysCode;
-        //dc.events.on('check', event => this._checkDoorClosability(event));
+        dc.events.on('check', event => this._checkDoorClosability(event));
         const dm = this._dm;
         dm.linkDoorContext(dc);
     }
@@ -1799,7 +1732,7 @@ class Engine {
             this._scheduler.schedule(this._time);
             this._doorProcess();
             // entity management
-            this._camera.think(this);
+            //this._camera.think(this);
             this._horde.process(this);
             this
                 ._horde
@@ -2366,8 +2299,10 @@ class Engine {
 
         const nMapSize = this._rc.getMapSize();
         this._tm.setMapSize(nMapSize);
+        this.horde.setMapSize(nMapSize);
         // sync with tag grid
         const ps = this._rc.options.metrics.spacing;
+        this.horde.setSectorSize(ps);
         this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
 
@@ -2613,7 +2548,8 @@ class Entity {
         this._inertia = new _geometry_Vector__WEBPACK_IMPORTED_MODULE_1__["default"]();
         this._dead = false;
         this._lightsource = null;
-        this.data = {};
+        this._sector = null; // this is a logical sector, for tag and door management purpose (not collision)
+        this.data = {}; // user data
     }
 
     get lightsource() {
@@ -2706,6 +2642,10 @@ class Entity {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _geometry_GeometryHelper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../geometry/GeometryHelper */ "./lib/src/geometry/GeometryHelper.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./consts */ "./lib/src/engine/consts/index.js");
+/* harmony import */ var _array_helper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../array-helper */ "./lib/src/array-helper/index.js");
+/* harmony import */ var _sector_registry_SectorRegistry__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../sector-registry/SectorRegistry */ "./lib/src/sector-registry/SectorRegistry.js");
+
+
 
 
 
@@ -2714,8 +2654,23 @@ const {SPRITE_DIRECTION_COUNT} = _consts__WEBPACK_IMPORTED_MODULE_1__;
 class Horde {
     constructor() {
         this._entities = [];
+        this._sectors = new _sector_registry_SectorRegistry__WEBPACK_IMPORTED_MODULE_3__["default"]();
     }
 
+    setMapSize(w) {
+        this
+            ._sectors
+            .grid
+            .setWidth(w)
+            .setHeight(w);
+    }
+
+    setSectorSize(n) {
+        this
+            ._sectors
+            .setCellWidth(n)
+            .setCellHeight(n);
+    }
 
     /**
      * checks if an entity is linked into the engine.
@@ -2744,6 +2699,7 @@ class Horde {
      * @param entity {Entity}
      */
     unlinkEntity(entity) {
+        entity._sector = null;
         const aEntities = this._entities;
         const iEntity = aEntities.indexOf(entity);
         if (iEntity >= 0) {
@@ -2786,34 +2742,70 @@ class Horde {
     process(engine) {
         const entities = this._entities;
         const rc = engine.raycaster;
+        const sr = this._sectors;
+        const ps = sr.getCellWidth();
         for (let i = 0, l = entities.length; i < l; ++i) {
             const e = entities[i];
             const s = e.sprite;
+            const bHasSprite = !!s;
             const eloc = e.location;
             this.updateLookingAngle(e, engine.camera);
             e.think(engine);
             let bChangeLoc = false;
-            if (s.x !== eloc.x) {
-                s.x = eloc.x;
-                bChangeLoc = true;
+            if (bHasSprite) {
+                if (s.x !== eloc.x) {
+                    s.x = eloc.x;
+                    bChangeLoc = true;
+                }
+                if (s.y !== eloc.y) {
+                    s.y = eloc.y;
+                    bChangeLoc = true;
+                }
+                if (s.z !== eloc.z) {
+                    s.h = eloc.z;
+                    bChangeLoc = true;
+                }
             }
-            if (s.y !== eloc.y) {
-                s.y = eloc.y;
-                bChangeLoc = true;
-            }
-            if (s.z !== eloc.z) {
-                s.h = eloc.z;
-                bChangeLoc = true;
-            }
-            if (bChangeLoc) {
+            // si le sprite a changé de location ou si c'est la camera
+            // mettre a jou les autre donnée de location
+            // (lumière, secteur)
+            if (bChangeLoc || !bHasSprite) {
                 // update light source
                 if (!!e.lightsource) {
                     const ls = e.lightsource;
                     ls.x = eloc.x;
                     ls.y = eloc.y;
                 }
+
+                // update grid sector
+                // get the sector coords
+                const xSector = eloc.x / ps | 0;
+                const ySector = eloc.y / ps | 0;
+                const eds = e._sector;
+                if (!!eds) {
+                    eds.remove(e);
+                }
+                const sector = sr.sector(xSector, ySector);
+                e._sector = sector;
+                sector.add(e);
             }
             // compute animation from angle
+        }
+    }
+
+    /**
+     * Get a list of entities at specified sector
+     * @param xSector {number}
+     * @param ySector {number}
+     * @return {Array}
+     */
+    getEntitiesAt(xSector, ySector) {
+        const g = this._sectors;
+        const nSize = g.grid.getWidth();
+        if (xSector > 0 && ySector > 0 && xSector < nSize && ySector < nSize) {
+            return g.sector(xSector, ySector).objects;
+        } else {
+            return [];
         }
     }
 }
@@ -8080,13 +8072,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             rc.globalAlpha = _consts__WEBPACK_IMPORTED_MODULE_4__["FX_ALPHA"][nFx >> 2];
         }
         let xStart = aLine[1] | 0;
-        if (xStart >= 0) {
+        let wSrc = aLine[3] | 0;
+        let hSrc = aLine[4] | 0;
+        if (xStart >= 0 && hSrc > 0 && wSrc > 0) {
             rc.drawImage(
                 oTile,
                 xStart,       // sx
                 aLine[2] * flagSourceFactor | 0,       // sy
-                aLine[3] | 0,       // sw
-                aLine[4] | 0,       // sh
+                wSrc,       // sw
+                hSrc,       // sh
                 aLine[5] | 0,       // dx
                 aLine[6] | 0,       // dy
                 aLine[7] | 0,       // dw
@@ -9260,6 +9254,138 @@ const DEFAULT_PHYS_CODE = PHYS_NONE;
 /***/ (function(module) {
 
 module.exports = {"$schema":"http://json-schema.org/draft-04/schema#","type":"object","description":"Object used for the O876-Raycaster-Engine level definition","definitions":{"id":{"description":"an id which can be either integer or string","anyOf":[{"type":"integer"},{"type":"string"}]},"nullableInteger":{"description":"this is an index to a tile in the wall or flat tileset. it can be null (no tile).","anyOf":[{"type":"integer"},{"type":"null"}]},"decal":{"description":"a decal face definition","type":"object","properties":{"align":{"type":"string","description":"the alignement value","enum":["@DECAL_ALIGN_TOP_LEFT","@DECAL_ALIGN_TOP","@DECAL_ALIGN_TOP_RIGHT","@DECAL_ALIGN_LEFT","@DECAL_ALIGN_CENTER","@DECAL_ALIGN_RIGHT","@DECAL_ALIGN_BOTTOM_LEFT","@DECAL_ALIGN_BOTTOM","@DECAL_ALIGN_BOTTOM_RIGHT"]},"tileset":{"$ref":"#/definitions/id","description":"the tileset id used to paint the decal"},"tile":{"$ref":"#/definitions/nullableInteger","description":"the tile index used to paint the decal, if not specified default value is 0 (the first tile)"}},"additionalProperties":false,"required":["align","tileset"]}},"properties":{"version":{"type":"string","enum":["RCE-100"]},"tilesets":{"type":"array","description":"A list of tiles referenced by blueprints","items":{"type":"object","description":"A tileset is the definition of graphic item used by blueprints","properties":{"id":{"$ref":"#/definitions/id","description":"the tileset id, can be referenced by blueprints and decals"},"src":{"type":"string","description":"A valid HTML image content descriptor : Usually a base64 encoded image-data, but can be any valid URL"},"width":{"type":"integer","description":"The width in pixels of a tile in the tileset"},"height":{"type":"integer","description":"The height in pixels of a tile in the tileset"},"animations":{"type":"array","description":"A list of animation definitions for this tileset","items":{"type":"object","description":"An animation definition","properties":{"start":{"anyOf":[{"type":"array","description":"All starting frames, this an array of 8 starting frame","items":{"type":"integer","description":"One starting frame index"}},{"type":"integer","description":"All direection shares the same starting frame"}]},"length":{"type":"integer","description":"Animation length in frames"},"loop":{"type":"string","description":"Animation loop type","enum":["@LOOP_NONE","@LOOP_FORWARD","@LOOP_YOYO"]},"duration":{"type":"integer","description":"Animation duration in millliseconds"},"iterations":{"type":"integer","description":"A number of iterations after which the animation is suspended"}},"required":["start","length","loop"]}}},"additionalProperties":false,"required":["id","src","width","height","animations"]}},"blueprints":{"type":"array","description":"Definition of physical object that can be spawned on the level during runtime","items":{"type":"object","description":"Definition of a blueprint","properties":{"id":{"$ref":"#/definitions/id","description":"the blueprint id, can be referenced by objects"},"tileset":{"$ref":"#/definitions/id","description":"A reference to a tileset"},"scale":{"type":"number","description":"an homotethie factor"},"thinker":{"type":"string","description":"The name of a thinker class"},"size":{"type":"integer","description":"The physical size of the blueprint (in texels)"},"fx":{"type":"array","description":"A list of visual effets applied to the blueprint","items":{"type":"string","description":"A value of a FX_ flag","enum":["@FX_NONE","@FX_LIGHT_SOURCE","@FX_LIGHT_ADD","@FX_ALPHA_75","@FX_ALPHA_50","@FX_ALPHA_25"]}},"lightsource":{"type":"object","description":"Definition of the light emitted by the thing","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"number","description":"light maximum intensity"}},"additionalProperties":false,"required":["r0","r1","v"]}},"additionalProperties":false,"required":["id","tileset","size"]}},"shading":{"type":"object","description":"shading parameter to tweak ambiance","properties":{"color":{"type":"string","description":"the shading color at its maximum intensity"},"factor":{"type":"number","description":"number of texels needed to increase fog intensity by one rank"},"brightness":{"type":"number","description":"additional fog negative instensity on all surface : if value is 0, the fog intensity is normally applied, if value is 0.5 the fog instensity is halved on all surfaces"},"filter":{"anyOf":[{"type":"string","description":"a color balance applied on sprite to help ambiance integration"},{"type":"null","description":"no color filter for this level"}]}},"additionalProperties":false,"required":["color","factor","brightness","filter"]},"level":{"type":"object","description":"The level definition","properties":{"metrics":{"type":"object","description":"Properties that rule over texture size","properties":{"spacing":{"type":"integer","description":"The size of a map cell, in texels"},"height":{"type":"integer","description":"the height of a cell, in texels"}},"additionalProperties":false,"required":["spacing","height"]},"textures":{"type":"object","description":"Properties that rule over textures","properties":{"flats":{"type":"string","description":"A valid URL of the flat texture content (floor and ceiling) ; can be a URL or a base 64 encoded data-image"},"walls":{"type":"string","description":"A valid URL of the wall texture content ; can be a URL or a base 64 encoded data-image"},"sky":{"type":"string","description":"A valid URL of the sky texture content ; can be a URL or a base 64 encoded data-image. If there is no sky, you set an empty string as value"},"smooth":{"type":"boolean","description":"if true then all textures will be smoothed, looosing there old school 'no-iterpolation' look"},"stretch":{"type":"boolean","description":"If true then all texture will be stretched x2 along their height, this is useful when designing tall building"}},"additionalProperties":false,"required":["flats","walls","sky","smooth","stretch"]},"map":{"type":"array","description":"Contains all cell values, that describes the map geometry","items":{"anyOf":[{"type":"array","items":{"type":"integer","description":"A cell value, references of of the legend item code"}},{"type":"string","description":"A string is sometimes seen as an array of characters. Each character references a legend item code"}]}},"legend":{"type":"array","description":"A list of item which describes the cell physical and graphical properties. Its code is referenced by items in the 'map' property above","items":{"type":"object","properties":{"code":{"anyOf":[{"type":"string","description":"A code referenced by a cell value"},{"type":"integer","description":"A code referenced by a cell value"}]},"phys":{"type":"string","description":"A value describing the physical property of this cell","enum":["@PHYS_NONE","@PHYS_WALL","@PHYS_DOOR_UP","@PHYS_CURT_UP","@PHYS_DOOR_DOWN","@PHYS_CURT_DOWN","@PHYS_DOOR_LEFT","@PHYS_DOOR_RIGHT","@PHYS_DOOR_DOUBLE","@PHYS_SECRET_BLOCK","@PHYS_TRANSPARENT_BLOCK","@PHYS_INVISIBLE_BLOCK","@PHYS_OFFSET_BLOCK"]},"offset":{"type":"number","description":"wall offset (depth)"},"faces":{"type":"object","description":"Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face","properties":{"f":{"description":"floor flat tile","$ref":"#/definitions/nullableInteger"},"c":{"description":"ceiling flat tile","$ref":"#/definitions/nullableInteger"},"n":{"description":"north wall tile","$ref":"#/definitions/nullableInteger"},"e":{"description":"east wall tile","$ref":"#/definitions/nullableInteger"},"w":{"description":"west wall tile","$ref":"#/definitions/nullableInteger"},"s":{"description":"south wall tile","$ref":"#/definitions/nullableInteger"}}},"lightsource":{"type":"object","description":"Definition of the light emitted by the block","properties":{"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"number","description":"light maximum intensity"}},"additionalProperties":false,"required":["r0","r1","v"]}},"additionalProperties":false,"required":["code","phys","faces"]}}},"required":["metrics","textures","map","legend"]},"tags":{"type":"array","description":"a list of tags, each cell can hold several tags","items":{"type":"object","properties":{"x":{"type":"number","description":"tag position (x axis)"},"y":{"type":"number","description":"tag position (y axis)"},"tags":{"type":"array","description":"a list of tag associated with this cell","items":{"type":"string","description":"a tag"}}},"additionalProperties":false,"required":["x","y","tags"]}},"lightsources":{"type":"array","description":"A list of light sources that are spawned during level building","items":{"type":"object","properties":{"x":{"type":"number","description":"position of light source"},"y":{"type":"number","description":"position of light source"},"r0":{"type":"number","description":"inner radius value, below the value, the light is at its maximum intensity"},"r1":{"type":"number","description":"outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"},"v":{"type":"number","description":"light maximum intensity"}},"additionalProperties":false,"required":["x","y","r0","r1","v"]}},"objects":{"type":"array","description":"A list of object that are spawned during level building","items":{"type":"object","properties":{"x":{"type":"number","description":"Object position on map (along x axis)"},"y":{"type":"number","description":"Object position on map (along y axis)"},"z":{"type":"number","description":"Object height above floor. A value of 0 means that the object is on the ground. On the other hand a value above 0 means that the object is floating above the ground"},"angle":{"type":"number","description":"Object heading angle"},"blueprint":{"$ref":"#/definitions/id","description":"A reference to a blueprint"},"animation":{"anyOf":[{"type":"string","description":"Reference of the starting animation (this value must reference an animation define within the blueprint)"},{"type":"null","description":"No animation for this object"}]}},"additionalProperties":false,"required":["x","y","z","angle","blueprint"]}},"decals":{"type":"array","description":"A collection of decal definitions","items":{"type":"object","description":"decal parameters","properties":{"x":{"type":"integer","description":"Cell coordinates where the decal is located (x axis)"},"y":{"type":"integer","description":"Cell coordinates where the decal is located (y axis)"},"f":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the floor face"},"c":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the ceiling face"},"n":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the north face"},"e":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the east face"},"w":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the west face"},"s":{"$ref":"#/definitions/decal","description":"indicates that the decal will be put on the south face"}},"additionalProperties":false,"required":["x","y"]}},"camera":{"type":"object","description":"The camera properties. Location, angle etc...","properties":{"thinker":{"type":"string"},"x":{"type":"number"},"y":{"type":"number"},"z":{"type":"number"},"angle":{"type":"number"}},"additionalProperties":false,"required":["x","y","z","angle"]},"preview":{"type":"string","description":"a url or data-url of an image (preview thumbnail)"}},"additionalProperties":false,"required":["version","tilesets","blueprints","level","objects","decals","lightsources","tags","camera"]};
+
+/***/ }),
+
+/***/ "./lib/src/sector-registry/Sector.js":
+/*!*******************************************!*\
+  !*** ./lib/src/sector-registry/Sector.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _array_helper__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../array-helper */ "./lib/src/array-helper/index.js");
+/**
+ * Classe enregistrant les mobile qui s'aventure dans un secteur particulier
+ * du monde. Les Mobile d'un même secteurs sont testé entre eux pour savoir
+ * Qui entre en collision avec qui.
+ */
+
+
+class Sector {
+    constructor() {
+        this._objects = [];
+        this.x = -1;
+        this.y = -1;
+    }
+
+    get objects() {
+        return this._objects;
+    }
+
+    add(oObject) {
+        this._objects.push(oObject);
+    }
+
+    remove(oObject) {
+        _array_helper__WEBPACK_IMPORTED_MODULE_0__["default"].remove(this._objects, oObject)
+    }
+
+    /**
+     * Renvoie le nombre d'objet enregistrer dans le secteur
+     * @return int
+     */
+    count() {
+        return this._objects.length;
+    }
+
+    /** Renvoie l'objet désigné par son rang */
+    get(i) {
+        return this._objects[i] || null;
+    }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (Sector);
+
+
+/***/ }),
+
+/***/ "./lib/src/sector-registry/SectorRegistry.js":
+/*!***************************************************!*\
+  !*** ./lib/src/sector-registry/SectorRegistry.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _grid_Grid__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../grid/Grid */ "./lib/src/grid/Grid.js");
+/* harmony import */ var _Sector__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Sector */ "./lib/src/sector-registry/Sector.js");
+/**
+ * @class SectorRegistry
+ * The SectorRegistry registers object withing a sectorized grid
+ * it helps process entiteis among others witin a limited region of 2d space
+ */
+
+
+
+
+class SectorRegistry {
+    constructor() {
+        const g = new _grid_Grid__WEBPACK_IMPORTED_MODULE_0__["default"]();
+        g.on('rebuild', function(data) {
+            let oSector = new _Sector__WEBPACK_IMPORTED_MODULE_1__["default"]();
+            oSector.x = data.x;
+            oSector.y = data.y;
+            data.cell = oSector;
+        });
+        this._cellWidth = 0;
+        this._cellHeight = 0;
+        this._grid = g;
+    }
+
+    setCellWidth(w) {
+        this._cellWidth = w;
+        return this;
+    }
+
+    setCellHeight(h) {
+        this._cellHeight = h;
+        return this;
+    }
+
+    getCellWidth() {
+        return this._cellWidth;
+    }
+
+    getCellHeight() {
+        return this._cellHeight;
+    }
+
+    get grid() {
+        return this._grid;
+    }
+
+    /**
+     * Return the sector corresponding to the given coordinates
+     * if the parameters are number, the real sector indices are used (0, 1, 2...)
+     * if the parameter is a Vector, its components are int-divided by cell size before application
+     * @param x {number} position x
+     * @param y {number|undefined} position y
+     * @return {*}
+     */
+    sector(x, y) {
+        if (y === undefined) {
+            return this._grid.cell(x.x / this._cellWidth | 0, x.y / this._cellHeight | 0);
+        } else {
+            return this._grid.cell(x, y);
+        }
+    }
+}
+
+/* harmony default export */ __webpack_exports__["default"] = (SectorRegistry);
 
 /***/ }),
 
