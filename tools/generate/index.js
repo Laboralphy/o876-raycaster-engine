@@ -457,6 +457,8 @@ function generateTags(input) {
 function generateLightsources(input) {
     const blocks = input.blocks;
     const aLightsources = [];
+    const ps = input.metrics.tileWidth | 0;
+    const hps = ps >> 1;
     input
         .grid
         .map((row, y) => row.map(
@@ -465,8 +467,8 @@ function generateLightsources(input) {
                 const block = blocks.find(b => b.id === code);
                 if (!!block && block.light.enabled) {
                     const lightsource = {
-                        x,
-                        y,
+                        x: x * ps + hps,
+                        y: y * ps + hps,
                         r0: block.light.inner | 0,
                         r1: block.light.outer | 0,
                         v:  parseFloat(block.light.value)
