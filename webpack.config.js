@@ -6,7 +6,7 @@ const DEV_CONFIG = false; // include dev examples or not ?
 const devConfig = {
     mode: "development",
     entry: {
-        libraycaster: path.resolve(__dirname, 'src/index.js'),
+        libraycaster: path.resolve(__dirname, 'lib/src/index.js'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

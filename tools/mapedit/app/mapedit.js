@@ -1847,7 +1847,11 @@ class Engine {
      * @param bAutoclose {boolean} if true, then the door will auto close after a certain time (see DOOR_MAINTAIN_DURATION constant)
      */
     openDoor(x, y, bAutoclose) {
-        this._buildDoorContext(x, y, bAutoclose);
+        // is there a door opening here ?
+        const dm = this._dm;
+        if (!dm.getDoorContext(x, y)) {
+            this._buildDoorContext(x, y, bAutoclose);
+        }
     }
 
     /**
@@ -6085,6 +6089,8 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ShadedTileSet__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ShadedTileSet */ "./lib/src/raycaster/ShadedTileSet.js");
 /* harmony import */ var _consts__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./consts */ "./lib/src/raycaster/consts/index.js");
+/* harmony import */ var _canvas_helper__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../canvas-helper */ "./lib/src/canvas-helper/index.js");
+
 
 
 
@@ -6276,18 +6282,27 @@ class CellSurfaceManager {
      * @param nSide {number} wall side index
      * @param oTile {HTMLCanvasElement} the new surface
      */
-    setSurfaceTile(x, y, nSide, oTile) {
+    setDecal(x, y, nSide, oTile) {
         let oSurface = this.getSurface(x, y, nSide);
         // in case of flat texture
         oSurface.imageData = null;
         oSurface.imageData32 = null;
         const ts = new _ShadedTileSet__WEBPACK_IMPORTED_MODULE_0__["default"]();
         oSurface.tileset = ts;
-        ts.setImage(oTile, oTile.width, oTile.height);
+        ts.setImage(oTile, oTile.width, oTile.height); // will automatically shade
     }
 
-    removeClone(x, y, nSide) {
-        this.getSurface(x, y, nSide).tileset = null;
+    /**
+     * Remove decal from a wall
+     * @param x
+     * @param y
+     * @param nSide
+     */
+    removeDecal(x, y, nSide) {
+        const s = this.getSurface(x, y, nSide);
+        if (!!s) {
+            s.tileset = null;
+        }
     }
 
     shadeSurface(x, y, nSide, nShades, sFogColor, sFilter, fBrightness) {
@@ -8483,14 +8498,21 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     paintSurface(x, y, nSide, pDrawingFunction) {
         const cellCode = this.getCellMaterial(x, y);
         const iTile = this._cellCodes[cellCode][nSide];
-        const c = nSide < 4
-            ? this._walls.extractTile(iTile, 0)
-            : this._flats.extractTile(iTile, 0);
         const csm = this._csm;
+        const surface = csm.getSurface(x, y, nSide);
+        let c;
+        if (!!surface && !!surface.tileset) {
+            // déja un decal : reutiliser
+            c = surface.tileset.getOriginalImage();
+        } else {
+            c = nSide < 4
+                ? this._walls.extractTile(iTile, 0)
+                : this._flats.extractTile(iTile, 0);
+        }
         _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].setImageSmoothing(c, true);
         pDrawingFunction(x, y, nSide, c);
         _canvas_helper_CanvasHelper__WEBPACK_IMPORTED_MODULE_3__["default"].setImageSmoothing(c, this._options.textures.smooth);
-        csm.setSurfaceTile(x, y, nSide, c);
+        csm.setDecal(x, y, nSide, c);
         this.shadeSurface(x, y, nSide);
     }
 
