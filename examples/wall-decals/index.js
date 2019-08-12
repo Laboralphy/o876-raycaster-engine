@@ -134,7 +134,7 @@ const LEVEL = {
         // the "w" is for the west side
         // the "n" is for the north side
         {"x": 0, "y": 6, "e": {"align": '@DECAL_ALIGN_TOP_LEFT', "tileset": 'd1'}},
-        {"x": 0, "y": 5, "e": {"align": '@DECAL_ALIGN_TOP', "tileset": 'd2'}},
+        {"x": 0, "y": 6, "e": {"align": '@DECAL_ALIGN_TOP', "tileset": 'd2'}},
         {"x": 0, "y": 4, "e": {"align": '@DECAL_ALIGN_TOP_RIGHT', "tileset": 'd3'}},
         {"x": 0, "y": 3, "e": {"align": '@DECAL_ALIGN_LEFT', "tileset": 'd4'}},
         {"x": 0, "y": 2, "e": {"align": '@DECAL_ALIGN_CENTER', "tileset": 'd5'}},
