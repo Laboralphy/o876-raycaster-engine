@@ -14,14 +14,57 @@
         }
       ]
     },
-    "nullableInteger": {
+    "tile": {
       "description": "this is an index to a tile in the wall or flat tileset. it can be null (no tile).",
       "anyOf": [
         {
           "type": "integer"
         },
         {
+          "type": "string"
+        },
+        {
           "type": "null"
+        }
+      ]
+    },
+    "animation": {
+      "type": "array",
+      "description": "this tile will be animated",
+      "items": [
+        {
+          "type": "integer",
+          "description": "fist frame. in animation, the first frame is not optionnal",
+        },
+        {
+          "type": "integer",
+          "description": "number of frames"
+        },
+        {
+          "type": "integer",
+          "description": "delay between each frame"
+        },
+        {
+          "type": "string",
+          "description": "type of animation loop",
+          "enum": [
+            "@LOOP_NONE",
+            "@LOOP_FORWARD",
+            "@LOOP_YOYO"
+          ]
+        }
+      ]
+    },
+    "face": {
+      "description": "a wall or flat face definition",
+      "anyOf": [
+        {
+          "$ref": "#/definitions/tile",
+          "description": "a reference to a tile"
+        },
+        {
+          "$ref": "#/definitions/animation",
+          "description": "this tile will be animated",
         }
       ]
     },
@@ -49,7 +92,7 @@
           "description": "the tileset id used to paint the decal"
         },
         "tile": {
-          "$ref": "#/definitions/nullableInteger",
+          "$ref": "#/definitions/tile",
           "description": "the tile index used to paint the decal, if not specified default value is 0 (the first tile)"
         }
       },
@@ -378,27 +421,27 @@
                 "properties": {
                   "f": {
                     "description": "floor flat tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   },
                   "c": {
                     "description": "ceiling flat tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   },
                   "n": {
                     "description": "north wall tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   },
                   "e": {
                     "description": "east wall tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   },
                   "w": {
                     "description": "west wall tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   },
                   "s": {
                     "description": "south wall tile",
-                    "$ref": "#/definitions/nullableInteger"
+                    "$ref": "#/definitions/tile"
                   }
                 }
               },
