@@ -64,7 +64,7 @@
         },
         {
           "$ref": "#/definitions/animation",
-          "description": "this tile will be animated",
+          "description": "this tile will be animated"
         }
       ]
     },
