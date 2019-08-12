@@ -34,7 +34,7 @@
       "items": [
         {
           "type": "integer",
-          "description": "fist frame. in animation, the first frame is not optionnal",
+          "description": "fist frame. in animation, the first frame is not optionnal"
         },
         {
           "type": "integer",
