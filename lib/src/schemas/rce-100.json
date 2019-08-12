@@ -489,30 +489,6 @@
               "faces": {
                 "$ref": "#/definitions/face",
                 "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face"
-              },
-              "lightsource": {
-                "type": "object",
-                "description": "Definition of the light emitted by the block",
-                "properties": {
-                  "r0": {
-                    "type": "number",
-                    "description": "inner radius value, below the value, the light is at its maximum intensity"
-                  },
-                  "r1": {
-                    "type": "number",
-                    "description": "outer radius value, above this value, no light is shed. The intensity linearly decreases from 'r0' to 'r1'"
-                  },
-                  "v": {
-                    "type": "number",
-                    "description": "light maximum intensity"
-                  }
-                },
-                "additionalProperties": false,
-                "required": [
-                  "r0",
-                  "r1",
-                  "v"
-                ]
               }
             },
             "additionalProperties": false,

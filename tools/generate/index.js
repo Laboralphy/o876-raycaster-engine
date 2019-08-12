@@ -223,7 +223,7 @@ function generateMap(input) {
     const bHasUpperMap = grid.some(row => row.some(cell => cell.upperblock !== 0));
     output.map = grid.map(row => row.map(cell => cell.block || 0));
     if (bHasUpperMap) {
-        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0))
+        output.uppermap = grid.map(row => row.map(cell => cell.upperblock || 0));
     }
     return output;
 }
@@ -307,15 +307,6 @@ function generateLegend(input, block) {
             c: generateFace(input, block.faces.c, 'flat'),
         }
     };
-
-    if (block.light.enabled) {
-        r.lightsource = {
-            r0: block.light.inner | 0,
-            r1: block.light.outer | 0,
-            v:  parseFloat(block.light.value)
-        };
-    }
-
     return r;
 }
 
@@ -464,7 +455,27 @@ function generateTags(input) {
 }
 
 function generateLightsources(input) {
-    return [];
+    const blocks = input.blocks;
+    const aLightsources = [];
+    input
+        .grid
+        .map((row, y) => row.map(
+            (cell, x) => {
+                const code = cell.block;
+                const block = blocks.find(b => b.id === code);
+                if (!!block && b.light.enabled) {
+                    const lightsource = {
+                        x,
+                        y,
+                        r0: block.light.inner | 0,
+                        r1: block.light.outer | 0,
+                        v:  parseFloat(block.light.value)
+                    };
+                    aLightsources.push(lightsource);
+                }
+            }
+        ));
+    return aLightsources;
 }
 
 async function generate(input, imageAppender) {
