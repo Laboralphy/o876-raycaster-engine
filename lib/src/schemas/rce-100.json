@@ -57,16 +57,87 @@
     },
     "face": {
       "description": "a wall or flat face definition",
-      "anyOf": [
-        {
-          "$ref": "#/definitions/tile",
-          "description": "a reference to a tile"
+      "type": "object",
+      "properties": {
+        "n": {
+          "description": "the north face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
         },
-        {
-          "$ref": "#/definitions/animation",
-          "description": "this tile will be animated"
+        "e": {
+          "description": "the east face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
+        },
+        "w": {
+          "description": "the west face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
+        },
+        "s": {
+          "description": "the south face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
+        },
+        "f": {
+          "description": "the floor face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
+        },
+        "c": {
+          "description": "the ceiling face definition",
+          "anyOf": [
+            {
+              "$ref": "#/definitions/tile",
+              "description": "a reference to a tile"
+            },
+            {
+              "$ref": "#/definitions/animation",
+              "description": "this tile will be animated"
+            }
+          ]
         }
-      ]
+      }
     },
     "decal": {
       "description": "a decal face definition",
@@ -416,34 +487,8 @@
                 "description": "wall offset (depth)"
               },
               "faces": {
-                "type": "object",
-                "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face",
-                "properties": {
-                  "f": {
-                    "description": "floor flat tile",
-                    "$ref": "#/definitions/tile"
-                  },
-                  "c": {
-                    "description": "ceiling flat tile",
-                    "$ref": "#/definitions/tile"
-                  },
-                  "n": {
-                    "description": "north wall tile",
-                    "$ref": "#/definitions/tile"
-                  },
-                  "e": {
-                    "description": "east wall tile",
-                    "$ref": "#/definitions/tile"
-                  },
-                  "w": {
-                    "description": "west wall tile",
-                    "$ref": "#/definitions/tile"
-                  },
-                  "s": {
-                    "description": "south wall tile",
-                    "$ref": "#/definitions/tile"
-                  }
-                }
+                "$ref": "#/definitions/face",
+                "description": "Each of these faces references a tile from the 'walls' property or the 'flats' property, depending on of the face is a flat or a wall face"
               },
               "lightsource": {
                 "type": "object",
