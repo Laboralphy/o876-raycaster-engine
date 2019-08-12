@@ -463,7 +463,7 @@ function generateLightsources(input) {
             (cell, x) => {
                 const code = cell.block;
                 const block = blocks.find(b => b.id === code);
-                if (!!block && b.light.enabled) {
+                if (!!block && block.light.enabled) {
                     const lightsource = {
                         x,
                         y,
