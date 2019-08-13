@@ -12,6 +12,31 @@ render
 This event is emitted when an image is rendered. Like the 'update' event, this event is triggered many times
 per second, so only fast handler must be attached to this event, to avoid performance issues. No parameter.
 
+level.load
+This event is fired when a level is fully loaded
+
+door.locked
+This event is fired when an attempt to open a locked door occurs
+parameters :
+- x : cell door coordinates
+- y : cell door coordinates
+
+door.open
+This event is fired when an attempt an unlocked door is succesfully opened.
+- x : cell door coordinates
+- y : cell door coordinates
+- context : door context instance
+
+door.closing
+This event is fired when a door begins to close.
+- x : cell door coordinates
+- y : cell door coordinates
+
+door.closed
+This event is fired when a door shuts.
+- x : cell door coordinates
+- y : cell door coordinates
+
 tag.xxxx.enter
 This event is emitted when an entity enters a "xxxx" tagged zone.
 parameter :
@@ -38,8 +63,8 @@ parameter :
 Engine.screen events
 --------------------
 
-pointerlockenter
+pointerlock.enter
 This event is emitted when the user click on the game surface and takes controls of the camera. No parameter.
 
-pointerlockexit
+pointerlock.exit
 This event is emitted when the user hit the "escape" key and exits pointer lock mode. No parameter.

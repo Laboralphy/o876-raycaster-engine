@@ -1116,7 +1116,7 @@ __webpack_require__.r(__webpack_exports__);
 class DoorContext {
 
 
-    constructor({sdur = 0, mdur = 0, ddur = 0, ofsmax = 0, sfunc = _easing__WEBPACK_IMPORTED_MODULE_0__["default"].SMOOTHSTEP}) {
+    constructor({sdur = 0, mdur = 0, ddur = 0, ofsmax = 0, sfunc = _easing__WEBPACK_IMPORTED_MODULE_0__["default"].SMOOTHSTEP, cfunc = ''}) {
         this._phase = 0;        // current phase
         this._time = 0;         // elapsed time
         this._slidingDuration = sdur;     // sliding duration
@@ -1126,6 +1126,7 @@ class DoorContext {
         this._offsetMax = ofsmax;
         this._easing = new _easing__WEBPACK_IMPORTED_MODULE_0__["default"]();
         this._easing.setFunction(sfunc);
+        this._cfunc = cfunc !== '' ? cfunc : sfunc;
         this.events = new events__WEBPACK_IMPORTED_MODULE_1___default.a();
 
         // public properties
@@ -1173,11 +1174,7 @@ class DoorContext {
      */
     close() {
         if (this._phase < _consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]) {
-            const checkEvent = {context: this, cancel: false};
-            this.events.emit('check', checkEvent);
-            if (!checkEvent.cancel) {
-                this.initPhase(_consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]);
-            }
+            this.initPhase(_consts__WEBPACK_IMPORTED_MODULE_2__["DOOR_PHASE_CLOSING"]);
         }
     }
 
@@ -1225,6 +1222,7 @@ class DoorContext {
                 } else {
                     easing.setOutputRange(this._offsetMax, 0);
                     easing.setStepCount(this._slidingDuration);
+                    easing.setFunction(this._cfunc);
                     this._time = 0;
                     this.events.emit('closing');
                 }
@@ -1315,7 +1313,7 @@ class DoorManager {
      * @returns {DoorContext}
      */
     getDoorContext(x, y) {
-        return this._doors.find(d => d.x === x && d.y === y);
+        return this._doors.find(d => d.data.x === x && d.data.y === y);
     }
 
     /**
@@ -1393,6 +1391,8 @@ var _schemas_rce_100_json__WEBPACK_IMPORTED_MODULE_19___namespace = /*#__PURE__*
 /* harmony import */ var _collider_Collider__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../collider/Collider */ "./lib/src/collider/Collider.js");
 /* harmony import */ var _TagManager__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ./TagManager */ "./lib/src/engine/TagManager.js");
 /* harmony import */ var _filters_FilterManager__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../filters/FilterManager */ "./lib/src/filters/FilterManager.js");
+/* harmony import */ var _marker_registry__WEBPACK_IMPORTED_MODULE_24__ = __webpack_require__(/*! ../marker-registry */ "./lib/src/marker-registry/index.js");
+
 
 
 
@@ -1426,6 +1426,7 @@ class Engine {
         // to be instanciate for each level
         this._rc = null;
         this._dm = null;
+        this._locks = null;
         this._scheduler = null;
         this._horde = null;
         this._camera = null;
@@ -1584,6 +1585,7 @@ class Engine {
      * @param x {number} cell position x
      * @param y [number} cell position y
      * @private
+     * @return {DoorContext}
      */
     _buildSecretDoorContext(x, y) {
         const rc = this._rc;
@@ -1600,12 +1602,15 @@ class Engine {
             sdur: nSlidingDuration,
             mdur: nMaintainDuration,
             ofsmax: nOffsetMax,
-            sfunc: sFunction1
+            sfunc: sFunction1,
+            cfunc: sFunction2
         });
         dc1.data.x = x;
         dc1.data.y = y;
         dc1.data.phys = nPhysCode;
-        dc1.events.on('check', event => this._checkDoorClosability(event));
+        dc1.events.on('check', event => {
+            this._checkDoorClosability(event);
+        });
         let nSecurityCheck = 0;
         this._forEachNeighbor(x, y, (xc, yc, phys) => {
             if (phys === _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_SECRET_BLOCK"]) {
@@ -1618,17 +1623,27 @@ class Engine {
                     mdur: nMaintainDuration,
                     ofsmax: nOffsetMax,
                     sfunc: sFunction2,
+                    cfunc: sFunction1,
                     ddur: nSlidingDuration
                 });
                 dc2.data.x = xc;
                 dc2.data.y = yc;
                 dc2.data.phys = phys;
-                dc2.events.on('check', event => this._checkDoorClosability(event));
+                dc2.events.on('check', event => {
+                    const parentEvent = {context: dc1, cancel: false};
+                    this._checkDoorClosability(parentEvent);
+                    if (parentEvent.cancel) {
+                        event.cancel = true;
+                    } else {
+                        this._checkDoorClosability(event);
+                    }
+                });
                 dc1.data.child = dc2;
                 dm.linkDoorContext(dc2);
             }
         }, _consts__WEBPACK_IMPORTED_MODULE_0__["CELL_NEIGHBOR_SIDE"]);
         dm.linkDoorContext(dc1);
+        return dc1;
     }
 
     /**
@@ -1649,6 +1664,7 @@ class Engine {
      * @param y [number} cell position y
      * @param bAutoclose {boolean} if true, then the door will auto close after a certain time (see DOOR_MAINTAIN_DURATION constant)
      * @private
+     * @return {DoorContext|null} true if context could be created, false otherwise (phys code invalid)
      */
     _buildDoorContext(x, y, bAutoclose) {
         const rc = this._rc;
@@ -1681,11 +1697,10 @@ class Engine {
                 break;
 
             case _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_SECRET_BLOCK"]:
-                this._buildSecretDoorContext(x, y);
-                return;
+                return this._buildSecretDoorContext(x, y);
 
             default:
-                return;
+                return null;
         }
         const dc = new _DoorContext__WEBPACK_IMPORTED_MODULE_3__["default"]({
             sdur: _consts__WEBPACK_IMPORTED_MODULE_0__["DOOR_SLIDING_DURATION"] * fSlidingDuration | 0,
@@ -1699,6 +1714,7 @@ class Engine {
         dc.events.on('check', event => this._checkDoorClosability(event));
         const dm = this._dm;
         dm.linkDoorContext(dc);
+        return dc;
     }
 
     /**
@@ -1733,7 +1749,7 @@ class Engine {
             this._scheduler.schedule(this._time);
             this._doorProcess();
             // entity management
-            //this._camera.think(this);
+            //this._camera.think(this); // camera is now in the entity list
             this._horde.process(this);
             this
                 ._horde
@@ -1848,11 +1864,36 @@ class Engine {
      * @param bAutoclose {boolean} if true, then the door will auto close after a certain time (see DOOR_MAINTAIN_DURATION constant)
      */
     openDoor(x, y, bAutoclose) {
-        // is there a door opening here ?
-        const dm = this._dm;
-        if (!dm.getDoorContext(x, y)) {
-            this._buildDoorContext(x, y, bAutoclose);
+        if (this.isDoorLocked(x, y)) {
+            this.events.emit('door.locked', {x, y});
+            return;
         }
+        const dm = this._dm;
+        // is there a door opening here ?
+        if (!dm.getDoorContext(x, y)) {
+            const dc = this._buildDoorContext(x, y, bAutoclose);
+            if (!!dc) {
+                this.events.emit('door.open', {x, y, context: dc});
+                if (!!dc.data.child) {
+                    dc.data.child.events.once('closing', () => this.events.emit('door.closing', {x, y}));
+                } else {
+                    dc.events.once('closing', () => this.events.emit('door.closing', {x, y}));
+                }
+                dc.events.once('close', () => this.events.emit('door.closed', {x, y}));
+            }
+        }
+    }
+
+    lockDoor(x, y, bLock) {
+        if (bLock) {
+            this._locks.mark(x, y);
+        } else {
+            this._locks.unmark(x, y);
+        }
+    }
+
+    isDoorLocked(x, y) {
+        return this._locks.isMarked(x, y);
     }
 
     /**
@@ -1865,9 +1906,10 @@ class Engine {
     closeDoor(x, y) {
         const dc = this._dm.getDoorContext(x, y);
         if (dc) {
-            if (dc.data.child) {
-                dc.event.once('close', () => dc.close());
-                dc.data.child.close();
+            const child = dc.data.child;
+            if (!!child) {
+                child.events.once('close', () => dc.close());
+                child.close();
             } else {
                 dc.close();
             }
@@ -2103,7 +2145,7 @@ class Engine {
         }
 
         this._horde.linkEntity(entity);
-        this.events.emit('entitycreated', {entity});
+        this.events.emit('entity.created', {entity});
         return entity;
     }
 
@@ -2114,7 +2156,7 @@ class Engine {
             }
             this._rc.disposeSprite(e.sprite);
             this._horde.unlinkEntity(e);
-            this.events.emit('entitydestroyed', {entity: e});
+            this.events.emit('entity.destroyed', {entity: e});
         }
     }
 
@@ -2206,6 +2248,7 @@ class Engine {
 
         const feedback = !!monitor ? monitor : (phase, progress) => {};
         feedback('init', 0);
+        this._locks = new _marker_registry__WEBPACK_IMPORTED_MODULE_24__["default"]();
         const oTranslator = new _translator_Translator__WEBPACK_IMPORTED_MODULE_11__["default"]();
         oTranslator.strict = false;
         oTranslator
@@ -2466,7 +2509,7 @@ class Engine {
         }
 
         feedback('done', 1);
-        this.events.emit('levelbuilt');
+        this.events.emit('level.load');
     }
 
 
@@ -45144,6 +45187,9 @@ const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = Object(
                 const data = await Object(_libraries_generate__WEBPACK_IMPORTED_MODULE_4__["default"])(level, _libraries_append_images__WEBPACK_IMPORTED_MODULE_5__["appendImages"]);
                 this.setLevelGeneratedData({value: data});
                 engine = new _lib_src_engine_Engine__WEBPACK_IMPORTED_MODULE_6__["default"]();
+                engine.events.on('door.open', ({x, y, context}) => console.log('door open at', x, y));
+                engine.events.on('door.closing', ({x, y, context}) => console.log('door closing at', x, y));
+                engine.events.on('door.closed', ({x, y, context}) => console.log('door closed at', x, y));
                 engine.setRenderingCanvas(canvas);
                 const grad = context.createLinearGradient(x, y, x, y + h);
                 grad.addColorStop(0, 'rgba(0, 66, 240)');
