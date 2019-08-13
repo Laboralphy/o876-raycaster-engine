@@ -3333,7 +3333,7 @@
       "y": 3,
       "s": {
         "tileset": 63,
-        "align": "@ALIGN_CENTER"
+        "align": "@DECAL_ALIGN_CENTER"
       }
     },
     {
@@ -3341,7 +3341,7 @@
       "y": 4,
       "s": {
         "tileset": 63,
-        "align": "@ALIGN_CENTER"
+        "align": "@DECAL_ALIGN_CENTER"
       }
     },
     {
@@ -3349,7 +3349,7 @@
       "y": 5,
       "w": {
         "tileset": 63,
-        "align": "@ALIGN_CENTER"
+        "align": "@DECAL_ALIGN_CENTER"
       }
     },
     {
@@ -3357,7 +3357,7 @@
       "y": 18,
       "s": {
         "tileset": 65,
-        "align": "@ALIGN_CENTER"
+        "align": "@DECAL_ALIGN_CENTER"
       }
     },
     {
@@ -3365,7 +3365,7 @@
       "y": 27,
       "n": {
         "tileset": 64,
-        "align": "@ALIGN_CENTER"
+        "align": "@DECAL_ALIGN_CENTER"
       }
     }
   ],
