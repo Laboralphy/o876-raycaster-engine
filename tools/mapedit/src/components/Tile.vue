@@ -9,7 +9,6 @@
             @dragleave="dragleaveEvent"
             @dragover="dragoverEvent"
             @drop="dropEvent"
-
     >
         <div class="indicator" v-if="anim"><FilmstripIcon title="This tile is part of an animation"></FilmstripIcon></div>
     </div>
@@ -173,6 +172,7 @@
         display: inline-block;
         background-repeat: no-repeat;
         background-position: center;
+        filter: brightness(100%);
     }
 
     div.tile:hover {
