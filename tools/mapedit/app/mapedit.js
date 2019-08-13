@@ -72141,42 +72141,42 @@ function generateObjectsAndDecals(input) {
                 const tileset = oTT.tile;
                 switch (thing.x * 10 + thing.y) {
                     case 0:
-                        decal.w = { tileset, align: '@ALIGN_LEFT' };
-                        decal.n = { tileset, align: '@ALIGN_RIGHT' };
+                        decal.w = { tileset, align: '@DECAL_ALIGN_LEFT' };
+                        decal.n = { tileset, align: '@DECAL_ALIGN_RIGHT' };
                         break;
 
                     case 10:
-                        decal.n = { tileset, align: '@ALIGN_CENTER' };
+                        decal.n = { tileset, align: '@DECAL_ALIGN_CENTER' };
                         break;
 
                     case 20:
-                        decal.n = { tileset, align: '@ALIGN_LEFT' };
-                        decal.e = { tileset, align: '@ALIGN_RIGHT' };
+                        decal.n = { tileset, align: '@DECAL_ALIGN_LEFT' };
+                        decal.e = { tileset, align: '@DECAL_ALIGN_RIGHT' };
                         break;
 
                     case 1:
-                        decal.w = { tileset, align: '@ALIGN_CENTER' };
+                        decal.w = { tileset, align: '@DECAL_ALIGN_CENTER' };
                         break;
 
                     case 11:
                         break;
 
                     case 21:
-                        decal.e = { tileset, align: '@ALIGN_CENTER' };
+                        decal.e = { tileset, align: '@DECAL_ALIGN_CENTER' };
                         break;
 
                     case 2:
-                        decal.w = { tileset, align: '@ALIGN_RIGHT' };
-                        decal.s = { tileset, align: '@ALIGN_LEFT' };
+                        decal.w = { tileset, align: '@DECAL_ALIGN_RIGHT' };
+                        decal.s = { tileset, align: '@DECAL_ALIGN_LEFT' };
                         break;
 
                     case 12:
-                        decal.s = { tileset, align: '@ALIGN_CENTER' };
+                        decal.s = { tileset, align: '@DECAL_ALIGN_CENTER' };
                         break;
 
                     case 22:
-                        decal.s = { tileset, align: '@ALIGN_RIGHT' };
-                        decal.e = { tileset, align: '@ALIGN_LEFT' };
+                        decal.s = { tileset, align: '@DECAL_ALIGN_RIGHT' };
+                        decal.e = { tileset, align: '@DECAL_ALIGN_LEFT' };
                         break;
                 }
                 aDecals.push(decal);
