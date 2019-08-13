@@ -4,6 +4,23 @@ function redMaxId(prev, curr) {
     return Math.max(prev, curr.id);
 }
 
+function buildSmartTileGetter(sType) {
+    return state => {
+        // préparer les tile animée
+        const stx = state.tiles[sType];
+        const aAnimated = stx
+            .map((tw, itw) => ({
+                anim: !!tw.animation,
+                indexMin: itw,
+                indexMax: !tw.animation ? -1 : parseInt(tw.animation.frames) + itw - 1
+            }))
+            .filter(t => t.anim);
+        return stx.filter((t, i) => aAnimated
+            .filter(atw => atw.indexMin < i)
+            .every(atw => atw.indexMax < i));
+    };
+}
+
 export default {
     getMaxTileId: state =>
         Math.max(
@@ -23,9 +40,9 @@ export default {
     getMaxBlockId: state => state.blocks.reduce(redMaxId, 0),
     getMaxThingId: state => state.things.reduce(redMaxId, 0),
     getTimeInterval: state => state.time.interval,
-    getWallTiles: state => state.tiles.walls,
-    getFlatTiles: state => state.tiles.flats,
-    getSpriteTiles: state => state.tiles.sprites,
+    getWallTiles: buildSmartTileGetter('walls'),
+    getFlatTiles: buildSmartTileGetter('flats'),
+    getSpriteTiles: buildSmartTileGetter('sprites'),
     getWallTile: state => tid => state.tiles.walls.find(t => t.id === tid),
     getFlatTile: state => tid => state.tiles.flats.find(t => t.id === tid),
     getSpriteTile: state => tid => state.tiles.sprites.find(t => t.id === tid),

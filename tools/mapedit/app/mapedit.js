@@ -2453,7 +2453,6 @@ class Engine {
         const aLightsources = [];
         for (let iLS = 0, nLS = data.lightsources.length; iLS < nLS; ++iLS) {
             const ls = data.lightsources[iLS];
-            console.log('creazting ')
             aLightsources.push(this.createLightSource(ls.x, ls.y, ls.r0, ls.r1, ls.v));
             showProgress('creating lightsources');
         }
@@ -19782,7 +19781,7 @@ exports.push([module.i, "\ninput[type=\"number\"][data-v-f915ebc0] {\n    width:
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "\ndiv.indicator[data-v-ae1296fe] {\n    font-size: 2em;\n    color: white;\n    background-color: rgba(0, 0, 0, 0.5);\n    border-radius: 15%;\n    width: 1em;\n    position: absolute;\n}\ndiv.tile[data-v-ae1296fe] {\n    border: solid 0.4em #00C;\n    margin: 0.3em;\n    cursor: pointer;\n    user-select: none;\n    display: inline-block;\n    background-repeat: no-repeat;\n    background-position: center;\n}\ndiv.tile[data-v-ae1296fe]:hover {\n    border-color: #55F;\n    filter: brightness(140%);\n}\ndiv.tile.selected[data-v-ae1296fe] {\n    border-color: lime;\n    filter: brightness(120%);\n}\ndiv.tile.selected[data-v-ae1296fe]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\n@keyframes dragover-pulse-data-v-ae1296fe {\nfrom {\n        border-color: lime;\n}\nto {\n        border-color: black;\n}\n}\ndiv.tile.dragover[data-v-ae1296fe] {\n    animation: dragover-pulse-data-v-ae1296fe 777ms alternate infinite ease-in-out;\n}\n", ""]);
+exports.push([module.i, "\ndiv.indicator[data-v-ae1296fe] {\n    font-size: 2em;\n    color: white;\n    background-color: rgba(0, 0, 0, 0.5);\n    border-radius: 15%;\n    width: 1em;\n    position: absolute;\n}\ndiv.tile[data-v-ae1296fe] {\n    border: solid 0.4em #00C;\n    margin: 0.3em;\n    cursor: pointer;\n    user-select: none;\n    display: inline-block;\n    background-repeat: no-repeat;\n    background-position: center;\n    filter: brightness(100%);\n}\ndiv.tile[data-v-ae1296fe]:hover {\n    border-color: #55F;\n    filter: brightness(140%);\n}\ndiv.tile.selected[data-v-ae1296fe] {\n    border-color: lime;\n    filter: brightness(120%);\n}\ndiv.tile.selected[data-v-ae1296fe]:hover {\n    border-color: #8F8;\n    filter: brightness(140%);\n}\n@keyframes dragover-pulse-data-v-ae1296fe {\nfrom {\n        border-color: lime;\n}\nto {\n        border-color: black;\n}\n}\ndiv.tile.dragover[data-v-ae1296fe] {\n    animation: dragover-pulse-data-v-ae1296fe 777ms alternate infinite ease-in-out;\n}\n", ""]);
 
 
 
@@ -46308,7 +46307,6 @@ const {mapMutations: editorMapMutations, mapGetters: editorMapGetters} = Object(
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_material_design_icons_Filmstrip_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-material-design-icons/Filmstrip.vue */ "./node_modules/vue-material-design-icons/Filmstrip.vue");
-//
 //
 //
 //
@@ -77128,6 +77126,23 @@ function redMaxId(prev, curr) {
     return Math.max(prev, curr.id);
 }
 
+function buildSmartTileGetter(sType) {
+    return state => {
+        // préparer les tile animée
+        const stx = state.tiles[sType];
+        const aAnimated = stx
+            .map((tw, itw) => ({
+                anim: !!tw.animation,
+                indexMin: itw,
+                indexMax: !tw.animation ? -1 : parseInt(tw.animation.frames) + itw - 1
+            }))
+            .filter(t => t.anim);
+        return stx.filter((t, i) => aAnimated
+            .filter(atw => atw.indexMin < i)
+            .every(atw => atw.indexMax < i));
+    };
+}
+
 /* harmony default export */ __webpack_exports__["default"] = ({
     getMaxTileId: state =>
         Math.max(
@@ -77147,9 +77162,9 @@ function redMaxId(prev, curr) {
     getMaxBlockId: state => state.blocks.reduce(redMaxId, 0),
     getMaxThingId: state => state.things.reduce(redMaxId, 0),
     getTimeInterval: state => state.time.interval,
-    getWallTiles: state => state.tiles.walls,
-    getFlatTiles: state => state.tiles.flats,
-    getSpriteTiles: state => state.tiles.sprites,
+    getWallTiles: buildSmartTileGetter('walls'),
+    getFlatTiles: buildSmartTileGetter('flats'),
+    getSpriteTiles: buildSmartTileGetter('sprites'),
     getWallTile: state => tid => state.tiles.walls.find(t => t.id === tid),
     getFlatTile: state => tid => state.tiles.flats.find(t => t.id === tid),
     getSpriteTile: state => tid => state.tiles.sprites.find(t => t.id === tid),
