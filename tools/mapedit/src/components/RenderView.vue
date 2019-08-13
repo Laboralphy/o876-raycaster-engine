@@ -69,6 +69,9 @@
                     const data = await generate(level, appendImages);
                     this.setLevelGeneratedData({value: data});
                     engine = new Engine();
+                    engine.events.on('door.open', ({x, y, context}) => console.log('door open at', x, y));
+                    engine.events.on('door.closing', ({x, y, context}) => console.log('door closing at', x, y));
+                    engine.events.on('door.closed', ({x, y, context}) => console.log('door closed at', x, y));
                     engine.setRenderingCanvas(canvas);
                     const grad = context.createLinearGradient(x, y, x, y + h);
                     grad.addColorStop(0, 'rgba(0, 66, 240)');
