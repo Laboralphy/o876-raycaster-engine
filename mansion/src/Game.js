@@ -1,13 +1,13 @@
 import GameAbstract from '../../lib/src/game-abstract';
+import {quoteSplit} from "../../lib/src/quote-split";
 
 class Game extends GameAbstract {
     // ... write your game here ...
 
-    constructor() {
-        super();
-        this.on('initialized', () => {
-            this.getLevelTags();
-        });
+    enterLevel() {
+        super.enterLevel();
+        console.log(this.getTags());
+        this.engine.events.on('tag.bgm.enter', (...args) => console.log('tag event bgm enter', ...args));
     }
 
     /**
@@ -19,10 +19,16 @@ class Game extends GameAbstract {
      * }
      * @return {array}
      */
-    getLevelTags() {
-        this.engine._tm._tg.iterate((x, y, cell) => {
-            console.log(x, y, cell);
-        })
+    getTags() {
+        const aTags = []; // output list
+        const tg = this.engine._tm._tg; // get the tag grid
+        tg.iterate((x, y, cell) => { // iterates all cells of the tag grid
+            cell.forEach(t => aTags.push({
+                x, y,
+                tag: quoteSplit(tg.getTag(t))
+            }));
+        });
+        return aTags;
     }
 }
 
