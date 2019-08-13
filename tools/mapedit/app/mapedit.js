@@ -41890,9 +41890,9 @@ const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = Object(v
             'getTileWidth',
             'getTileHeight',
             'getTile',
-            'getWallTiles',
-            'getFlatTiles',
-            'getSpriteTiles',
+            'getWallFrames',
+            'getFlatFrames',
+            'getSpriteFrames',
             'getTimeInterval'
         ]),
 
@@ -41909,24 +41909,24 @@ const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = Object(v
                 const oFirstTile = this.getTile(this.value.tile);
                 const sType = oFirstTile.type;
                 let bWall = false;
-                let aTiles;
+                let aFrames;
                 switch (sType) {
                     case _consts__WEBPACK_IMPORTED_MODULE_3__["TILE_TYPE_WALL"]:
-                        aTiles = this.getWallTiles;
+                        aFrames = this.getWallFrames;
                         bWall = true;
                         break;
 
                     case _consts__WEBPACK_IMPORTED_MODULE_3__["TILE_TYPE_FLAT"]:
-                        aTiles = this.getFlatTiles;
+                        aFrames = this.getFlatFrames;
                         break;
 
                     case _consts__WEBPACK_IMPORTED_MODULE_3__["TILE_TYPE_SPRITE"]:
-                        aTiles = this.getSpriteTiles;
+                        aFrames = this.getSpriteFrames;
                         break;
                 }
-                const iFirstFrame = aTiles.findIndex(t => t.id === this.value.tile);
+                const iFirstFrame = aFrames.findIndex(t => t.id === this.value.tile);
                 const iFrame = this.frameIndex + iFirstFrame;
-                const oTile = iFrame < aTiles.length ? aTiles[iFrame] : aTiles[aTiles.length - 1];
+                const oTile = iFrame < aFrames.length ? aFrames[iFrame] : aFrames[aFrames.length - 1];
                 return oTile.content;
             } else {
                 return this.content;
@@ -77165,6 +77165,9 @@ function buildSmartTileGetter(sType) {
     getWallTiles: buildSmartTileGetter('walls'),
     getFlatTiles: buildSmartTileGetter('flats'),
     getSpriteTiles: buildSmartTileGetter('sprites'),
+    getWallFrames: state => state.tiles.walls,
+    getFlatFrames: state => state.tiles.flats,
+    getSpriteFrames: state => state.tiles.sprites,
     getWallTile: state => tid => state.tiles.walls.find(t => t.id === tid),
     getFlatTile: state => tid => state.tiles.flats.find(t => t.id === tid),
     getSpriteTile: state => tid => state.tiles.sprites.find(t => t.id === tid),

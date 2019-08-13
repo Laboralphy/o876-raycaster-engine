@@ -126,9 +126,9 @@
                 'getTileWidth',
                 'getTileHeight',
                 'getTile',
-                'getWallTiles',
-                'getFlatTiles',
-                'getSpriteTiles',
+                'getWallFrames',
+                'getFlatFrames',
+                'getSpriteFrames',
                 'getTimeInterval'
             ]),
 
@@ -145,24 +145,24 @@
                     const oFirstTile = this.getTile(this.value.tile);
                     const sType = oFirstTile.type;
                     let bWall = false;
-                    let aTiles;
+                    let aFrames;
                     switch (sType) {
                         case CONSTS.TILE_TYPE_WALL:
-                            aTiles = this.getWallTiles;
+                            aFrames = this.getWallFrames;
                             bWall = true;
                             break;
 
                         case CONSTS.TILE_TYPE_FLAT:
-                            aTiles = this.getFlatTiles;
+                            aFrames = this.getFlatFrames;
                             break;
 
                         case CONSTS.TILE_TYPE_SPRITE:
-                            aTiles = this.getSpriteTiles;
+                            aFrames = this.getSpriteFrames;
                             break;
                     }
-                    const iFirstFrame = aTiles.findIndex(t => t.id === this.value.tile);
+                    const iFirstFrame = aFrames.findIndex(t => t.id === this.value.tile);
                     const iFrame = this.frameIndex + iFirstFrame;
-                    const oTile = iFrame < aTiles.length ? aTiles[iFrame] : aTiles[aTiles.length - 1];
+                    const oTile = iFrame < aFrames.length ? aFrames[iFrame] : aFrames[aFrames.length - 1];
                     return oTile.content;
                 } else {
                     return this.content;
