@@ -1946,16 +1946,16 @@ class Engine {
 //           |___/                               |___/
 
 
-    _tagEnter({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.enter', {entity, parameters, remove});
+    _tagEnter({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.enter', {entity, command, operation: 'enter', parameters, remove, x, y});
     }
 
-    _tagLeave({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.leave', {entity, parameters, remove});
+    _tagLeave({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.leave', {entity, command, operation: 'leave', parameters, remove, x, y});
     }
 
-    _tagPush({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.push', {entity, parameters, remove});
+    _tagPush({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.push', {entity, command, operation: 'push', parameters, remove, x, y});
     }
 
     addTag(x, y, sTag) {
@@ -2950,10 +2950,25 @@ __webpack_require__.r(__webpack_exports__);
 class Scheduler {
 
     constructor() {
-        this.aCommands = [];
+        this.aCommands = {
+            delayed: [],
+            looped: []
+        };
         this.bInvalid = true;
         this.nTime = 0;
         this._lastId = 0;
+    }
+
+    /**
+     * executes a command again and again.
+     * time duration between each execution is specified
+     * @param command {function} function to be called back
+     * @param duration {number} number of milliseconds between one execution and the next
+     */
+    loopCommand(command, duration) {
+        const id = ++this._lastId;
+        this.aCommands.looped.push({id, command, duration, time: duration + this.nTime});
+        return id;
     }
 
     /**
@@ -2966,7 +2981,7 @@ class Scheduler {
     delayCommand(command, delay) {
         delay += this.nTime;
         const id = ++this._lastId;
-        this.aCommands.push({id, command, delay});
+        this.aCommands.delayed.push({id, command, delay});
         this.bInvalid = true;
         return id;
     }
@@ -2976,9 +2991,15 @@ class Scheduler {
      * @param id {number} command identifier , given by delayCommand
      */
     cancelCommand(id) {
-        const iIndex = this.aCommands.findIndex(c => c.id === id);
+        let d = this.aCommands.delayed;
+        let iIndex = d.findIndex(c => c.id === id);
         if (iIndex >= 0) {
-            this.aCommands.splice(iIndex, 1);
+            d.splice(iIndex, 1);
+        }
+        d = this.aCommands.looped;
+        iIndex = d.findIndex(c => c.id === id);
+        if (iIndex >= 0) {
+            d.splice(iIndex, 1);
         }
     }
 
@@ -2987,14 +3008,22 @@ class Scheduler {
      * @param nTime {number}
      */
     schedule(nTime) {
+        const d = this.aCommands.delayed;
         this.nTime = nTime;
         if (this.bInvalid) { // trier en cas d'invalidité
-            this.aCommands.sort(function(a, b) { return a.delay - b.delay; });
+            d.sort(function(a, b) { return a.delay - b.delay; });
             this.bInvalid = false;
         }
-        const aCommands = this.aCommands;
-        while (aCommands.length > 0 && aCommands[0].delay <= nTime) {
-            aCommands.shift().command();
+        while (d.length > 0 && d[0].delay <= nTime) {
+            d.shift().command();
+        }
+        const aLooped = this.aCommands.looped;
+        for (let i = 0, l = aLooped.length; i < l; ++i) {
+            const c = aLooped[i];
+            while (c.time <= nTime) {
+                c.time += c.duration;
+                c.command();
+            }
         }
     }
 }
@@ -3096,6 +3125,7 @@ class TagManager {
         const tg = this._tg;
         const event = {
             entity,
+            x, y,
             ...this.tagParse(sTag),
             remove: () => tg.removeTagRegion(x, y, id)
         };
