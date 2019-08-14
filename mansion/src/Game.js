@@ -6,11 +6,6 @@ import * as MUTATIONS from './ui/store/mutation-types';
 class Game extends GameAbstract {
     // ... write your game here ...
 
-    constructor() {
-        super();
-        this._ui = ui.create();
-    }
-
     enterLevel() {
         super.enterLevel();
         this.processTags();
@@ -27,8 +22,8 @@ class Game extends GameAbstract {
 //                 |_|   |_|            |___/
 
 
-    popup(text, icon) {
-        this._ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text, icon, time: this.engine.getTime() + 2000});
+    popup(text, icon = '') {
+        ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text, icon, time: this.engine.getTime() + 2000});
     }
 
 
@@ -47,11 +42,11 @@ class Game extends GameAbstract {
      * Initialize tag handlers
      */
     initTagHandlers() {
-        this.engine.events.on('door.locked', ({x, y}) => console.log('door locked at', x, y));
+        this.engine.events.on('door.locked', ({x, y}) => this.tagEventLock(x, y));
     }
 
     tagEventLock(x, y) {
-        this._ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text: 'This door is locked'});
+        this.popup('This door is locked');
     }
 
     /**
@@ -75,7 +70,6 @@ class Game extends GameAbstract {
      * @param y {number} cell door coordinates (y axis)
      */
     tagInitLock(x, y) {
-        console.log('locking door', x, y);
         this.engine.lockDoor(x, y, true);
     }
 

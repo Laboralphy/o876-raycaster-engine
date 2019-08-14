@@ -21,9 +21,15 @@ function createApplication() {
     });
 }
 
-const oApplication = createApplication();
+let oApplication = null;
 
 export default {
-    instance: oApplication,
-    mutate: function(mutation, payload) { oApplication.$store.commit(mutation, payload); }
+    get instance() {
+        if (!oApplication) {
+            oApplication = createApplication();
+            window.VUEAPP = oApplication;
+        }
+        return oApplication;
+    },
+    mutate: function(mutation, payload) { this.instance.$store.commit(mutation, payload); }
 };

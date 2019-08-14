@@ -1,6 +1,8 @@
 <template>
-    <HUD></HUD>
-    <Info></Info>
+    <div>
+        <HUD></HUD>
+        <Info></Info>
+    </div>
 </template>
 
 <script>
