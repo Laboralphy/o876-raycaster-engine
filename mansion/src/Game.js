@@ -1,23 +1,92 @@
 import GameAbstract from '../../lib/src/game-abstract';
 import {quoteSplit} from "../../lib/src/quote-split";
+import ui from './ui';
+import * as MUTATIONS from './ui/store/mutation-types';
 
 class Game extends GameAbstract {
     // ... write your game here ...
 
+    constructor() {
+        super();
+        this._ui = ui.create();
+    }
+
     enterLevel() {
         super.enterLevel();
-        console.log(this.getTags());
-        this.engine.events.on('tag.bgm.enter', (...args) => console.log('tag event bgm enter', ...args));
+        this.processTags();
+        this.initTagHandlers();
+    }
+
+
+
+//                              _                   _                                   _        _   _
+//  _ __ ___   __ _ _ __  _ __ (_)_ __   __ _   ___| |_ ___  _ __ ___   _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
+// | '_ ` _ \ / _` | '_ \| '_ \| | '_ \ / _` | / __| __/ _ \| '__/ _ \ | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
+// | | | | | | (_| | |_) | |_) | | | | | (_| | \__ \ || (_) | | |  __/ | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
+// |_| |_| |_|\__,_| .__/| .__/|_|_| |_|\__, | |___/\__\___/|_|  \___| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
+//                 |_|   |_|            |___/
+
+
+    popup(text, icon) {
+        this._ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text, icon, time: this.engine.getTime() + 2000});
+    }
+
+
+
+
+
+//  _                                           _   _
+// | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+// | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//           |___/        |_|
+
+
+    /**
+     * Initialize tag handlers
+     */
+    initTagHandlers() {
+        this.engine.events.on('door.locked', ({x, y}) => console.log('door locked at', x, y));
+    }
+
+    tagEventLock(x, y) {
+        this._ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text: 'This door is locked'});
     }
 
     /**
-     * Returns a list of all tags present on the maps
-     * the list contains items with these properties :
+     * Processes tag initial behavior.
+     * Some tags may trigger initial behavior right after level loading.
+     * For example, the "lock" tag must trigger a lockDoor() call.
+     */
+    processTags() {
+        this.getTags().forEach(({tag, x, y}) => {
+            switch (tag[0]) {
+                case 'lock':
+                    this.tagInitLock(x, y);
+                    break;
+            }
+        });
+    }
+
+    /**
+     * Initially locks a door tagged with "lock"
+     * @param x {number} cell door coordinates (x axis)
+     * @param y {number} cell door coordinates (y axis)
+     */
+    tagInitLock(x, y) {
+        console.log('locking door', x, y);
+        this.engine.lockDoor(x, y, true);
+    }
+
+
+    /**
+     * Returns a list of all tags present on the maps, the returns list contains items with these properties :
      * {
      *     x, y, // cell coordinates
-     *     tags,  // tags
+     *     tags,  // tag components (space separated values)
      * }
-     * @return {array}
+     * @return {array<{tag, x, y}>}
      */
     getTags() {
         const aTags = []; // output list

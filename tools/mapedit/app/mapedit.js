@@ -1946,16 +1946,16 @@ class Engine {
 //           |___/                               |___/
 
 
-    _tagEnter({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.enter', {entity, parameters, remove});
+    _tagEnter({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.enter', {entity, command, operation: 'enter', parameters, remove, x, y});
     }
 
-    _tagLeave({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.leave', {entity, parameters, remove});
+    _tagLeave({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.leave', {entity, command, operation: 'leave', parameters, remove, x, y});
     }
 
-    _tagPush({entity, command, parameters, remove}) {
-        this._events.emit('tag.' + command + '.push', {entity, parameters, remove});
+    _tagPush({entity, command, parameters, remove, x, y}) {
+        this._events.emit('tag.' + command + '.push', {entity, command, operation: 'push', parameters, remove, x, y});
     }
 
     addTag(x, y, sTag) {
@@ -3096,6 +3096,7 @@ class TagManager {
         const tg = this._tg;
         const event = {
             entity,
+            x, y,
             ...this.tagParse(sTag),
             remove: () => tg.removeTagRegion(x, y, id)
         };
