@@ -1,3 +1,7 @@
 export default {
-    popupTexts: []
+    popup: {
+        text: '',
+        icon: '',
+        visible: false
+    }
 };

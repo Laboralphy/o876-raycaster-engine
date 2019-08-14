@@ -1,4 +1,5 @@
 import GameAbstract from '../../lib/src/game-abstract';
+import PopupManager from "./PopupManager";
 import {quoteSplit} from "../../lib/src/quote-split";
 import ui from './ui';
 import * as MUTATIONS from './ui/store/mutation-types';
@@ -6,11 +7,21 @@ import * as MUTATIONS from './ui/store/mutation-types';
 class Game extends GameAbstract {
     // ... write your game here ...
 
+    constructor() {
+        super();
+        this._pm = new PopupManager();
+    }
+
     enterLevel() {
         super.enterLevel();
         this.processTags();
         this.initTagHandlers();
+        this.engine._scheduler.loopCommand(() => {
+            this._pm.process();
+        }, this._pm.TIME_GRANULARITY);
     }
+
+
 
 
 
@@ -22,10 +33,20 @@ class Game extends GameAbstract {
 //                 |_|   |_|            |___/
 
 
+    /**
+     * displays a new popup, if a popup is already displayed,
+     * @param text
+     * @param icon
+     */
     popup(text, icon = '') {
-        ui.mutate(MUTATIONS.ADD_POPUP_TEXT, {text, icon, time: this.engine.getTime() + 2000});
+        const aWords = text.split(' ').filter(w => w.length > 1);
+        const nWordCount = aWords.length;
+        const WPM = 180;
+        const MINIMUM_TIME = 1500;
+        const MS_IN_A_MINUTE = 60000;
+        const nTime = Math.max(MINIMUM_TIME, MS_IN_A_MINUTE * nWordCount / WPM);
+        this._pm.popup(text, icon, nTime);
     }
-
 
 
 
@@ -46,7 +67,7 @@ class Game extends GameAbstract {
     }
 
     tagEventLock(x, y) {
-        this.popup('This door is locked');
+        this.popup('This door is locked.', 'assets/icons/i-keyhole.png');
     }
 
     /**

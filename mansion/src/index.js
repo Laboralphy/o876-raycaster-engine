@@ -5,6 +5,7 @@ async function main() {
     const g = new Game();
     await g.run();
     g.engine.filters.link(new FadeIn({duration: 600}));
+    window.GAME = g;
 }
 
 window.addEventListener('load', main);

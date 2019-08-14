@@ -1,6 +1,6 @@
 <template>
     <div class="popups">
-        <Popup v-if="!!getFirstPopup" :icon="getFirstPopup.icon" :text="getFirstPopup.text"></Popup>
+        <Popup :visible="getPopup.visible" :icon="getPopup.icon" :text="getPopup.text"></Popup>
     </div>
 </template>
 
@@ -14,7 +14,7 @@
         components: {Popup},
         computed: {
             ...mapGetters([
-                'getFirstPopup'
+                'getPopup'
             ])
         }
     }

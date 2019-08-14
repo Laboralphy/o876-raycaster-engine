@@ -1,9 +1,15 @@
 <template>
-    <div class="popup">
-        <div class="section icon" v-if="icon !== ''"><img alt="missing popup icon" :src="icon" /></div>
-        <div class="section message">
-            <p class="message">{{ text }}</p>
-        </div>
+    <div :class="getComputedClass">
+        <table>
+            <tr>
+                <td>
+                    <div class="icon"><img class="icon" v-if="icon !== ''" alt="missing popup icon" :src="icon" /></div>
+                </td>
+                <td>
+                    <p class="message">{{ text }}</p>
+                </td>
+            </tr>
+        </table>
     </div>
 </template>
 
@@ -20,6 +26,18 @@
             text: {
                 type: String,
                 required: true
+            },
+            visible: {
+                type: Boolean,
+                required: false,
+                default: false
+            }
+        },
+        computed: {
+            getComputedClass: function() {
+                const a = ['popup'];
+                a.push(this.visible ? 'visible' : 'hidden');
+                return a.join(' ');
             }
         }
     }
@@ -29,21 +47,52 @@
 
     div.popup {
         position: absolute;
-        left: 25%;
+        box-sizing: border-box;
         top: 15%;
+        left: 25%;
         width: 50%;
-        background-color: rgba(179, 158, 107, 0.8);
-        border: solid 0.5em rgba(64, 12, 0, 0.8);
-        border-radius: 15%;
+        background-color: rgb(181, 151, 91);
+        border: solid 0.2em rgb(37, 26, 26);
+        border-radius: 0.5em;
+        padding: 0;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-1em);
+        transition: transform 0.25s, visibility 0.25s, opacity 0.25s ease-in;
+        vertical-align: middle;
     }
 
-    div.section {
-        display: inline-block;
+    div.popup div.icon {
+        width: 3em;
+        padding: 0;
+    }
+
+    div.popup div.icon img.icon {
+        margin: auto;
+        width: 2em;
+        height: 2em;
+        image-rendering: initial;
     }
 
     div.popup p.message {
-        color: rgba(48, 6, 0, 1);
-        text-shadow: black 0.1em 0.1em 0.3em;
+        font-size: 1em;
+        font-family: "Courier New", Courier, monospace;
+        color: rgb(37, 26, 26);
+        text-shadow: rgba(0, 0, 0, 0.5) 0.1em 0.1em 0.15em;
+    }
+
+    div.popup.visible {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+        transition: transform 0.25s, visibility 0s, opacity 0.25s ease-out;
+    }
+
+    div.popup.hidden {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-1em);
+        transition: transform 0.25s, visibility 0.25s, opacity 0.25s ease-in;
     }
 
 </style>

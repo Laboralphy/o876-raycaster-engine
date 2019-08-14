@@ -3,14 +3,11 @@ import Vuex from 'vuex';
 import store from './store';
 import Application from './components/Application.vue';
 
-import './styles/font-sizes.css';
-import 'vue-material-design-icons/styles.css';
-
 Vue.use(Vuex);
 
 function createApplication() {
     return new Vue({
-        el: 'div.overlay',
+        el: '#vue-application',
         store: new Vuex.Store(store),
         components: {
             Application
