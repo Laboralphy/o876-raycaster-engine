@@ -1,2 +1,3 @@
-export const SHOW_POPUP = 'SHOW_POPUP';
+export const SHIFT_POPUP = 'SHIFT_POPUP';
 export const HIDE_POPUP = 'HIDE_POPUP';
+export const PUSH_POPUP = 'PUSH_POPUP';

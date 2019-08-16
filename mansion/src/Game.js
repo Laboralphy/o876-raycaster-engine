@@ -1,51 +1,38 @@
 import GameAbstract from '../../lib/src/game-abstract';
-import PopupManager from "./PopupManager";
 import {quoteSplit} from "../../lib/src/quote-split";
-import ui from './ui';
-import * as MUTATIONS from './ui/store/mutation-types';
+import UI from './ui';
 
 class Game extends GameAbstract {
     // ... write your game here ...
+    init() {
+        super.init();
+        this._ui = new UI();
+        this._state = {
+            items: []
+        }
+    }
 
-    constructor() {
-        super();
-        this._pm = new PopupManager();
+    get ui() {
+        return this._ui;
     }
 
     enterLevel() {
         super.enterLevel();
-        this.processTags();
         this.initTagHandlers();
-        this.engine._scheduler.loopCommand(() => {
-            this._pm.process();
-        }, this._pm.TIME_GRANULARITY);
     }
 
+//  _                _                   _        _   _
+// | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
+// | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
+// | |  __/\ V /  __/ | | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
+// |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
 
 
-
-
-//                              _                   _                                   _        _   _
-//  _ __ ___   __ _ _ __  _ __ (_)_ __   __ _   ___| |_ ___  _ __ ___   _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
-// | '_ ` _ \ / _` | '_ \| '_ \| | '_ \ / _` | / __| __/ _ \| '__/ _ \ | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
-// | | | | | | (_| | |_) | |_) | | | | | (_| | \__ \ || (_) | | |  __/ | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
-// |_| |_| |_|\__,_| .__/| .__/|_|_| |_|\__, | |___/\__\___/|_|  \___| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
-//                 |_|   |_|            |___/
-
-
-    /**
-     * displays a new popup, if a popup is already displayed,
-     * @param text
-     * @param icon
-     */
-    popup(text, icon = '') {
-        const aWords = text.split(' ').filter(w => w.length > 1);
-        const nWordCount = aWords.length;
-        const WPM = 180;
-        const MINIMUM_TIME = 1500;
-        const MS_IN_A_MINUTE = 60000;
-        const nTime = Math.max(MINIMUM_TIME, MS_IN_A_MINUTE * nWordCount / WPM);
-        this._pm.popup(text, icon, nTime);
+    removeDecals(x, y) {
+        const csm = this.engine.raycaster._csm;
+        for (let i = 0; i < 4; ++i) {
+            csm.removeDecal(x, y, i);
+        }
     }
 
 
@@ -60,22 +47,13 @@ class Game extends GameAbstract {
 
 
     /**
-     * Initialize tag handlers
-     */
-    initTagHandlers() {
-        this.engine.events.on('door.locked', ({x, y}) => this.tagEventLock(x, y));
-    }
-
-    tagEventLock(x, y) {
-        this.popup('This door is locked.', 'assets/icons/i-keyhole.png');
-    }
-
-    /**
      * Processes tag initial behavior.
      * Some tags may trigger initial behavior right after level loading.
      * For example, the "lock" tag must trigger a lockDoor() call.
+     *
+     * Also initialize tag handlers for all tags.
      */
-    processTags() {
+    initTagHandlers() {
         this.getTags().forEach(({tag, x, y}) => {
             switch (tag[0]) {
                 case 'lock':
@@ -83,6 +61,26 @@ class Game extends GameAbstract {
                     break;
             }
         });
+        this.engine.events.on('tag.item.push', ({x, y, parameters}) => this.tagEventItem(x, y, parameters, remove));
+        this.engine.events.on('tag.lock.push', ({x, y, parameters, remove}) => this.tagEventLock(x, y, parameters, remove));
+    }
+
+    tagEventLock(x, y, key, remove) {
+        if (this._state.items.indexOf(key)) {
+            remove();
+            this.ui.popup('You unlock the door with : ' + key, 'assets/icons/i-unlock.png');
+            this.removeDecal(x, y);
+            this.engine.lockDoor(x, y, false);
+        } else {
+            this.ui.popup('This door is locked.', 'assets/icons/i-keyhole.png');
+        }
+    }
+
+    tagEventItem(x, y, item, remove) {
+        this.ui.popup('You acquired : ' + item);
+        this.removeDecal(x, y);
+        this._state.items.push(item);
+        remove();
     }
 
     /**

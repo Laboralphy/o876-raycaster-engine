@@ -1,32 +1,42 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 import store from './store';
+import * as MUTATIONS from './store/mutation-types';
+import * as ACTIONS from './store/action-types';
 import Application from './components/Application.vue';
 
 Vue.use(Vuex);
 
-function createApplication() {
-    return new Vue({
-        el: '#vue-application',
-        store: new Vuex.Store(store),
-        components: {
-            Application
-        },
-        render: function (h) {
-            return h(Application);
-        }
-    });
+
+class UI {
+    constructor() {
+        this._vue = this.createApplication();
+    }
+
+    createApplication() {
+        return new Vue({
+            el: '#vue-application',
+            store: new Vuex.Store(store),
+            components: {
+                Application
+            },
+            render: function (h) {
+                return h(Application);
+            }
+        });
+    }
+
+    dispatch(action, payload) {
+        return this._vue.$store.dispatch(action, payload);
+    }
+
+    mutate(mutation, payload) {
+        this._vue.$store.commit(mutation, payload);
+    }
+
+    popup(text, icon = '') {
+        this.dispatch(ACTIONS.SHOW_POPUP, {text, icon});
+    }
 }
 
-let oApplication = null;
-
-export default {
-    get instance() {
-        if (!oApplication) {
-            oApplication = createApplication();
-            window.VUEAPP = oApplication;
-        }
-        return oApplication;
-    },
-    mutate: function(mutation, payload) { this.instance.$store.commit(mutation, payload); }
-};
+export default UI;

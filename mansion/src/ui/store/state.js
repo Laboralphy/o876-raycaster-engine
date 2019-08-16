@@ -2,6 +2,8 @@ export default {
     popup: {
         text: '',
         icon: '',
-        visible: false
+        timestamp: 0,
+        visible: false,
+        queue: []
     }
 };
