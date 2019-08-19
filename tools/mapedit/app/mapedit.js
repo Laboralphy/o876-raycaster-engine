@@ -1854,6 +1854,8 @@ class Engine {
      * @param y {number}
      */
     pushBlock(entity, x, y) {
+        const nPhys = this.raycaster.getCellPhys(x, y);
+        const bDoor = nPhys >= _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_FIRST_DOOR"] && nPhys <= _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_LAST_DOOR"];
         this._tm.entityPushBlock(this, entity, x, y);
     }
 
@@ -9187,7 +9189,7 @@ class TileAnimation {
 /*!*******************************************!*\
   !*** ./lib/src/raycaster/consts/index.js ***!
   \*******************************************/
-/*! exports provided: PHYS_NONE, PHYS_WALL, PHYS_FIRST_DOOR, PHYS_DOOR_UP, PHYS_CURT_UP, PHYS_DOOR_DOWN, PHYS_CURT_DOWN, PHYS_DOOR_LEFT, PHYS_DOOR_RIGHT, PHYS_DOOR_DOUBLE, PHYS_LAST_DOOR, PHYS_SECRET_BLOCK, PHYS_TRANSPARENT_BLOCK, PHYS_INVISIBLE_BLOCK, PHYS_OFFSET_BLOCK, PHYS_DOOR_D, PHYS_DOOR_E, PHYS_DOOR_F, METRIC_LIGHTMAP_SCALE, FACE_WEST, FACE_SOUTH, FACE_EAST, FACE_NORTH, FACE_FLOOR, FACE_CEILING, ANIM_LOOP_NONE, ANIM_LOOP_FORWARD, ANIM_LOOP_YOYO, FX_NONE, FX_LIGHT_ADD, FX_LIGHT_SOURCE, FX_ALPHA_75, FX_ALPHA_50, FX_ALPHA_25, FX_DIM0, FX_ALPHA, DEFAULT_PHYS_CODE */
+/*! exports provided: PHYS_NONE, PHYS_WALL, PHYS_FIRST_DOOR, PHYS_DOOR_UP, PHYS_CURT_UP, PHYS_DOOR_DOWN, PHYS_CURT_DOWN, PHYS_DOOR_LEFT, PHYS_DOOR_RIGHT, PHYS_DOOR_DOUBLE, PHYS_LAST_DOOR, PHYS_SECRET_BLOCK, PHYS_TRANSPARENT_BLOCK, PHYS_INVISIBLE_BLOCK, PHYS_OFFSET_BLOCK, METRIC_LIGHTMAP_SCALE, FACE_WEST, FACE_SOUTH, FACE_EAST, FACE_NORTH, FACE_FLOOR, FACE_CEILING, ANIM_LOOP_NONE, ANIM_LOOP_FORWARD, ANIM_LOOP_YOYO, FX_NONE, FX_LIGHT_ADD, FX_LIGHT_SOURCE, FX_ALPHA_75, FX_ALPHA_50, FX_ALPHA_25, FX_DIM0, FX_ALPHA, DEFAULT_PHYS_CODE */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9207,9 +9209,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_TRANSPARENT_BLOCK", function() { return PHYS_TRANSPARENT_BLOCK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_INVISIBLE_BLOCK", function() { return PHYS_INVISIBLE_BLOCK; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_OFFSET_BLOCK", function() { return PHYS_OFFSET_BLOCK; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_DOOR_D", function() { return PHYS_DOOR_D; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_DOOR_E", function() { return PHYS_DOOR_E; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "PHYS_DOOR_F", function() { return PHYS_DOOR_F; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "METRIC_LIGHTMAP_SCALE", function() { return METRIC_LIGHTMAP_SCALE; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FACE_WEST", function() { return FACE_WEST; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FACE_SOUTH", function() { return FACE_SOUTH; });
@@ -9247,10 +9246,6 @@ const PHYS_SECRET_BLOCK = 0x09;
 const PHYS_TRANSPARENT_BLOCK = 0x0A;
 const PHYS_INVISIBLE_BLOCK = 0x0B;
 const PHYS_OFFSET_BLOCK = 0x0C;
-const PHYS_DOOR_D = 0x0D;
-const PHYS_DOOR_E = 0x0E;
-const PHYS_DOOR_F = 0x0F;
-
 
 
 // lightmap / grid cell ratio
@@ -75695,9 +75690,6 @@ async function render(oCanvas, phys, faces, light) {
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_LEFT"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_RIGHT"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_DOUBLE"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_D"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_E"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_F"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_CURT_DOWN"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_CURT_UP"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_SECRET_BLOCK"]:
@@ -75774,9 +75766,6 @@ async function render(oCanvas, phys, faces, light) {
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_LEFT"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_RIGHT"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_DOUBLE"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_D"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_E"]:
-        case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_DOOR_F"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_CURT_DOWN"]:
         case _lib_src_raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_CURT_UP"]:
             ornateDoorIcon(c, phys, w, h);

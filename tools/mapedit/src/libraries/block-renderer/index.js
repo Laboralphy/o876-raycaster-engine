@@ -183,9 +183,6 @@ export async function render(oCanvas, phys, faces, light) {
         case CONSTS.PHYS_DOOR_LEFT:
         case CONSTS.PHYS_DOOR_RIGHT:
         case CONSTS.PHYS_DOOR_DOUBLE:
-        case CONSTS.PHYS_DOOR_D:
-        case CONSTS.PHYS_DOOR_E:
-        case CONSTS.PHYS_DOOR_F:
         case CONSTS.PHYS_CURT_DOWN:
         case CONSTS.PHYS_CURT_UP:
         case CONSTS.PHYS_SECRET_BLOCK:
@@ -262,9 +259,6 @@ export async function render(oCanvas, phys, faces, light) {
         case CONSTS.PHYS_DOOR_LEFT:
         case CONSTS.PHYS_DOOR_RIGHT:
         case CONSTS.PHYS_DOOR_DOUBLE:
-        case CONSTS.PHYS_DOOR_D:
-        case CONSTS.PHYS_DOOR_E:
-        case CONSTS.PHYS_DOOR_F:
         case CONSTS.PHYS_CURT_DOWN:
         case CONSTS.PHYS_CURT_UP:
             ornateDoorIcon(c, phys, w, h);
