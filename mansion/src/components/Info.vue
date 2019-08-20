@@ -6,14 +6,16 @@
 
 <script>
 
-    import {mapGetters} from 'vuex';
+    import {createNamespacedHelpers} from 'vuex';
     import Popup from "./Popup.vue";
+
+    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
         name: "Info",
         components: {Popup},
         computed: {
-            ...mapGetters([
+            ...uiMapGetters([
                 'getPopup'
             ])
         }

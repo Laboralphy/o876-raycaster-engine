@@ -1,19 +1,22 @@
 import GameAbstract from '../../lib/src/game-abstract';
 import {quoteSplit} from "../../lib/src/quote-split";
-import UI from './ui';
+import UI from './UI';
+import Logic from './Logic';
 
 class Game extends GameAbstract {
     // ... write your game here ...
     init() {
         super.init();
         this._ui = new UI();
-        this._state = {
-            items: []
-        }
+        this._logic = new Logic(this._ui.store);
     }
 
     get ui() {
         return this._ui;
+    }
+
+    get logic() {
+        return this._logic;
     }
 
     enterLevel() {
@@ -33,6 +36,11 @@ class Game extends GameAbstract {
         for (let i = 0; i < 4; ++i) {
             csm.removeDecal(x, y, i);
         }
+    }
+
+
+    addTag(x, y, sTag) {
+        return this.engine._tm._tg.addTag(x, y, sTag);
     }
 
 
@@ -61,26 +69,33 @@ class Game extends GameAbstract {
                     break;
             }
         });
-        this.engine.events.on('tag.item.push', ({x, y, parameters}) => this.tagEventItem(x, y, parameters, remove));
-        this.engine.events.on('tag.lock.push', ({x, y, parameters, remove}) => this.tagEventLock(x, y, parameters, remove));
+        this.engine.events.on('tag.item.push', ({x, y, parameters, remove}) => this.tagEventItem(remove, x, y, ...parameters));
+        this.engine.events.on('tag.lock.push', ({x, y, parameters, remove}) => this.tagEventLock(remove, x, y, ...parameters));
     }
 
-    tagEventLock(x, y, key, remove) {
-        console.log('tag event lock');
-        if (this._state.items.indexOf(key)) {
-            remove();
+    tagEventUnlocked(remove, x, y) {
+        this.engine.lockDoor(x, y, false); // unlock door
+        remove();
+    }
+
+    tagEventLock(remove, x, y, key) {
+        if (this.logic.hasQuestItem(key)) {
+            const bDiscard = key.substr(0, 2) === 'k_';
+            if (bDiscard) { // the item is a discardable key
+                this.logic.removeQuestItem(key); // remove key from inventory
+            }
+            remove(); // removes tag
             this.ui.popup('You unlock the door with : ' + key, 'assets/icons/i-unlock.png');
-            this.removeDecal(x, y);
-            this.engine.lockDoor(x, y, false);
+            this.removeDecals(x, y); // remove keyhole decal from door
         } else {
             this.ui.popup('This door is locked.', 'assets/icons/i-keyhole.png');
         }
     }
 
-    tagEventItem(x, y, item, remove) {
+    tagEventItem(remove, x, y, item) {
         this.ui.popup('You acquired : ' + item);
-        this.removeDecal(x, y);
-        this._state.items.push(item);
+        this.removeDecals(x, y);
+        this.logic.addQuestItem(item);
         remove();
     }
 
