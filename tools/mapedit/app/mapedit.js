@@ -1854,9 +1854,8 @@ class Engine {
      * @param y {number}
      */
     pushBlock(entity, x, y) {
-        const nPhys = this.raycaster.getCellPhys(x, y);
-        const bDoor = nPhys >= _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_FIRST_DOOR"] && nPhys <= _raycaster_consts__WEBPACK_IMPORTED_MODULE_1__["PHYS_LAST_DOOR"];
         this._tm.entityPushBlock(this, entity, x, y);
+        this.openDoor(x, y, true);
     }
 
     /**
@@ -3467,7 +3466,6 @@ class FPSControlThinker extends _TangibleThinker__WEBPACK_IMPORTED_MODULE_1__["d
      */
     useBlock(x, y) {
         this.engine.pushBlock(this.entity, x, y);
-        this.engine.openDoor(x, y, true);
     }
 
     $move() {
