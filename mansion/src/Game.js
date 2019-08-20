@@ -73,11 +73,6 @@ class Game extends GameAbstract {
         this.engine.events.on('tag.lock.push', ({x, y, parameters, remove}) => this.tagEventLock(remove, x, y, ...parameters));
     }
 
-    tagEventUnlocked(remove, x, y) {
-        this.engine.lockDoor(x, y, false); // unlock door
-        remove();
-    }
-
     tagEventLock(remove, x, y, key) {
         if (this.logic.hasQuestItem(key)) {
             const bDiscard = key.substr(0, 2) === 'k_';
@@ -85,15 +80,16 @@ class Game extends GameAbstract {
                 this.logic.removeQuestItem(key); // remove key from inventory
             }
             remove(); // removes tag
-            this.ui.popup('You unlock the door with : ' + key, 'assets/icons/i-unlock.png');
+            this.ui.popup('DOOR_UNLOCKED', 'unlock', key);
             this.removeDecals(x, y); // remove keyhole decal from door
+            this.engine.lockDoor(x, y, false); // unlock door
         } else {
-            this.ui.popup('This door is locked.', 'assets/icons/i-keyhole.png');
+            this.ui.popup('DOOR_LOCKED', 'keyhole');
         }
     }
 
     tagEventItem(remove, x, y, item) {
-        this.ui.popup('You acquired : ' + item);
+        this.ui.popup('ITEM_ACQUIRED', '', item);
         this.removeDecals(x, y);
         this.logic.addQuestItem(item);
         remove();
