@@ -6,7 +6,7 @@ node_modules
 
 # webpack output folder
 dist
-tools/mapedit/app
+tools/mapedit/app/*
 
 # game project
 game
