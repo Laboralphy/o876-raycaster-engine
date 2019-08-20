@@ -1854,7 +1854,7 @@ class Engine {
      * @param y {number}
      */
     pushBlock(entity, x, y) {
-        this._tm.entityPushBlock(this, entity, x, y);
+        this._tm.entityPushBlock(entity, x, y);
         this.openDoor(x, y, true);
     }
 
