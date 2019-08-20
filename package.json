@@ -7,7 +7,7 @@
     "test": "jasmine dist/tests/tests.js",
     "build": "webpack",
     "watch": "webpack --watch",
-    "serve": "node bin/o876-raycaster-engine.js -- -g mansion"
+    "serve": "node bin/o876-raycaster-engine.js -- -g game"
   },
   "keywords": [
     "HTML5",

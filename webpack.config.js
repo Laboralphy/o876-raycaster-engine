@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const GAME_FOLDER = 'mansion'; // game project directory
+const GAME_FOLDER = 'game'; // game project directory
 const DEV_CONFIG = false; // include dev examples or not ?
 
 const devConfig = {
