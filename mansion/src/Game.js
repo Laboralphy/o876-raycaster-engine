@@ -2,7 +2,7 @@ import GameAbstract from '../../lib/src/game-abstract';
 import {quoteSplit} from "../../lib/src/quote-split";
 import UI from './UI';
 import Logic from './Logic';
-import {fetchJSON} from "../../lib/src/fetch-json";
+import Scripts from './scripts';
 
 class Game extends GameAbstract {
     // ... write your game here ...
@@ -10,7 +10,7 @@ class Game extends GameAbstract {
         super.init();
         this._ui = new UI();
         this._logic = new Logic(this._ui.store);
-        this._logic.loadData();
+        this.logic.loadData();
     }
 
     get ui() {
@@ -33,6 +33,11 @@ class Game extends GameAbstract {
 // |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
 
 
+    /**
+     * Remove all decals from a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     */
     removeDecals(x, y) {
         const csm = this.engine.raycaster._csm;
         for (let i = 0; i < 4; ++i) {
@@ -40,11 +45,27 @@ class Game extends GameAbstract {
         }
     }
 
+    /**
+     * Rotates all decals on a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     * @param bClockWise {boolean} true = clock wise ; false = counter clock wise (default)
+     */
+    rotateDecals(x, y, bClockWise) {
+        const csm = this.engine.raycaster._csm;
+        csm.rotateWallSurfaces(x, y, !bClockWise);
+    }
 
+    /**
+     * Adds a tag on a cell
+     * @param x {number} cell coordinate (x axis)
+     * @param y {number} cell coordinate (y axis)
+     * @param sTag {string} complete tag (one string)
+     * @return {number} tag identifier (for modification)
+     */
     addTag(x, y, sTag) {
         return this.engine._tm._tg.addTag(x, y, sTag);
     }
-
 
 
 
@@ -54,59 +75,6 @@ class Game extends GameAbstract {
 // | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
 //  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 //           |___/        |_|
-
-
-    /**
-     * Processes tag initial behavior.
-     * Some tags may trigger initial behavior right after level loading.
-     * For example, the "lock" tag must trigger a lockDoor() call.
-     *
-     * Also initialize tag handlers for all tags.
-     */
-    initTagHandlers() {
-        this.getTags().forEach(({tag, x, y}) => {
-            switch (tag[0]) {
-                case 'lock':
-                    this.tagInitLock(x, y);
-                    break;
-            }
-        });
-        this.engine.events.on('tag.item.push', ({x, y, parameters, remove}) => this.tagEventItem(remove, x, y, ...parameters));
-        this.engine.events.on('tag.lock.push', ({x, y, parameters, remove}) => this.tagEventLock(remove, x, y, ...parameters));
-    }
-
-    tagEventLock(remove, x, y, key) {
-        if (this.logic.hasQuestItem(key)) {
-            const bDiscard = key.substr(0, 2) === 'k_';
-            if (bDiscard) { // the item is a discardable key
-                this.logic.removeQuestItem(key); // remove key from inventory
-            }
-            remove(); // removes tag
-            this.ui.popup('DOOR_UNLOCKED', 'unlock', key);
-            this.removeDecals(x, y); // remove keyhole decal from door
-            this.engine.lockDoor(x, y, false); // unlock door
-        } else {
-            this.ui.popup('DOOR_LOCKED', 'keyhole');
-        }
-    }
-
-    tagEventItem(remove, x, y, item) {
-        this.ui.popup('ITEM_ACQUIRED', '', item);
-        this.removeDecals(x, y);
-        this.logic.addQuestItem(item);
-        remove();
-    }
-
-    /**
-     * Initially locks a door tagged with "lock"
-     * @param x {number} cell door coordinates (x axis)
-     * @param y {number} cell door coordinates (y axis)
-     */
-    tagInitLock(x, y) {
-        this.engine.lockDoor(x, y, true);
-    }
-
-
     /**
      * Returns a list of all tags present on the maps, the returns list contains items with these properties :
      * {
@@ -125,6 +93,45 @@ class Game extends GameAbstract {
             }));
         });
         return aTags;
+    }
+
+    /**
+     * Processes tag initial behavior.
+     * Some tags may trigger initial behavior right after level loading.
+     * For example, the "lock" tag must trigger a lockDoor() call.
+     *
+     * Also initialize tag handlers for all tags.
+     *
+     * the "scripts" folder contains many scripts, each script matches to a set of events.
+     * when the event is trigger the matching script is run.
+     *
+     * example .
+     * when 'tag.item.push' is triggered, the script "item" is loaded and the function "item.push()" is called.
+     */
+    initTagHandlers() {
+        this.getTags().forEach(({tag, x, y}) => {
+            const s = tag[0];
+            if (s in Scripts) {
+                const script = Scripts[s];
+                if ('init' in script) {
+                    let bRemove = false;
+                    const pRemove = function () {
+                        bRemove = true;
+                    };
+                    script.init(this, pRemove, x, y)
+                }
+            }
+        });
+        const ee = this.engine.events;
+        const actions = ['push', 'enter', 'exit'];
+        for (let s in Scripts) {
+            const script = Scripts[s];
+            actions.forEach(a => {
+                if (a in script) {
+                    ee.on('tag.' + s + '.' + a,({x, y, parameters, remove}) => script[a](this, remove, x, y, ...parameters));
+                }
+            });
+        }
     }
 }
 

@@ -5,9 +5,6 @@ class Logic {
 
     constructor(store) {
         this.store = store;
-        this._index = {
-            items: {}
-        };
     }
 
     dispatch(action, payload) {
@@ -32,7 +29,12 @@ class Logic {
      * @return {*}
      */
     getItemData(ref) {
-
+        const items = this.prop('getItemData');
+        const item = items.find(x => x.id === ref);
+        if (!item) {
+            throw new Error('This item could not be found : "' + ref + '"');
+        }
+        return item;
     }
 
     addQuestItem(ref) {
