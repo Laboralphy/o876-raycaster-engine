@@ -15,13 +15,17 @@ export default {
         state.popup.visible = false;
     },
 
+    [TYPES.SHOW_POPUP]: function(state) {
+        state.popup.visible = true;
+    },
+
     [TYPES.PUSH_POPUP]: function(state, {text, icon}) {
         const aWords = text.split(' ').filter(w => w.length > 1); // splits text into words
         const nWordCount = aWords.length; // number of words in the text
         const WPM = 180; // word read per minutes
         const MINIMUM_TIME = 1500; // minimum read time for a text
         const MS_IN_A_MINUTE = 60000; // number of milliseconds in a minute
-        const time = Math.max(MINIMUM_TIME, MS_IN_A_MINUTE * nWordCount / WPM);
+        const time = Math.ceil(Math.max(MINIMUM_TIME, MS_IN_A_MINUTE * nWordCount / WPM));
         state.popup.queue.push({text, icon, time});
     }
 }

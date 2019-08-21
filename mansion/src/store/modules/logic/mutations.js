@@ -23,5 +23,9 @@ export default {
         if (n >= 0) {
             qi.splice(n, 1);
         }
+    },
+
+    [TYPES.DEFINE_ITEMS]: function(state, {items}) {
+        items.forEach(x => state.data.items.push(x));
     }
 }

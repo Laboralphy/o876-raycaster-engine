@@ -3,5 +3,9 @@ export default {
         inventory: {
             questItems: []
         }
+    },
+
+    data: {
+        items: []
     }
 };

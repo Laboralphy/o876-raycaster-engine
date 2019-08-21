@@ -27,17 +27,25 @@ export default {
                     dispatch(ACTIONS.SHOW_NEXT_POPUP);
                     break;
 
-                case 'fh': // queue is full + current popup hidden (should not happen)
-                    throw new Error('popup action : non-empty popup queue + current popup hidden : should not happen');
+                case 'fh': // queue is full + current popup hidden (maybe transitionning)
+                    // -> just push the popup
+                    commit(MUTATIONS.PUSH_POPUP, {text, icon});
+                    break;
+
             }
         }
     },
 
     [ACTIONS.SHOW_NEXT_POPUP]: function({commit, dispatch, getters}) {
         if (getters.getPopupQueue.length > 0) {
-            // actually there is a popup to shift
-            commit(MUTATIONS.SHIFT_POPUP);
-            setTimeout(() => dispatch(ACTIONS.SHOW_NEXT_POPUP), getters.getPopup.time);
+            // if popup is already hidden we don't need to wait before shifting content.
+            const CSS_TRANSITION_DELAY = getters.getPopup.visible ? 500 : 0;
+            commit(MUTATIONS.HIDE_POPUP); // hide the previous popup if any
+            setTimeout(() => { // show the popup again with new content
+                commit(MUTATIONS.SHIFT_POPUP);
+                commit(MUTATIONS.SHOW_POPUP);
+                setTimeout(() => dispatch(ACTIONS.SHOW_NEXT_POPUP), getters.getPopup.time);
+            }, CSS_TRANSITION_DELAY);
         } else {
             // nothing to shift : hide the popup
             commit(MUTATIONS.HIDE_POPUP);

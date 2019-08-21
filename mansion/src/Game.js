@@ -2,6 +2,7 @@ import GameAbstract from '../../lib/src/game-abstract';
 import {quoteSplit} from "../../lib/src/quote-split";
 import UI from './UI';
 import Logic from './Logic';
+import {fetchJSON} from "../../lib/src/fetch-json";
 
 class Game extends GameAbstract {
     // ... write your game here ...
@@ -9,6 +10,7 @@ class Game extends GameAbstract {
         super.init();
         this._ui = new UI();
         this._logic = new Logic(this._ui.store);
+        this._logic.loadData();
     }
 
     get ui() {

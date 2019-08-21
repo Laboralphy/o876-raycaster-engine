@@ -31,6 +31,13 @@ class UI {
         });
     }
 
+    /**
+     * Displays a popup with a text inside, and an icon
+     * @param sText
+     * @param sIconRef
+     * @param params
+     * @return {Promise<any>}
+     */
     popup(sText, sIconRef, ...params) {
         const icon = !!sIconRef && sIconRef.length > 0 ? 'assets/icons/i-' + sIconRef + '.png' : '';
         let text = sText in STRINGS ? STRINGS[sText] : sText;
