@@ -157,6 +157,7 @@
                         decorative>
                 </CloseIcon>
             </MyButton>
+            <span>{{ getSelectedCoords }}</span>
 
         </template>
         <div
@@ -267,6 +268,19 @@
                 'getSomethingHasChanged',
                 'getLevelGridThingSelected'
             ]),
+
+            getSelectedCoords: function() {
+                if (this.isLevelGridRegionSelected) {
+                    const r = this.getLevelGridSelectedRegion;
+                    if (r.x1 !== r.x2 || r.y1 !== r.y2) {
+                        return '(' + r.x1 + ':' + r.y1 + ') - (' + r.x2 + ':' + r.y2 + ')';
+                    } else {
+                        return '(' + r.x1 + ':' + r.y1 + ')';
+                    }
+                } else {
+                    return '';
+                }
+            },
 
             getCellSize: function () {
                 return this.gridRenderer.cellWidth;
