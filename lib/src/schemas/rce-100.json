@@ -288,6 +288,10 @@
             "type": "integer",
             "description": "The physical size of the blueprint (in texels)"
           },
+          "ref": {
+            "type": "string",
+            "description": "A reference of the blueprint"
+          },
           "fx": {
             "type": "array",
             "description": "A list of visual effets applied to the blueprint",
@@ -462,6 +466,10 @@
                     "description": "A code referenced by a cell value"
                   }
                 ]
+              },
+              "ref": {
+                "type": "string",
+                "description": "A reference to the block definition"
               },
               "phys": {
                 "type": "string",

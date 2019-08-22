@@ -139,6 +139,7 @@ function generateBlueprint(things, id) {
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'StaticTangibleThinker' : 'StaticThinker';
     output.size = thing.size | 0;
+    output.ref = thing.ref;
     output.fx = [];
     if (thing.ghost) {
         output.fx.push('@FX_LIGHT_ADD');
@@ -293,11 +294,11 @@ function generateLegend(input, block) {
      */
 
 
-    // ca ne marche pas
-    const r = {
+    return {
         code: block.id,
         phys: PHYS[block.phys],
         offset: block.offs | 0,
+        ref: block.ref,
         faces: {
             n: generateFace(input, block.faces.n, 'wall'),
             e: generateFace(input, block.faces.e, 'wall'),
@@ -307,7 +308,6 @@ function generateLegend(input, block) {
             c: generateFace(input, block.faces.c, 'flat'),
         }
     };
-    return r;
 }
 
 function generateLegends(input) {
