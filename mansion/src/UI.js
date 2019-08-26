@@ -10,17 +10,17 @@ import * as STRINGS from './strings';
 Vue.use(Vuex);
 
 class UI {
-    constructor() {
-        this._vue = this.createApplication();
+    constructor(sDomSelector) {
+        this._vue = this.createApplication(sDomSelector);
     }
 
     get store() {
         return this._vue.$store;
     }
 
-    createApplication() {
+    createApplication(sWhere) {
         return new Vue({
-            el: '#vue-application',
+            el: sWhere,
             store: new Vuex.Store(store),
             components: {
                 Application

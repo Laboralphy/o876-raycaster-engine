@@ -12,7 +12,7 @@
     const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
-        name: "Info",
+        name: "Popups",
         components: {Popup},
         computed: {
             ...uiMapGetters([

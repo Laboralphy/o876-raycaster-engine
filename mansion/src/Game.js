@@ -8,7 +8,7 @@ class Game extends GameAbstract {
     // ... write your game here ...
     init() {
         super.init();
-        this._ui = new UI();
+        this._ui = new UI('#vue-application');
         this._logic = new Logic(this._ui.store);
         this.logic.loadData();
     }
