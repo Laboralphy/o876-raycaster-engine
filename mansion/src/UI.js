@@ -4,7 +4,6 @@ import store from './store';
 import * as UI_MUTATIONS from './store/modules/ui/mutation-types';
 import * as UI_ACTIONS from './store/modules/ui/action-types';
 import Application from './components/Application.vue';
-
 import * as STRINGS from './strings';
 
 Vue.use(Vuex);
@@ -16,6 +15,14 @@ class UI {
 
     get store() {
         return this._vue.$store;
+    }
+
+    dispatch(action, payload) {
+        this.store.dispatch('ui/' + action, payload);
+    }
+
+    commit(mutation, payload) {
+        this.store.commit('ui/' + mutation, payload);
     }
 
     createApplication(sWhere) {

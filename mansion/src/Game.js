@@ -3,6 +3,8 @@ import {quoteSplit} from "../../lib/src/quote-split";
 import UI from './UI';
 import Logic from './Logic';
 import Scripts from './scripts';
+import FadeIn from "../../lib/src/engine/filters/FadeIn";
+import Halo from "../../lib/src/engine/filters/Halo";
 
 class Game extends GameAbstract {
     // ... write your game here ...
@@ -11,6 +13,8 @@ class Game extends GameAbstract {
         this._ui = new UI('#vue-application');
         this._logic = new Logic(this._ui.store);
         this.logic.loadData();
+        // this.screen.on('pointerlock.enter', () => this._ui.store.commit('ui/SET_VISIBLE', {value: false}));
+        // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
     }
 
     get ui() {
@@ -24,6 +28,8 @@ class Game extends GameAbstract {
     enterLevel() {
         super.enterLevel();
         this.initTagHandlers();
+        this.engine.filters.link(new Halo('black'));
+        this.engine.filters.link(new FadeIn({duration: 600}));
     }
 
 //  _                _                   _        _   _

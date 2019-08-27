@@ -1,13 +1,18 @@
 <template>
-    <div class="app">
+    <div class="ui-components">
 
-        <HUD pos="tl"><p>top left</p></HUD>
-        <HUD pos="bl"><p>bottom left</p></HUD>
+        <section>
+            <HUD pos="tl">
+                <Vitals></Vitals>
+                <Scores></Scores>
+            </HUD>
+            <HUD pos="bl"><p>bottom left</p></HUD>
 
-        <HUD pos="t"><p>-------top center-------<br/>xxxxxxxxx</p></HUD>
+            <HUD pos="t"></HUD>
 
-        <HUD pos="tr"><p>top-right</p></HUD>
-        <HUD pos="br"><p>bottom right</p></HUD>
+            <HUD pos="tr"><p>top-right</p></HUD>
+            <HUD pos="br"><p>bottom right</p></HUD>
+        </section>
 
         <Popups></Popups>
     </div>
@@ -16,14 +21,27 @@
 <script>
     import HUD from "./HUD.vue";
     import Popups from "./Popups.vue";
+    import Vitals from "./Vitals.vue";
+    import {createNamespacedHelpers} from 'vuex';
+    import Scores from "./Scores.vue";
+
+    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+
     export default {
         name: "Application",
-        components: {HUD, Popups}
+        components: {Scores, Vitals, HUD, Popups},
+        computed: {
+            ...uiMapGetters([
+                'isVisible',
+                'isShotVisible'
+            ])
+        }
+
     }
 </script>
 
 <style scoped>
-    .app {
+    .ui-components {
         width: 100%;
         height: 100%;
     }

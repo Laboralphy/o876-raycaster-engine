@@ -27,5 +27,25 @@ export default {
         const MS_IN_A_MINUTE = 60000; // number of milliseconds in a minute
         const time = Math.ceil(Math.max(MINIMUM_TIME, MS_IN_A_MINUTE * nWordCount / WPM));
         state.popup.queue.push({text, icon, time});
+    },
+
+    [TYPES.SET_VISIBLE]: function(state, {value}) {
+        state.visible = value;
+    },
+
+    [TYPES.SET_SHOT]: function(state, {
+        value, energy, distance, angle, targets, shutter
+    }) {
+        state.shot.visible = true;
+        state.shot.shutter = shutter;
+        state.shot.energy = energy;
+        state.shot.distance = distance;
+        state.shot.angle = angle;
+        state.shot.targets = targets;
+        state.shot.value = value;
+    },
+
+    [TYPES.CLEAR_SHOT]: function(state) {
+        state.shot.visible = false;
     }
 }

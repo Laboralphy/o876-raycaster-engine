@@ -1,5 +1,8 @@
 import * as ACTIONS from './action-types';
 import * as MUTATIONS from './mutation-types';
+import * as CONSTS from '../../../consts';
+
+let TIMEOUT_SHOT = null;
 
 export default {
     [ACTIONS.SHOW_POPUP]: function({commit, getters, dispatch}, {text, icon}) {
@@ -39,7 +42,7 @@ export default {
     [ACTIONS.SHOW_NEXT_POPUP]: function({commit, dispatch, getters}) {
         if (getters.getPopupQueue.length > 0) {
             // if popup is already hidden we don't need to wait before shifting content.
-            const CSS_TRANSITION_DELAY = getters.getPopup.visible ? 500 : 0;
+            const CSS_TRANSITION_DELAY = getters.getPopup.visible ? CONSTS.DELAY_BETWEEN_POPUPS : 0;
             commit(MUTATIONS.HIDE_POPUP); // hide the previous popup if any
             setTimeout(() => { // show the popup again with new content
                 commit(MUTATIONS.SHIFT_POPUP);
@@ -50,5 +53,22 @@ export default {
             // nothing to shift : hide the popup
             commit(MUTATIONS.HIDE_POPUP);
         }
+    },
+
+    [ACTIONS.SET_SHOT]: function({commit, dispatch}, payload) {
+        console.log('set shot', payload);
+        if (!!TIMEOUT_SHOT) {
+            console.log('previous time out present', payload);
+            // Scores are being displayed currently
+            clearTimeout(TIMEOUT_SHOT); // cancel previous time out
+            TIMEOUT_SHOT = null; // clear time out flag
+        }
+        commit(MUTATIONS.SET_SHOT, payload); // sets new shot data
+        console.log('hide in', CONSTS.SHOT_DISPLAY_DURATION);
+        TIMEOUT_SHOT = setTimeout(() => {
+            console.log('hiding shot');
+            commit(MUTATIONS.CLEAR_SHOT);
+            TIMEOUT_SHOT = null;
+        }, CONSTS.SHOT_DISPLAY_DURATION);
     }
 }
