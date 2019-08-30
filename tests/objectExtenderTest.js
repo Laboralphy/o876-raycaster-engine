@@ -1,5 +1,12 @@
 const OE = require('../lib/src/object-helper/Extender').default;
 
+
+class MyTestClass {
+    myMethod() {
+        console.log('fooooooo !');
+    }
+}
+
 describe('#objectExtender', function() {
     it ('should build a map', function() {
         let a = OE.objectKeyMap({
@@ -205,6 +212,19 @@ describe('#objectExtender', function() {
                     rays: {are: {very: {hazardous: true}}}
                 }}
         });
+    });
+
+
+    it('should do well will classes', function() {
+        const a = {
+            temoins: {
+                z: 0
+            },
+            classes: {}
+        };
+        OE.objectExtends(a, {temoins: {z: 1}, classes: {MyTestClass}}, true);
+        expect(a.temoins.z).toBe(1);
+        expect(a.classes.MyTestClass).toBeDefined();
     });
 
 });
