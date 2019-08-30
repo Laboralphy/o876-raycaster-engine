@@ -37,6 +37,14 @@ This event is fired when a door shuts.
 - x : cell door coordinates
 - y : cell door coordinates
 
+entity.created
+A new entity has been created.
+- entity : newly created entity instance
+
+entity.destroyed
+An entity has just been destroyed.
+- entity : recently destroyed entity instance
+
 tag.xxxx.enter
 This event is emitted when an entity enters a "xxxx" tagged zone.
 parameter :
@@ -57,6 +65,14 @@ parameter :
 - entity : the entity that pushed the tagged block.
 - parameters : the tag parameters, defined during level design phase.
 - remove : if the event handler call this function, the tag is removed.
+
+
+think.xxxx
+Events emitted by thinker via their ".emit" method.
+
+think.state
+A default thinker event emitted when a thinker changes state.
+- value : new state value
 
 
 
