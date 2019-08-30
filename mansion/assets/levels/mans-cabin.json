@@ -219,6 +219,20 @@
       "width": 64,
       "height": 96,
       "animations": []
+    },
+    {
+      "id": 66,
+      "src": "assets/textures/8e5527a058efc34ac83a26a65ac8890f.png",
+      "width": 64,
+      "height": 80,
+      "animations": []
+    },
+    {
+      "id": 67,
+      "src": "assets/textures/330e6e0ce3a000934cbb3b63f4669035.png",
+      "width": 28,
+      "height": 64,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -227,6 +241,7 @@
       "tileset": 34,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -234,6 +249,7 @@
       "tileset": 28,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -241,6 +257,7 @@
       "tileset": 29,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -248,6 +265,7 @@
       "tileset": 30,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -255,6 +273,7 @@
       "tileset": 32,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -262,6 +281,7 @@
       "tileset": 33,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -269,6 +289,7 @@
       "tileset": 36,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": [
         "@FX_LIGHT_SOURCE"
       ],
@@ -283,6 +304,7 @@
       "tileset": 47,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": [
         "@FX_LIGHT_SOURCE"
       ],
@@ -297,6 +319,7 @@
       "tileset": 51,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": [
         "@FX_LIGHT_SOURCE"
       ],
@@ -311,6 +334,7 @@
       "tileset": 52,
       "thinker": "StaticTangibleThinker",
       "size": 30,
+      "ref": "",
       "fx": []
     },
     {
@@ -318,6 +342,7 @@
       "tileset": 53,
       "thinker": "StaticTangibleThinker",
       "size": 8,
+      "ref": "",
       "fx": []
     },
     {
@@ -325,6 +350,7 @@
       "tileset": 54,
       "thinker": "StaticTangibleThinker",
       "size": 8,
+      "ref": "",
       "fx": []
     },
     {
@@ -332,6 +358,7 @@
       "tileset": 58,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": [
         "@FX_LIGHT_SOURCE"
       ],
@@ -346,6 +373,7 @@
       "tileset": 63,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -353,6 +381,7 @@
       "tileset": 64,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
       "fx": []
     },
     {
@@ -360,6 +389,23 @@
       "tileset": 65,
       "thinker": "StaticThinker",
       "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 17,
+      "tileset": 66,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 18,
+      "tileset": 67,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
       "fx": []
     }
   ],
@@ -526,10 +572,10 @@
         6
       ],
       [
-        5,
-        1,
-        1,
         22,
+        22,
+        22,
+        17,
         22,
         22,
         17,
@@ -558,10 +604,10 @@
         0
       ],
       [
-        6,
-        6,
-        6,
         22,
+        35,
+        18,
+        18,
         18,
         18,
         18,
@@ -590,10 +636,10 @@
         0
       ],
       [
-        0,
-        0,
-        0,
         22,
+        22,
+        18,
+        18,
         18,
         18,
         18,
@@ -622,10 +668,10 @@
         0
       ],
       [
-        0,
-        0,
-        0,
         22,
+        22,
+        36,
+        18,
         18,
         18,
         18,
@@ -654,10 +700,10 @@
         0
       ],
       [
-        0,
-        0,
-        0,
         22,
+        22,
+        18,
+        18,
         18,
         18,
         18,
@@ -686,10 +732,10 @@
         0
       ],
       [
-        0,
-        0,
-        0,
         22,
+        34,
+        18,
+        18,
         18,
         18,
         18,
@@ -718,13 +764,13 @@
         0
       ],
       [
-        0,
-        0,
-        0,
         22,
-        28,
-        29,
         22,
+        22,
+        34,
+        22,
+        22,
+        27,
         22,
         22,
         19,
@@ -754,9 +800,9 @@
         0,
         6,
         22,
-        18,
-        18,
-        18,
+        22,
+        29,
+        28,
         22,
         18,
         18,
@@ -1488,7 +1534,7 @@
         0
       ],
       [
-        7,
+        0,
         0,
         0,
         0,
@@ -1520,9 +1566,9 @@
         0
       ],
       [
-        7,
-        7,
-        7,
+        0,
+        0,
+        0,
         0,
         0,
         0,
@@ -2293,6 +2339,7 @@
         "code": 1,
         "phys": "@PHYS_NONE",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": null,
           "e": null,
@@ -2306,6 +2353,7 @@
         "code": 2,
         "phys": "@PHYS_NONE",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": null,
           "e": null,
@@ -2319,6 +2367,7 @@
         "code": 12,
         "phys": "@PHYS_NONE",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": null,
           "e": null,
@@ -2332,6 +2381,7 @@
         "code": 14,
         "phys": "@PHYS_NONE",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": null,
           "e": null,
@@ -2345,6 +2395,21 @@
         "code": 18,
         "phys": "@PHYS_NONE",
         "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 6,
+          "c": 4
+        }
+      },
+      {
+        "code": 36,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "ref": "",
         "faces": {
           "n": null,
           "e": null,
@@ -2358,6 +2423,7 @@
         "code": 3,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 7,
           "e": 7,
@@ -2371,6 +2437,7 @@
         "code": 5,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 2,
           "e": 2,
@@ -2384,6 +2451,7 @@
         "code": 6,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 3,
           "e": 3,
@@ -2397,6 +2465,7 @@
         "code": 7,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 0,
           "e": 0,
@@ -2410,6 +2479,7 @@
         "code": 8,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 1,
           "e": 1,
@@ -2423,6 +2493,7 @@
         "code": 9,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 14,
           "e": 14,
@@ -2436,6 +2507,7 @@
         "code": 16,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 5,
           "e": 5,
@@ -2449,6 +2521,7 @@
         "code": 19,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 14,
           "e": 12,
@@ -2462,6 +2535,7 @@
         "code": 20,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 12,
           "e": 14,
@@ -2475,6 +2549,7 @@
         "code": 22,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 13,
           "e": 13,
@@ -2488,6 +2563,7 @@
         "code": 25,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": [
             19,
@@ -2521,6 +2597,7 @@
         "code": 28,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 17,
           "e": 17,
@@ -2534,6 +2611,7 @@
         "code": 29,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 16,
           "e": 16,
@@ -2547,6 +2625,7 @@
         "code": 30,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 10,
           "e": 10,
@@ -2560,6 +2639,7 @@
         "code": 33,
         "phys": "@PHYS_WALL",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 27,
           "e": 27,
@@ -2573,6 +2653,7 @@
         "code": 21,
         "phys": "@PHYS_DOOR_DOUBLE",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 9,
           "e": 9,
@@ -2586,6 +2667,7 @@
         "code": 23,
         "phys": "@PHYS_SECRET_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 14,
           "e": 14,
@@ -2599,6 +2681,7 @@
         "code": 32,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 16,
+        "ref": "",
         "faces": {
           "n": 26,
           "e": 26,
@@ -2612,6 +2695,7 @@
         "code": 27,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 8,
+        "ref": "",
         "faces": {
           "n": 23,
           "e": 23,
@@ -2625,6 +2709,7 @@
         "code": 4,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 6,
           "e": null,
@@ -2638,6 +2723,7 @@
         "code": 10,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 32,
+        "ref": "",
         "faces": {
           "n": 4,
           "e": null,
@@ -2651,6 +2737,7 @@
         "code": 11,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 1,
           "e": 1,
@@ -2664,6 +2751,7 @@
         "code": 13,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 1,
           "e": 1,
@@ -2677,6 +2765,7 @@
         "code": 15,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 5,
           "e": 5,
@@ -2690,6 +2779,7 @@
         "code": 17,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 30,
+        "ref": "",
         "faces": {
           "n": 15,
           "e": 15,
@@ -2703,6 +2793,7 @@
         "code": 24,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 16,
+        "ref": "",
         "faces": {
           "n": 18,
           "e": 18,
@@ -2716,6 +2807,7 @@
         "code": 26,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 32,
+        "ref": "",
         "faces": {
           "n": null,
           "e": 6,
@@ -2729,6 +2821,7 @@
         "code": 31,
         "phys": "@PHYS_TRANSPARENT_BLOCK",
         "offset": 0,
+        "ref": "",
         "faces": {
           "n": 26,
           "e": 26,
@@ -2736,6 +2829,34 @@
           "s": 26,
           "f": 1,
           "c": null
+        }
+      },
+      {
+        "code": 34,
+        "phys": "@PHYS_TRANSPARENT_BLOCK",
+        "offset": 32,
+        "ref": "",
+        "faces": {
+          "n": 25,
+          "e": 25,
+          "w": 25,
+          "s": 25,
+          "f": 6,
+          "c": 4
+        }
+      },
+      {
+        "code": 35,
+        "phys": "@PHYS_TRANSPARENT_BLOCK",
+        "offset": 32,
+        "ref": "",
+        "faces": {
+          "n": 24,
+          "e": 24,
+          "w": 24,
+          "s": 24,
+          "f": 6,
+          "c": 4
         }
       }
     ],
@@ -2943,12 +3064,12 @@
       "animation": null
     },
     {
-      "x": 96,
-      "y": 352,
+      "x": 138,
+      "y": 480,
       "z": 0,
       "angle": 0,
-      "blueprint": 1,
-      "animation": null
+      "blueprint": 7,
+      "animation": "default"
     },
     {
       "x": 650,
@@ -2959,20 +3080,12 @@
       "animation": "default"
     },
     {
-      "x": 288,
-      "y": 800,
+      "x": 138,
+      "y": 608,
       "z": 0,
       "angle": 0,
-      "blueprint": 9,
-      "animation": null
-    },
-    {
-      "x": 352,
-      "y": 800,
-      "z": 0,
-      "angle": 0,
-      "blueprint": 12,
-      "animation": null
+      "blueprint": 7,
+      "animation": "default"
     },
     {
       "x": 608,
@@ -2989,6 +3102,22 @@
       "angle": 0,
       "blueprint": 7,
       "animation": "default"
+    },
+    {
+      "x": 288,
+      "y": 864,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 9,
+      "animation": null
+    },
+    {
+      "x": 352,
+      "y": 864,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 12,
+      "animation": null
     },
     {
       "x": 928,
@@ -3353,6 +3482,22 @@
       }
     },
     {
+      "x": 1,
+      "y": 8,
+      "e": {
+        "tileset": 66,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 3,
+      "y": 11,
+      "n": {
+        "tileset": 67,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 10,
       "y": 18,
       "s": {
@@ -3428,6 +3573,13 @@
   ],
   "lightsources": [
     {
+      "x": 160,
+      "y": 544,
+      "r0": 32,
+      "r1": 90,
+      "v": 0.5
+    },
+    {
       "x": 1120,
       "y": 928,
       "r0": 40,
@@ -3435,5 +3587,5 @@
       "v": 1
     }
   ],
-  "preview": "assets/textures/1a145221829d4fc6cf266d31273a6fb2.jpg"
+  "preview": "assets/textures/c5492e202330971e81c43559fa65dc04.jpg"
 }

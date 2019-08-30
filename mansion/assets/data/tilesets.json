@@ -1,1 +1,10 @@
-[]
+[
+  {
+    "id": "visor",
+    "src": "assets/camera/visor.png",
+    "width": 400,
+    "height": 250,
+    "animations": [
+    ]
+  }
+]
