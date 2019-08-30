@@ -239,11 +239,6 @@ function getLevel() {
                 "faces": {
                     "f": 0,
                     "c": 1
-                },
-                "lightsource": {
-                    "r0": 512,
-                    "r1": 768,
-                    "v": 0.3
                 }
             }
             ]
@@ -283,7 +278,36 @@ function getLevel() {
             z: 1 // camera altitude (1 is the default object)
         },
         "tags": [],
-        "lightsources": []
+        "lightsources": [
+            {
+                "x": 32,
+                "y": 64 * 2,
+                "r0": 64,
+                "r1": 512,
+                "v": 0.5
+            },
+            {
+                "x": 32,
+                "y": 64 * 7,
+                "r0": 64,
+                "r1": 512,
+                "v": 0.5
+            },
+            {
+                "x": 32,
+                "y": 64 * 12,
+                "r0": 64,
+                "r1": 512,
+                "v": 0.5
+            },
+            {
+                "x": 32,
+                "y": 64 * 17,
+                "r0": 64,
+                "r1": 512,
+                "v": 0.5
+            }
+        ]
     };
 }
 // json de configuration
@@ -305,7 +329,7 @@ async function main() {
     const ct = engine.camera.thinker;
 
     // retrieve the warlock which is the second entity created
-    const oWarlock = engine.horde.entities[2];
+    const oWarlock = engine.horde.entities[3];
 
 	// plugs keyboard events
     window.addEventListener('keydown', event => {
