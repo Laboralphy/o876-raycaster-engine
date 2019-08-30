@@ -3,10 +3,18 @@ import FPSControlThinker from "../../../lib/src/engine/thinkers/FPSControlThinke
 class PlayerThinker extends FPSControlThinker {
     constructor() {
         super();
-        console.log('using PlayerThinker');
         this.setupKeys({
-            use: [' ', 'Mouse0']
+            use: [' ', 'Mouse0'],
+            camera: ['Mouse1']
         })
+    }
+
+    $move() {
+        super.$move();
+        if (this._keys.camera.state !== false) {
+            this._keys.camera.state = false;
+
+        }
     }
 }
 
