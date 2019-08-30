@@ -1,3 +1,5 @@
+import * as CONSTS from './consts';
+import * as MUTATIONS from './store/modules/logic/mutation-types';
 import GameAbstract from '../../lib/src/game-abstract';
 import {quoteSplit} from "../../lib/src/quote-split";
 import UI from './UI';
@@ -17,7 +19,16 @@ class Game extends GameAbstract {
         // this.screen.on('pointerlock.enter', () => this._ui.store.commit('ui/SET_VISIBLE', {value: false}));
         // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
         this._cameraFilter = new CameraObscura();
+        this.engine.events.on('update', () => this.engineUpdateHandler());
     }
+
+//
+//  _           _                                    _   _
+// (_)_ __  ___| |_ __ _ _ __   ___ ___    __ _  ___| |_| |_ ___ _ __ ___
+// | | '_ \/ __| __/ _` | '_ \ / __/ _ \  / _` |/ _ \ __| __/ _ \ '__/ __|
+// | | | | \__ \ || (_| | | | | (_|  __/ | (_| |  __/ |_| ||  __/ |  \__ \
+// |_|_| |_|___/\__\__,_|_| |_|\___\___|  \__, |\___|\__|\__\___|_|  |___/
+//                                        |___/
 
     get ui() {
         return this._ui;
@@ -27,6 +38,32 @@ class Game extends GameAbstract {
         return this._logic;
     }
 
+
+//                       _                                                                 _
+//   _____   _____ _ __ | |_   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//  / _ \ \ / / _ \ '_ \| __| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// |  __/\ V /  __/ | | | |_  | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \___| \_/ \___|_| |_|\__| |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                                                         |___/
+
+    engineUpdateHandler() {
+        // checks for camera energy
+        if (this.isCameraRaised()) {
+            // if ghost
+            const bGhost = true;
+            this.logic.commit(bGhost ? MUTATIONS.INC_ENERGY : MUTATIONS.DEPLETE_ENERGY);
+            this.syncCameraStore();
+        } else {
+        }
+    }
+
+
+//            _                 _          _                  _   _               _
+//   _____  _| |_ ___ _ __   __| | ___  __| |  _ __ ___   ___| |_| |__   ___   __| |___
+//  / _ \ \/ / __/ _ \ '_ \ / _` |/ _ \/ _` | | '_ ` _ \ / _ \ __| '_ \ / _ \ / _` / __|
+// |  __/>  <| ||  __/ | | | (_| |  __/ (_| | | | | | | |  __/ |_| | | | (_) | (_| \__ \
+//  \___/_/\_\\__\___|_| |_|\__,_|\___|\__,_| |_| |_| |_|\___|\__|_| |_|\___/ \__,_|___/
+
     enterLevel() {
         super.enterLevel();
         this.initTagHandlers();
@@ -34,6 +71,90 @@ class Game extends GameAbstract {
         this.engine.filters.link(new Halo('black'));
         this.engine.filters.link(new FadeIn({duration: 600}));
     }
+
+    keyDownHandler(key) {
+        super.keyDownHandler(key);
+        // manage the camera
+        switch (key) {
+            case 'Mouse0':
+                if (this.isCameraRaised()) {
+                    this.flashCamera();
+                }
+                break;
+
+            case 'Mouse2':
+                this.toggleCamera();
+                break;
+        }
+    }
+
+//        _                                    _   _
+//  _ __ | | __ _ _   _  ___ _ __    __ _  ___| |_(_) ___  _ __  ___
+// | '_ \| |/ _` | | | |/ _ \ '__|  / _` |/ __| __| |/ _ \| '_ \/ __|
+// | |_) | | (_| | |_| |  __/ |    | (_| | (__| |_| | (_) | | | \__ \
+// | .__/|_|\__,_|\__, |\___|_|     \__,_|\___|\__|_|\___/|_| |_|___/
+// |_|            |___/
+
+    /**
+     * sync camera energy property with store
+     */
+    syncCameraStore() {
+        this._cameraFilter.energy.current = this.logic.prop('getPlayerEnergy');
+        this._cameraFilter.energy.max = this.logic.prop('getPlayerEnergyMax');
+    }
+
+    /**
+     * shoot a photo
+     */
+    flashCamera() {
+        this.engine.filters.link(new FadeIn({
+            color: 'white',
+            duration: CONSTS.FLASH_DURATION
+        }));
+        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+        // pour tous les fantomes present dans la ligne de mire
+        // appliquer un filter ghostshot
+        // calculer les dégats
+        // lancer des script pour les spectres
+    }
+
+    toggleCamera() {
+        if (this.isCameraRaised()) {
+            this.dropCamera();
+        } else {
+            this.raiseCamera();
+        }
+    }
+
+    raiseCamera() {
+        if (this.isCameraRaisable()) {
+            this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+            const oCamera = this.engine.camera;
+            oCamera.data.camera = true;
+            oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_CAMERA_SPEED);
+            this._cameraFilter.show();
+            this.syncCameraStore();
+        }
+    }
+
+    dropCamera() {
+        const oCamera = this.engine.camera;
+        oCamera.data.camera = false;
+        oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
+        this._cameraFilter.hide();
+        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+        this.syncCameraStore();
+    }
+
+    isCameraRaised() {
+        return this._cameraFilter.isVisible();
+    }
+
+    isCameraRaisable() {
+        return true;
+    }
+
+
 
 //  _                _                   _        _   _
 // | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___

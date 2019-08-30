@@ -108,6 +108,10 @@ class CameraObscura extends AbstractFilter {
         }
     }
 
+    isVisible() {
+        return this._nState === STATE_VISIBLE;
+    }
+
     show() {
         if (this._nState === STATE_HIDDEN) {
             this._easing.from(0.5).to(0).steps(DURATION_RAISING).use(Easing.CUBE_DECCEL);

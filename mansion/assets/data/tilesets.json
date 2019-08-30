@@ -1,10 +1,17 @@
 [
   {
-    "id": "visor",
-    "src": "assets/camera/visor.png",
-    "width": 400,
-    "height": 250,
+    "id": "g_bashed_boy",
+    "src": "assets/sprites/g_bashed_boy.png",
+    "width": 192,
+    "height": 192,
     "animations": [
+      {
+        "id": "death",
+        "start": [0, 0, 0, 0, 0, 0, 0, 0],
+        "length": 1,
+        "duration": 1,
+        "loop": "@LOOP_NONE"
+      }
     ]
   }
 ]

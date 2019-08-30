@@ -37,5 +37,22 @@ export default {
     [TYPES.SET_PLAYER_MAX_HP]: function(state, {value}) {
         // value won't be below 1
         state.player.attributes.hpMax = Math.max(1, value);
-    }
+    },
+
+    [TYPES.INC_ENERGY]: function(state) {
+        const e = state.player.energy;
+        e.value = Math.min(e.maximum, e.value + e.rate);
+    },
+
+    [TYPES.DEC_ENERGY]: function(state) {
+        const e = state.player.energy;
+        e.value = Math.max(0, e.value - e.depleteRate);
+    },
+
+    [TYPES.DEPLETE_ENERGY]: function(state) {
+        const e = state.player.energy;
+        e.value = 0;
+    },
+
+
 }
