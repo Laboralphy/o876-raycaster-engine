@@ -230,7 +230,15 @@ async function run(sBaseDir) {
         {
             path: path.join(GAME_ASSETS_DIR, 'styles', 'base.css'),
             template: 'base.css'
-        }
+        },
+
+        {
+            path: path.join(GAME_SRC_DIR, 'config', 'index.js'),
+            template: 'config.js'
+        },
+
+
+
     ];
     for (let i = 0, l = PROJECT_TREE.length; i < l; ++i) {
         await runTemplateItem(PROJECT_TREE[i]);
