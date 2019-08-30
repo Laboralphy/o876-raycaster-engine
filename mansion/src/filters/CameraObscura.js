@@ -173,16 +173,16 @@ class CameraObscura extends AbstractFilter {
         const xCopy = SCREEN_X;
         const yCopy = SCREEN_Y + xOffset;
         const bIS = CanvasHelper.getImageSmoothing(canvas);
-        CanvasHelper.setImageSmoothing(canvas, true);
         this._oOccularCtx.drawImage(canvas, xCopy, yCopy, SCREEN_W, SCREEN_H, 0, 0, SCREEN_W, SCREEN_H);
 
+        ctx.save();
 
         // 2 blur
         const bAlphaChanging = state === STATE_FALLING || state === STATE_RAISING;
         if (bAlphaChanging) {
-            ctx.save();
             ctx.globalAlpha = 1 - (y * 2);
         }
+        CanvasHelper.setImageSmoothing(canvas, true);
         this._oBlurCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, BLUR_W, BLUR_W);
         ctx.drawImage(this._oBlurCvs, 0, 0, BLUR_W, BLUR_W, 0, 0, canvas.width, canvas.height);
 
@@ -190,25 +190,19 @@ class CameraObscura extends AbstractFilter {
         // 3 paste screen surface
         ctx.drawImage(this._oOccularCvs, 0, 0, SCREEN_W, SCREEN_H, xCopy, yCopy, SCREEN_W, SCREEN_H);
 
+        CanvasHelper.setImageSmoothing(canvas, false);
 
         // 4 display camera
         ctx.drawImage(this._visor, 0, y * canvas.height);
-        CanvasHelper.setImageSmoothing(canvas, bIS);
-        if (bAlphaChanging) {
-            ctx.restore();
-        }
-
 
         // 5 display circles
         if (this._oManagedEnergyData.getLog().length) {
             this.renderCircle();
             this._oManagedEnergyData.clear();
         }
-        ctx.save();
         ctx.globalAlpha = this._fAlpha;
         ctx.drawImage(this._oCircleCvs, xCopy, yCopy);
         ctx.restore();
-
     }
 }
 
