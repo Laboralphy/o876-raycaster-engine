@@ -250,7 +250,7 @@ function getLevel() {
                 "z": 0,
                 "angle": 0,
                 "blueprint": "o-bluereddisc",
-                "animation": "blue"
+                "animation": "red"
             },
             {
                 "x": 7 * 64 + 32,
