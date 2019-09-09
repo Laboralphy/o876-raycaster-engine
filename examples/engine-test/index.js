@@ -155,7 +155,7 @@ function getLevel() {
             {
                 "id": "o-bluereddisc",
                 "tileset": "o-bluereddisc",
-                "thinker": 'StaticThinker',
+                "thinker": 'StaticTangibleThinker',
                 "size": 16
             },
         ],
