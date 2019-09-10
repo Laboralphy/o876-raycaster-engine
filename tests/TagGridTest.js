@@ -51,4 +51,14 @@ describe('#tags-grid', function() {
         expect(tg.visit(2, 1, 2, 1)).toBeFalsy();
     });
 
+    it('should build a tag list', function() {
+        const tg = new TagGrid();
+        tg.setWidth(10);
+        tg.setHeight(10);
+        tg.addTag(0, 0, 't111');
+        tg.addTag(0, 0, 't222 "cy z"'); // 111 222
+        tg.addTag(1, 0, 't222'); //     222
+        tg.addTag(2, 0, 't333'); //         333
+        expect(tg.getCellTags(0, 0)).toEqual([{x: 0, y: 0, tag: ['t111']}, {x: 0, y: 0, tag: ['t222', 'cy z']}]);
+    })
 });
