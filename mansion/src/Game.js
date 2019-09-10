@@ -116,6 +116,17 @@ class Game extends GameAbstract {
         // appliquer un filter ghostshot
         // calculer les dégats
         // lancer des script pour les spectres
+
+        // tous les blocs possédant un tag "photo" doivent déclencher un event
+        const engine = this.engine;
+        const tagGrid = engine._tm._tg;
+        engine.raycaster._scanSectors.iterate((x, y) => {
+            const aTags = tagGrid.cell(x, y);
+            aTags.forEach(id => {
+                const sTag = tagGrid.getTag(id);
+                console.log(sTag);
+            })
+        });
     }
 
     toggleCamera() {
