@@ -7,9 +7,30 @@
     "animations": [
       {
         "id": "death",
+        "start": [4, 4, 4, 4, 4, 4, 4, 4],
+        "length": 5,
+        "duration": 200,
+        "loop": "@LOOP_NONE"
+      },
+      {
+        "id": "walk",
         "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 1,
-        "duration": 1,
+        "length": 5,
+        "duration": 200,
+        "loop": "@LOOP_YOYO"
+      },
+      {
+        "id": "rush",
+        "start": [0, 0, 0, 0, 0, 0, 0, 0],
+        "length": 5,
+        "duration": 100,
+        "loop": "@LOOP_YOYO"
+      },
+      {
+        "id": "attack",
+        "start": [4, 4, 4, 4, 4, 4, 4, 4],
+        "length": 5,
+        "duration": 200,
         "loop": "@LOOP_NONE"
       }
     ]
