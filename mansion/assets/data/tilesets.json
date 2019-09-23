@@ -9,9 +9,9 @@
         "id": "death",
         "start": [4, 4, 4, 4, 4, 4, 4, 4],
         "length": 5,
-        "duration": 200,
-        "loop": "@LOOP_FORWARD",
-        "iterations": 1
+        "duration": 80,
+        "loop": "@LOOP_YOYO",
+        "iterations": 4
       },
       {
         "id": "walk",
@@ -24,15 +24,15 @@
         "id": "rush",
         "start": [0, 0, 0, 0, 0, 0, 0, 0],
         "length": 5,
-        "duration": 100,
+        "duration": 120,
         "loop": "@LOOP_YOYO"
       },
       {
         "id": "attack",
         "start": [4, 4, 4, 4, 4, 4, 4, 4],
         "length": 5,
-        "duration": 200,
-        "loop": "@LOOP_NONE"
+        "duration": 80,
+        "loop": "@LOOP_YOYO"
       }
     ]
   }

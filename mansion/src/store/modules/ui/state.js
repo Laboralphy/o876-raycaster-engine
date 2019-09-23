@@ -7,7 +7,7 @@ export default {
         queue: []
     },
 
-    visible: true,
+    visible: false,
 
     shot: { // information sur le dernier tir
         visible: false,

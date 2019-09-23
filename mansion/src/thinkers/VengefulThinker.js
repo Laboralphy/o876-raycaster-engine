@@ -10,12 +10,22 @@ class VengefulThinker extends MoverThinker {
         super();
         this._nOpacity = 0; // indice de transparence 0 = invisible, 1 = 25% alpha ... 4 = 100% opacity
         this._nTime = 0;
+        this._aDeathOpacity = null;
         this.transitions = {
             "s_spawn": {
                 "1": "s_spawning"
             },
             "s_spawning": {
                 "t_fullOpacity": "s_idle"
+            },
+            "s_kill": {
+                "1": "s_dying"
+            },
+            "s_dying": {
+                "t_doneDying": "s_fadeOut"
+            },
+            "s_fadeOut": {
+                "t_doneFadeOut": "s_dead"
             }
         }
     }
@@ -23,7 +33,7 @@ class VengefulThinker extends MoverThinker {
     /**
      * Sets sprites flag according to opacity level
      */
-    setSpriteFXFlags() {
+    setOpacityFlags() {
         const sprite = this.entity.sprite;
         switch (this._nOpacity) {
             case 0:
@@ -45,7 +55,7 @@ class VengefulThinker extends MoverThinker {
 
             case 3:
                 sprite.removeFlag(RC_CONSTS.FX_ALPHA_25 | RC_CONSTS.FX_ALPHA_50);
-                sprite.visible = false;
+                sprite.visible = true;
                 sprite.addFlag(RC_CONSTS.FX_ALPHA_75);
                 break;
 
@@ -63,9 +73,8 @@ class VengefulThinker extends MoverThinker {
     pulse() {
         ++this._nTime;
         this._nOpacity = (this._nTime & 1) + 3;
-        this.setSpriteFXFlags();
+        this.setOpacityFlags();
     }
-
 
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -77,7 +86,8 @@ class VengefulThinker extends MoverThinker {
      */
     s_spawn() {
         this._nOpacity = 0;
-        this.setSpriteFXFlags();
+        this.entity.sprite.setCurrentAnimation('walk');
+        this.setOpacityFlags();
     }
 
     /**
@@ -85,7 +95,7 @@ class VengefulThinker extends MoverThinker {
      */
     s_spawning() {
         ++this._nOpacity;
-        this.setSpriteFXFlags();
+        this.setOpacityFlags();
     }
 
     /**
@@ -94,6 +104,25 @@ class VengefulThinker extends MoverThinker {
      */
     s_idle() {
         this.pulse();
+    }
+
+    s_kill() {
+        this.entity.sprite.setCurrentAnimation('death');
+    }
+
+    s_dying() {
+        this.pulse();
+    }
+
+    s_fadeOut() {
+        --this._nOpacity;
+        this.setOpacityFlags();
+    }
+
+    s_dead() {
+        if (!this.entity.dead) {
+            this.entity.dead = true;
+        }
     }
 
 
@@ -110,7 +139,17 @@ class VengefulThinker extends MoverThinker {
         return this._nOpacity >= 4;
     }
 
+    /**
+     * Tests if dead opacity is depleted
+     * @returns {boolean}
+     */
+    t_doneDying() {
+        return this.entity.sprite.getCurrentAnimation().frozen;
+    }
 
+    t_doneFadeOut() {
+        return this._nOpacity <= 0;
+    }
 }
 
 

@@ -10,6 +10,8 @@ import Halo from "../../lib/src/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
 import Position from "../../lib/src/engine/Position";
 
+import THINKERS from './thinkers';
+
 class Game extends GameAbstract {
     // ... write your game here ...
     init() {
@@ -21,6 +23,7 @@ class Game extends GameAbstract {
         // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
         this._cameraFilter = new CameraObscura();
         this.engine.events.on('update', () => this.engineUpdateHandler());
+        this.engine.useThinkers(THINKERS);
     }
 
 //
