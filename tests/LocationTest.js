@@ -1,10 +1,10 @@
-import Location from "../lib/src/engine/Location";
+import Position from "../lib/src/engine/Position";
 
-describe('#Location', function() {
+describe('#Position', function() {
     describe('basic', function() {
         it('should be initialized', function() {
-            const l = new Location();
-            expect(l instanceof Location).toBeTruthy();
+            const l = new Position();
+            expect(l instanceof Position).toBeTruthy();
             expect(l.x).toBe(0);
             expect(l.y).toBe(0);
             expect(l.z).toBe(0);
@@ -14,8 +14,8 @@ describe('#Location', function() {
 
     describe('set', function() {
         it('l1 should be copied into l2', function() {
-            const l1 = new Location({x: 5, y: 10, z: 15, angle: 20, area: 'abc'});
-            const l2 = new Location();
+            const l1 = new Position({x: 5, y: 10, z: 15, angle: 20, area: 'abc'});
+            const l2 = new Position();
             expect(l2.x).toBe(0);
             l2.set(l1);
             expect(l2.x).toBe(5);
