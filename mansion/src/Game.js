@@ -8,6 +8,7 @@ import Scripts from './scripts';
 import FadeIn from "../../lib/src/engine/filters/FadeIn";
 import Halo from "../../lib/src/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
+import Position from "../../lib/src/engine/Position";
 
 class Game extends GameAbstract {
     // ... write your game here ...
@@ -174,11 +175,18 @@ class Game extends GameAbstract {
 // |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
 
 
-    spawnGhost(sRef, x, y) {
+    /**
+     * Spawns a ghost at the given cell coordinates
+     * @param sRef {string} ghsot reference id
+     * @param xCell {number}
+     * @param yCell {number}
+     * @returns {Entity}
+     */
+    spawnGhost(sRef, xCell, yCell) {
         const engine = this.engine;
         const ps = engine.raycaster.options.metrics.spacing;
         const ps2 = ps >> 1;
-        this.engine.createEntity(sRef, new Location({x: x * ps + ps2, y: y * ps + ps2}))
+        return this.engine.createEntity(sRef, new Position({x: xCell * ps + ps2, y: yCell * ps + ps2}));
     }
 
 
