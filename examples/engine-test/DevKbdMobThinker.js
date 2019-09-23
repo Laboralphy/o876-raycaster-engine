@@ -120,9 +120,9 @@ class DevKbdMobThinker extends TangibleThinker {
         }
     }
 
-    $move() {
+    s_move() {
         this.computeSpeedVector();
-        super.$move();
+        super.s_move();
         if (this.bWalk) {
             this.entity.sprite.setCurrentAnimation('walk');
         } else {
