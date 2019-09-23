@@ -1,1 +1,9 @@
-[]
+[
+  {
+    "id": "g_bashed_boy",
+    "tileset": "g_bashed_boy",
+    "scale": 0.333,
+    "thinker": "VengefulThinker",
+    "size": 16
+  }
+]

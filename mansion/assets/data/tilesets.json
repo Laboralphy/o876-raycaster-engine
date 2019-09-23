@@ -10,7 +10,8 @@
         "start": [4, 4, 4, 4, 4, 4, 4, 4],
         "length": 5,
         "duration": 200,
-        "loop": "@LOOP_NONE"
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
       },
       {
         "id": "walk",

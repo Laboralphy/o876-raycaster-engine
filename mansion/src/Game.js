@@ -174,6 +174,14 @@ class Game extends GameAbstract {
 // |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
 
 
+    spawnGhost(sRef, x, y) {
+        const engine = this.engine;
+        const ps = engine.raycaster.options.metrics.spacing;
+        const ps2 = ps >> 1;
+        this.engine.createEntity(sRef, new Location({x: x * ps + ps2, y: y * ps + ps2}))
+    }
+
+
     /**
      * Remove all decals from a block
      * @param x {number} block cell coordinate (x axis)
