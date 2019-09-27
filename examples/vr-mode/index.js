@@ -75,11 +75,6 @@ const LEVEL = {
             "faces": {
                 "f": 0, // floor texture (taken from "flats" property)
                 "c": 1  // ceiling texture (taken from "flats" property)
-            },
-            "lightsource": {
-                "r0": 128,
-                "r1": 256,
-                "v": 0.3
             }
         }, {
             "code": '+',
@@ -96,11 +91,6 @@ const LEVEL = {
             "faces": {
                 "f": 0, // floor texture (taken from "flats" property)
                 "c": 2  // ceiling texture (taken from "flats" property)
-            },
-            "lightsource": {
-                "r0": 256,
-                "r1": 384,
-                "v": 0.45
             }
         }]
     },
