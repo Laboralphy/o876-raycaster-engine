@@ -98,7 +98,7 @@ class DevKbdThinker extends TangibleThinker {
         const k = this._keys;
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
-        const oEntLoc = this.entity.location;
+        const oEntLoc = this.entity.position;
 
         const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
         switch (forw) {
@@ -132,16 +132,16 @@ class DevKbdThinker extends TangibleThinker {
 
         if (k.use) {
             k.use = false;
-            const vFront = entity.location.front(ps);
+            const vFront = entity.position.front(ps);
             vFront.x = vFront.x / ps | 0;
             vFront.y = vFront.y / ps | 0;
             engine.openDoor(vFront.x, vFront.y, true);
         }
     }
 
-    $move() {
+    s_move() {
         this.computeSpeedVector();
-        super.$move();
+        super.s_move();
     }
 }
 

@@ -78,7 +78,7 @@ class DevKbdMobThinker extends TangibleThinker {
 
     computeSpeedVector() {
         const k = this._keys;
-        const oEntLoc = this.entity.location;
+        const oEntLoc = this.entity.position;
 
         const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
         switch (forw) {
@@ -115,14 +115,14 @@ class DevKbdMobThinker extends TangibleThinker {
 
         if (k.fire !== false) {
             k.fire = false;
-            const missile = this.engine.createEntity('p-magbolt-0', this.entity.location);
+            const missile = this.engine.createEntity('p-magbolt-0', this.entity.position);
             missile.thinker.fire(this.entity);
         }
     }
 
-    $move() {
+    s_move() {
         this.computeSpeedVector();
-        super.$move();
+        super.s_move();
         if (this.bWalk) {
             this.entity.sprite.setCurrentAnimation('walk');
         } else {
