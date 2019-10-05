@@ -8,6 +8,7 @@ import "./styles/responsive/starter.css";
 import "./styles/responsive/colors.css";
 import "./styles/responsive/custom.css";
 import 'vue-material-design-icons/styles.css';
+import "./styles/base.css";
 
 import Application from './components/Application.vue';
 import HomePage from "./components/HomePage.vue";

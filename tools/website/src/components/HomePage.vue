@@ -4,8 +4,23 @@
             <div class="col lg-12">
                 <h3>Local project status</h3>
                 <p>Welcome to your local game project management page.</p>
-                <h4>Run project</h4>
-                <p>Click here to <a :href="gameActionPrefix"><b style="font-size: 1.3em">run your project</b></a>.</p>
+                <nav v-if="getPublishedLevels.length > 0">
+                    <ul>
+                        <li>
+                            <button class="green" @click="runProject()">Run your game project</button>
+                        </li>
+                    </ul>
+                </nav>
+                <nav v-else>
+                    <ul>
+                        <li>
+                            <button class="disabled">Run your game project</button>
+                        </li>
+                        <li style="padding-left: 1em">
+                            <span class="note">(The game project need at list one published level)</span>
+                        </li>
+                    </ul>
+                </nav>
             </div>
         </div>
         <div class="row">
@@ -100,6 +115,10 @@
                 return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
                     this.levels.splice(0, this.levels.length, ...data);
                 });
+            },
+
+            runProject: function() {
+                window.location.href = this.gameActionPrefix;
             }
         },
 
