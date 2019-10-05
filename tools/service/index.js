@@ -26,7 +26,7 @@ const CONFIG = require('./config');
 
 const readdir = util.promisify(fs.readdir);
 
-const DEFAULT_USER = 'DEFAULT_USER';
+const DEFAULT_USER = 'LOCAL_USER';
 
 function print(...args) {
     console.log(...args);
@@ -129,7 +129,7 @@ function initExamples() {
     app.get('/examples-list', async (req, res) => {
         // get a list of all example
         const aList = await readdir(sExamplePath);
-        res.json({list: aList});
+        return res.json({list: aList});
     });
 }
 

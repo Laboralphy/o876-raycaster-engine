@@ -134,6 +134,9 @@ h5 {
 }
 
 
-.btn.blue {
-	background-color: #00F;
-}
+.btn.blue, button.blue { background-color: blue; }
+.btn.red, button.red { background-color: red; }
+.btn.green, button.green { background-color: green; }
+.btn.yellow, button.yellow { background-color: yellow; }
+
+
