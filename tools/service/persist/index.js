@@ -4,6 +4,7 @@ const JsonBlobz = require('../../../lib/src/json-blobz');
 const Vault = require('./Vault');
 
 const TILE_PATH = 'tiles';
+const LEVEL_PATH = 'levels';
 
 const vault = new Vault();
 vault.vaultPath = '.';
@@ -14,7 +15,8 @@ async function saveLevel(sUser, sLevelName, data) {
 	try {
 		const jb = new JsonBlobz();
 		vault.namespace = sUser;
-		const sTilePath = path.join(sLevelName, TILE_PATH);
+		const sLevelPath = path.join(LEVEL_PATH, sLevelName);
+		const sTilePath = path.join(sLevelPath, TILE_PATH);
 		await vault.mkdir(sTilePath);
 		const oNewData = await jb.deblob(data, async blobs => {
 			for (let hash in blobs) {
@@ -24,7 +26,7 @@ async function saveLevel(sUser, sLevelName, data) {
 				await vault.save(path.join(sTilePath, hash), blob);
 			}
 		});
-		await vault.saveJSON(path.join(sLevelName, 'level.json'), oNewData);
+		await vault.saveJSON(path.join(sLevelPath, 'level.json'), oNewData);
 		return {status: 'done'};
 	} catch (e) {
 		return {status: 'error', error: e.message};
@@ -35,8 +37,9 @@ async function saveLevel(sUser, sLevelName, data) {
 async function loadLevel(sUser, sLevelName) {
 	const jb = new JsonBlobz();
 	vault.namespace = sUser;
-	const sTilePath = path.join(sLevelName, TILE_PATH);
-	const data = await vault.loadJSON(path.join(sLevelName, 'level.json'));
+	const sLevelPath = path.join(LEVEL_PATH, sLevelName);
+	const sTilePath = path.join(sLevelPath, TILE_PATH);
+	const data = await vault.loadJSON(path.join(sLevelPath, 'level.json'));
 	return jb.reblob(data, async hashes => {
 		const blobs = {};
 		for (let i = 0, l = hashes.length; i < l; ++i) {
@@ -54,7 +57,7 @@ async function loadLevel(sUser, sLevelName) {
  */
 async function listLevels(sUser) {
 	vault.namespace = sUser;
-	const aList = await vault.ls('.', {
+	const aList = await vault.ls(LEVEL_PATH, {
 		withFileTypes: true
 	});
 	const aOutput = [];
@@ -62,7 +65,7 @@ async function listLevels(sUser) {
 		const f = aList[i];
 		const name = f.name;
 		if (f.isDirectory()) {
-			const filename = path.join(name, 'level.json');
+			const filename = path.join(LEVEL_PATH, name, 'level.json');
 			try {
 				const st = await vault.stat(filename);
 				const date = Math.floor(st.mtimeMs / 1000);
@@ -86,7 +89,7 @@ async function listLevels(sUser) {
 
 async function removeLevel(sUser, name) {
 	vault.namespace = sUser;
-	await vault.rmdir(name, true);
+	await vault.rmdir(path.join(LEVEL_PATH, name), true);
 	return {status: 'done'};
 }
 
@@ -109,8 +112,8 @@ function getVaultPath() {
 
 async function getLevelPreview(sUser, sLevelName) {
 	vault.namespace = sUser;
-	const data = await vault.loadJSON(path.join(sLevelName, 'level.json'));
-	return vault._fqn(path.join(sLevelName, TILE_PATH, data.preview));
+	const data = await vault.loadJSON(path.join(LEVEL_PATH, sLevelName, 'level.json'));
+	return vault._fqn(path.join(LEVEL_PATH, sLevelName, TILE_PATH, data.preview));
 }
 
 

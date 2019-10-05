@@ -2446,11 +2446,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "MapEditPage"
+    name: "MapEditPage",
+
+    methods: {
+        openMapEditor: function() {
+            window.location.href = '/mapedit';
+        }
+    }
 });
+
+
 
 
 /***/ }),
@@ -4081,44 +4088,47 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("p", [
+          _vm._v(
+            "The Map Editor is a web software that allows you to design your own maps for a Raycaster Game Project."
+          )
+        ]),
+        _vm._v(" "),
+        _c("nav", [
+          _c("ul", [
+            _c("li", [
+              _c(
+                "button",
+                {
+                  staticClass: "green",
+                  on: {
+                    click: function($event) {
+                      return _vm.openMapEditor()
+                    }
+                  }
+                },
+                [_vm._v("Open Map Editor")]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("h3", [_vm._v("The map editor")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("p", [
-            _vm._v("To open the Map Editor follow this link : "),
-            _c("a", { attrs: { href: "/mapedit" } }, [_vm._v("/mapedit")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "center" }, [
-            _c("figure", [
-              _c("a", { attrs: { href: "/mapedit" } }, [
-                _c("img", {
-                  staticClass: "screenshot",
-                  attrs: {
-                    src: __webpack_require__(/*! ../../assets/images/screen-mapedit.jpg */ "./tools/website/assets/images/screen-mapedit.jpg")
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("figcaption", [
-                _vm._v("A screenshot of the Map Editor Software.")
-              ])
-            ])
-          ])
-        ])
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("The map editor")])
       ])
     ])
   }
@@ -17453,17 +17463,6 @@ module.exports = __webpack_require__.p + "bf17596b9cb846917454928d8c849090.jpg";
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "7c1a60bf2d57c3fd8c46522ba97ebf0b.jpg";
-
-/***/ }),
-
-/***/ "./tools/website/assets/images/screen-mapedit.jpg":
-/*!********************************************************!*\
-  !*** ./tools/website/assets/images/screen-mapedit.jpg ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "2fa7b274d5421bb60beb7084283f4608.jpg";
 
 /***/ }),
 
