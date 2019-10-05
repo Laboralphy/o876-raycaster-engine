@@ -99,7 +99,7 @@
             return {
                 levels: [],
                 gameActionPrefix: CONFIG.getVariable('game_action_prefix'),
-                onlineVersion: true
+                onlineVersion: false
             }
         },
 

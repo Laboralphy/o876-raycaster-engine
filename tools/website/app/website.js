@@ -2257,7 +2257,7 @@ __webpack_require__.r(__webpack_exports__);
         return {
             levels: [],
             gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix'),
-            onlineVersion: true
+            onlineVersion: false
         }
     },
 
