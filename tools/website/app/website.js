@@ -250,7 +250,7 @@ exports.push([module.i, ".material-design-icon {\n  display: inline-flex;\n  ali
 
 exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, ".note {\n    font-style: italic;\n    color: #444;\n    font-size: 0.8em;\n}", ""]);
+exports.push([module.i, ".note {\n    font-style: italic;\n    color: #444;\n    font-size: 0.8em;\n}\n\n.seamless {\n    padding: 0;\n    margin: 0;\n}", ""]);
 
 
 
@@ -2222,6 +2222,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2233,7 +2256,8 @@ __webpack_require__.r(__webpack_exports__);
     data: function() {
         return {
             levels: [],
-            gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix')
+            gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix'),
+            onlineVersion: true
         }
     },
 
@@ -3828,126 +3852,184 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col lg-12" }, [
-        _c("h3", [_vm._v("Local project status")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Welcome to your local game project management page.")
-        ]),
-        _vm._v(" "),
-        _vm.getPublishedLevels.length > 0
-          ? _c("nav", [
-              _c("ul", [
-                _c("li", [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "green",
-                      on: {
-                        click: function($event) {
-                          return _vm.runProject()
-                        }
-                      }
-                    },
-                    [_vm._v("Run your game project")]
-                  )
-                ])
-              ])
+    _vm.onlineVersion
+      ? _c("div", { staticClass: "seamless" }, [_vm._m(0)])
+      : _c("div", { staticClass: "seamless" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Local project status")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("Welcome to your local game project management page.")
+              ]),
+              _vm._v(" "),
+              _vm.getPublishedLevels.length > 0
+                ? _c("nav", [
+                    _c("ul", [
+                      _c("li", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "green",
+                            on: {
+                              click: function($event) {
+                                return _vm.runProject()
+                              }
+                            }
+                          },
+                          [_vm._v("Run your game project")]
+                        )
+                      ])
+                    ])
+                  ])
+                : _c("nav", [_vm._m(1)])
             ])
-          : _c("nav", [_vm._m(0)])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col lg-12" },
-        [
-          _c("h4", [_vm._v("Published levels")]),
+          ]),
           _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n            If you modify one of these levels via the Map Editor, you'll have to publish it again."
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col lg-12" },
+              [
+                _c("h4", [_vm._v("Published levels")]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n                If you modify one of these levels via the Map Editor, you'll have to publish it again."
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.getPublishedLevels.length === 0
+                  ? _c("p", { staticStyle: { color: "#800" } }, [
+                      _vm._v("No published level.")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.getPublishedLevels, function(l) {
+                  return _c("LevelThumbnail", {
+                    key: l.name,
+                    attrs: {
+                      name: l.name,
+                      date: l.date,
+                      preview: l.preview,
+                      exported: l.exported,
+                      invault: l.invault
+                    },
+                    on: {
+                      unpublish: function(ref) {
+                        var name = ref.name
+
+                        return _vm.unpublish(name)
+                      }
+                    }
+                  })
+                })
+              ],
+              2
             )
           ]),
           _vm._v(" "),
-          _vm.getPublishedLevels.length === 0
-            ? _c("p", { staticStyle: { color: "#800" } }, [
-                _vm._v("No published level.")
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.getPublishedLevels, function(l) {
-            return _c("LevelThumbnail", {
-              key: l.name,
-              attrs: {
-                name: l.name,
-                date: l.date,
-                preview: l.preview,
-                exported: l.exported,
-                invault: l.invault
-              },
-              on: {
-                unpublish: function(ref) {
-                  var name = ref.name
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col lg-12" },
+              [
+                _c("h4", [_vm._v("In vault levels")]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n                To publish a level, click on "Publish" or use the Map Editor.'
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.getUnpublishedLevels.length === 0
+                  ? _c("p", { staticStyle: { color: "#800" } }, [
+                      _vm._v("Nothing to publish.")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.getUnpublishedLevels, function(l) {
+                  return _c("LevelThumbnail", {
+                    key: l.name,
+                    attrs: {
+                      name: l.name,
+                      date: l.date,
+                      preview: l.preview,
+                      exported: l.exported,
+                      invault: l.invault,
+                      publishable: true
+                    },
+                    on: {
+                      publish: function(ref) {
+                        var name = ref.name
 
-                  return _vm.unpublish(name)
-                }
-              }
-            })
-          })
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col lg-12" },
-        [
-          _c("h4", [_vm._v("In vault levels")]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n            To publish a level, click on "Publish" or use the Map Editor.'
+                        return _vm.publish(name)
+                      }
+                    }
+                  })
+                })
+              ],
+              2
             )
-          ]),
-          _vm._v(" "),
-          _vm.getUnpublishedLevels.length === 0
-            ? _c("p", { staticStyle: { color: "#800" } }, [
-                _vm._v("Nothing to publish.")
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.getUnpublishedLevels, function(l) {
-            return _c("LevelThumbnail", {
-              key: l.name,
-              attrs: {
-                name: l.name,
-                date: l.date,
-                preview: l.preview,
-                exported: l.exported,
-                invault: l.invault,
-                publishable: true
-              },
-              on: {
-                publish: function(ref) {
-                  var name = ref.name
-
-                  return _vm.publish(name)
-                }
-              }
-            })
-          })
-        ],
-        2
-      )
-    ])
+          ])
+        ])
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("Raycasting Game Engine Home Page")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "\n                    This version of the O87 Raycasting Game Engine is hosted online.\n                "
+          )
+        ]),
+        _vm._v(" "),
+        _c("ul", [
+          _c("li", [
+            _vm._v(
+              'Click on the "Map Editor" tab to run the map editor software and create your own\n                        raycasting game maps.'
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", [
+            _vm._v(
+              'The "Docs" map will give you insights of what raycasting technology is.'
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", [
+            _vm._v(
+              'The "Demos" tab will direct you to a set of small demos using this game engine'
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h4", [_vm._v("For game developers")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "\n                    Visit the Project GitHub Repository located at :\n                    "
+          ),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://github.com/Laboralphy/o876-raycaster-engine"
+              }
+            },
+            [_vm._v("https://github.com/Laboralphy/o876-raycaster-engine")]
+          ),
+          _vm._v(".\n                ")
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
