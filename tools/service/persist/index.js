@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const JsonBlobz = require('../../../lib/src/json-blobz');
+const JsonBlobz = require('../../json-blobz');
 const Vault = require('./Vault');
 
 const TILE_PATH = 'tiles';

@@ -12,11 +12,12 @@
 
 const express = require('express');
 const path = require('path');
-const persist = require('./persist');
-const LZ = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
 const AppRootPath = require('app-root-path');
+
+const persist = require('./persist');
+const LZ = require('./level-zip');
 const pm = require('./project-mgr');
 
 const app = express();
