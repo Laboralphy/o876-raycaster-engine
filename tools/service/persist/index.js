@@ -14,7 +14,8 @@ async function saveLevel(sUser, sLevelName, data) {
 	try {
 		const jb = new JsonBlobz();
 		vault.namespace = sUser;
-		const sTilePath = path.join(sLevelName, TILE_PATH);
+		const sLevelPath = sLevelName;
+		const sTilePath = path.join(sLevelPath, TILE_PATH);
 		await vault.mkdir(sTilePath);
 		const oNewData = await jb.deblob(data, async blobs => {
 			for (let hash in blobs) {
@@ -24,7 +25,7 @@ async function saveLevel(sUser, sLevelName, data) {
 				await vault.save(path.join(sTilePath, hash), blob);
 			}
 		});
-		await vault.saveJSON(path.join(sLevelName, 'level.json'), oNewData);
+		await vault.saveJSON(path.join(sLevelPath, 'level.json'), oNewData);
 		return {status: 'done'};
 	} catch (e) {
 		return {status: 'error', error: e.message};
@@ -35,8 +36,9 @@ async function saveLevel(sUser, sLevelName, data) {
 async function loadLevel(sUser, sLevelName) {
 	const jb = new JsonBlobz();
 	vault.namespace = sUser;
-	const sTilePath = path.join(sLevelName, TILE_PATH);
-	const data = await vault.loadJSON(path.join(sLevelName, 'level.json'));
+	const sLevelPath = sLevelName;
+	const sTilePath = path.join(sLevelPath, TILE_PATH);
+	const data = await vault.loadJSON(path.join(sLevelPath, 'level.json'));
 	return jb.reblob(data, async hashes => {
 		const blobs = {};
 		for (let i = 0, l = hashes.length; i < l; ++i) {
