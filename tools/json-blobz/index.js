@@ -1,9 +1,4 @@
 const crypto = require('crypto');
-const fs = require('fs');
-const util = require('util');
-const Events = require('events');
-
-
 
 const TYPES = {
     png: 'data:image/png;base64',
@@ -15,11 +10,6 @@ const TYPES = {
  * encoded blobs inside the json.
  */
 class JsonBlobz {
-
-    constructor() {
-        this._separator = '';
-        this._events = new Events();
-    }
 
     /**
      * Turns a base64 encode image into a blob
