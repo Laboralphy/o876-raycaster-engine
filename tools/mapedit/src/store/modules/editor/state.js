@@ -161,7 +161,12 @@ export default {
     statusBar: {
         content: 'Welcome to Raycaster Map Editor',
         color: '#000'
-    }
+    },
 
-    
+    popup: {
+        visible: false,
+        content: '',
+        type: 'simple', // simple, progress, error
+        progress: 0 // 0 -> 1
+    }
 };
