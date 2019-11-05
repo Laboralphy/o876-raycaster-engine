@@ -23,6 +23,13 @@
             "tileset": string,              // id of the tilset used
             "thinker": string,              // AI thinker reference (class name)
             "size": number,                 // physical size (for collision)
+            "scale": number,                // a scale factor. 1 = normal size 2 = double size
+            "ref": string,                  // a reference string
+            "lightsource": {
+                "v": number,
+                "r0": number,
+                "r1": number
+            }
             "fx": []                        // array of FX. Possible values are
                                                 // @FX_NONE : no fx
                                                 // @FX_LIGHT_SOURCE : the sprite emits light and will not be shaded

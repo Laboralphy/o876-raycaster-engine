@@ -25,6 +25,15 @@
             },
             disabled: Boolean
         },
+        watch: {
+            disabled: {
+                handler: function(newValue, oldValue) {
+                    if (this.selected && newValue && !oldValue) {
+                        this.$parent.selectAnotherSibling();
+                    }
+                }
+            }
+        },
         data: function() {
             return {
                 selected: this.default

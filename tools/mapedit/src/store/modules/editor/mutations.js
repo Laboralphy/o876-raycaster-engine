@@ -66,5 +66,23 @@ export default {
 
     [MUTATION.SET_LEVEL_GENERATED_DATA]: (state, {value}) => {
         state.levelData = value;
+    },
+
+
+
+    [MUTATION.SHOW_POPUP]: state => {
+        state.popup.visible = true;
+    },
+    [MUTATION.HIDE_POPUP]: state => {
+        state.popup.visible = false;
+    },
+    [MUTATION.SET_POPUP_TYPE]: (state, {value}) => {
+        state.popup.type = value;
+    },
+    [MUTATION.SET_POPUP_CONTENT]: (state, {value}) => {
+        state.popup.content = value;
+    },
+    [MUTATION.SET_POPUP_PROGRESS]: (state, {value}) => {
+        state.popup.progress = value;
     }
 }

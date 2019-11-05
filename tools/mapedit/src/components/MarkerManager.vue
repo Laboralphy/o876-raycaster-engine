@@ -5,6 +5,7 @@
         <template v-slot:toolbar>
         </template>
         <h3>Available shapes</h3>
+        <p>Select a cell, or a region of cells, on the level map, then click on one of the buttons below, to apply a mark.</p>
         <div>
             <MyButton @click="() => setShape(CONSTS.SHAPE_NONE)"><CloseCircleIcon style="color: #A00"></CloseCircleIcon></MyButton>
             <MyButton @click="() => setShape(CONSTS.SHAPE_CIRCLE)"><CircleIcon></CircleIcon></MyButton>
@@ -15,6 +16,7 @@
         </div>
         <hr />
         <h3>Available colors</h3>
+        <p>Mark a cell, or a region of <u>MARKED</u> cells <i>(see above)</i>, then click on one of the button below to change its color.</p>
         <div>
             <MyButton @click="() => setColor('black')"><SquareIcon style="color: black"></SquareIcon></MyButton>
             <MyButton @click="() => setColor('red')"><SquareIcon style="color: red"></SquareIcon></MyButton>
@@ -27,6 +29,7 @@
         </div>
         <hr />
         <h3>Startpoint</h3>
+        <p>Select a single cell on the map, then click on one of the directionnal button below, to define the starting point.</p>
         <div>
             <table>
                 <tbody>

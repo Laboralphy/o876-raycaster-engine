@@ -241,6 +241,21 @@ exports.push([module.i, ".material-design-icon {\n  display: inline-flex;\n  ali
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./tools/website/src/styles/base.css":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./tools/website/src/styles/base.css ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".note {\n    font-style: italic;\n    color: #444;\n    font-size: 0.8em;\n}\n\n.seamless {\n    padding: 0;\n    margin: 0;\n}", ""]);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./tools/website/src/styles/responsive/colors.css":
 /*!**********************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./tools/website/src/styles/responsive/colors.css ***!
@@ -250,7 +265,7 @@ exports.push([module.i, ".material-design-icon {\n  display: inline-flex;\n  ali
 
 exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
 // Module
-exports.push([module.i, "/*\n #####\n#     #   ####   #        ####   #####    ####\n#        #    #  #       #    #  #    #  #\n#        #    #  #       #    #  #    #   ####\n#        #    #  #       #    #  #####        #\n#     #  #    #  #       #    #  #   #   #    #\n #####    ####   ######   ####   #    #   ####\n*/\n\n\n/* This stylesheet is aimed at configuring colors, backgrounds, shadows... */\n\nbody {\n\tbackground-color: #CCC;\n}\n\n/****** Containers ****** Containers ****** Containers ******/\n/****** Containers ****** Containers ****** Containers ******/\n/****** Containers ****** Containers ****** Containers ******/\n\n.card {\n\tbox-shadow: 0.1em 0.1em 0.4em rgba(0, 0, 0, 0.4);\n\tborder-color: #777;\n\tbackground-color: #AAA;\n}\n\n\n\n\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n\nbutton, a.btn {\n\tbackground-color: #888;\n\ttext-shadow: 0.1em 0.1em 0 rgba(0, 0, 0, 0.5);\n\tcolor: #FFF;\n}\n\nbutton:hover, a.btn:hover {\n\tbackground-color: #666;\n\tcolor: #FFF;\n\ttext-shadow: 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.8);\n\tbox-shadow: 0.1em 0.1em 0.4em rgba(0, 0, 0, 0.5);\n}\n\nbutton.disabled, a.disabled.btn, button.disabled:hover, a.disabled.btn:hover {\n\tbackground-color: #888;\n\ttext-shadow: 0.1em 0.1em 0 rgba(0, 0, 0, 0.5);\n\tcolor: #FFF;\n\topacity: 0.5;\n\tcursor: default;\n\tbox-shadow: none;\n}\n\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n\nh1 {\n\ttext-shadow: 0.2em 0.2em 0.3em rgba(0, 0, 0, 0.3);\n}\n\nh2 {\n\ttext-shadow: 0.15em 0.15em 0.25em rgba(0, 0, 0, 0.3);\n}\n\nh3 {\n\ttext-shadow: 0.10em 0.10em 0.20em rgba(0, 0, 0, 0.3);\n}\n\nh4 {\n\ttext-shadow: 0.07em 0.07em 0.17em rgba(0, 0, 0, 0.3);\n}\n\nh5 {\n\ttext-shadow: 0.05em 0.05em 0.15em rgba(0, 0, 0, 0.3);\n}\n\n.title {\n\ttext-shadow: 0.15em 0.15em 0.25em rgba(0, 0, 0, 0.5);\n}\n\n.title.blue {\n\tbackground: linear-gradient(45deg, rgb(0, 0, 128), rgb(0, 0, 96));\n\tborder: solid thin rgb(0, 0, 96);\n\tcolor: #DDDDFF;\n\ttext-shadow: 0 0 0.2em rgba(128, 128, 255, 1), 0.15em 0.15em 0.25em rgba(0, 0, 255, 1);\n}\n\n.title.purple {\n\tbackground: linear-gradient(45deg, rgb(128, 0, 128), rgb(96, 0, 96));\n\tborder: solid thin rgb(96, 0, 96);\n\tcolor: #FFDDFF;\n\ttext-shadow: 0 0 0.2em rgba(255, 128, 255, 1), 0.15em 0.15em 0.25em rgba(255, 0, 255, 1);\n}\n\n.title.red {\n\tbackground: linear-gradient(45deg, rgb(128, 0, 0), rgb(96, 0, 0));\n\tborder: solid thin rgb(96, 0, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 128, 128, 1), 0.15em 0.15em 0.25em rgba(255, 0, 0, 1);\n}\n\n.title.orange {\n\tbackground: linear-gradient(45deg, rgb(128, 64, 0), rgb(96, 48, 0));\n\tborder: solid thin rgb(96, 48, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 192, 128, 1), 0.15em 0.15em 0.25em rgba(255, 128, 0, 1);\n}\n\n.title.golden {\n\tbackground: linear-gradient(45deg, rgb(192, 128, 0), rgb(128, 96, 0));\n\t/* previous : background-color: rgb(192, 128, 0); */\n\t/* previous : background-color: rgba(192, 128, 0, 0.75); */\n\tborder: solid thin rgb(128, 64, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 192, 128, 1), 0.15em 0.15em 0.25em rgba(255, 128, 0, 1);\n}\n\n.title.green {\n\tbackground: linear-gradient(45deg, rgb(0, 112, 0), rgb(0, 64, 0));\n\tborder: solid thin rgb(0, 88, 0);\n\tcolor: #DDFFDD;\n\ttext-shadow: 0 0 0.2em rgba(96, 240, 96, 1), 0.15em 0.15em 0.25em rgba(0, 192, 0, 1);\n}\n\n.title.gray, .title.grey {\n\tbackground: linear-gradient(45deg, rgb(32, 32, 32), rgb(24, 24, 24));\n\tborder: solid thin rgb(12, 12, 12);\n\tcolor: #DDFFDD;\n\ttext-shadow: 0 0 0.2em rgba(150, 150, 150, 1), 0.15em 0.15em 0.25em rgba(128, 128, 128, 1);\n}\n\n\n.btn.blue {\n\tbackground-color: #00F;\n}\n", ""]);
+exports.push([module.i, "/*\n #####\n#     #   ####   #        ####   #####    ####\n#        #    #  #       #    #  #    #  #\n#        #    #  #       #    #  #    #   ####\n#        #    #  #       #    #  #####        #\n#     #  #    #  #       #    #  #   #   #    #\n #####    ####   ######   ####   #    #   ####\n*/\n\n\n/* This stylesheet is aimed at configuring colors, backgrounds, shadows... */\n\nbody {\n\tbackground-color: #CCC;\n}\n\n/****** Containers ****** Containers ****** Containers ******/\n/****** Containers ****** Containers ****** Containers ******/\n/****** Containers ****** Containers ****** Containers ******/\n\n.card {\n\tbox-shadow: 0.1em 0.1em 0.4em rgba(0, 0, 0, 0.4);\n\tborder-color: #777;\n\tbackground-color: #AAA;\n}\n\n\n\n\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n/****** Buttons ****** Buttons ****** Buttons ****** Buttons ******/\n\nbutton, a.btn {\n\tbackground-color: #888;\n\ttext-shadow: 0.1em 0.1em 0 rgba(0, 0, 0, 0.5);\n\tcolor: #FFF;\n}\n\nbutton:hover, a.btn:hover {\n\tbackground-color: #666;\n\tcolor: #FFF;\n\ttext-shadow: 0.1em 0.1em 0.1em rgba(0, 0, 0, 0.8);\n\tbox-shadow: 0.1em 0.1em 0.4em rgba(0, 0, 0, 0.5);\n}\n\nbutton.disabled, a.disabled.btn, button.disabled:hover, a.disabled.btn:hover {\n\tbackground-color: #888;\n\ttext-shadow: 0.1em 0.1em 0 rgba(0, 0, 0, 0.5);\n\tcolor: #FFF;\n\topacity: 0.5;\n\tcursor: default;\n\tbox-shadow: none;\n}\n\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n/****** Title ****** Title ****** Title ****** Title ****** Title ******/\n\nh1 {\n\ttext-shadow: 0.2em 0.2em 0.3em rgba(0, 0, 0, 0.3);\n}\n\nh2 {\n\ttext-shadow: 0.15em 0.15em 0.25em rgba(0, 0, 0, 0.3);\n}\n\nh3 {\n\ttext-shadow: 0.10em 0.10em 0.20em rgba(0, 0, 0, 0.3);\n}\n\nh4 {\n\ttext-shadow: 0.07em 0.07em 0.17em rgba(0, 0, 0, 0.3);\n}\n\nh5 {\n\ttext-shadow: 0.05em 0.05em 0.15em rgba(0, 0, 0, 0.3);\n}\n\n.title {\n\ttext-shadow: 0.15em 0.15em 0.25em rgba(0, 0, 0, 0.5);\n}\n\n.title.blue {\n\tbackground: linear-gradient(45deg, rgb(0, 0, 128), rgb(0, 0, 96));\n\tborder: solid thin rgb(0, 0, 96);\n\tcolor: #DDDDFF;\n\ttext-shadow: 0 0 0.2em rgba(128, 128, 255, 1), 0.15em 0.15em 0.25em rgba(0, 0, 255, 1);\n}\n\n.title.purple {\n\tbackground: linear-gradient(45deg, rgb(128, 0, 128), rgb(96, 0, 96));\n\tborder: solid thin rgb(96, 0, 96);\n\tcolor: #FFDDFF;\n\ttext-shadow: 0 0 0.2em rgba(255, 128, 255, 1), 0.15em 0.15em 0.25em rgba(255, 0, 255, 1);\n}\n\n.title.red {\n\tbackground: linear-gradient(45deg, rgb(128, 0, 0), rgb(96, 0, 0));\n\tborder: solid thin rgb(96, 0, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 128, 128, 1), 0.15em 0.15em 0.25em rgba(255, 0, 0, 1);\n}\n\n.title.orange {\n\tbackground: linear-gradient(45deg, rgb(128, 64, 0), rgb(96, 48, 0));\n\tborder: solid thin rgb(96, 48, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 192, 128, 1), 0.15em 0.15em 0.25em rgba(255, 128, 0, 1);\n}\n\n.title.golden {\n\tbackground: linear-gradient(45deg, rgb(192, 128, 0), rgb(128, 96, 0));\n\t/* previous : background-color: rgb(192, 128, 0); */\n\t/* previous : background-color: rgba(192, 128, 0, 0.75); */\n\tborder: solid thin rgb(128, 64, 0);\n\tcolor: #FFDDDD;\n\ttext-shadow: 0 0 0.2em rgba(255, 192, 128, 1), 0.15em 0.15em 0.25em rgba(255, 128, 0, 1);\n}\n\n.title.green {\n\tbackground: linear-gradient(45deg, rgb(0, 112, 0), rgb(0, 64, 0));\n\tborder: solid thin rgb(0, 88, 0);\n\tcolor: #DDFFDD;\n\ttext-shadow: 0 0 0.2em rgba(96, 240, 96, 1), 0.15em 0.15em 0.25em rgba(0, 192, 0, 1);\n}\n\n.title.gray, .title.grey {\n\tbackground: linear-gradient(45deg, rgb(32, 32, 32), rgb(24, 24, 24));\n\tborder: solid thin rgb(12, 12, 12);\n\tcolor: #DDFFDD;\n\ttext-shadow: 0 0 0.2em rgba(150, 150, 150, 1), 0.15em 0.15em 0.25em rgba(128, 128, 128, 1);\n}\n\n\n.btn.blue, button.blue { background-color: blue; }\n.btn.red, button.red { background-color: red; }\n.btn.green, button.green { background-color: green; }\n.btn.yellow, button.yellow { background-color: yellow; }\n\n\n", ""]);
 
 
 
@@ -2192,6 +2207,44 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2203,7 +2256,8 @@ __webpack_require__.r(__webpack_exports__);
     data: function() {
         return {
             levels: [],
-            gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix')
+            gameActionPrefix: _service_config__WEBPACK_IMPORTED_MODULE_2___default.a.getVariable('game_action_prefix'),
+            onlineVersion: false
         }
     },
 
@@ -2243,6 +2297,10 @@ __webpack_require__.r(__webpack_exports__);
             return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(this.gameActionPrefix + '/levels').then(data => {
                 this.levels.splice(0, this.levels.length, ...data);
             });
+        },
+
+        runProject: function() {
+            window.location.href = this.gameActionPrefix;
         }
     },
 
@@ -2412,11 +2470,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "MapEditPage"
+    name: "MapEditPage",
+
+    methods: {
+        openMapEditor: function() {
+            window.location.href = '/mapedit';
+        }
+    }
 });
+
+
 
 
 /***/ }),
@@ -3787,117 +3852,203 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col lg-12" }, [
-        _c("h3", [_vm._v("Local project status")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Welcome to your local game project management page.")
-        ]),
-        _vm._v(" "),
-        _c("h4", [_vm._v("Run project")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v("Click here to "),
-          _c("a", { attrs: { href: _vm.gameActionPrefix } }, [
-            _c("b", { staticStyle: { "font-size": "1.3em" } }, [
-              _vm._v("run your project")
+    _vm.onlineVersion
+      ? _c("div", { staticClass: "seamless" }, [_vm._m(0)])
+      : _c("div", { staticClass: "seamless" }, [
+          _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col lg-12" }, [
+              _c("h3", [_vm._v("Local project status")]),
+              _vm._v(" "),
+              _c("p", [
+                _vm._v("Welcome to your local game project management page.")
+              ]),
+              _vm._v(" "),
+              _vm.getPublishedLevels.length > 0
+                ? _c("nav", [
+                    _c("ul", [
+                      _c("li", [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "green",
+                            on: {
+                              click: function($event) {
+                                return _vm.runProject()
+                              }
+                            }
+                          },
+                          [_vm._v("Run your game project")]
+                        )
+                      ])
+                    ])
+                  ])
+                : _c("nav", [_vm._m(1)])
             ])
           ]),
-          _vm._v(".")
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col lg-12" },
+              [
+                _c("h4", [_vm._v("Published levels")]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n                If you modify one of these levels via the Map Editor, you'll have to publish it again."
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.getPublishedLevels.length === 0
+                  ? _c("p", { staticStyle: { color: "#800" } }, [
+                      _vm._v("No published level.")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.getPublishedLevels, function(l) {
+                  return _c("LevelThumbnail", {
+                    key: l.name,
+                    attrs: {
+                      name: l.name,
+                      date: l.date,
+                      preview: l.preview,
+                      exported: l.exported,
+                      invault: l.invault
+                    },
+                    on: {
+                      unpublish: function(ref) {
+                        var name = ref.name
+
+                        return _vm.unpublish(name)
+                      }
+                    }
+                  })
+                })
+              ],
+              2
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row" }, [
+            _c(
+              "div",
+              { staticClass: "col lg-12" },
+              [
+                _c("h4", [_vm._v("In vault levels")]),
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v(
+                    'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n                To publish a level, click on "Publish" or use the Map Editor.'
+                  )
+                ]),
+                _vm._v(" "),
+                _vm.getUnpublishedLevels.length === 0
+                  ? _c("p", { staticStyle: { color: "#800" } }, [
+                      _vm._v("Nothing to publish.")
+                    ])
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.getUnpublishedLevels, function(l) {
+                  return _c("LevelThumbnail", {
+                    key: l.name,
+                    attrs: {
+                      name: l.name,
+                      date: l.date,
+                      preview: l.preview,
+                      exported: l.exported,
+                      invault: l.invault,
+                      publishable: true
+                    },
+                    on: {
+                      publish: function(ref) {
+                        var name = ref.name
+
+                        return _vm.publish(name)
+                      }
+                    }
+                  })
+                })
+              ],
+              2
+            )
+          ])
         ])
-      ])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col lg-12" },
-        [
-          _c("h4", [_vm._v("Published levels")]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              "These levels have been published from the Map Editor. They can be loaded in the Raycaster Game Engine.\n            If you modify one of these levels via the Map Editor, you'll have to publish it again."
-            )
-          ]),
-          _vm._v(" "),
-          _vm.getPublishedLevels.length === 0
-            ? _c("p", { staticStyle: { color: "#800" } }, [
-                _vm._v("No published level.")
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.getPublishedLevels, function(l) {
-            return _c("LevelThumbnail", {
-              key: l.name,
-              attrs: {
-                name: l.name,
-                date: l.date,
-                preview: l.preview,
-                exported: l.exported,
-                invault: l.invault
-              },
-              on: {
-                unpublish: function(ref) {
-                  var name = ref.name
-
-                  return _vm.unpublish(name)
-                }
-              }
-            })
-          })
-        ],
-        2
-      )
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "row" }, [
-      _c(
-        "div",
-        { staticClass: "col lg-12" },
-        [
-          _c("h4", [_vm._v("In vault levels")]),
-          _vm._v(" "),
-          _c("p", [
-            _vm._v(
-              'These levels can be edited via the Map editor, but are still unavailable for the Game Engine until they are published.\n            To publish a level, click on "Publish" or use the Map Editor.'
-            )
-          ]),
-          _vm._v(" "),
-          _vm.getUnpublishedLevels.length === 0
-            ? _c("p", { staticStyle: { color: "#800" } }, [
-                _vm._v("Nothing to publish.")
-              ])
-            : _vm._e(),
-          _vm._v(" "),
-          _vm._l(_vm.getUnpublishedLevels, function(l) {
-            return _c("LevelThumbnail", {
-              key: l.name,
-              attrs: {
-                name: l.name,
-                date: l.date,
-                preview: l.preview,
-                exported: l.exported,
-                invault: l.invault,
-                publishable: true
-              },
-              on: {
-                publish: function(ref) {
-                  var name = ref.name
-
-                  return _vm.publish(name)
-                }
-              }
-            })
-          })
-        ],
-        2
-      )
-    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("Raycasting Game Engine Home Page")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "\n                    This version of the O87 Raycasting Game Engine is hosted online.\n                "
+          )
+        ]),
+        _vm._v(" "),
+        _c("ul", [
+          _c("li", [
+            _vm._v(
+              'Click on the "Map Editor" tab to run the map editor software and create your own\n                        raycasting game maps.'
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", [
+            _vm._v(
+              'The "Docs" map will give you insights of what raycasting technology is.'
+            )
+          ]),
+          _vm._v(" "),
+          _c("li", [
+            _vm._v(
+              'The "Demos" tab will direct you to a set of small demos using this game engine'
+            )
+          ])
+        ]),
+        _vm._v(" "),
+        _c("h4", [_vm._v("For game developers")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v(
+            "\n                    Visit the Project GitHub Repository located at :\n                    "
+          ),
+          _c(
+            "a",
+            {
+              attrs: {
+                href: "https://github.com/Laboralphy/o876-raycaster-engine"
+              }
+            },
+            [_vm._v("https://github.com/Laboralphy/o876-raycaster-engine")]
+          ),
+          _vm._v(".\n                ")
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("ul", [
+      _c("li", [
+        _c("button", { staticClass: "disabled" }, [
+          _vm._v("Run your game project")
+        ])
+      ]),
+      _vm._v(" "),
+      _c("li", { staticStyle: { "padding-left": "1em" } }, [
+        _c("span", { staticClass: "note" }, [
+          _vm._v("(The game project need at list one published level)")
+        ])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -4019,44 +4170,47 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("p", [
+          _vm._v(
+            "The Map Editor is a web software that allows you to design your own maps for a Raycaster Game Project."
+          )
+        ]),
+        _vm._v(" "),
+        _c("nav", [
+          _c("ul", [
+            _c("li", [
+              _c(
+                "button",
+                {
+                  staticClass: "green",
+                  on: {
+                    click: function($event) {
+                      return _vm.openMapEditor()
+                    }
+                  }
+                },
+                [_vm._v("Open Map Editor")]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("h3", [_vm._v("The map editor")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col lg-12" }, [
-          _c("p", [
-            _vm._v("To open the Map Editor follow this link : "),
-            _c("a", { attrs: { href: "/mapedit" } }, [_vm._v("/mapedit")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "center" }, [
-            _c("figure", [
-              _c("a", { attrs: { href: "/mapedit" } }, [
-                _c("img", {
-                  staticClass: "screenshot",
-                  attrs: {
-                    src: __webpack_require__(/*! ../../assets/images/screen-mapedit.jpg */ "./tools/website/assets/images/screen-mapedit.jpg")
-                  }
-                })
-              ]),
-              _vm._v(" "),
-              _c("figcaption", [
-                _vm._v("A screenshot of the Map Editor Software.")
-              ])
-            ])
-          ])
-        ])
+    return _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col lg-12" }, [
+        _c("h3", [_vm._v("The map editor")])
       ])
     ])
   }
@@ -17394,17 +17548,6 @@ module.exports = __webpack_require__.p + "7c1a60bf2d57c3fd8c46522ba97ebf0b.jpg";
 
 /***/ }),
 
-/***/ "./tools/website/assets/images/screen-mapedit.jpg":
-/*!********************************************************!*\
-  !*** ./tools/website/assets/images/screen-mapedit.jpg ***!
-  \********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "2fa7b274d5421bb60beb7084283f4608.jpg";
-
-/***/ }),
-
 /***/ "./tools/website/assets/images/vr-glasses.jpg":
 /*!****************************************************!*\
   !*** ./tools/website/assets/images/vr-glasses.jpg ***!
@@ -18229,13 +18372,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _styles_responsive_custom_css__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(_styles_responsive_custom_css__WEBPACK_IMPORTED_MODULE_6__);
 /* harmony import */ var vue_material_design_icons_styles_css__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue-material-design-icons/styles.css */ "./node_modules/vue-material-design-icons/styles.css");
 /* harmony import */ var vue_material_design_icons_styles_css__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(vue_material_design_icons_styles_css__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var _components_Application_vue__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/Application.vue */ "./tools/website/src/components/Application.vue");
-/* harmony import */ var _components_HomePage_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/HomePage.vue */ "./tools/website/src/components/HomePage.vue");
-/* harmony import */ var _components_ExamplePage_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/ExamplePage.vue */ "./tools/website/src/components/ExamplePage.vue");
-/* harmony import */ var _components_MapEditPage_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/MapEditPage.vue */ "./tools/website/src/components/MapEditPage.vue");
-/* harmony import */ var _components_FeatPage_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/FeatPage.vue */ "./tools/website/src/components/FeatPage.vue");
-/* harmony import */ var _components_TechPage_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/TechPage.vue */ "./tools/website/src/components/TechPage.vue");
-/* harmony import */ var _components_AboutPage_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/AboutPage.vue */ "./tools/website/src/components/AboutPage.vue");
+/* harmony import */ var _styles_base_css__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./styles/base.css */ "./tools/website/src/styles/base.css");
+/* harmony import */ var _styles_base_css__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_styles_base_css__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _components_Application_vue__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/Application.vue */ "./tools/website/src/components/Application.vue");
+/* harmony import */ var _components_HomePage_vue__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./components/HomePage.vue */ "./tools/website/src/components/HomePage.vue");
+/* harmony import */ var _components_ExamplePage_vue__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./components/ExamplePage.vue */ "./tools/website/src/components/ExamplePage.vue");
+/* harmony import */ var _components_MapEditPage_vue__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./components/MapEditPage.vue */ "./tools/website/src/components/MapEditPage.vue");
+/* harmony import */ var _components_FeatPage_vue__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./components/FeatPage.vue */ "./tools/website/src/components/FeatPage.vue");
+/* harmony import */ var _components_TechPage_vue__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./components/TechPage.vue */ "./tools/website/src/components/TechPage.vue");
+/* harmony import */ var _components_AboutPage_vue__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./components/AboutPage.vue */ "./tools/website/src/components/AboutPage.vue");
+
 
 
 
@@ -18264,37 +18410,37 @@ function createApplication() {
         {
             path: '/',
             components: {
-                default: _components_HomePage_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
+                default: _components_HomePage_vue__WEBPACK_IMPORTED_MODULE_10__["default"]
             }
         },
         {
             path: '/tech',
             components: {
-                default: _components_TechPage_vue__WEBPACK_IMPORTED_MODULE_13__["default"]
+                default: _components_TechPage_vue__WEBPACK_IMPORTED_MODULE_14__["default"]
             }
         },
         {
             path: '/examples',
             components: {
-                default: _components_ExamplePage_vue__WEBPACK_IMPORTED_MODULE_10__["default"]
+                default: _components_ExamplePage_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
             }
         },
         {
             path: '/features',
             components: {
-                default: _components_FeatPage_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
+                default: _components_FeatPage_vue__WEBPACK_IMPORTED_MODULE_13__["default"]
             }
         },
         {
             path: '/mapedit',
             components: {
-                default: _components_MapEditPage_vue__WEBPACK_IMPORTED_MODULE_11__["default"]
+                default: _components_MapEditPage_vue__WEBPACK_IMPORTED_MODULE_12__["default"]
             }
         },
         {
             path: '/about',
             components: {
-                default: _components_AboutPage_vue__WEBPACK_IMPORTED_MODULE_14__["default"]
+                default: _components_AboutPage_vue__WEBPACK_IMPORTED_MODULE_15__["default"]
             }
         }
     ];
@@ -18303,17 +18449,47 @@ function createApplication() {
         el: '#vue-application',
         router: new vue_router__WEBPACK_IMPORTED_MODULE_2__["default"]({routes}),
         components: {
-            Application: _components_Application_vue__WEBPACK_IMPORTED_MODULE_8__["default"]
+            Application: _components_Application_vue__WEBPACK_IMPORTED_MODULE_9__["default"]
         },
 
         render: function (h) {
-            return h(_components_Application_vue__WEBPACK_IMPORTED_MODULE_8__["default"]);
+            return h(_components_Application_vue__WEBPACK_IMPORTED_MODULE_9__["default"]);
         }
     });
 }
 
 window.APPLICATION = createApplication();
 
+
+/***/ }),
+
+/***/ "./tools/website/src/styles/base.css":
+/*!*******************************************!*\
+  !*** ./tools/website/src/styles/base.css ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../node_modules/css-loader/dist/cjs.js!./base.css */ "./node_modules/css-loader/dist/cjs.js!./tools/website/src/styles/base.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
 
 /***/ }),
 

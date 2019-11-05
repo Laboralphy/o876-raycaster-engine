@@ -1,18 +1,18 @@
 <template xmlns:v-slot="http://www.w3.org/1999/XSL/Transform">
     <div class="popup">
-        <Window>
-            <template v-slot:toolbar>
-                {{ title }}
-            </template>
+        <Window :caption="title">
+            <div class="message">
+                <slot></slot>
+                <div v-if="type === 'progress'">
+                    <progress style="width: 100%" max="1" :value="progress"></progress>
+                </div>
+            </div>
         </Window>
-        <div class="message">
-            <slot></slot>
-        </div>
     </div>
 </template>
 
 <script>
-    import Window from "./Window";
+    import Window from "./Window.vue";
     export default {
         name: "Popup",
         components: {Window},
@@ -22,6 +22,11 @@
                 required: true
             },
             type: {
+                type: String,
+                required: false,
+                default: "simple"
+            },
+            progress: {
                 type: Number,
                 required: false,
                 default: 0

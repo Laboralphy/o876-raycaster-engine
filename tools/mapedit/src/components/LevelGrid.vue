@@ -68,7 +68,7 @@
                 </MagnifyPlusIcon>
             </MyButton>
 
-            <Siblings @input="selectTool">
+            <Siblings ref="toolSiblings" @input="selectTool">
                 <SiblingButton
                         title="Select tool"
                         :default="true"

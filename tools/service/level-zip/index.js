@@ -8,7 +8,7 @@ const path = require('path');
 const util = require('util');
 const mkdirp = require('mkdirp');
 const generate = require('../../generate');
-const appendImages = require('../append-images');
+const appendImages = require('../../append-images');
 const archiver = require('archiver');
 
 
