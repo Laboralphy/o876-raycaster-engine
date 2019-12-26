@@ -52,6 +52,7 @@
     "express": "^4.17.1",
     "jsonschema": "^1.2.4",
     "mkdirp": "^0.5.1",
-    "pngjs": "^3.4.0"
+    "pngjs": "^3.4.0",
+    "set-value": ">=2.0.1"
   }
 }
