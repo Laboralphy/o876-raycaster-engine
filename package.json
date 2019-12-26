@@ -53,6 +53,7 @@
     "jsonschema": "^1.2.4",
     "mkdirp": "^0.5.1",
     "pngjs": "^3.4.0",
-    "set-value": ">=2.0.1"
+    "set-value": ">=2.0.1",
+    "serialize-javascript": ">=2.1.1"
   }
 }
