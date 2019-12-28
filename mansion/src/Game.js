@@ -189,7 +189,7 @@ class Game extends GameAbstract {
         const engine = this.engine;
         const ps = engine.raycaster.options.metrics.spacing;
         const ps2 = ps >> 1;
-        return this.engine.createEntity(sRef, new Position({x: xCell * ps + ps2, y: yCell * ps + ps2}));
+        return engine.createEntity(sRef, new Position({x: xCell * ps + ps2, y: yCell * ps + ps2}));
     }
 
 
