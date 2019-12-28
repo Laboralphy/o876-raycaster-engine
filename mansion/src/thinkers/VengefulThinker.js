@@ -1,9 +1,6 @@
 import MoverThinker from "../../../lib/src/engine/thinkers/MoverThinker";
 import * as RC_CONSTS from "../../../lib/src/raycaster/consts";
 
-
-
-
 class VengefulThinker extends MoverThinker {
 
     constructor() {
@@ -13,9 +10,11 @@ class VengefulThinker extends MoverThinker {
         this._aDeathOpacity = null;
         this.transitions = {
             "s_spawn": {
+                // commencer la phase d'apparition = alpha in
                 "1": "s_spawning"
             },
             "s_spawning": {
+                // lorsque la full opacity est atteinte ...
                 "t_fullOpacity": "s_idle"
             },
             "s_kill": {
