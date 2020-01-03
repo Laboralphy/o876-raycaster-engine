@@ -5,6 +5,9 @@
     "scale": 3,
     "thinker": "VengefulThinker",
     "size": 16,
-    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
+    "data": {
+      "type": "v"
+    }
   }
 ]
