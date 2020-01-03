@@ -331,6 +331,11 @@
               "r1",
               "v"
             ]
+          },
+          "data": {
+            "type": "object",
+            "description": "Additionnal custom properties",
+            "additionalProperties": true
           }
         },
         "additionalProperties": false,
