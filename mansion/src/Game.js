@@ -186,18 +186,6 @@ class Game extends GameAbstract {
         return this.engine.raycaster.options.metrics.spacing;
     }
 
-    getCameraCellPosition() {
-        const ps = this.getLevelSpacing();
-        const oCameraPos = this.engine.camera.position;
-        return {
-            x: oCameraPos.x / ps | 0,
-            y: oCameraPos.y / ps | 0
-        };
-    }
-
-    getCameraBearing() {
-        return this.engine.camera.position.angle;
-    }
 
 
 
