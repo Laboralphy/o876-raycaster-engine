@@ -5,6 +5,13 @@
         <template v-slot:toolbar>
         </template>
         <div>
+            <h3>Controls</h3>
+            <p>The raycaster game engine is currently runing your map. To move the camera use the
+            keyboard keys :</p>
+            <div align="center">
+                <img src="../../assets/images/keyboard-arrows.png" />
+            </div>
+            <hr/>
             <h3>Export level</h3>
             <p>Download this level as a JSON data string, so you can just use it directly with an engine instance.</p>
             <MyButton :disabled="!getDownloadURLData" :href="getDownloadURLData" :download="getDownloadFileName">Export to .json</MyButton>

@@ -18,7 +18,12 @@ export default {
     getLevelName: state => state.levelName,
 
     getStatusBarText: state => state.statusBar.content,
-    getLevelGeneratedData: state => state.levelData
+    getLevelGeneratedData: state => state.levelData,
+
+    getPopupVisible: state => state.popup.visible,
+    getPopupType: state => state.popup.type,
+    getPopupContent: state => state.popup.content,
+    getPopupProgress: state => state.popup.progress
 }
 
 

@@ -2,7 +2,7 @@
  * The whole page must be 100% in width and height
  * with no padding and no margin
  */
-html, body, table.o876structure {
+html, body, div.o876structure, table.o876structure {
 	height: 100%;
 	width: 100%;
 	padding: 0;

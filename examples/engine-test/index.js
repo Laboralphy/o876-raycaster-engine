@@ -49,7 +49,7 @@ function getLevel() {
                         "id": "death",
                         "start": 16,
                         "length": 11,
-                        "loop": "@LOOP_FORWARD",
+                        "loop": "@LOOP_NONE",
                         "duration": 80,
                         "iterations": 1
                     }

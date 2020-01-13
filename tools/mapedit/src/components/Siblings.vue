@@ -18,6 +18,13 @@
                     c.selected = i === n;
                 });
                 this.$emit('input', {index: n});
+            },
+
+            selectAnotherSibling: function() {
+                const oNewSelectedSibling = this.$children.filter((c, i) => !c.$props.disabled).shift();
+                if (!!oNewSelectedSibling) {
+                    this.selectSibling(oNewSelectedSibling);
+                }
             }
         }
     }

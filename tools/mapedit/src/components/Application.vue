@@ -1,30 +1,35 @@
 <template>
-    <table class="o876structure">
-        <tbody>
-            <tr>
-                <td colspan="2">
-                    <MainMenu></MainMenu>
-                </td>
-            </tr>
-            <tr class="floatingHeight">
-                <td class="floatingWidth">
-                    <div>
-                        <router-view></router-view>
-                    </div>
-                </td>
-                <td class="side-panel">
-                    <div>
-                        <router-view name="side"></router-view>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <StatusBar>
-                    <FlashyText></FlashyText>
-                </StatusBar>
-            </tr>
-        </tbody>
-    </table>
+    <div class="o876structure">
+        <table class="o876structure">
+            <tbody>
+                <tr>
+                    <td colspan="2">
+                        <MainMenu></MainMenu>
+                    </td>
+                </tr>
+                <tr class="floatingHeight">
+                    <td class="floatingWidth">
+                        <div>
+                            <router-view></router-view>
+                        </div>
+                    </td>
+                    <td class="side-panel">
+                        <div>
+                            <router-view name="side"></router-view>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <StatusBar>
+                        <FlashyText></FlashyText>
+                    </StatusBar>
+                </tr>
+            </tbody>
+        </table>
+        <Popup v-if="getPopupVisible" :title="getPopupTitle" :type="getPopupType" :progress="getPopupProgress">
+            {{ getPopupContent }}
+        </Popup>
+    </div>
 </template>
 
 <script>
@@ -33,18 +38,29 @@
     import MainMenu from "./MainMenu.vue";
     import StatusBar from "./StatusBar.vue";
     import FlashyText from "./FlashyText.vue";
+    import Popup from "./Popup.vue";
+
+    import {createNamespacedHelpers} from 'vuex';
+    const {mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "Application",
-        components: {FlashyText, StatusBar, MainMenu, MyButton, Window},
-        data: function() {
-            return {
-                popup: {
-                    visible: false,
-                    title: '',
-                    content: ''
+        components: {FlashyText, StatusBar, MainMenu, MyButton, Window, Popup},
+
+        computed: {
+            ...editorMapGetters([
+                'getPopupVisible',
+                'getPopupContent',
+                'getPopupType',
+                'getPopupProgress'
+            ]),
+            getPopupTitle: function() {
+                switch (this.getPopupType) {
+                    case 'simple': return 'Information';
+                    case 'progress': return 'Progress';
+                    case 'error': return 'Error';
                 }
-            };
+            }
         }
     }
 </script>

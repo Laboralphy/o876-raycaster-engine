@@ -12,11 +12,12 @@
 
 const express = require('express');
 const path = require('path');
-const persist = require('./persist');
-const LZ = require('./level-zip');
 const util = require('util');
 const fs = require('fs');
 const AppRootPath = require('app-root-path');
+
+const persist = require('./persist');
+const LZ = require('./level-zip');
 const pm = require('./project-mgr');
 
 const app = express();
@@ -26,12 +27,15 @@ const CONFIG = require('./config');
 
 const readdir = util.promisify(fs.readdir);
 
-
+const DEFAULT_USER = 'LOCAL_USER';
 
 function print(...args) {
     console.log(...args);
 }
 
+function getUserId(req) {
+    return DEFAULT_USER;
+}
 
 function initFavicon() {
     app.get('/favicon.ico', (req, res) => {
@@ -51,7 +55,7 @@ function initMapEditor() {
 
     // list levels
     app.get('/vault', (req, res) => {
-        persist.ls()
+        persist.listLevels(getUserId(req))
             .then(r => res.json(r))
             .catch(e => {
                 console.error('GET /vault - error');
@@ -62,25 +66,25 @@ function initMapEditor() {
     // loads a level for the map editor
     app.get('/vault/:name.json', (req, res) => {
         const name = req.params.name;
-        persist.load(name).then(r => res.json(r));
+        persist.loadLevel(getUserId(req), name).then(r => res.json(r));
     });
 
     // load a preview thumbnail of a level
-    app.get('/vault/:name.jpg', (req, res) => {
+    app.get('/vault/:name.jpg', async (req, res) => {
         const name = req.params.name;
-        const filename = path.resolve(persist.getVaultPath(), name, 'preview.jpg');
-        res.sendFile(filename);
+        const filename = await persist.getLevelPreview(getUserId(req), name);
+        res.sendFile(path.resolve(persist.getVaultPath(), filename));
     });
 
     // get the zipped version of a level
     app.get('/vault/:name.zip', async (req, res) => {
         try {
             const name = req.params.name;
-            const data = await persist.load(name);
+            const data = await persist.loadLevel(getUserId(req), name);
             const archive = await LZ.buildZip(name, data);
             res.download(archive.filename);
         } catch (e) {
-            res.json({status: 'error', error: e.message});
+            await res.json({status: 'error', error: e.message});
         }
     });
 
@@ -89,33 +93,33 @@ function initMapEditor() {
         try {
             const name = req.params.name;
             const {data} = req.body;
-            const r = await persist.save(name, data);
-            res.json(r)
+            const r = await persist.saveLevel(getUserId(req), name, data);
+            await res.json(r)
         } catch (e) {
-            res.json({status: 'error', error: e.message});
+            await res.json({status: 'error', error: e.message});
         }
     });
 
     // delete a specified level from the vault
     app.delete('/vault/:name', (req, res) => {
         const name = req.params.name;
-        persist.rm(name).then(r => res.json(r));
+        persist.removeLevel(getUserId(req), name).then(r => res.json(r));
     });
 
     // export this level to the game assets
     app.get('/export/:name', async (req, res) => {
         try {
             const name = req.params.name;
-            const data = await persist.load(name);
+            const data = await persist.loadLevel(getUserId(req), name);
             await LZ.exportLevel(name, data, {
                 textures: CONFIG.getVariable('texture_path'),
                 level: CONFIG.getVariable('level_path'),
                 game: path.resolve(AppRootPath.path, CONFIG.getVariable('game_path'))
             });
-            res.json({status: 'done'});
+            await res.json({status: 'done'});
         } catch (e) {
             console.error(e);
-            res.json({status: 'error', error: e.message});
+            await res.json({status: 'error', error: e.message});
         }
     });
 }
@@ -129,7 +133,7 @@ function initExamples() {
     app.get('/examples-list', async (req, res) => {
         // get a list of all example
         const aList = await readdir(sExamplePath);
-        res.json({list: aList});
+        return res.json({list: aList});
     });
 }
 
@@ -169,7 +173,7 @@ function initGameProject() {
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
         try {
             const aPublished = await pm.getPublishedLevels();
-            const aVault = await persist.ls();
+            const aVault = await persist.listLevels(getUserId(req));
             aPublished.forEach(l => {
                 l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
             });
@@ -179,9 +183,9 @@ function initGameProject() {
                 l.invault = true;
             });
             const aLevels = aPublished.concat(aVault);
-            res.json(aLevels);
+            await res.json(aLevels);
         } catch (e) {
-            res.json({status: 'error', error: e.message});
+            await res.json({status: 'error', error: e.message});
         }
     });
 

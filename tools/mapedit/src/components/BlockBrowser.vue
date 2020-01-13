@@ -4,8 +4,8 @@
     >
         <template v-slot:toolbar>
             <MyButton title="Create a new block" @click="createClicked"><PlusIcon title="Create a new block" decorative></PlusIcon></MyButton>
-            <MyButton :disabled="!selected" title="Modify the selected block" @click="modifyClicked"><PencilIcon title="Modify the selected block" decorative></PencilIcon></MyButton>
-            <MyButton :disabled="!selected" title="Delete the selected block" @click="deleteClicked"><DeleteIcon title="Delete the selected block" decorative></DeleteIcon></MyButton>
+            <MyButton :disabled="!getBlockBrowserSelected" title="Modify the selected block" @click="modifyClicked"><PencilIcon title="Modify the selected block" decorative></PencilIcon></MyButton>
+            <MyButton :disabled="!getBlockBrowserSelected" title="Delete the selected block" @click="deleteClicked"><DeleteIcon title="Delete the selected block" decorative></DeleteIcon></MyButton>
         </template>
         <Block
                 v-for="b in getBlocks"
@@ -13,7 +13,7 @@
                 :width="CONSTS.BLOCK_WIDTH"
                 :height="CONSTS.BLOCK_HEIGHT"
                 :content="b.preview"
-                :selected="b.id === selected"
+                :selected="b.id === getBlockBrowserSelected"
                 @click="() => onClicked(b.id)"
         ></Block>
     </Window>
@@ -41,15 +41,16 @@
 
         data: function() {
             return {
-                CONSTS,
-
-                selected: null
+                CONSTS
             }
         },
 
         computed: {
             ...levelMapGetters([
                 'getBlocks'
+            ]),
+            ...editorMapGetters([
+                'getBlockBrowserSelected'
             ])
         },
 
@@ -64,11 +65,9 @@
 
 
             onClicked: function(id) {
-                if (this.selected === id) {
-                    this.selected = null;
+                if (this.getBlockBrowserSelected === id) {
                     this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
                 } else {
-                    this.selected = id;
                     this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: id});
                 }
             },
