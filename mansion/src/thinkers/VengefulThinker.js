@@ -7,6 +7,7 @@ class VengefulThinker extends MoverThinker {
     super();
     this._nOpacity = 0; // indice de transparence 0 = invisible, 1 = 25% alpha ... 4 = 100% opacity
     this._nTime = 0;
+    this._target = null; // cible designée
     this._aDeathOpacity = null;
     this.transitions = {
       "s_spawn": {
@@ -27,6 +28,10 @@ class VengefulThinker extends MoverThinker {
         "t_doneFadeOut": "s_dead"
       }
     }
+  }
+
+  get target() {
+    return this._target;
   }
 
   /**
@@ -133,7 +138,13 @@ class VengefulThinker extends MoverThinker {
    * 2) advance
    */
   s_chase() {
-      //
+      // determiner l'angle de visée du ghost
+    const oGhost = this.entity;
+    const oTarget = this.target;
+    const vGhostPos = oGhost.position;
+    const vTargetPos = oTarget.position;
+    const vDiff = vTargetPos.vector();
+
   }
 
 
