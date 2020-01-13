@@ -8,6 +8,9 @@ import Scripts from './scripts';
 import FadeIn from "../../lib/src/engine/filters/FadeIn";
 import Halo from "../../lib/src/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
+import Position from "../../lib/src/engine/Position";
+
+import THINKERS from './thinkers';
 
 class Game extends GameAbstract {
     // ... write your game here ...
@@ -20,6 +23,7 @@ class Game extends GameAbstract {
         // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
         this._cameraFilter = new CameraObscura();
         this.engine.events.on('update', () => this.engineUpdateHandler());
+        this.engine.useThinkers(THINKERS);
     }
 
 //
@@ -167,11 +171,57 @@ class Game extends GameAbstract {
 
 
 
-//  _                _                   _        _   _
-// | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
-// | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
-// | |  __/\ V /  __/ | | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
-// |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
+//                      _ _     _       _          __                    _         _                  _
+//   ___ __ _ _ __   __| (_) __| | __ _| |_ ___   / _| ___  _ __    __ _| |__  ___| |_ _ __ __ _  ___| |_
+//  / __/ _` | '_ \ / _` | |/ _` |/ _` | __/ _ \ | |_ / _ \| '__|  / _` | '_ \/ __| __| '__/ _` |/ __| __|
+// | (_| (_| | | | | (_| | | (_| | (_| | ||  __/ |  _| (_) | |    | (_| | |_) \__ \ |_| | | (_| | (__| |_
+//  \___\__,_|_| |_|\__,_|_|\__,_|\__,_|\__\___| |_|  \___/|_|     \__,_|_.__/|___/\__|_|  \__,_|\___|\__|
+//
+
+    /**
+     * Return the level cell size (in texels)
+     * @return number
+     */
+    getLevelSpacing() {
+        return this.engine.raycaster.options.metrics.spacing;
+    }
+
+
+
+
+
+//             _   _ _   _                                                                         _
+//   ___ _ __ | |_(_) |_(_) ___  ___   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//  / _ \ '_ \| __| | __| |/ _ \/ __| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+// |  __/ | | | |_| | |_| |  __/\__ \ | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//  \___|_| |_|\__|_|\__|_|\___||___/ |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//                                                                 |___/
+
+
+    /**
+     * Spawns a ghost at the given cell coordinates
+     * @param sRef {string} ghsot reference id
+     * @param xCell {number}
+     * @param yCell {number}
+     * @returns {Entity}
+     */
+    spawnGhost(sRef, xCell, yCell) {
+        const engine = this.engine;
+        const ps = engine.raycaster.options.metrics.spacing;
+        const ps2 = ps >> 1;
+        return engine.createEntity(sRef, new Position({x: xCell * ps + ps2, y: yCell * ps + ps2}));
+    }
+
+
+
+
+
+//      _                _                                  _   _
+//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//                                    |_|
 
 
     /**
@@ -197,6 +247,15 @@ class Game extends GameAbstract {
         csm.rotateWallSurfaces(x, y, !bClockWise);
     }
 
+
+
+
+//  _                                           _   _
+// | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+// | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//           |___/        |_|
     /**
      * Adds a tag on a cell
      * @param x {number} cell coordinate (x axis)
@@ -208,14 +267,6 @@ class Game extends GameAbstract {
         return this.engine._tm._tg.addTag(x, y, sTag);
     }
 
-
-
-//  _                                           _   _
-// | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
-// | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
-// | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
-//  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
-//           |___/        |_|
     /**
      * Returns a list of all tags present on the maps, the returns list contains items with these properties :
      * {

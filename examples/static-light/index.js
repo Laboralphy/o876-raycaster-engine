@@ -75,11 +75,6 @@ const LEVEL = {
             "faces": {
                 "f": 0, // floor texture (taken from "flats" property)
                 "c": 1  // ceiling texture (taken from "flats" property)
-            },
-            "lightsource": {
-                "r0": 128,
-                "r1": 256,
-                "v": 0.3
             }
         }, {
             "code": '+',
@@ -96,11 +91,6 @@ const LEVEL = {
             "faces": {
                 "f": 0, // floor texture (taken from "flats" property)
                 "c": 2  // ceiling texture (taken from "flats" property)
-            },
-            "lightsource": {
-                "r0": 256,
-                "r1": 384,
-                "v": 0.45
             }
         }]
     },
@@ -116,7 +106,25 @@ const LEVEL = {
     ],
     "decals": [],
     "tags": [],
-    "lightsources": []
+    "lightsources": [{
+        x: 11 * 64 + 32,
+        y: 4 * 64 + 32,
+        r0: 256,
+        r1: 384,
+        v: 0.45
+    }, {
+        x: 11 * 64 + 32,
+        y: 9 * 64 + 32,
+        r0: 256,
+        r1: 384,
+        v: 0.45
+    }, {
+        x: 13 * 64 + 32,
+        y: 18 * 64 + 32,
+        r0: 256,
+        r1: 384,
+        v: 0.45
+    }]
 };
 
 // note that we use an "async" function, because we deal with promises when textures are loading

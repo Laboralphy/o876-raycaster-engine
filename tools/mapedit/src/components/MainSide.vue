@@ -4,10 +4,14 @@
     >
         <template v-slot:toolbar>
         </template>
-        <div>
+        <p>
             This editor is used to easily design levels for the <br/>
             <code><b>O 8 7 6</b></code> Raycasting Game Engine Framework.
-        </div>
+        </p>
+        <ul>
+            <li>Author: Raphaël Marandet</li>
+            <li>Project GitHub repository : <a href="https://github.com/Laboralphy/o876-raycaster-engine">https://github.com/Laboralphy/o876-raycaster-engine</a></li>
+        </ul>
     </Window>
 </template>
 

@@ -1,7 +1,7 @@
 <template>
     <div class="ui-components">
 
-        <section>
+        <section v-if="isVisible">
             <HUD pos="tl">
                 <Vitals></Vitals>
                 <Scores></Scores>
