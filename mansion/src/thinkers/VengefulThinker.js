@@ -8,6 +8,7 @@ class VengefulThinker extends MoverThinker {
     this._nOpacity = 0; // indice de transparence 0 = invisible, 1 = 25% alpha ... 4 = 100% opacity
     this._nTime = 0;
     this._target = null; // cible designée
+    this._speed = 0; // vitesse de déplacement actuelle
     this._aDeathOpacity = null;
     this.transitions = {
       "s_spawn": {
@@ -80,6 +81,23 @@ class VengefulThinker extends MoverThinker {
     this.setOpacityFlags();
   }
 
+  /**
+   * sets the moving angle, so the ghost may chase the target
+   */
+  lookAtTarget() {
+    const oGhost = this.entity;
+    const oTarget = this.target;
+    const vGhostPos = oGhost.position;
+    const vTargetPos = oTarget.position;
+    const vDiff = vTargetPos.vector().sub(vGhostPos.vector());
+    oGhost.position.angle = vDiff.angle();
+  }
+
+  moveForward() {
+    const oGhostPos = this.entity.position;
+    oGhostPos.set(oGhostPos.front(this._speed));
+  }
+
 
   ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
   ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -138,13 +156,8 @@ class VengefulThinker extends MoverThinker {
    * 2) advance
    */
   s_chase() {
-      // determiner l'angle de visée du ghost
-    const oGhost = this.entity;
-    const oTarget = this.target;
-    const vGhostPos = oGhost.position;
-    const vTargetPos = oTarget.position;
-    const vDiff = vTargetPos.vector();
-
+    this.lookAtTarget();
+    this.moveForward();
   }
 
 
