@@ -7,6 +7,7 @@ class VengefulThinker extends MoverThinker {
     super();
     this._nOpacity = 0; // indice de transparence 0 = invisible, 1 = 25% alpha ... 4 = 100% opacity
     this._nTime = 0;
+    this._nTimeOut = 0;
     this._target = null; // cible designée
     this._speed = 0; // vitesse de déplacement actuelle
     this._aDeathOpacity = null;
@@ -150,15 +151,7 @@ class VengefulThinker extends MoverThinker {
     }
   }
 
-  /**
-   * ghost is chasing the player
-   * 1) change the angle
-   * 2) advance
-   */
-  s_chase() {
-    this.lookAtTarget();
-    this.moveForward();
-  }
+  s_
 
 
 
@@ -184,6 +177,10 @@ class VengefulThinker extends MoverThinker {
 
   t_doneFadeOut() {
     return this._nOpacity <= 0;
+  }
+
+  t_timeOut() {
+    return this._nTime > this._nTimeOut;
   }
 }
 
