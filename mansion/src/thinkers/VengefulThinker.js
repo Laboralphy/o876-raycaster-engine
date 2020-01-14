@@ -99,6 +99,10 @@ class VengefulThinker extends MoverThinker {
     oGhostPos.set(oGhostPos.front(this._speed));
   }
 
+  setTimeOut(n) {
+    this._nTimeOut = this.engine.getTime() + n;
+  }
+
 
   ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
   ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -151,8 +155,6 @@ class VengefulThinker extends MoverThinker {
     }
   }
 
-  s_
-
 
 
   ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -180,7 +182,7 @@ class VengefulThinker extends MoverThinker {
   }
 
   t_timeOut() {
-    return this._nTime > this._nTimeOut;
+    return this.engine.getTime() >= this._nTimeOut;
   }
 }
 
