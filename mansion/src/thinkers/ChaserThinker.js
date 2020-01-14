@@ -1,37 +1,43 @@
 import VengefulThinker from './VengefulThinker';
 
 class ChaserThinker extends VengefulThinker {
-  constructor() {
-    super();
+    constructor() {
+        super();
 
-    // le ghost poursuit inlassablement sa cible
+        // le ghost poursuit inlassablement sa cible
 
-    this.transitions = {
-      ...this.transitions,
-      "s_idle": {
-        "1": "s_seek"
-      },
-      "s_seek": {
-        "1": "s_forward"
-      }
-    };
-  }
+        this.transitions = {
+            ...this.transitions,
+            "s_idle": {
+                "1": "s_seek"
+            },
+
+            "s_seek": {
+                "1": "s_forward"
+            },
+
+            "s_forward": {
+                "t_timeOut": "s_idle"
+            }
+        };
+    }
 
 
-  s_seek() {
-    this.lookAtTarget();
-    this.pulse();
-  }
+    s_seek() {
+        this.setTimeOut(1000);
+        this.lookAtTarget();
+        this.pulse();
+    }
 
-  /**
-   * ghost is chasing the player
-   * 1) change the angle
-   * 2) advance
-   */
-  s_forward() {
-    this.moveForward();
-    this.pulse();
-  }
+    /**
+     * ghost is chasing the player
+     * 1) change the angle
+     * 2) advance
+     */
+    s_forward() {
+        this.moveForward();
+        this.pulse();
+    }
 
 }
 

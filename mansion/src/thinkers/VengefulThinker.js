@@ -181,8 +181,19 @@ class VengefulThinker extends MoverThinker {
     return this._nOpacity <= 0;
   }
 
+    /**
+     * returns true if the time is out
+     * @returns {boolean}
+     */
   t_timeOut() {
     return this.engine.getTime() >= this._nTimeOut;
+  }
+
+    /**
+     * returns true if target is in melee attack range
+     */
+  t_targetInMeleeRange() {
+    this.entity.position.vector()
   }
 }
 
