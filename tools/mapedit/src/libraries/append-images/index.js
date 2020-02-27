@@ -1,4 +1,4 @@
-import CanvasHelper from "../../../../../lib/src/canvas-helper";
+import CanvasHelper from "../../../../../src/libs/canvas-helper";
 
 /**
  * Combine plusieurs tiles en une seule et renvoie les data-images

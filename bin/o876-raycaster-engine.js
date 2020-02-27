@@ -10,6 +10,9 @@
  * @date 2019-06-12
  */
 
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 
 const ArgumentParser = require('../tools/argument-parser');
 const Service = require('../tools/service/index');

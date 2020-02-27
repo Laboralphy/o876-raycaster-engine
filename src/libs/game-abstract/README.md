@@ -7,7 +7,7 @@ This class assumes the role of an abstract. There is no such thing as abstract
 in javascript. That mean this class should not be instantiated, but extended.
 
 ```javascript
-import GameAbstract from '../../lib/src/game-abstract';
+import GameAbstract from '../../src/libs/game-abstract';
 
 class Game extends GameAbstract {
     // ... write your game here ...

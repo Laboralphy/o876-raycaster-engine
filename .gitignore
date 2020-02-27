@@ -5,8 +5,8 @@
 node_modules
 
 # webpack output folder
-dist
+dist/
 tools/mapedit/app/*
 
-# game project
-game
+# .env file
+.env

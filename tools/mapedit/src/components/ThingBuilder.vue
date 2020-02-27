@@ -82,7 +82,7 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
-    import * as RC_CONSTS from '../../../../lib/src/raycaster/consts';
+    import * as RC_CONSTS from '../../../../src/libs/raycaster/consts';
 
     import * as LEVEL_ACTION from '../store/modules/level/action-types';
 

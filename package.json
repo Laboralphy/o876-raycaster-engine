@@ -7,7 +7,7 @@
     "test": "jasmine dist/tests/tests.js",
     "build": "webpack",
     "watch": "webpack --watch",
-    "serve": "node bin/o876-raycaster-engine.js -- -g game"
+    "serve": "node bin/o876-raycaster-engine.js"
   },
   "keywords": [
     "HTML5",
@@ -49,11 +49,12 @@
   "dependencies": {
     "app-root-path": "^2.2.1",
     "archiver": "^3.0.0",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "jsonschema": "^1.2.4",
     "mkdirp": "^0.5.1",
     "pngjs": "^3.4.0",
-    "set-value": ">=2.0.1",
-    "serialize-javascript": ">=2.1.1"
+    "serialize-javascript": ">=2.1.1",
+    "set-value": ">=2.0.1"
   }
 }

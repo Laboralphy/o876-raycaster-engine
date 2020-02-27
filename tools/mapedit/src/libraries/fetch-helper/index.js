@@ -2,7 +2,7 @@
  * These functions help communicate with the persistance service
  */
 import * as CONSTS from "../../consts";
-import {fetchJSON, deleteJSON} from "../../../../../lib/src/fetch-json";
+import {fetchJSON, deleteJSON} from "../../../../../src/libs/fetch-json";
 
 export function saveLevel(name, data) {
     return fetchJSON(CONSTS.SERVICE_URL_SAVE + name, {data});

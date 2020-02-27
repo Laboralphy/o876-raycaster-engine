@@ -1,5 +1,5 @@
-import CanvasHelper from "../../../../../lib/src/canvas-helper";
-import * as CONSTS from "../../../../../lib/src/raycaster/consts";
+import CanvasHelper from "../../../../../src/libs/canvas-helper";
+import * as CONSTS from "../../../../../src/libs/raycaster/consts";
 
 
 const SIMILARITY_NONE = 0;

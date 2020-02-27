@@ -96,61 +96,6 @@ return /******/ (function(modules) { // webpackBootstrap
 /************************************************************************/
 /******/ ({
 
-/***/ "./lib/src/fetch-json/index.js":
-/*!*************************************!*\
-  !*** ./lib/src/fetch-json/index.js ***!
-  \*************************************/
-/*! exports provided: fetchJSON, deleteJSON */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchJSON", function() { return fetchJSON; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteJSON", function() { return deleteJSON; });
-async function fetchJSON(url, postData = null) {
-    try {
-        const bPost = !!postData;
-        const oRequest = {
-            method: bPost ? 'POST' : 'GET',
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-        };
-        if (bPost) {
-            oRequest.body = JSON.stringify(postData);
-        }
-        const response = await fetch(url, oRequest);
-        const oJSON = await response.json();
-        if (response.status === 500) {
-            throw new Error('Error 500 : internal server error : ' + oJSON.message);
-        }
-        return oJSON;
-    } catch (e) {
-        throw new Error('FetchJSON Error - ' + e.message);
-    }
-}
-
-
-async function deleteJSON(url) {
-
-    const oRequest = {
-        method: 'DELETE',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-    };
-    const response = await fetch(url, oRequest);
-    const oJSON = await response.json();
-    if (response.status === 500) {
-        throw new Error('Error 500 : internal server error : ' + oJSON.message);
-    }
-    return oJSON;
-}
-
-/***/ }),
-
 /***/ "./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib/index.js?!./tools/website/src/components/Application.vue?vue&type=style&index=0&id=8d372110&scoped=true&lang=css&":
 /*!****************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/vue-loader/lib??vue-loader-options!./tools/website/src/components/Application.vue?vue&type=style&index=0&id=8d372110&scoped=true&lang=css& ***!
@@ -1765,7 +1710,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../lib/src/fetch-json */ "./lib/src/fetch-json/index.js");
+/* harmony import */ var _src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../../src/libs/fetch-json */ "./src/libs/fetch-json/index.js");
 //
 //
 //
@@ -1798,7 +1743,7 @@ __webpack_require__.r(__webpack_exports__);
 
     mounted: async function() {
         // gettings all examples
-        const oResponse = await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_0__["fetchJSON"])('/examples-list');
+        const oResponse = await Object(_src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_0__["fetchJSON"])('/examples-list');
         this.examples = oResponse.list;
     }
 });
@@ -2153,7 +2098,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LevelThumbnail_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LevelThumbnail.vue */ "./tools/website/src/components/LevelThumbnail.vue");
-/* harmony import */ var _lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../lib/src/fetch-json */ "./lib/src/fetch-json/index.js");
+/* harmony import */ var _src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../../../src/libs/fetch-json */ "./src/libs/fetch-json/index.js");
 /* harmony import */ var _service_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../service/config */ "./tools/service/config.js");
 /* harmony import */ var _service_config__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_service_config__WEBPACK_IMPORTED_MODULE_2__);
 //
@@ -2284,17 +2229,17 @@ __webpack_require__.r(__webpack_exports__);
                     return;
                 }
             }
-            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])(this.gameActionPrefix + '/level/' + name);
+            await Object(_src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_1__["deleteJSON"])(this.gameActionPrefix + '/level/' + name);
             return this.fetchLevelData();
         },
 
         publish: async function(name) {
-            await Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/export/' + name);
+            await Object(_src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])('/export/' + name);
             return this.fetchLevelData();
         },
 
         fetchLevelData: function() {
-            return Object(_lib_src_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(this.gameActionPrefix + '/levels').then(data => {
+            return Object(_src_libs_fetch_json__WEBPACK_IMPORTED_MODULE_1__["fetchJSON"])(this.gameActionPrefix + '/levels').then(data => {
                 this.levels.splice(0, this.levels.length, ...data);
             });
         },
@@ -17221,24 +17166,79 @@ module.exports = g;
 
 /***/ }),
 
+/***/ "./src/libs/fetch-json/index.js":
+/*!**************************************!*\
+  !*** ./src/libs/fetch-json/index.js ***!
+  \**************************************/
+/*! exports provided: fetchJSON, deleteJSON */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchJSON", function() { return fetchJSON; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteJSON", function() { return deleteJSON; });
+async function fetchJSON(url, postData = null) {
+    try {
+        const bPost = !!postData;
+        const oRequest = {
+            method: bPost ? 'POST' : 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        };
+        if (bPost) {
+            oRequest.body = JSON.stringify(postData);
+        }
+        const response = await fetch(url, oRequest);
+        const oJSON = await response.json();
+        if (response.status === 500) {
+            throw new Error('Error 500 : internal server error : ' + oJSON.message);
+        }
+        return oJSON;
+    } catch (e) {
+        throw new Error('FetchJSON Error - ' + e.message);
+    }
+}
+
+
+async function deleteJSON(url) {
+
+    const oRequest = {
+        method: 'DELETE',
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        },
+    };
+    const response = await fetch(url, oRequest);
+    const oJSON = await response.json();
+    if (response.status === 500) {
+        throw new Error('Error 500 : internal server error : ' + oJSON.message);
+    }
+    return oJSON;
+}
+
+/***/ }),
+
 /***/ "./tools/service/config.js":
 /*!*********************************!*\
   !*** ./tools/service/config.js ***!
   \*********************************/
 /*! no static exports found */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-const CONFIG = {
+/* WEBPACK VAR INJECTION */(function(process) {const CONFIG = {
     // not configurable by command line
     texture_path: 'assets/textures',
     level_path: 'assets/levels',
     data_path: 'assets/data',
 
     // configurable at launch by command line
-    game_action_prefix: '/game', // this value must be identical with your Engine configuration
-    port: 8080, // server listening port
-    vault_path: 'vault',    // the folder where all map editor levels are located
-    game_path: 'game',  // the game project folder
+    game_action_prefix: process.env.GAME_ACTION_PREFIX || 'game', // this value must be identical with your Engine configuration
+    port: parseInt(process.env.SERVER_PORT || 8080), // server listening port
+    vault_path: process.env.VAULT_PATH || 'vault',    // the folder where all map editor levels are located
+    game_path: process.env.GAME_PATH || 'game',  // the game project folder
 
 };
 
@@ -17259,6 +17259,7 @@ function setVariable(s, v) {
 module.exports = {
     getVariable, setVariable
 };
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../node_modules/process/browser.js */ "./node_modules/process/browser.js")))
 
 /***/ }),
 
