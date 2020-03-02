@@ -7,7 +7,7 @@ const TILE_PATH = 'tiles';
 
 const vault = new Vault();
 vault.vaultPath = '.';
-
+vault.namespace = '/';
 
 
 async function saveLevel(sLevelName, data) {
@@ -33,6 +33,7 @@ async function saveLevel(sLevelName, data) {
 
 
 async function loadLevel(sLevelName) {
+	const sBasePath = path.resolve(__dirname,);
 	const jb = new JsonBlobz();
 	const sLevelPath = sLevelName;
 	const sTilePath = path.join(sLevelPath, TILE_PATH);
@@ -105,9 +106,9 @@ function getVaultPath() {
 }
 
 
-async function getLevelPreview(sUser, sLevelName) {
+async function getLevelPreview(sLevelName) {
 	const data = await vault.loadJSON(path.join(sLevelName, 'level.json'));
-	return vault._fqn(path.join(sLevelName, TILE_PATH, data.preview));
+	return vault.fqn(path.join(sLevelName, TILE_PATH, data.preview));
 }
 
 

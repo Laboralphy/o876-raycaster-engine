@@ -1,5 +1,5 @@
 import Game from './Game';
-import config from './config/index';
+import config from './config';
 
 async function main() {
     const g = new Game();
