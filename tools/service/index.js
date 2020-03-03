@@ -71,7 +71,7 @@ function initMapEditor() {
     app.get('/vault/:name.jpg', async (req, res) => {
         const name = req.params.name;
         const filename = await persist.getLevelPreview(name);
-        res.sendFile(path.resolve(persist.getVaultPath(), filename));
+        res.sendFile(path.resolve(filename));
     });
 
     // get the zipped version of a level
@@ -159,7 +159,7 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
-    const GAME_ACTION_PREFIX = CONFIG.getVariable('game_action_prefix');
+    const GAME_ACTION_PREFIX = path.join('/', CONFIG.getVariable('game_action_prefix'));
 
     // declare the assets directory as static resources
     app.use(GAME_ACTION_PREFIX + '/assets', express.static(path.join(CONFIG.getVariable('game_path'), 'assets')));
@@ -217,18 +217,15 @@ function run(options) {
         let r;
         r = gpo(x);
         if (r !== undefined) {
-            console.log('config', a, 'using option variable:', x, r);
             CONFIG.setVariable(a, r);
             return;
         }
         r = gpe(y);
         if (r !== undefined) {
-            console.log('config', a, 'using env variable:', y, r);
             CONFIG.setVariable(a, r);
             return;
         }
         r = z;
-        console.log('config', a, 'using factory value:', r);
         CONFIG.setVariable(a, r);
     };
 

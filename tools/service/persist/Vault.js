@@ -21,12 +21,11 @@ class Vault {
     }
 
 
-    get vaultPath() {
+    get path() {
         return this._vaultPath;
     }
 
-    set vaultPath(value) {
-        console.log('set vault path:', value)
+    set path(value) {
         this._vaultPath = value;
     }
 
@@ -54,8 +53,7 @@ class Vault {
         if (!this.namespace) {
             throw new Error('the given resource namespace is empty');
         }
-        console.log('fqn', path.join(this.vaultPath, this.namespace, name))
-        return path.join(this.vaultPath, this.namespace, name);
+        return path.join(this.path, this.namespace, name);
     }
 
     /**

@@ -93,18 +93,15 @@ function main() {
         let r;
         r = gpr(x);
         if (r !== undefined) {
-            console.log('setting option', a, 'using argument variable:', x, r);
             options[a] = r;
             return;
         }
         r = gpe(y);
         if (r !== undefined) {
-            console.log('setting option', a, 'using env variable:', y, r);
             options[a] = r;
             return;
         }
         r = z;
-        console.log('setting option', a, 'using factory value:', r);
         options[a] = r;
     };
 
