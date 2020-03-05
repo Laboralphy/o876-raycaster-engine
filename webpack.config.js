@@ -54,8 +54,6 @@ function getAllIndex(sSource, sEntry) {
     return output;
 }
 
-
-
 const exampleConfig = {
     mode: "development",
     entry: getAllIndex('examples', 'index.js'),
@@ -74,16 +72,15 @@ const exampleConfig = {
     target: 'web'
 };
 
-
 require('dotenv').config({ path: path.resolve(DIR_NAME, '.env') });
 
 const gameConfig = {
-    mode: "development",
+    mode: 'development',
     entry: {
-        game: path.resolve(path.resolve(DIR_NAME, process.env.GAME_PATH, 'src/index.js')),
+        game: path.resolve(DIR_NAME, process.env.GAME_PATH, 'src/index.js')
     },
     output: {
-        path: path.resolve(DIR_NAME, 'dist'),
+        path: path.resolve(DIR_NAME, process.env.GAME_PATH, 'dist'),
         libraryTarget: 'umd',
         filename: '[name].js'
     },
@@ -94,7 +91,7 @@ const gameConfig = {
     },
     plugins: [],
     target: 'web'
-}
+};
 
 const CONFIG = [
     testConfig,

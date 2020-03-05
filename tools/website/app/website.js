@@ -17251,7 +17251,6 @@ function getVariable(s) {
 }
 
 function setVariable(s, v) {
-    console.log('setting variable', s, v);
     CONFIG[s] = v;
 }
 

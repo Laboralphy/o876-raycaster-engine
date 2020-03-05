@@ -31,14 +31,14 @@ function print(...args) {
     console.log(...args);
 }
 
-function getProjectFQN(sPath) {
-    return path.join(O876_RC_ROOT_PATH, sPath);
+function getProjectFQN(...aPath) {
+    return path.join(O876_RC_ROOT_PATH, ...aPath);
 }
 
 function initFavicon() {
     app.get('/favicon.ico', (req, res) => {
         print('serving favicon');
-        res.sendFile(getProjectFQN('favicon/favicon.png'));
+        res.sendFile(getProjectFQN('favicon', 'favicon.png'));
     });
 }
 
@@ -48,7 +48,7 @@ function initFavicon() {
  */
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
-    app.use('/mapedit', express.static(getProjectFQN('tools/mapedit')));
+    app.use('/mapedit', express.static(getProjectFQN('tools', 'mapedit')));
     persist.setVaultPath(CONFIG.getVariable('vault_path'));
 
     // list levels
@@ -71,7 +71,7 @@ function initMapEditor() {
     app.get('/vault/:name.jpg', async (req, res) => {
         const name = req.params.name;
         const filename = await persist.getLevelPreview(name);
-        res.sendFile(path.resolve(filename));
+        res.sendFile(getProjectFQN(filename));
     });
 
     // get the zipped version of a level
@@ -143,7 +143,7 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/', express.static(getProjectFQN('tools/website')));
+    app.use('/', express.static(getProjectFQN('tools', 'website')));
 }
 
 
@@ -159,13 +159,13 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
-    const GAME_ACTION_PREFIX = path.join('/', CONFIG.getVariable('game_action_prefix'));
+    const GAME_ACTION_PREFIX = '/' + CONFIG.getVariable('game_action_prefix');
 
     // declare the assets directory as static resources
-    app.use(GAME_ACTION_PREFIX + '/assets', express.static(path.join(CONFIG.getVariable('game_path'), 'assets')));
+    app.use(GAME_ACTION_PREFIX + '/assets', express.static(getProjectFQN(CONFIG.getVariable('game_path'), 'assets')));
 
     // declare the dist directory as static resources
-    app.use(GAME_ACTION_PREFIX + '/dist', express.static(path.join(CONFIG.getVariable('game_path'), 'dist')));
+    app.use(GAME_ACTION_PREFIX + '/dist', express.static(getProjectFQN(CONFIG.getVariable('game_path'), 'dist')));
 
     // get a list of published levels
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
@@ -202,7 +202,8 @@ function initGameProject() {
 
     // launch the game
     app.get(GAME_ACTION_PREFIX + '/index.html', (req, res) => {
-        res.sendFile(path.join(CONFIG.getVariable('game_path'), 'index.html'));
+        console.log(getProjectFQN(CONFIG.getVariable('game_path'), 'index.html'));
+        res.sendFile(getProjectFQN(CONFIG.getVariable('game_path'), 'index.html'));
     });
 
     pm.run(AppRootPath.path);
