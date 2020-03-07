@@ -14,7 +14,6 @@ const express = require('express');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
-const AppRootPath = require('app-root-path');
 
 const persist = require('./persist');
 const LZ = require('./level-zip');
@@ -22,8 +21,8 @@ const pm = require('./project-mgr');
 
 const app = express();
 
-const O876_RC_ROOT_PATH = path.resolve(AppRootPath.path);//__dirname, '../../');
 const CONFIG = require('./config');
+const O876_RC_ROOT_PATH = path.resolve(CONFIG.getVariable('base_path'));
 
 const readdir = util.promisify(fs.readdir);
 
@@ -202,11 +201,10 @@ function initGameProject() {
 
     // launch the game
     app.get(GAME_ACTION_PREFIX + '/index.html', (req, res) => {
-        console.log(getProjectFQN(CONFIG.getVariable('game_path'), 'index.html'));
         res.sendFile(getProjectFQN(CONFIG.getVariable('game_path'), 'index.html'));
     });
 
-    pm.run(AppRootPath.path);
+    pm.run(CONFIG.getVariable('base_path'));
 }
 
 
@@ -237,6 +235,7 @@ function run(options) {
     print('---------------------------------');
     print(' ');
 
+    CONFIG.setVariable('base_path', options.base_path);
     gpoe('port', 'port', 'SERVER_PORT', 80);
     gpoe('vault_path', 'vault_path', 'VAULT_PATH', '');
     gpoe('game_path', 'game_path', 'GAME_PATH', '');
@@ -250,7 +249,7 @@ function run(options) {
     initWebSite();
 
     app.listen(CONFIG.getVariable('port'));
-    print('base location :', AppRootPath.path);
+    print('base location :', options.base_path);
     print('vault location :', CONFIG.getVariable('vault_path'));
     print('game project location :', CONFIG.getVariable('game_path'));
     print('server port :', CONFIG.getVariable('port'));
