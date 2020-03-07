@@ -1,0 +1,23 @@
+/* regular height for inline blocks, containing text or other readable things (small icons, gauge aligned with texts) */
+
+.ui {
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.ui.regular-height {
+    height: 1.2em;
+}
+
+.ui.row {
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+.ui.axial {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
