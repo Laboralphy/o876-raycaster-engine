@@ -1,0 +1,10 @@
+[
+  {
+    "id": "g_bashed_boy",
+    "tileset": "g_bashed_boy",
+    "scale": 3,
+    "thinker": "VengefulThinker",
+    "size": 16,
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+  }
+]

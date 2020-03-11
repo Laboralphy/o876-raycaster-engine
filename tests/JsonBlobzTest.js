@@ -17,7 +17,7 @@ describe('#jsonblobz', function () {
             oBlobs = blobs;
             return Promise.resolve();
         });
-        expect(r).toEqual({"tile":[{"id":1,"img":"file:594478fb3a43415a0c77accab23019da.png","type":10}]});
+        expect(r).toEqual({"tile":[{"id":1,"img":"594478fb3a43415a0c77accab23019da.png","type":10}]});
         expect(oBlobs['594478fb3a43415a0c77accab23019da.png']).toBeDefined();
     });
 
@@ -54,7 +54,7 @@ describe('#jsonblobz', function () {
             oBlobs = blobs;
             return Promise.resolve();
         });
-        expect(r).toEqual({"tile":[{"id":1,"img":"file:4c5fca3ed14e45d865d31b780a7bd40c.png","type":10}],"deep":{"tree":{"obj":{"hidden":[0,1,2,3,{"inside":{"a":{"node":{"img":"file:4c5fca3ed14e45d865d31b780a7bd40c.jpg"}}}}]}}}});
+        expect(r).toEqual({"tile":[{"id":1,"img":"4c5fca3ed14e45d865d31b780a7bd40c.png","type":10}],"deep":{"tree":{"obj":{"hidden":[0,1,2,3,{"inside":{"a":{"node":{"img":"4c5fca3ed14e45d865d31b780a7bd40c.jpg"}}}}]}}}});
         expect(oBlobs['4c5fca3ed14e45d865d31b780a7bd40c.png']).toBeDefined();
         expect(oBlobs['4c5fca3ed14e45d865d31b780a7bd40c.jpg']).toBeDefined();
     });
