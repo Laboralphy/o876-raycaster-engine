@@ -1,5 +1,5 @@
 import UI from '../ui';
-import RC from '../index'
+import RC from '../../index'
 import {fetchJSON} from "../fetch-json";
 import Extender from "../object-helper/Extender";
 import * as ENGINE_CONSTS from '../engine/consts';

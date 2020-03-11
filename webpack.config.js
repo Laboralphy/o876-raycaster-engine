@@ -6,7 +6,7 @@ const DIR_NAME = __dirname;
 const devConfig = {
     mode: "development",
     entry: {
-        libraycaster: path.resolve(DIR_NAME, 'lib/src/index.js'),
+        libraycaster: path.resolve(DIR_NAME, 'src/libs/index.js'),
     },
     output: {
         path: path.resolve(DIR_NAME, 'dist'),
@@ -45,7 +45,7 @@ const testConfig = {
 const mapeditConfig = require('./tools/mapedit/webpack.config');
 const websiteConfig = require('./tools/website/webpack.config');
 
-function getAllIndex(sSource, sEntry) {
+function lsIndex(sSource, sEntry) {
     const sPath = path.resolve(DIR_NAME, sSource);
     const output = {};
     fs
@@ -56,7 +56,7 @@ function getAllIndex(sSource, sEntry) {
 
 const exampleConfig = {
     mode: "development",
-    entry: getAllIndex('examples', 'index.js'),
+    entry: lsIndex('examples', 'index.js'),
     output: {
         path: path.resolve(DIR_NAME, 'dist/examples'),
         libraryTarget: 'umd',
