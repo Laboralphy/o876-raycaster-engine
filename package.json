@@ -28,22 +28,22 @@
     "o876-raycaster-engine": "./bin/o876-raycaster-engine.js"
   },
   "devDependencies": {
-    "vue": "^2.6.10",
-    "vue-material-design-icons": "^3.1.0",
-    "vue-router": "^3.0.6",
-    "vuex": "^3.1.0",
-    "css-loader": "^2.1.1",
     "clean-css": "^4.2.1",
+    "css-loader": "^2.1.1",
     "file-loader": "^3.0.1",
     "jasmine": "^3.4.0",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "url-loader": "^1.1.2",
+    "vue": "^2.6.10",
     "vue-html-loader": "^1.2.4",
     "vue-loader": "^15.7.0",
+    "vue-material-design-icons": "^3.1.0",
+    "vue-router": "^3.0.6",
     "vue-template-compiler": "^2.6.10",
     "vue-template-loader": "^1.0.0",
-    "webpack": "^4.30.0",
+    "vuex": "^3.1.0",
+    "webpack": "^4.42.1",
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
