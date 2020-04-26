@@ -204,7 +204,7 @@
 </template>
 
 <script>
-    import * as CONSTS from '../../../../src/libs/raycaster/consts';
+    import * as CONSTS from '../../../../libs/raycaster/consts';
     import * as ACTION from '../store/modules/level/action-types';
     // vuex
     import {createNamespacedHelpers} from 'vuex';

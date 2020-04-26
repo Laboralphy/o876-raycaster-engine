@@ -23,7 +23,7 @@ function getArgumentDefinition() {
 
 
 /**
- * Get the previously set argument definition (see setArgumentDefinition)
+ * Set argument definition (see setArgumentDefinition)
  * @param a {Array} argument definition
  * {
  *     name: string,
@@ -34,6 +34,7 @@ function getArgumentDefinition() {
  *     value: {
  *         required: boolean,
  *         type: string
+ *         default: *
  *     }
  * }
  */

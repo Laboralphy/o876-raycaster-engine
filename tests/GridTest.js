@@ -1,4 +1,4 @@
-import Grid from "../src/libs/grid/Grid";
+import Grid from "../libs/grid/Grid";
 
 describe('#grid', function() {
     describe('clipAxis', function () {

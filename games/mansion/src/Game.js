@@ -1,14 +1,14 @@
 import * as CONSTS from './consts';
 import * as MUTATIONS from './store/modules/logic/mutation-types';
-import GameAbstract from '../../lib/src/game-abstract';
-import {quoteSplit} from "../../lib/src/quote-split";
+import GameAbstract from 'libs/game-abstract';
+import {quoteSplit}  from "libs/quote-split";
 import UI from './UI';
 import Logic from './Logic';
 import Scripts from './scripts';
-import FadeIn from "../../lib/src/engine/filters/FadeIn";
-import Halo from "../../lib/src/engine/filters/Halo";
+import FadeIn  from "libs/engine/filters/FadeIn";
+import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
-import Position from "../../lib/src/engine/Position";
+import Position  from "libs/engine/Position";
 
 import THINKERS from './thinkers';
 

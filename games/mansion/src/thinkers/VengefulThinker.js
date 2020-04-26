@@ -1,5 +1,5 @@
-import MoverThinker from "../../../lib/src/engine/thinkers/MoverThinker";
-import * as RC_CONSTS from "../../../lib/src/raycaster/consts";
+import MoverThinker from "libs/engine/thinkers/MoverThinker";
+import * as RC_CONSTS from "libs/raycaster/consts";
 
 class VengefulThinker extends MoverThinker {
 

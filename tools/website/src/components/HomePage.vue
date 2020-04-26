@@ -89,7 +89,7 @@
 
 <script>
     import LevelThumbnail from "./LevelThumbnail.vue";
-    import {deleteJSON, fetchJSON} from "../../../../src/libs/fetch-json";
+    import {deleteJSON, fetchJSON} from "../../../../libs/fetch-json";
     import CONFIG from "../../../service/config";
 
     export default {

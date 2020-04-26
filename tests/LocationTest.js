@@ -1,4 +1,4 @@
-import Position from "../src/libs/engine/Position";
+import Position from "../libs/engine/Position";
 
 describe('#Position', function() {
     describe('basic', function() {

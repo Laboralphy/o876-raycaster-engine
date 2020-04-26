@@ -1,6 +1,6 @@
 import * as ACTIONS from './action-types';
 import * as MUTATIONS from './mutation-types';
-import {fetchJSON} from "../../../../../lib/src/fetch-json";
+import {fetchJSON} from "libs/fetch-json";
 
 export default {
     [ACTIONS.LOAD_ITEMS]: async function({commit}) {

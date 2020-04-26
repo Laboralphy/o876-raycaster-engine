@@ -1,6 +1,6 @@
-import Easing from "../../src/libs/easing/Easing";
-import TangibleThinker from "../../src/libs/engine/thinkers/TangibleThinker";
-import * as CONSTS from "../../src/libs/engine/consts";
+import Easing from "../../libs/easing/Easing";
+import TangibleThinker from "../../libs/engine/thinkers/TangibleThinker";
+import * as CONSTS from "../../libs/engine/consts";
 
 const ANGLE_INT_MAX_TIME = 666;
 const ANGLE_INT_MIN_VALUE = 0.0;

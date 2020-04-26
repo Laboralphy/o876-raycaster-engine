@@ -17,7 +17,7 @@
 </template>
 
 <script>
-    import {fetchJSON} from "../../../../src/libs/fetch-json";
+    import {fetchJSON} from "../../../../libs/fetch-json";
 
     export default {
         name: "ExamplePage",

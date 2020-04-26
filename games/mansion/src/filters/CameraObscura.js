@@ -2,11 +2,11 @@
 // Effets visuels associés au smartphone
 // Classe abstraite
 
-import AbstractFilter from "../../../lib/src/filters/AbstractFilter";
-import Easing from "../../../lib/src/easing";
-import Rainbow from "../../../lib/src/rainbow";
-import CanvasHelper from "../../../lib/src/canvas-helper";
-import Reactor from "../../../lib/src/object-helper/Reactor";
+import AbstractFilter from "libs/filters/AbstractFilter";
+import Easing from "libs/easing";
+import Rainbow from "libs/rainbow";
+import CanvasHelper from "libs/canvas-helper";
+import Reactor from "libs/object-helper/Reactor";
 
 const SCREEN_W = 195; // screen width
 const SCREEN_H = 204; // screen height

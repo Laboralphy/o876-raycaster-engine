@@ -1,4 +1,4 @@
-import FPSControlThinker from "../../../lib/src/engine/thinkers/FPSControlThinker";
+import FPSControlThinker from "libs/engine/thinkers/FPSControlThinker";
 
 class PlayerThinker extends FPSControlThinker {
     constructor() {

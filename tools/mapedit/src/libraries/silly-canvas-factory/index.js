@@ -1,7 +1,7 @@
 /**
  * a silly class to factorize text
  */
-import CanvasHelper from "../../../../../src/libs/canvas-helper";
+import CanvasHelper from "../../../../../libs/canvas-helper";
 import * as CONSTS from "../../consts";
 
 class SillyCanvasFactory {
