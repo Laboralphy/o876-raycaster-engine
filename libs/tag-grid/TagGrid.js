@@ -54,17 +54,26 @@ class TagGrid extends Grid {
     getCellTags(x, y) {
         const aTagIds = this.cell(x, y);
         const aTags = [];
-        aTagIds.forEach(id => aTags.push({x, y, tag: quoteSplit(this.getTag(id))}));
+        aTagIds.forEach(id => aTags.push({x, y, tag: this.getTagCommand(id)}));
         return aTags;
     }
 
     /**
-     * returns the ttag maching the specified id
+     * returns the tag maching the specified id
      * @param id {number}
      * @return {string}
      */
     getTag(id) {
         return this._tagFactoryInv[id];
+    }
+
+    /**
+     * returns the quote-split tag maching the specified id
+     * @param id {number}
+     * @return {string[]}
+     */
+    getTagCommand(id) {
+        return quoteSplit(this.getTag(id))
     }
 
     /**

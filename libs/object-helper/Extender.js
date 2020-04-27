@@ -84,8 +84,6 @@ class Extender {
     static objectSet(oObj, sBranch, newValue) {
         const {node, key} = Extender.objectReachBranch(oObj, sBranch);
         if (Object.isSealed(node) && !(key in node)) {
-            console.trace();
-            console.log(node);
             throw new Error('cannot set ' + key + ' property : object is sealed');
         }
         node[key] = newValue;

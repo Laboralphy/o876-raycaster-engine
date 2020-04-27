@@ -1,3 +1,5 @@
+import * as CONSTS from '../../consts';
+
 /**
  * Initially locks a door tagged with "lock"
  * @param game {Game} game instance
@@ -9,10 +11,18 @@ export function init(game, remove, x, y) {
     game.engine.lockDoor(x, y, true);
 }
 
+/**
+ * This script will unlock a door if the player have the right unlocking item.
+ * @param game
+ * @param remove
+ * @param x
+ * @param y
+ * @param key
+ */
 export function push(game, remove, x, y, key) {
     if (!!key && game.logic.hasQuestItem(key)) {
         const d = game.logic.getItemData(key);
-        const bDiscard = d.type === 'key-one';
+        const bDiscard = d.type === CONSTS.ITEM_TYPE_DISCARDABLE_KEY;
         if (bDiscard) { // the item is a discardable key
             game.logic.removeQuestItem(key); // remove key from inventory
         }

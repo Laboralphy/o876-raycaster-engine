@@ -25,34 +25,74 @@ export default {
         }
     },
 
+    /**
+     * Define all the items available in game
+     * @param state
+     * @param items
+     */
     [TYPES.DEFINE_ITEMS]: function(state, {items}) {
         items.forEach(x => state.data.items.push(x));
     },
 
+    /**
+     * Change player HP value
+     * @param state
+     * @param value
+     */
     [TYPES.SET_PLAYER_HP]: function(state, {value}) {
         // value is ranged between 0 and hpMax
         state.player.attributes.hp = Math.min(state.player.attributes.hpMax, Math.max(0, value));
     },
 
+    /**
+     * Define maximum player HP value
+     * @param state
+     * @param value
+     */
     [TYPES.SET_PLAYER_MAX_HP]: function(state, {value}) {
         // value won't be below 1
         state.player.attributes.hpMax = Math.max(1, value);
     },
 
+    /**
+     * Increase camera charged energy
+     * @param state
+     */
     [TYPES.INC_ENERGY]: function(state) {
-        const e = state.player.energy;
+        const e = state.camera.energy;
         e.value = Math.min(e.maximum, e.value + e.rate);
     },
 
+    /**
+     * Decrease camera charged energy
+     * @param state
+     */
     [TYPES.DEC_ENERGY]: function(state) {
-        const e = state.player.energy;
+        const e = state.camera.energy;
         e.value = Math.max(0, e.value - e.depleteRate);
     },
 
+    /**
+     * Deplete charged energy : set energy to 0
+     * @param state
+     */
     [TYPES.DEPLETE_ENERGY]: function(state) {
-        const e = state.player.energy;
+        const e = state.camera.energy;
         e.value = 0;
     },
 
+    [TYPES.FLASH_TAG]: function(state, {tag}) {
+        const tags = state.camera.flashed.tags;
+        if (!tags.includes(tag)) {
+            tag.push(tag);
+        }
+    },
 
+    [TYPES.FLASH_UNTAG]: function(state, {tag}) {
+        const tags = state.camera.flashed.tags;
+        const n = tags.indexOf(tag);
+        if (n >= 0) {
+            tag.splice(n, 1);
+        }
+    }
 }

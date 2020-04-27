@@ -4,5 +4,6 @@ export default {
     thinkers: {
         PlayerThinker
     },
-    cameraThinker: 'PlayerThinker'
+    cameraThinker: 'PlayerThinker',
+    mouseSensitivity: 0.003
 };

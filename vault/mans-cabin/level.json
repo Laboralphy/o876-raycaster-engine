@@ -4336,7 +4336,9 @@
       },
       {
         "block": 22,
-        "tags": [],
+        "tags": [
+          "photo skull_face"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -6417,7 +6419,9 @@
       },
       {
         "block": 25,
-        "tags": [],
+        "tags": [
+          "photo fire_place"
+        ],
         "mark": {
           "color": 0,
           "shape": 0

@@ -74,6 +74,10 @@ class Engine {
         return this._filters;
     }
 
+    /**
+     * Returns the EventEmiiter instance
+     * @returns {EventEmitter}
+     */
     get events() {
         return this._events;
     }
@@ -458,8 +462,10 @@ class Engine {
      * starts the doom loop
      */
     startDoomLoop() {
+        console.log('start doom loop');
         this.stopDoomLoop();
         this._interval = setInterval(() => this._update(this._TIME_INTERVAL), this._TIME_INTERVAL);
+        console.log('interval function set');
     }
 
     /**
@@ -604,6 +610,10 @@ class Engine {
 
     addTag(x, y, sTag) {
         this._tm.addTag(x, y, sTag);
+    }
+
+    get tagManager() {
+        return this._tm;
     }
 
     tags(x, y) {

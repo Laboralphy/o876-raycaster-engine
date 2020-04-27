@@ -8,6 +8,8 @@ import CanvasHelper from "../canvas-helper";
 class GameAbstract {
 
     constructor() {
+        this._debug = false;
+        this._logGroups = [];
         this._screen = null;
         this._engine = null;
         this._options = {
@@ -60,6 +62,25 @@ class GameAbstract {
         this._runCalled = false;
     }
 
+    log(...args) {
+        if (this._debug) {
+            console.log('[g]', ...args);
+        }
+    }
+
+    logGroup(sGroup, ...args) {
+        if (this._debug) {
+            console.group(sGroup);
+            this._logGroups.push(sGroup);
+        }
+    }
+
+    logGroupEnd() {
+        if (this._debug) {
+            console.groupEnd(this._logGroups.pop());
+        }
+    }
+
     get screen() {
         return this._screen;
     }
@@ -73,6 +94,7 @@ class GameAbstract {
      * @return {GameAbstract}
      */
     initScreen() {
+        this.log('init screen')
         const surface = this._options.surface;
         const overlay = this._options.overlay;
         const screen = new UI.Screen({
@@ -88,6 +110,7 @@ class GameAbstract {
     }
 
     initEngine() {
+        this.log('init engine')
         const surface = this._screen.surface;       // getting the surface a.k.a the rendering canvas
         const engine = new RC.Engine();             // create an engine instance
         engine._config.cameraThinker = this._options.cameraThinker;
@@ -114,6 +137,7 @@ class GameAbstract {
     }
 
     initListeners() {
+        this.log('install event listeners')
         window.addEventListener('keydown', event => {
             this.keyDownHandler(event.key);
         });
@@ -127,7 +151,7 @@ class GameAbstract {
             this.keyUpHandler('Mouse' + event.button);
         });
         if (this._options.pointerlock) {
-            this._screen.on('mousemove', event => {
+            this.screen.on('mousemove', event => {
                 const engine = this._engine;
                 if (!!engine && !!engine.camera) {
                     engine.camera.thinker.look(event.x);
@@ -137,6 +161,7 @@ class GameAbstract {
     }
 
     init() {
+        this.log('init game')
         this.initScreen();
         this.initEngine();
         this.initListeners();
@@ -203,9 +228,12 @@ class GameAbstract {
      * @return {Promise<void>}
      */
     async loadLevel(name) {
+        this.log('loading level', name)
         this._engine.stopDoomLoop();
         await this._engine.loadLevel(name, this._options.loadProgress);
+        this.log('data successfuly loaded and parsed')
         this._engine.startDoomLoop();
+        this.log('doom loop started')
         this.enterLevel();
     }
 
@@ -213,6 +241,7 @@ class GameAbstract {
      * does something special (and synchronous) each time a level is loaded. activates pointerlock.
      */
     enterLevel() {
+        this.log('entering level');
         if (this._options.pointerlock) {
             this.setMouseSensitivity(this._options.mouseSensitivity);
             this._screen.pointerlock.enable();
@@ -220,6 +249,7 @@ class GameAbstract {
     }
 
     async run() {
+        this.log('starting game engine');
         this._runCalled = true;
         this.init();
         const aLevels = await fetchJSON(this._options.fetchLevelListAction);
@@ -228,6 +258,7 @@ class GameAbstract {
         if (!!level) {
             try {
                 await this.loadLevel(level.name);
+                this.log('level', level.name, 'successfully loaded');
             } catch (e) {
                 this.displayMessage('Error: ' + e.message);
             }
@@ -238,4 +269,3 @@ class GameAbstract {
 }
 
 export default GameAbstract;
-

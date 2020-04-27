@@ -5,7 +5,7 @@ export default {
     getPlayerAttributeHP: state => state.player.attributes.hp,
     getPlayerAttributeHPMax: state => state.player.attributes.hpMax,
 
-    getPlayerEnergy: state => state.player.energy.value,
-    getPlayerEnergyMax: state => state.player.energy.maximum,
+    getPlayerEnergy: state => state.camera.energy.value,
+    getPlayerEnergyMax: state => state.camera.energy.maximum,
 
 };

@@ -9,20 +9,29 @@ import FadeIn  from "libs/engine/filters/FadeIn";
 import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
 import Position  from "libs/engine/Position";
+import GeometryHelper from "libs/geometry/GeometryHelper";
 
 import THINKERS from './thinkers';
 
 class Game extends GameAbstract {
+
     // ... write your game here ...
     init() {
+        this._debug = true;
         super.init();
+        this.log('initialize user interface')
         this._ui = new UI('#vue-application');
+        this.log('initialize game logic and state')
         this._logic = new Logic(this._ui.store);
+        this.log('load state data')
         this.logic.loadData();
         // this.screen.on('pointerlock.enter', () => this._ui.store.commit('ui/SET_VISIBLE', {value: false}));
         // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
+        this.log('initialize camera visual filter')
         this._cameraFilter = new CameraObscura();
+        this.log('initialize update event');
         this.engine.events.on('update', () => this.engineUpdateHandler());
+        this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS);
     }
 
@@ -107,6 +116,23 @@ class Game extends GameAbstract {
         this._cameraFilter.energy.max = this.logic.prop('getPlayerEnergyMax');
     }
 
+    triggerPhotoShot(x, y) {
+        const engine = this.engine;
+        const tagGrid = engine.tagManager.grid;
+        const aTags = tagGrid.cell(x, y);
+        aTags.forEach(id => {
+            const tags = tagGrid.getTagCommand(id);
+            const [command, item] = tags;
+            if (command === 'photo') {
+                const oPhotoScripts = Scripts.photos;
+                const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
+                if (item in oPhotoScripts) {
+                    oPhotoScripts[item].main(this, remove, x, y);
+                }
+            }
+        });
+    }
+
     /**
      * shoot a photo
      */
@@ -123,14 +149,14 @@ class Game extends GameAbstract {
 
         // tous les blocs possédant un tag "photo" doivent déclencher un event
         const engine = this.engine;
-        const tagGrid = engine._tm._tg;
-        engine.raycaster._scanSectors.iterate((x, y) => {
-            const aTags = tagGrid.cell(x, y);
-            aTags.forEach(id => {
-                const sTag = tagGrid.getTag(id);
-                console.log(sTag);
-            })
-        });
+        const oAimedCell = engine.raycaster.aimedCell;
+        if (('xCell' in oAimedCell) && ('yCell' in oAimedCell)) {
+            const p = engine.camera.position;
+            const d = GeometryHelper.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
+            if (d <= CONSTS.CAMERA_EXAMINATION_RANGE) {
+                this.triggerPhotoShot(oAimedCell.xCell, oAimedCell.yCell);
+            }
+        }
     }
 
     toggleCamera() {
@@ -269,10 +295,13 @@ class Game extends GameAbstract {
      * when 'tag.item.push' is triggered, the script "item" is loaded and the function "item.push()" is called.
      */
     initTagHandlers() {
+        const oScriptActions = Scripts.actions;
+        this.logGroup('tag handlers')
+        this.log('init')
         this.getTags().forEach(({tag, x, y}) => {
             const s = tag[0];
-            if (s in Scripts) {
-                const script = Scripts[s];
+            if (s in oScriptActions) {
+                const script = oScriptActions[s];
                 if ('init' in script) {
                     let bRemove = false;
                     const pRemove = function () {
@@ -282,16 +311,23 @@ class Game extends GameAbstract {
                 }
             }
         });
+        /**
+         * ee = event emitter
+         * @type {EventEmitter|module:events.internal|EventEmitter|number|ASTElementHandlers}
+         */
         const ee = this.engine.events;
+
         const actions = ['push', 'enter', 'exit'];
-        for (let s in Scripts) {
-            const script = Scripts[s];
+        for (let s in oScriptActions) {
+            const script = oScriptActions[s];
             actions.forEach(a => {
                 if (a in script) {
+                    this.log('script', s, a)
                     ee.on('tag.' + s + '.' + a,({x, y, parameters, remove}) => script[a](this, remove, x, y, ...parameters));
                 }
             });
         }
+        this.logGroupEnd();
     }
 
 

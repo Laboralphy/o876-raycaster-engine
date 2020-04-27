@@ -3,6 +3,12 @@ const {VueLoaderPlugin} = require('vue-loader');
 
 module.exports = {
     mode: "development",
+    resolve: {
+        alias: {
+            '@': __dirname,
+            'libs': path.resolve(__dirname, '../../libs')
+        }
+    },
     entry: {
         game: path.resolve(__dirname, 'src/index.js'),
     },
