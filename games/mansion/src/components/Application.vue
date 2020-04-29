@@ -1,7 +1,7 @@
 <template>
-    <div class="ui-components">
+    <div class="ui-components" data-request-pointer-lock="">
 
-        <section v-if="isVisible">
+        <section v-if="isHUDVisible">
             <HUD pos="tl">
                 <Vitals></Vitals>
                 <Scores></Scores>
@@ -14,6 +14,8 @@
             <HUD pos="br"><p>bottom right</p></HUD>
         </section>
 
+        <UIFrame v-if="isUIFrameVisible"></UIFrame>
+
         <Popups></Popups>
     </div>
 </template>
@@ -24,19 +26,20 @@
     import Vitals from "./Vitals.vue";
     import {createNamespacedHelpers} from 'vuex';
     import Scores from "./Scores.vue";
+    import UIFrame from "./UIFrame.vue";
 
     const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
         name: "Application",
-        components: {Scores, Vitals, HUD, Popups},
+        components: {UIFrame, Scores, Vitals, HUD, Popups},
         computed: {
             ...uiMapGetters([
-                'isVisible',
-                'isShotVisible'
+                'isHUDVisible',
+                'isShotVisible',
+                'isUIFrameVisible'
             ])
         }
-
     }
 </script>
 

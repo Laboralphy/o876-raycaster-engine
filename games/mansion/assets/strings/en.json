@@ -1,0 +1,29 @@
+{
+  "ITEM_ACQUIRED" : "You acquired : %s.",
+
+  "DOOR_LOCKED" : "This door is locked.",
+  "DOOR_UNLOCKED" : "You unlocked the door with : %s.",
+
+  "ATTR_HITPOINTS" : "Sanity",
+
+  "SHOT_FATAL" : "Fatal frame",
+  "SHOT_ZERO" : "Zero shot",
+  "SHOT_CLOSE" : "Point-blank shot",
+  "SHOT_CORE" : "Core shot",
+  "SHOT_DOUBLE" : "Double shot",
+  "SHOT_TRIPLE" : "Triple shot",
+  "SHOT_MULTIPLE" : "Multiple shot",
+  "SHOT_VALUE" : "Value",
+
+  "PHOTO_TYPES_DEBUG": "_debug",
+  "PHOTO_TYPES_ART": "Art",
+  "PHOTO_TYPES_CLUE": "Clues",
+  "PHOTO_TYPES_WRAITHS": "Wraiths",
+  "PHOTO_TYPES_ARCHIVES": "Archives",
+
+  "MAIN_TAB_ALBUM": "Album",
+  "MAIN_TAB_INV": "Inventory",
+  "MAIN_TAB_NOTES": "Notes",
+
+  "k_cabin" : "Cabin key"
+}

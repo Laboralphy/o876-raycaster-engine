@@ -2,7 +2,9 @@ export default {
     getPopup: state => state.popup,
     getPopupQueue: state => state.popup.queue,
 
-    isVisible: state => state.visible,
+    isHUDVisible: state => state.hud.visible,
+    isUIFrameVisible: state => state.uiframe.visible,
+    isUIFrameFadingOut: state => state.uiframe.fadeOut,
 
     isShotVisible: state => state.shot.visible,
     isShotFatal: state => state.shot.shutter,
@@ -13,5 +15,13 @@ export default {
     isShotTriple: state => state.shot.targets === 3,
     isShotMultiple: state => state.shot.targets > 3,
 
-    getShotScore: state => state.shot.value
+    getShotScore: state => state.shot.value,
+
+    getAlbumPhotos: state => state.album.photos.filter(p => p.type === state.album.activeType),
+    getPhotoTypes: state => {
+        const aTypes = new Set(state.album.photos.map(p => p.type));
+        return ([...aTypes]).sort();
+    },
+    getAlbumActiveType: state => state.album.activeType,
+    getUIActiveTab: state => state.uiframe.activeTab
 };

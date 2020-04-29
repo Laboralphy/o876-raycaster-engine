@@ -1,22 +1,11 @@
 import * as MUTATIONS from './store/modules/logic/mutation-types';
 import * as ACTIONS from './store/modules/logic/action-types';
+import StoreAbstract from "./StoreAbstract";
 
-class Logic {
-
+class Logic extends StoreAbstract {
     constructor(store) {
+        super('logic');
         this.store = store;
-    }
-
-    dispatch(action, payload) {
-        this.store.dispatch('logic/' + action, payload);
-    }
-
-    commit(mutation, payload) {
-        this.store.commit('logic/' + mutation, payload);
-    }
-
-    prop(getter) {
-        return this.store.getters['logic/' + getter];
     }
 
     loadData() {
@@ -49,6 +38,5 @@ class Logic {
         return this.prop('getQuestItems').indexOf(ref) >= 0;
     }
 }
-
 
 export default Logic;

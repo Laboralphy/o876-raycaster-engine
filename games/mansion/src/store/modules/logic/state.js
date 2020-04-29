@@ -17,8 +17,8 @@ export default {
             power: 100,
             depleteRate: 0.7
         },
-        flashed: {
-            tags: []
+        sensor: {
+
         }
     },
 

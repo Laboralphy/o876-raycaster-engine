@@ -4337,7 +4337,8 @@
       {
         "block": 22,
         "tags": [
-          "photo skull_face"
+          "photo skull_face",
+          "ecto"
         ],
         "mark": {
           "color": 0,

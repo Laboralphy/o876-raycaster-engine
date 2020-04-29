@@ -6,12 +6,14 @@ import UI from './UI';
 import Logic from './Logic';
 import Scripts from './scripts';
 import FadeIn  from "libs/engine/filters/FadeIn";
+import Flash from "libs/engine/filters/Flash";
 import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
 import Position  from "libs/engine/Position";
 import GeometryHelper from "libs/geometry/GeometryHelper";
 
 import THINKERS from './thinkers';
+import CanvasHelper from "libs/canvas-helper";
 
 class Game extends GameAbstract {
 
@@ -23,16 +25,16 @@ class Game extends GameAbstract {
         this._ui = new UI('#vue-application');
         this.log('initialize game logic and state')
         this._logic = new Logic(this._ui.store);
-        this.log('load state data')
+        this.log('load state data');
         this.logic.loadData();
-        // this.screen.on('pointerlock.enter', () => this._ui.store.commit('ui/SET_VISIBLE', {value: false}));
-        // this.screen.on('pointerlock.exit', () => this._ui.store.commit('ui/SET_VISIBLE', {value: true}));
         this.log('initialize camera visual filter')
         this._cameraFilter = new CameraObscura();
         this.log('initialize update event');
         this.engine.events.on('update', () => this.engineUpdateHandler());
         this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS);
+        this.initScreenHandler();
+        this._cvsPhoto = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
     }
 
 //
@@ -52,6 +54,35 @@ class Game extends GameAbstract {
     }
 
 
+//
+//                        _       _             __
+//  _   _ ___  ___ _ __  (_)_ __ | |_ ___ _ __ / _| __ _  ___ ___
+// | | | / __|/ _ \ '__| | | '_ \| __/ _ \ '__| |_ / _` |/ __/ _ \
+// | |_| \__ \  __/ |    | | | | | ||  __/ |  |  _| (_| | (_|  __/
+//  \__,_|___/\___|_|    |_|_| |_|\__\___|_|  |_|  \__,_|\___\___|
+//
+
+    /**
+     * Called when the user enters UI mode by exiting FPS Mode
+     */
+    enterUI() {
+        this.engine.stopDoomLoop();
+        this.ui.show();
+        this.screen.surface.classList.add('alpha50');
+    }
+
+    /**
+     * Called when the user exits UI mode and enters FPS Mode
+     */
+    exitUI() {
+        this.engine.startDoomLoop();
+        this.ui.hide();
+        this.screen.surface.classList.remove('alpha50');
+    }
+
+
+
+
 //                       _                                                                 _
 //   _____   _____ _ __ | |_   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
 //  / _ \ \ / / _ \ '_ \| __| | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
@@ -59,6 +90,10 @@ class Game extends GameAbstract {
 //  \___| \_/ \___|_| |_|\__| |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
 //                                                         |___/
 
+
+    /**
+     * Synchronisation des données de l'engine avec le store
+     */
     engineUpdateHandler() {
         // checks for camera energy
         if (this.isCameraRaised()) {
@@ -69,6 +104,21 @@ class Game extends GameAbstract {
         } else {
         }
     }
+
+
+    /**
+     * init screen event handlers
+     */
+    initScreenHandler() {
+        this.log('init screen handler');
+        this.screen.on('pointerlock.exit', () => {
+            this.enterUI();
+        });
+        this.screen.on('pointerlock.enter', () => {
+            this.exitUI();
+        });
+    }
+
 
 
 //            _                 _          _                  _   _               _
@@ -116,49 +166,77 @@ class Game extends GameAbstract {
         this._cameraFilter.energy.max = this.logic.prop('getPlayerEnergyMax');
     }
 
-    triggerPhotoShot(x, y) {
-        const engine = this.engine;
-        const tagGrid = engine.tagManager.grid;
-        const aTags = tagGrid.cell(x, y);
-        aTags.forEach(id => {
-            const tags = tagGrid.getTagCommand(id);
-            const [command, item] = tags;
-            if (command === 'photo') {
-                const oPhotoScripts = Scripts.photos;
-                const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
-                if (item in oPhotoScripts) {
-                    oPhotoScripts[item].main(this, remove, x, y);
-                }
-            }
-        });
-    }
-
     /**
-     * shoot a photo
+     * checks if a "photo" tagged cell is currently aimed
+     * if so, triggers the corresponding script
      */
-    flashCamera() {
-        this.engine.filters.link(new FadeIn({
-            color: 'white',
-            duration: CONSTS.FLASH_DURATION
-        }));
-        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
-        // pour tous les fantomes present dans la ligne de mire
-        // appliquer un filter ghostshot
-        // calculer les dégats
-        // lancer des script pour les spectres
-
-        // tous les blocs possédant un tag "photo" doivent déclencher un event
+    checkAimedCell() {
         const engine = this.engine;
         const oAimedCell = engine.raycaster.aimedCell;
         if (('xCell' in oAimedCell) && ('yCell' in oAimedCell)) {
             const p = engine.camera.position;
             const d = GeometryHelper.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
             if (d <= CONSTS.CAMERA_EXAMINATION_RANGE) {
-                this.triggerPhotoShot(oAimedCell.xCell, oAimedCell.yCell);
+                const x = oAimedCell.xCell;
+                const y = oAimedCell.yCell;
+                const tagGrid = engine.tagManager.grid;
+                const aTags = tagGrid.cell(x, y);
+                aTags.forEach(id => {
+                    const tags = tagGrid.getTagCommand(id);
+                    const [command, item] = tags;
+                    if (command === 'photo') {
+                        const oPhotoScripts = Scripts.photos;
+                        const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
+                        if (item in oPhotoScripts) {
+                            oPhotoScripts[item].main(this, remove, x, y);
+                        }
+                    }
+                });
+                // DEBUG
+                const sPhoto = this.capture();
+                console.log('et les captures ?')
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
+                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
             }
         }
     }
 
+    /**
+     * shoot a photo
+     */
+    flashCamera() {
+        // capture screenshot
+        this.engine.raycaster.screenshot();
+        this.engine.filters.link(new Flash({
+            duration: CONSTS.FLASH_DURATION * 2,
+            strength: 6
+        }));
+        this.engine.filters.link(new FadeIn({
+            color: 'white',
+            duration: CONSTS.FLASH_DURATION / 2
+        }));
+        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+        // pour tous les fantomes present dans la ligne de mire
+        // appliquer un filter ghostshot
+        // calculer les dégats
+        // lancer des script pour les spectres
+        this.checkAimedCell();
+    }
+
+    /**
+     * switch form game/camera mode
+     */
     toggleCamera() {
         if (this.isCameraRaised()) {
             this.dropCamera();
@@ -167,6 +245,9 @@ class Game extends GameAbstract {
         }
     }
 
+    /**
+     * show camera interface and go to camera navigation mode
+     */
     raiseCamera() {
         if (this.isCameraRaisable()) {
             this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
@@ -178,6 +259,9 @@ class Game extends GameAbstract {
         }
     }
 
+    /**
+     * hide camera interface and go back to game navigation mode
+     */
     dropCamera() {
         const oCamera = this.engine.camera;
         oCamera.data.camera = false;
@@ -187,15 +271,50 @@ class Game extends GameAbstract {
         this.syncCameraStore();
     }
 
+    /**
+     * returns true if the camera is currently raised
+     * @returns {boolean}
+     */
     isCameraRaised() {
         return this._cameraFilter.isVisible();
     }
 
+    /**
+     * return true if the camera can be raised at the present moment
+     * @returns {boolean}
+     */
     isCameraRaisable() {
         return true;
     }
 
-
+    /**
+     * Captures an image at the given location (player location by default)
+     * @param pos {Position}
+     * @returns {string} data url of the image (jpeg)
+     */
+    capture(pos = null) {
+        // creation d'une capture
+        if (pos === null) {
+            pos = this.engine.camera.position;
+        }
+        const oScreenShot = this.engine.screenshot(pos.x, pos.y, pos.angle, pos.z);
+        const photo = this._cvsPhoto;
+        const ctx = photo.getContext('2d');
+        const sw =  oScreenShot.width;
+        const sh =  oScreenShot.height;
+        const dw =  photo.width;
+        const dh =  photo.height;
+        const dx = 0;
+        const dy = 0;
+        const sx = (sw - dw) >> 1;
+        const sy = (sh - dh) >> 1;
+        ctx.drawImage(
+            oScreenShot,
+            sx, sy, dw, dh,
+            dx, dy, dw, dh
+        );
+        return photo.toDataURL('image/jpeg');
+    }
 
 //  _                _                   _        _   _
 // | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___

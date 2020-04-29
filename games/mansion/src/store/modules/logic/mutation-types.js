@@ -8,6 +8,3 @@ export const SET_PLAYER_MAX_HP = 'SET_PLAYER_MAX_HP';
 export const INC_ENERGY = 'INC_ENERGY';
 export const DEC_ENERGY = 'DEC_ENERGY';
 export const DEPLETE_ENERGY = 'DEPLETE_ENERGY';
-
-export const FLASH_TAG = 'FLASH_TAG';
-export const FLASH_UNTAG = 'FLASH_UNTAG';

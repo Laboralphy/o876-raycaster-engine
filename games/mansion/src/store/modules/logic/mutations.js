@@ -79,20 +79,5 @@ export default {
     [TYPES.DEPLETE_ENERGY]: function(state) {
         const e = state.camera.energy;
         e.value = 0;
-    },
-
-    [TYPES.FLASH_TAG]: function(state, {tag}) {
-        const tags = state.camera.flashed.tags;
-        if (!tags.includes(tag)) {
-            tag.push(tag);
-        }
-    },
-
-    [TYPES.FLASH_UNTAG]: function(state, {tag}) {
-        const tags = state.camera.flashed.tags;
-        const n = tags.indexOf(tag);
-        if (n >= 0) {
-            tag.splice(n, 1);
-        }
     }
 }

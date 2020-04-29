@@ -29,8 +29,12 @@ export default {
         state.popup.queue.push({text, icon, time});
     },
 
-    [TYPES.SET_VISIBLE]: function(state, {value}) {
-        state.visible = value;
+    [TYPES.SET_HUD_VISIBLE]: function(state, {value}) {
+        state.hud.visible = value;
+    },
+
+    [TYPES.SET_UI_FRAME_VISIBLE]: function(state, {value}) {
+        state.uiframe.visible = value;
     },
 
     [TYPES.SET_SHOT]: function(state, {
@@ -47,5 +51,35 @@ export default {
 
     [TYPES.CLEAR_SHOT]: function(state) {
         state.shot.visible = false;
+    },
+
+    [TYPES.HIDE_ALL]: function(state) {
+        state.uiframe.visible = false;
+    },
+
+    [TYPES.UI_FADE_OUT]: function(state) {
+        state.uiframe.fadeOut = true;
+    },
+
+    [TYPES.UI_FADE_IN]: function(state) {
+        state.uiframe.fadeOut = false;
+    },
+
+    [TYPES.STORE_PHOTO]: function(state, {content, type, value}) {
+        const id = state.album.photoId++;
+        state.album.photos.push({
+            id,
+            type,
+            image: content,
+            value
+        });
+    },
+
+    [TYPES.SET_ALBUM_ACTIVE_TYPE]: function(state, {value}) {
+        state.album.activeType = value;
+    },
+
+    [TYPES.SET_MAIN_ACTIVE_TAB]: function(state, {value}) {
+        state.uiframe.activeTab = value;
     }
 }

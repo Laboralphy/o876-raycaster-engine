@@ -1,4 +1,4 @@
-import * as STRINGS from '../../strings';
+import STRINGS from '../../../assets/strings';
 
 export default {
     data: function() {

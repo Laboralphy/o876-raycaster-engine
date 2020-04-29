@@ -56,7 +56,6 @@ export default {
     },
 
     [ACTIONS.SET_SHOT]: function({commit, dispatch}, payload) {
-        console.log('set shot', payload);
         if (!!TIMEOUT_SHOT) {
             console.log('previous time out present', payload);
             // Scores are being displayed currently
@@ -70,5 +69,19 @@ export default {
             commit(MUTATIONS.CLEAR_SHOT);
             TIMEOUT_SHOT = null;
         }, CONSTS.SHOT_DISPLAY_DURATION);
+    },
+
+    [ACTIONS.HIDE_UI_FRAME]: function({commit}) {
+        commit(MUTATIONS.UI_FADE_OUT);
+        setTimeout(() => {
+            commit(MUTATIONS.HIDE_ALL);
+            commit(MUTATIONS.SET_HUD_VISIBLE, {value: true});
+        }, 300);
+    },
+
+    [ACTIONS.SHOW_UI_FRAME]: function({commit}) {
+        commit(MUTATIONS.SET_UI_FRAME_VISIBLE, {value: true});
+        commit(MUTATIONS.SET_HUD_VISIBLE, {value: false});
+        setTimeout(() => commit(MUTATIONS.UI_FADE_IN), 16);
     }
 }

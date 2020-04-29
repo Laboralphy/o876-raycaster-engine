@@ -6,11 +6,11 @@ Base style sheet
 body {
     color: #AAA;
     background-color: black;
+    font-family: "Courier New", Courier, monospace;
 }
 
 /* canvas and images are optimized for speed rendering, no smoothing */
 canvas, img {
     display: block;
     padding: 0;
-    image-rendering: optimizeSpeed;
 }

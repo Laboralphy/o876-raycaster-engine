@@ -21,3 +21,33 @@
     justify-content: center;
 }
 
+.ui-window-title {
+    font-family: "KingthingsTrypewriter2", Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: black;
+    text-shadow: rgba(0, 0, 0, 0.5) 0.08em 0.08em 0.2em;
+}
+
+div.ui-menu-window {
+    position: absolute;
+    width: 60%;
+    height: 90%;
+    top: 5%;
+    left: 20%;
+    background-color: rgb(181, 151, 91);
+    background-image: url(../uigfx/notebook-texture.png);
+    border: solid 0.2em rgb(37, 26, 26);
+    border-radius: 0.5em;
+}
+
+canvas.screen {
+    transition-property: opacity;
+    transition-timing-function: linear;
+    transition-duration: 300ms;
+    opacity: 1;
+}
+
+canvas.screen.alpha50 {
+    opacity: 0.5;
+}

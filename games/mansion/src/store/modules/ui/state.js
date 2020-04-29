@@ -7,7 +7,15 @@ export default {
         queue: []
     },
 
-    visible: false,
+    hud: {
+        visible: false
+    },
+
+    uiframe: {
+        visible: false,
+        fadeOut: false,
+        activeTab: 'album'
+    },
 
     shot: { // information sur le dernier tir
         visible: false,
@@ -17,5 +25,11 @@ export default {
         energy: 0, // quantité d'energy disponible lors du shot
         targets: 0, // nombre de cible touché par le shot
         shutter: false, // photo prise pendant le shutter chance
+    },
+
+    album: {
+        photoId: 1,
+        activeType: 'debug',
+        photos: [] // {id: '', image: '...', type: x, value: x, }
     }
 };

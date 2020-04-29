@@ -4,25 +4,16 @@ import store from './store';
 import * as UI_MUTATIONS from './store/modules/ui/mutation-types';
 import * as UI_ACTIONS from './store/modules/ui/action-types';
 import Application from './components/Application.vue';
-import * as STRINGS from './strings';
+import STRINGS from '../assets/strings';
+import StoreAbstract from "./StoreAbstract";
 
 Vue.use(Vuex);
 
-class UI {
+class UI extends StoreAbstract {
     constructor(sDomSelector) {
+        super('ui');
         this._vue = this.createApplication(sDomSelector);
-    }
-
-    get store() {
-        return this._vue.$store;
-    }
-
-    dispatch(action, payload) {
-        this.store.dispatch('ui/' + action, payload);
-    }
-
-    commit(mutation, payload) {
-        this.store.commit('ui/' + mutation, payload);
+        this.store = this._vue.$store;
     }
 
     createApplication(sWhere) {
@@ -53,7 +44,19 @@ class UI {
             let sParamText = p in STRINGS ? STRINGS[p] : p;
             text = text.replace(/\%s/, sParamText);
         }
-        return this._vue.$store.dispatch('ui/' + UI_ACTIONS.SHOW_POPUP, {text, icon});
+        return this.dispatch(UI_ACTIONS.SHOW_POPUP, {text, icon});
+    }
+
+    show() {
+        this.dispatch(UI_ACTIONS.SHOW_UI_FRAME, {});
+    }
+
+    hide() {
+        this.dispatch(UI_ACTIONS.HIDE_UI_FRAME, {});
+    }
+
+    storePhoto(content, type, value) {
+        this.commit(UI_MUTATIONS.STORE_PHOTO, {content, type, value});
     }
 }
 

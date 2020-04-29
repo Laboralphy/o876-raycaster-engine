@@ -417,14 +417,23 @@ class Engine {
             const loc = camera.position;
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(loc.x, loc.y, loc.angle, loc.z);
+            this._events.emit('render');
             this._filters.render(rend._renderCanvas);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {
                 rend.flip(this._renderContext);
-                this._events.emit('render');
+                this._events.emit('flip');
             });
         }
+    }
+
+    screenshot(x, y, angle, z) {
+        const rc = this.raycaster;
+        rc.render(x, y, angle, z);
+        const oCanvas = CanvasHelper.createCanvas(this._renderCanvas.width, this._renderCanvas.height);
+        rc.flip(oCanvas.getContext('2d'));
+        return oCanvas;
     }
 
     /**
@@ -462,10 +471,8 @@ class Engine {
      * starts the doom loop
      */
     startDoomLoop() {
-        console.log('start doom loop');
         this.stopDoomLoop();
         this._interval = setInterval(() => this._update(this._TIME_INTERVAL), this._TIME_INTERVAL);
-        console.log('interval function set');
     }
 
     /**
