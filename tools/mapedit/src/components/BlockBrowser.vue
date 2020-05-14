@@ -59,16 +59,16 @@
                 deleteBlock: ACTION.DELETE_BLOCK
             }),
 
-            ...editorMapMutations([
-                MUTATION.BLOCKBROWSER_SET_SELECTED
-            ]),
+            ...editorMapMutations({
+                selectBlock: MUTATION.BLOCKBROWSER_SET_SELECTED
+            }),
 
 
             onClicked: function(id) {
                 if (this.getBlockBrowserSelected === id) {
-                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
+                    this.selectBlock({value: null});
                 } else {
-                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: id});
+                    this.selectBlock({value: id});
                 }
             },
 
@@ -78,15 +78,14 @@
 
             deleteClicked() {
                 if (confirm('Delete this block ?')) {
-                    this.deleteBlock({id: this.selected});
-                    this.selected = null;
-                    this[MUTATION.BLOCKBROWSER_SET_SELECTED]({value: null});
+                    this.deleteBlock({id: this.getBlockBrowserSelected});
+                    this.selectBlock({value: null});
                 }
             },
 
 
             modifyClicked() {
-                this.$router.push('/build-block/' + this.selected);
+                this.$router.push('/build-block/' + this.getBlockBrowserSelected);
             }
         }
     }

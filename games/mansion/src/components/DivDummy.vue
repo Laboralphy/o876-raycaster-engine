@@ -1,5 +1,5 @@
 <template>
-    <div class="ui-menu-window">
+    <div class="ui-menu-window ui-size-60-90">
         <TitleAndCo :title="title"></TitleAndCo>
     </div>
 </template>

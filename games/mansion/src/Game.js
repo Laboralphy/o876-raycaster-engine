@@ -11,13 +11,14 @@ import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
 import Position  from "libs/engine/Position";
 import GeometryHelper from "libs/geometry/GeometryHelper";
+import ObjectExtender from "libs/object-helper/Extender";
 
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
+import Album from "./Album";
 
 class Game extends GameAbstract {
 
-    // ... write your game here ...
     init() {
         this._debug = true;
         super.init();
@@ -25,6 +26,7 @@ class Game extends GameAbstract {
         this._ui = new UI('#vue-application');
         this.log('initialize game logic and state')
         this._logic = new Logic(this._ui.store);
+        this._album = new Album(this._ui.store);
         this.log('load state data');
         this.logic.loadData();
         this.log('initialize camera visual filter')
@@ -34,7 +36,7 @@ class Game extends GameAbstract {
         this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS);
         this.initScreenHandler();
-        this._cvsPhoto = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
+        this._locators = {};
     }
 
 //
@@ -53,6 +55,9 @@ class Game extends GameAbstract {
         return this._logic;
     }
 
+    get album() {
+        return this._album;
+    }
 
 //
 //                        _       _             __
@@ -61,6 +66,15 @@ class Game extends GameAbstract {
 // | |_| \__ \  __/ |    | | | | | ||  __/ |  |  _| (_| | (_|  __/
 //  \__,_|___/\___|_|    |_|_| |_|\__\___|_|  |_|  \__,_|\___\___|
 //
+    dimSurface() {
+        const oSurface = this.screen.surface;
+        oSurface.classList.add('dimmed');
+    }
+
+    undimSurface() {
+        const oSurface = this.screen.surface;
+        oSurface.classList.remove('dimmed');
+    }
 
     /**
      * Called when the user enters UI mode by exiting FPS Mode
@@ -68,7 +82,7 @@ class Game extends GameAbstract {
     enterUI() {
         this.engine.stopDoomLoop();
         this.ui.show();
-        this.screen.surface.classList.add('alpha50');
+        this.dimSurface();
     }
 
     /**
@@ -77,10 +91,8 @@ class Game extends GameAbstract {
     exitUI() {
         this.engine.startDoomLoop();
         this.ui.hide();
-        this.screen.surface.classList.remove('alpha50');
+        this.undimSurface();
     }
-
-
 
 
 //                       _                                                                 _
@@ -89,7 +101,6 @@ class Game extends GameAbstract {
 // |  __/\ V /  __/ | | | |_  | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
 //  \___| \_/ \___|_| |_|\__| |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
 //                                                         |___/
-
 
     /**
      * Synchronisation des données de l'engine avec le store
@@ -101,10 +112,8 @@ class Game extends GameAbstract {
             const bGhost = true;
             this.logic.commit(bGhost ? MUTATIONS.INC_ENERGY : MUTATIONS.DEPLETE_ENERGY);
             this.syncCameraStore();
-        } else {
         }
     }
-
 
     /**
      * init screen event handlers
@@ -119,7 +128,27 @@ class Game extends GameAbstract {
         });
     }
 
-
+//                _       _
+//  ___  ___ _ __(_)_ __ | |_ ___
+// / __|/ __| '__| | '_ \| __/ __|
+// \__ \ (__| |  | | |_) | |_\__ \
+// |___/\___|_|  |_| .__/ \__|___/
+//                 |_|
+    runScript(sName, ...params) {
+        let script = null;
+        try {
+            script = ObjectExtender.objectGet(Scripts, sName);
+        } catch (e) {
+            return;
+        }
+        if (typeof script === 'function') {
+            return script(this, ...params);
+        }
+        if (typeof script === 'object' && 'main' in script && typeof script.main === 'function') {
+            return script.main(this, ...params);
+        }
+        throw new Error('Unable to run script : "' + sName + '". No published function.');
+    }
 
 //            _                 _          _                  _   _               _
 //   _____  _| |_ ___ _ __   __| | ___  __| |  _ __ ___   ___| |_| |__   ___   __| |___
@@ -137,18 +166,7 @@ class Game extends GameAbstract {
 
     keyDownHandler(key) {
         super.keyDownHandler(key);
-        // manage the camera
-        switch (key) {
-            case 'Mouse0':
-                if (this.isCameraRaised()) {
-                    this.flashCamera();
-                }
-                break;
-
-            case 'Mouse2':
-                this.toggleCamera();
-                break;
-        }
+        this.runScript('keys.' + key.toLowerCase() + '.keydown');
     }
 
 //        _                                    _   _
@@ -192,24 +210,15 @@ class Game extends GameAbstract {
                         }
                     }
                 });
-                // DEBUG
-                const sPhoto = this.capture();
-                console.log('et les captures ?')
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
-                this.ui.storePhoto(sPhoto, 'debug', Math.random() * 100 + 100 | 0);
             }
+            //this.storePhoto('debug', Math.random() * 100 + 100 | 0, 'blip blap blop bloup debug' + (Math.random() * 10 + 10 | 0).toString());
         }
+    }
+
+    storePhoto(type, value, ref, oPosition = null) {
+        const oPhoto = this.capture(oPosition);
+        this.album.storePhoto(oPhoto.toDataURL('image/jpeg'), type, value, ref);
+        return oPhoto;
     }
 
     /**
@@ -284,13 +293,13 @@ class Game extends GameAbstract {
      * @returns {boolean}
      */
     isCameraRaisable() {
-        return true;
+        return !this.isPlayerFrozen();
     }
 
     /**
      * Captures an image at the given location (player location by default)
      * @param pos {Position}
-     * @returns {string} data url of the image (jpeg)
+     * @returns {HTMLCanvasElement} image (jpeg)
      */
     capture(pos = null) {
         // creation d'une capture
@@ -298,7 +307,7 @@ class Game extends GameAbstract {
             pos = this.engine.camera.position;
         }
         const oScreenShot = this.engine.screenshot(pos.x, pos.y, pos.angle, pos.z);
-        const photo = this._cvsPhoto;
+        const photo = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
         const ctx = photo.getContext('2d');
         const sw =  oScreenShot.width;
         const sh =  oScreenShot.height;
@@ -313,7 +322,25 @@ class Game extends GameAbstract {
             sx, sy, dw, dh,
             dx, dy, dw, dh
         );
-        return photo.toDataURL('image/jpeg');
+        return photo;
+    }
+
+    /**
+     * Freeze all player actions and movement
+     */
+    freezePlayer() {
+        this.engine.camera.thinker.frozen = true;
+    }
+
+    /**
+     * unfreeze player
+     */
+    thawPlayer() {
+        this.engine.camera.thinker.frozen = false;
+    }
+
+    isPlayerFrozen() {
+        return this.engine.camera.thinker.frozen;
     }
 
 //  _                _                   _        _   _
@@ -321,7 +348,6 @@ class Game extends GameAbstract {
 // | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
 // | |  __/\ V /  __/ | | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
 // |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
-
 
     /**
      * Spawns a ghost at the given cell coordinates
@@ -331,11 +357,19 @@ class Game extends GameAbstract {
      * @returns {Entity}
      */
     spawnGhost(sRef, xCell, yCell) {
-        const engine = this.engine;
-        const ps = engine.raycaster.options.metrics.spacing;
-        const ps2 = ps >> 1;
-        return engine.createEntity(sRef, new Position({x: xCell * ps + ps2, y: yCell * ps + ps2}));
+        return engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
     }
+
+
+
+
+
+//      _                _                                  _   _
+//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//                                    |_|
 
 
     /**
@@ -358,8 +392,18 @@ class Game extends GameAbstract {
      */
     rotateDecals(x, y, bClockWise) {
         const csm = this.engine.raycaster._csm;
-        csm.rotateWallSurfaces(x, y, !bClockWise);
+        csm.rotateWallSurfaces(x, y, bClockWise);
     }
+
+
+
+
+//  _                                           _   _
+// | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+// | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//           |___/        |_|
 
     /**
      * Adds a tag on a cell
@@ -372,14 +416,6 @@ class Game extends GameAbstract {
         return this.engine._tm._tg.addTag(x, y, sTag);
     }
 
-
-
-//  _                                           _   _
-// | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
-// | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
-// | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
-//  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
-//           |___/        |_|
     /**
      * Returns a list of all tags present on the maps, the returns list contains items with these properties :
      * {
@@ -394,7 +430,8 @@ class Game extends GameAbstract {
         tg.iterate((x, y, cell) => { // iterates all cells of the tag grid
             cell.forEach(t => aTags.push({
                 x, y,
-                tag: quoteSplit(tg.getTag(t))
+                tag: quoteSplit(tg.getTag(t)),
+                id: t
             }));
         });
         return aTags;
@@ -414,21 +451,23 @@ class Game extends GameAbstract {
      * when 'tag.item.push' is triggered, the script "item" is loaded and the function "item.push()" is called.
      */
     initTagHandlers() {
-        const oScriptActions = Scripts.actions;
+        const oScriptActions = Scripts.tags;
         this.logGroup('tag handlers')
-        this.log('init')
-        this.getTags().forEach(({tag, x, y}) => {
-            const s = tag[0];
-            if (s in oScriptActions) {
-                const script = oScriptActions[s];
-                if ('init' in script) {
-                    let bRemove = false;
-                    const pRemove = function () {
-                        bRemove = true;
-                    };
-                    script.init(this, pRemove, x, y)
-                }
+        this.log('calling init on each tag scripts');
+        const aDeleted = [];
+        this.getTags().forEach(({id, tag, x, y}) => {
+            const sCommand = tag[0];
+            try {
+                const parameters = tag.slice(1);
+                this.runScript('tags.' + sCommand + '.init', function () {
+                    aDeleted.push({x, y, id});
+                }, x, y, ...parameters);
+            } catch (e) {
+                // this tag has no init "script"
             }
+        });
+        aDeleted.forEach(({x, y, id}) => {
+            this.engine.tagManager.grid.removeTag(x, y, id);
         });
         /**
          * ee = event emitter
@@ -449,7 +488,12 @@ class Game extends GameAbstract {
         this.logGroupEnd();
     }
 
-
+    /**
+     * Renvoie la position d'un tag "locator"
+     */
+    get locators() {
+        return this._locators;
+    }
 }
 
 export default Game;

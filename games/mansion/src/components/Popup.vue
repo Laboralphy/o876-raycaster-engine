@@ -55,11 +55,12 @@
         border: solid 0.2em rgb(37, 26, 26);
         border-radius: 0.5em;
         padding: 0;
+        vertical-align: middle;
+
         visibility: hidden;
         opacity: 0;
         transform: translateY(-1em);
         transition: transform 0.25s, visibility 0.25s, opacity 0.25s ease-in;
-        vertical-align: middle;
     }
 
     div.popup div.icon {

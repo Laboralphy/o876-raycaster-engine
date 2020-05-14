@@ -1,4 +1,4 @@
 export function main(game, remove, x, y) {
-    console.log('photo of a warm fire place shot at', x, y);
+    game.storePhoto('clues', 500, 'fire_place');
     remove();
 }

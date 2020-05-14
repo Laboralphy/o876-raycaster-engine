@@ -27,7 +27,7 @@ export function push(game, remove, x, y, key) {
             game.logic.removeQuestItem(key); // remove key from inventory
         }
         remove(); // removes tag
-        game.ui.popup('DOOR_UNLOCKED', 'unlock', key);
+        game.ui.popup('DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key);
         game.removeDecals(x, y); // remove keyhole decal from door
         game.engine.lockDoor(x, y, false); // unlock door
     } else {

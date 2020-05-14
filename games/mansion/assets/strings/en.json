@@ -25,5 +25,21 @@
   "MAIN_TAB_INV": "Inventory",
   "MAIN_TAB_NOTES": "Notes",
 
-  "k_cabin" : "Cabin key"
+  "ALBUM_TAB_EMPTY": "This section is empty.",
+
+
+  "ITEMS": {
+    "k_cabin" : "Cabin key"
+  },
+
+  "PHOTOS": {
+    "fire_place": {
+      "title": "The chimney",
+      "description": [
+        "This chimney emits warm light, but only over 3 or 4 yards. The surrounding darkness seems to restrain light, dim brightness, and suck out all heat. Above a certain distance, the air is very cold.",
+        "The light flickers and creates shadows, that does not make you feel safe at all."
+      ]
+    }
+  }
+
 }

@@ -63,7 +63,6 @@ export default {
             TIMEOUT_SHOT = null; // clear time out flag
         }
         commit(MUTATIONS.SET_SHOT, payload); // sets new shot data
-        console.log('hide in', CONSTS.SHOT_DISPLAY_DURATION);
         TIMEOUT_SHOT = setTimeout(() => {
             console.log('hiding shot');
             commit(MUTATIONS.CLEAR_SHOT);
@@ -72,16 +71,16 @@ export default {
     },
 
     [ACTIONS.HIDE_UI_FRAME]: function({commit}) {
-        commit(MUTATIONS.UI_FADE_OUT);
+        commit(MUTATIONS.SET_UI_FULLY_VISIBLE, {value: false});
         setTimeout(() => {
-            commit(MUTATIONS.HIDE_ALL);
+            commit(MUTATIONS.SET_UI_FRAME_VISIBLE, {value: false});
             commit(MUTATIONS.SET_HUD_VISIBLE, {value: true});
         }, 300);
     },
 
     [ACTIONS.SHOW_UI_FRAME]: function({commit}) {
-        commit(MUTATIONS.SET_UI_FRAME_VISIBLE, {value: true});
         commit(MUTATIONS.SET_HUD_VISIBLE, {value: false});
-        setTimeout(() => commit(MUTATIONS.UI_FADE_IN), 16);
+        commit(MUTATIONS.SET_UI_FRAME_VISIBLE, {value: true});
+        setTimeout(() => commit(MUTATIONS.SET_UI_FULLY_VISIBLE, {value: true}), 16);
     }
 }

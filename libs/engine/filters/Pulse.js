@@ -29,7 +29,7 @@ class Pulse extends AbstractFilter {
         this._toAlpha = to;
         this._bPulse = from !== to && duration > 0;
         this._easing = new Easing();
-        this._easing.steps(duration).use(easing);
+        this._easing.steps(duration).use(easing).from(this._fromAlpha);
         this._direction = 0;
         this._loops = loops;
         this._child = child;
@@ -38,13 +38,13 @@ class Pulse extends AbstractFilter {
 
     fwd() {
         if (this._bPulse) {
-            this._easing.from(this._fromAlpha).to(this._toAlpha).reset();
+            this._easing.reset().from(this._fromAlpha).to(this._toAlpha).reset();
         }
     }
 
     bwd() {
         if (this._bPulse) {
-            this._easing.to(this._fromAlpha).from(this._toAlpha).reset();
+            this._easing.reset().to(this._fromAlpha).from(this._toAlpha).reset();
         }
     }
 

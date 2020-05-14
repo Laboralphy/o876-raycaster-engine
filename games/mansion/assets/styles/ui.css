@@ -1,4 +1,6 @@
-/* regular height for inline blocks, containing text or other readable things (small icons, gauge aligned with texts) */
+/*
+regular height for inline blocks, containing text or other readable things (small icons, gauge aligned with texts)
+*/
 
 .ui {
     font-family: "Lucida Console", Monaco, monospace;
@@ -31,23 +33,15 @@
 
 div.ui-menu-window {
     position: absolute;
-    width: 60%;
-    height: 90%;
-    top: 5%;
-    left: 20%;
     background-color: rgb(181, 151, 91);
-    background-image: url(../uigfx/notebook-texture.png);
+    background-image: url(../uigfx/notebook-texture-2.jpg);
     border: solid 0.2em rgb(37, 26, 26);
     border-radius: 0.5em;
 }
 
-canvas.screen {
-    transition-property: opacity;
-    transition-timing-function: linear;
-    transition-duration: 300ms;
-    opacity: 1;
-}
-
-canvas.screen.alpha50 {
-    opacity: 0.5;
+div.ui-size-60-90 {
+    width: 60%;
+    height: 90%;
+    top: 5%;
+    left: 20%;
 }

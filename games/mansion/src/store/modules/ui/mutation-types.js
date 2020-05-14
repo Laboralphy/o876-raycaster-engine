@@ -24,11 +24,8 @@ export const SET_UI_FRAME_VISIBLE = 'SET_UI_FRAME_VISIBLE';
 
 // hide everything
 export const HIDE_ALL = 'HIDE_ALL';
-export const UI_FADE_OUT = 'UI_FADE_OUT';
+export const SET_UI_FULLY_VISIBLE = 'SET_UI_FULLY_VISIBLE';
 export const UI_FADE_IN = 'UI_FADE_IN';
-
-// add a new photo to the album
-export const STORE_PHOTO = 'STORE_PHOTO';
 
 // select an active type to show only photos of that type
 // types are : 'debug', 'clue', 'wraith', 'art'
@@ -39,3 +36,6 @@ export const STORE_PHOTO = 'STORE_PHOTO';
 export const SET_ALBUM_ACTIVE_TYPE = 'SET_ALBUM_ACTIVE_TYPE';
 
 export const SET_MAIN_ACTIVE_TAB = 'SET_MAIN_ACTIVE_TAB';
+
+
+export const SET_PHOTO_DETAILS = 'SET_PHOTO_DETAILS';

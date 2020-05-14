@@ -260,6 +260,7 @@ class GameAbstract {
                 await this.loadLevel(level.name);
                 this.log('level', level.name, 'successfully loaded');
             } catch (e) {
+                console.error(e);
                 this.displayMessage('Error: ' + e.message);
             }
         } else {

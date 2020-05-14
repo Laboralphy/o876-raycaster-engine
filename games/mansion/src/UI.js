@@ -6,6 +6,7 @@ import * as UI_ACTIONS from './store/modules/ui/action-types';
 import Application from './components/Application.vue';
 import STRINGS from '../assets/strings';
 import StoreAbstract from "./StoreAbstract";
+import ObjectExtender from 'libs/object-helper/Extender';
 
 Vue.use(Vuex);
 
@@ -41,8 +42,16 @@ class UI extends StoreAbstract {
         let text = sText in STRINGS ? STRINGS[sText] : sText;
         for (let i = 0, l = params.length; i < l; ++i) {
             const p = params[i];
-            let sParamText = p in STRINGS ? STRINGS[p] : p;
-            text = text.replace(/\%s/, sParamText);
+            switch (typeof p) {
+                case 'string':
+                    let sParamText = ObjectExtender.objectGet(STRINGS, p);
+                    text = text.replace(/%s/, sParamText);
+                    break;
+
+                case 'number':
+                    text = text.replace(/%d/, p);
+                    break;
+            }
         }
         return this.dispatch(UI_ACTIONS.SHOW_POPUP, {text, icon});
     }
@@ -53,10 +62,6 @@ class UI extends StoreAbstract {
 
     hide() {
         this.dispatch(UI_ACTIONS.HIDE_UI_FRAME, {});
-    }
-
-    storePhoto(content, type, value) {
-        this.commit(UI_MUTATIONS.STORE_PHOTO, {content, type, value});
     }
 }
 

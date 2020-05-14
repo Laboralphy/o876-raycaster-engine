@@ -60,7 +60,13 @@ class Extender {
     static objectReachBranch(oObj, sBranch) {
         const aBranches = sBranch.split('.');
         const key = aBranches.pop();
-        const node = aBranches.reduce((prev, next) => prev[next], oObj);
+        const node = aBranches.reduce((prev, next) => {
+            if (next in prev) {
+                return prev[next];
+            } else {
+                throw new Error('this key : "' + next + '" does not exist in this object');
+            }
+        }, oObj);
         return {node, key};
     }
 

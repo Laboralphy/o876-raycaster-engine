@@ -19,6 +19,7 @@ class FPSControlThinker extends TangibleThinker {
         this._easing.setStepCount(ANGLE_INT_MAX_TIME);
         this._easing.setOutputRange(ANGLE_INT_MIN_VALUE, ANGLE_INT_MAX_VALUE);
         this._commands = {};
+        this._frozen = false;
         this.SPEED = SPEED;
         this.setupCommands({
             forward: ["ArrowUp", "w", "z"],       // going forward
@@ -67,6 +68,21 @@ class FPSControlThinker extends TangibleThinker {
         }
     }
 
+    set frozen(value) {
+        if (value === this._frozen) {
+            return;
+        }
+        this._frozen = value;
+        if (value) {
+            this._frozen = true;
+            const k = this._commands;
+            for (let sKey in k) {
+                const ik = k[sKey];
+                ik.state = false;
+            }
+        }
+    }
+
     getKey(key) {
         const k = this._commands;
         for (let sKey in k) {
@@ -79,6 +95,9 @@ class FPSControlThinker extends TangibleThinker {
     }
 
     keyDown(key) {
+        if (this._frozen) {
+            return null;
+        }
         const k = this.getKey(key);
         if (k !== null && k.state === false) {
             k.state = this._lastTime;
@@ -86,6 +105,9 @@ class FPSControlThinker extends TangibleThinker {
     }
 
     keyUp(key) {
+        if (this._frozen) {
+            return null;
+        }
         const k = this.getKey(key);
         if (k !== null) {
             k.state = false;
@@ -93,6 +115,9 @@ class FPSControlThinker extends TangibleThinker {
     }
 
     look(x) {
+        if (this._frozen) {
+            return null;
+        }
         this._lookAmount += x * this._lookFactor;
     }
 

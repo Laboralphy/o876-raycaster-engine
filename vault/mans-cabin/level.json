@@ -1184,11 +1184,11 @@
       "ref": "",
       "phys": 10,
       "offs": "16",
-      "preview": "b5fe7963d3bf89251280ddd9e3323d52.png",
+      "preview": "9b8aed0de8b95504472d277f165623fd.png",
       "light": {
         "enabled": true,
-        "value": "1",
-        "inner": "40",
+        "value": "0.66",
+        "inner": "24",
         "outer": "256"
       },
       "faces": {
@@ -1197,7 +1197,7 @@
         "w": 41,
         "s": 41,
         "f": 46,
-        "c": 20
+        "c": 25
       }
     },
     {
@@ -3470,11 +3470,12 @@
       {
         "block": 23,
         "tags": [
-          "block"
+          "block",
+          "locator clue_skull_face_target"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 3
         },
         "modified": true,
         "things": [
@@ -4337,12 +4338,11 @@
       {
         "block": 22,
         "tags": [
-          "photo skull_face",
-          "ecto"
+          "photo skull_face"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 1
         },
         "modified": true,
         "things": [
@@ -4754,10 +4754,12 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "locator clue_skull_face 270"
+        ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 2
         },
         "modified": true,
         "things": []
@@ -11608,9 +11610,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 10,
-    "y": 26,
-    "angle": 1.5
+    "x": 7,
+    "y": 10,
+    "angle": 1.25
   },
-  "preview": "fb67c5859429fcfcdb79baa7e2b06988.jpg"
+  "preview": "6e44e7c4b10502b2e4ce0db4d647d91a.jpg"
 }

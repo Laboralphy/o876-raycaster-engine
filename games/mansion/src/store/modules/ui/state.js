@@ -13,7 +13,7 @@ export default {
 
     uiframe: {
         visible: false,
-        fadeOut: false,
+        fullyVisible: false,
         activeTab: 'album'
     },
 
@@ -27,9 +27,11 @@ export default {
         shutter: false, // photo prise pendant le shutter chance
     },
 
-    album: {
-        photoId: 1,
-        activeType: 'debug',
-        photos: [] // {id: '', image: '...', type: x, value: x, }
+    photodetails: {
+        visible: false,
+        content: '',
+        title: '',
+        value: 0,
+        description: ['']
     }
 };

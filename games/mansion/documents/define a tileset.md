@@ -1,3 +1,7 @@
+#How to define a new tileset
+##sumup
+Sometimes you need to define a new tileset.
+
 Here is an example of a tileset definition :
 ```json
 {
@@ -19,7 +23,7 @@ Here is an example of a tileset definition :
 Here is the animation format : 
 ```json
 {
-  "id": "default",
+  "id": "default", 
   "start": [
     0,
     0,

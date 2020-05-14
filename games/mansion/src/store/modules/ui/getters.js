@@ -4,7 +4,7 @@ export default {
 
     isHUDVisible: state => state.hud.visible,
     isUIFrameVisible: state => state.uiframe.visible,
-    isUIFrameFadingOut: state => state.uiframe.fadeOut,
+    isUIFrameFullyVisible: state => state.uiframe.fullyVisible,
 
     isShotVisible: state => state.shot.visible,
     isShotFatal: state => state.shot.shutter,
@@ -17,11 +17,11 @@ export default {
 
     getShotScore: state => state.shot.value,
 
-    getAlbumPhotos: state => state.album.photos.filter(p => p.type === state.album.activeType),
-    getPhotoTypes: state => {
-        const aTypes = new Set(state.album.photos.map(p => p.type));
-        return ([...aTypes]).sort();
-    },
-    getAlbumActiveType: state => state.album.activeType,
-    getUIActiveTab: state => state.uiframe.activeTab
+    getUIActiveTab: state => state.uiframe.activeTab,
+
+    isPhotoDetailsVisible: state => state.photodetails.visible,
+    getPhotoDetailsDescription: state => state.photodetails.description.slice(0),
+    getPhotoDetailsContent: state => state.photodetails.content,
+    getPhotoDetailsValue: state => state.photodetails.value,
+    getPhotoDetailsTitle: state => state.photodetails.title
 };

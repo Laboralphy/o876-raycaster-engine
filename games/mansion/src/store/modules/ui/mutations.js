@@ -53,26 +53,8 @@ export default {
         state.shot.visible = false;
     },
 
-    [TYPES.HIDE_ALL]: function(state) {
-        state.uiframe.visible = false;
-    },
-
-    [TYPES.UI_FADE_OUT]: function(state) {
-        state.uiframe.fadeOut = true;
-    },
-
-    [TYPES.UI_FADE_IN]: function(state) {
-        state.uiframe.fadeOut = false;
-    },
-
-    [TYPES.STORE_PHOTO]: function(state, {content, type, value}) {
-        const id = state.album.photoId++;
-        state.album.photos.push({
-            id,
-            type,
-            image: content,
-            value
-        });
+    [TYPES.SET_UI_FULLY_VISIBLE]: function(state, {value}) {
+        state.uiframe.fullyVisible = value;
     },
 
     [TYPES.SET_ALBUM_ACTIVE_TYPE]: function(state, {value}) {
@@ -81,5 +63,14 @@ export default {
 
     [TYPES.SET_MAIN_ACTIVE_TAB]: function(state, {value}) {
         state.uiframe.activeTab = value;
+    },
+
+    [TYPES.SET_PHOTO_DETAILS]: function(state, {visible, title = '', content = '', description = '', value = 0}) {
+        const p = state.photodetails;
+        p.visible = visible;
+        p.title = title;
+        p.content = content;
+        p.description.splice(0, p.description.length, ...description);
+        p.value = value;
     }
 }

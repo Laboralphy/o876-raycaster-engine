@@ -26,6 +26,7 @@ import Collider from "../collider/Collider";
 import TagManager from "./TagManager";
 import FilterManager from "../filters/FilterManager";
 import MarkerRegistry from "../marker-registry";
+import Position from "./Position";
 
 
 class Engine {
@@ -119,6 +120,7 @@ class Engine {
     updateRaycasterOption(key) {
         switch (key) {
             case 'metrics.spacing':
+                this._cellSize = this._rc.options.metrics.spacing;
                 break;
         }
     }
@@ -228,8 +230,7 @@ class Engine {
     _buildSecretDoorContext(x, y) {
         const rc = this._rc;
         const dm = this._dm;
-        const metrics = rc.options.metrics;
-        const nOffsetMax = metrics.spacing;
+        const nOffsetMax = this.cellSize;
         const nSlidingDuration = CONSTS.DOOR_SLIDING_DURATION * 3;
         const nPhysCode = rc.getCellPhys(x, y);
         const sFunction1 = Easing.SQUARE_ACCEL;
@@ -485,15 +486,40 @@ class Engine {
     }
 
 
-    // PUBLIC API
-//              _     _ _           _      ____  ___
-//  _ __  _   _| |__ | (_) ___     / \    |  _ \|_ _|
-// | '_ \| | | | '_ \| | |/ __|   / _ \   | |_) || |
-// | |_) | |_| | |_) | | | (__   / ___ \ _|  __/ | | _
-// | .__/ \__,_|_.__/|_|_|\___| /_/   \_(_)_| (_)___(_)
-// |_|
+//  _     _            _                     _   _               _
+// | |__ | | ___   ___| | __  _ __ ___   ___| |_| |__   ___   __| |___
+// | '_ \| |/ _ \ / __| |/ / | '_ ` _ \ / _ \ __| '_ \ / _ \ / _` / __|
+// | |_) | | (_) | (__|   <  | | | | | |  __/ |_| | | | (_) | (_| \__ \
+// |_.__/|_|\___/ \___|_|\_\ |_| |_| |_|\___|\__|_| |_|\___/ \__,_|___/
+//
 
+    get cellSize() {
+        if (this._cellSize === undefined) {
+            return this._cellSize = this._rc.options.metrics.spacing;
+        }
+        return this._cellSize;
+    }
 
+    /**
+     * Renvoe la position du centre d'une cellule
+     * @param xCell
+     * @param yCell
+     * @returns {Position}
+     */
+    getCellCenter(xCell, yCell) {
+        const ps = this.cellSize;
+        return new Position({
+            x: xCell * ps + (ps >> 1),
+            y: yCell * ps + (ps >> 1)
+        });
+    }
+
+    /**
+     * Changement d'un block (offset, code-physique, material)
+     * @param x {number} positon of block to change
+     * @param y {number}
+     * @param ref {string} reference of the block
+     */
     alterBlock(x, y, ref) {
         const rc = this.raycaster;
         const r = this._getRefIndex(ref);
@@ -541,6 +567,12 @@ class Engine {
         }
     }
 
+    /**
+     * Lock/unlock door
+     * @param x
+     * @param y
+     * @param bLock
+     */
     lockDoor(x, y, bLock) {
         if (bLock) {
             this._locks.mark(x, y);
@@ -573,7 +605,17 @@ class Engine {
         }
     }
 
-	/**
+
+//           _              _       _
+//  ___  ___| |__   ___  __| |_   _| | ___ _ __
+// / __|/ __| '_ \ / _ \/ _` | | | | |/ _ \ '__|
+// \__ \ (__| | | |  __/ (_| | |_| | |  __/ |
+// |___/\___|_| |_|\___|\__,_|\__,_|_|\___|_|
+//
+
+
+
+    /**
 	 * Delays a command, just like a setTimeout, but the command will be synced with the doomloop
 	 * So it will be fired just before rendering process
 	 * @param nTime {number} delay in millisecond
@@ -770,7 +812,7 @@ class Engine {
      * Will create a new Entity and will link it into the engine entity collection
      * linkEntity() is automatically called
      * @param resref {string} resource reference OR id of the blueprint, to create the entity
-     * @param position {Location}
+     * @param position {Position}
      * @returns {Entity}
      */
     createEntity(resref, position) {
@@ -1046,7 +1088,7 @@ class Engine {
         this._tm.setMapSize(nMapSize);
         this.horde.setMapSize(nMapSize);
         // sync with tag grid
-        const ps = this._rc.options.metrics.spacing;
+        const ps = this.cellSize;
         this.horde.setSectorSize(ps);
         this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
         this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());

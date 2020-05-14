@@ -8,6 +8,14 @@
  *
  * @author Raphaël Marandet
  * @date 2019-06-20
+ *
+ *
+ * abstract :
+ * - constructor
+ * - process
+ * - render
+ * - over
+ * - terminate
  */
 class AbstractFilter {
 

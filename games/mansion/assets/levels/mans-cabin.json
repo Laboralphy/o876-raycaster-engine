@@ -2800,7 +2800,7 @@
           "w": 18,
           "s": 18,
           "f": 8,
-          "c": 0
+          "c": 5
         }
       },
       {
@@ -3515,10 +3515,10 @@
     }
   ],
   "camera": {
-    "x": 10,
-    "y": 26,
+    "x": 7,
+    "y": 10,
     "z": 1,
-    "angle": 4.71238898038469
+    "angle": 3.9269908169872414
   },
   "tags": [
     {
@@ -3539,15 +3539,22 @@
       "x": 10,
       "y": 5,
       "tags": [
-        "block"
+        "block",
+        "locator clue_skull_face_target"
       ]
     },
     {
       "x": 1,
       "y": 8,
       "tags": [
-        "photo skull_face",
-        "ecto"
+        "photo skull_face"
+      ]
+    },
+    {
+      "x": 10,
+      "y": 9,
+      "tags": [
+        "locator clue_skull_face 270"
       ]
     },
     {
@@ -3597,10 +3604,10 @@
     {
       "x": 1120,
       "y": 928,
-      "r0": 40,
+      "r0": 24,
       "r1": 256,
-      "v": 1
+      "v": 0.66
     }
   ],
-  "preview": "assets/textures/28d392c94aa5aad3b7d289287a56f2cf.jpg"
+  "preview": "assets/textures/74902f8a2cc26cfa01aa2ba0e873cf70.jpg"
 }

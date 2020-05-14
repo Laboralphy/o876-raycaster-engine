@@ -4,6 +4,13 @@
         <Album v-if="getUIActiveTab === 'album'"></Album>
         <DivDummy v-if="getUIActiveTab === 'inv'" title="inventory"></DivDummy>
         <DivDummy v-if="getUIActiveTab === 'notes'" title="Notes"></DivDummy>
+        <PhotoDetails
+                v-if="isPhotoDetailsVisible"
+                :content="getPhotoDetailsContent"
+                :title="getPhotoDetailsTitle"
+                :score="getPhotoDetailsValue"
+                :description="getPhotoDetailsDescription"
+        ></PhotoDetails>
     </section>
 </template>
 
@@ -13,53 +20,45 @@
     import Album from "./Album.vue";
     import Sidebar from "./Sidebar.vue";
     import DivDummy from "./DivDummy.vue";
+    import PhotoDetails from "./PhotoDetails.vue";
 
     const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
         name: "UIFrame",
-        components: {DivDummy, Sidebar, Album},
-        data: function() {
-            return {
-                fadeState: 0
-            };
-        },
+        components: {PhotoDetails, DivDummy, Sidebar, Album},
         computed: {
             ...uiMapGetters([
                 'getUIActiveTab',
-                'isUIFrameFadingOut'
+                'isUIFrameFullyVisible',
+                'isPhotoDetailsVisible',
+                'getPhotoDetailsTitle',
+                'getPhotoDetailsContent',
+                'getPhotoDetailsDescription',
+                'getPhotoDetailsValue'
             ]),
             getComputedClass: function() {
-                return 'ui-frame opacity' + this.fadeState.toString();
-            }
-        },
-        watch: {
-            isUIFrameFadingOut: {
-                handler: function(val, oldVal) {
-                    this.fadeState = val ? 0 : 1;
-                    console.log(this.fadeState);
-                },
-                immediate: true
+                const a = ['ui-frame'];
+                a.push(this.isUIFrameFullyVisible ? 'visible' : 'hidden');
+                return a.join(' ');
             }
         }
-
     }
 </script>
 
 <style scoped>
-    .ui-frame {
-        transition-property: opacity;
-        transition-duration: 300ms;
-        transition-timing-function: linear;
-
+    section.ui-frame {
         opacity: 0;
+        transition: opacity 300ms ease-in;
     }
 
-    .ui-frame.opacity1 {
+    section.ui-frame.visible {
         opacity: 1;
+        transition: opacity 300ms ease-out;
     }
 
-    .ui-frame.opacity0 {
+    section.ui-frame.hidden {
         opacity: 0;
+        transition: opacity 300ms ease-in;
     }
 </style>

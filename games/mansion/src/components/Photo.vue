@@ -1,7 +1,7 @@
 <template>
-    <figure class="photo">
+    <figure :class="'photo' + (big ? ' big' : '')" @click="$emit('click')">
         <img :src="content" alt="photo"/>
-        <figcaption>{{ caption }}</figcaption>
+        <figcaption :title="caption">{{ caption }}</figcaption>
     </figure>
 </template>
 
@@ -18,6 +18,11 @@
                 type: String,
                 required: false,
                 default: ''
+            },
+            big: {
+                type: Boolean,
+                require: false,
+                default: false
             }
         },
     }
@@ -29,7 +34,20 @@
         padding: 1%;
         float: left;
         margin: 0.5%;
-        width: 30%;
+        width: 22%;
+        box-shadow: rgba(0, 0, 0, 0.4) 0.2em 0.2em 0.2em;
+        cursor: pointer;
+        transition: filter 160ms linear;
+    }
+
+    figure.photo.big {
+        width: 33%;
+        margin-left: 2%;
+        margin-right: 3%;
+    }
+
+    figure.photo:hover {
+        filter: brightness(1.333);
     }
 
     figure.photo > img {
@@ -38,7 +56,11 @@
 
     figure.photo > figcaption {
         font-family: "KingthingsTrypewriter2", monospace;
-        font-size: 1em;
+        font-size: 0.8em;
         color: black;
+        height: 1.15em;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
     }
 </style>
