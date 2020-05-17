@@ -29,7 +29,7 @@ class Dummy {
     }
 
     set position(value) {
-        this._position = value;
+        this._position.set(value);
     }
 
     get dead() {

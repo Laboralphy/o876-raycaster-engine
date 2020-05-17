@@ -1,8 +1,8 @@
-const ServiceAbstract = require('libs/mpservice/service-manager/Abstract');
-const logger = require('libs/mpservice/logger');
-const RC = require('libs/mpservice/consts/raycaster');
-const STRINGS = require('libs/mpservice/consts/strings');
-const STATUS = require('libs/mpservice/consts/status');
+const ServiceAbstract = require('../../service-manager/ServiceAbstract');
+const logger = require('../../logger');
+const RC = require('../../consts/raycaster');
+const STRINGS = require('../../consts/strings');
+const STATUS = require('../../consts/status');
 
 
 class ServiceEngine extends ServiceAbstract {
@@ -13,11 +13,11 @@ class ServiceEngine extends ServiceAbstract {
         setInterval(() => this.doomloop(), RC.time_factor);
 
         gameInstance.events.on('mobile.created', ({players, mobile}) => this.transmitMobileCreationEvent(players, mobile));
-        gameInstance.emitter.on('mobile.destroyed', ({players, mobile}) => this.transmitMobileDestructionEvent(players, mobile));
-        gameInstance.emitter.on('door.open', ({players, x, y}) => {
+        gameInstance.events.on('mobile.destroyed', ({players, mobile}) => this.transmitMobileDestructionEvent(players, mobile));
+        gameInstance.events.on('door.open', ({players, x, y}) => {
             this._emit(players, 'G_DOOR_OPEN', {x, y})
         });
-        gameInstance.emitter.on('door.close', ({players, x, y}) => this._emit(players, 'G_DOOR_CLOSE', {x, y}));
+        gameInstance.events.on('door.close', ({players, x, y}) => this._emit(players, 'G_DOOR_CLOSE', {x, y}));
     }
 
     /**
@@ -53,8 +53,7 @@ class ServiceEngine extends ServiceAbstract {
         );
         let gs = this._gs;
         gs.removeDeadMobiles();
-        gs.emitter.emit('tick', {time: this._time++});
-
+        gs.events.emit('tick', {time: this._time++});
     }
 
     error(client, e) {
@@ -80,8 +79,8 @@ class ServiceEngine extends ServiceAbstract {
      */
     static buildMobileCreationPacket(m) {
         let mloc = m.location;
-        let mpos = mloc.position();
-        let mspd = m.inertia(); // vecteur de vitesse actuelle
+        let mpos = mloc.position;
+        let mspd = m.inertia; // vecteur de vitesse actuelle
         return {
             id: m.id,
             x: mpos.x,
@@ -100,8 +99,8 @@ class ServiceEngine extends ServiceAbstract {
      */
     static buildMobileUpdatePacket(m) {
         let mloc = m.location;
-        let mpos = mloc.position();
-        let mspd = m.inertia(); // vecteur de vitesse actuelle
+        let mpos = mloc.position;
+        let mspd = m.inertia; // vecteur de vitesse actuelle
         let f = m.getNewForces();
         m.resetForces();
         return {

@@ -21,7 +21,7 @@ class ServiceManager {
             let oInstance = new pClass();
             return this.plugin(oInstance);
         }
-        instance.clientManager(this.clientManager);
+        instance.clientManager = this.clientManager;
         instance.events.on('plugin-message',
             (_event, data) => {
                 this._plugins.forEach(p => {

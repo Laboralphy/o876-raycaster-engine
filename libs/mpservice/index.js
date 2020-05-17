@@ -69,4 +69,7 @@ class Application {
 	}
 }
 
-module.exports = Application;
+const app = new Application();
+//app.setRoutes(path.resolve(__dirname, 'public'));
+app.runService();
+app.listen();

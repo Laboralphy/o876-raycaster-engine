@@ -1,7 +1,7 @@
-const ServiceAbstract = require('libs/mpservice/service-manager/Abstract');
-const logger = require('libs/mpservice/logger');
-const STRINGS = require('libs/mpservice/consts/strings');
-const STATUS = require('libs/mpservice/consts/status');
+const ServiceAbstract = require('../../service-manager/ServiceAbstract');
+const logger = require('../../logger');
+const STRINGS = require('../../consts/strings');
+const STATUS = require('../../consts/status');
 
 class ServiceLogin extends ServiceAbstract {
     constructor() {

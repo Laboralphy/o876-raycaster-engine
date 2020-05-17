@@ -26,9 +26,9 @@ class System {
         // transmettre l'évènement à tous les utilisateurs du canal
         event.channel.users().forEach(u => {
 			this._events.emit('user-joins', {
-				to: u.id(),
-				user: event.user.id(),
-				channel: event.channel.id()
+				to: u.id,
+				user: event.user.id,
+				channel: event.channel.id
 			});
 		});
     }
@@ -36,18 +36,18 @@ class System {
     _eventUserLeaves(event) {
 		event.channel.users().forEach(u =>
 			this._events.emit('user-leaves', {
-				to: u.id(),
+				to: u.id,
 				user: event.user.idName(), // le user est sur le point de disparaitre
-				channel: event.channel.id()
+				channel: event.channel.id
 			})
 		);
     }
 
     _eventUserGotMessage(event) {
         this._events.emit('user-message', {
-            to: event.to.id(),
-            user: event.from.id(),
-            channel: event.channel ? event.channel.id() : null,
+            to: event.to.id,
+            user: event.from.id,
+            channel: event.channel ? event.channel.id : null,
             message: event.message
         });
     }
@@ -84,21 +84,21 @@ class System {
     }
 
     getUser(id) {
-        return this._users.find(u => u.id() === id);
+        return this._users.find(u => u.id === id);
     }
 
     addChannel(c) {
-		if (!c.id()) {
+		if (!c.id) {
 			throw new Error('cannot register channel : it has no valid identifier');
 		}
-		if (!c.name()) {
+		if (!c.name) {
 			throw new Error('cannot register channel : it has no valid name');
 		}
-		if (this.getChannel(c.id())) {
-			throw new Error('cannot register channel : id "' + c.id() + '" is already in use');
+		if (this.getChannel(c.id)) {
+			throw new Error('cannot register channel : id "' + c.id + '" is already in use');
 		}
-		if (this.searchChannel(c.name())) {
-			throw new Error('cannot register channel : name "' + c.name() + '" is already in use');
+		if (this.searchChannel(c.name)) {
+			throw new Error('cannot register channel : name "' + c.name + '" is already in use');
 		}
 		if (this.channelPresent(c)) {
 			throw new Error('cannot register channel ' + c.display() + ' : already registered');
@@ -109,11 +109,11 @@ class System {
     }
 
     getChannel(id) {
-	    return this._channels.find(c => c.id() === id);
+	    return this._channels.find(c => c.id === id);
     }
 
     searchChannel(sName) {
-		return this._channels.find(c => c.name() === sName);
+		return this._channels.find(c => c.name === sName);
 	}
 
     dropChannel(c) {

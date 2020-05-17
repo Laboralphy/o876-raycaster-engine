@@ -2,8 +2,7 @@
  * Permet de gerer un ensemble de force appliquée à un mobile
  */
 
-const o876 = require('../o876');
-const Vector = o876.geometry.Vector;
+const Vector = require('../../geometry/Vector');
 
 class ForceField {
     constructor() {

@@ -1,7 +1,7 @@
-const ServiceAbstract = require('libs/mpservice/service-manager/Abstract');
-const TinyTxat = require('libs/tiny-txat');
-const logger = require('libs/mpservice/logger');
-const STRINGS = require('libs/mpservice/consts/strings');
+const ServiceAbstract = require('../../service-manager/ServiceAbstract');
+const TinyTxat = require('../../../tiny-txat');
+const logger = require('../../logger');
+const STRINGS = require('../../consts/strings');
 
 class ServiceTxat extends ServiceAbstract {
 
@@ -17,11 +17,15 @@ class ServiceTxat extends ServiceAbstract {
         let c;
 
         c = new TinyTxat.Channel();
-        c.id(1).name('system').type('system');
+        c.id = 1;
+        c.name = 'system';
+        c.type = 'system';
         this.txat.addChannel(c);
 
         c = new TinyTxat.Channel();
-        c.id(2).name('public').type('public');
+        c.id = 2;
+        c.name = 'public';
+        c.type = 'public';
         this.txat.addChannel(c);
 
 

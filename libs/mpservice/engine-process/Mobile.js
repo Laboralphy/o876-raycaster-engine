@@ -4,11 +4,12 @@
  * Décision
  */
 
-const o876 = require('../o876/index');
-const Vector = o876.geometry.Vector;
+const GeometryHelper = require('../../geometry/GeometryHelper');
+const Vector = require('../../geometry/Vector');
 const RC_CONST = require('../consts/raycaster');
 const Location = require('./Location');
 const ForceField = require('./ForceField');
+const Dummy = require('../../collider/Dummy');
 
 const FORCE_NORM = 10;
 
@@ -56,7 +57,7 @@ module.exports = class Mobile {
 		let cm = this._dummy;
 		if (cm) {
 			cm.dead(true);
-            this.collider().track(cm);
+            this.collider.track(cm);
 			this._dummy = null;
 		}
 	}
@@ -65,24 +66,33 @@ module.exports = class Mobile {
 	 * setter/getter du collisionneur
 	 * @returns {*}
 	 */
-	collider() {
-		return this.location.area().collider();
+	get collider() {
+		return this.location.area.collider;
 	}
 
-    /**
-     * Défini la taille physique du mobile, pour les collisions
-     * @param n {number}
-     */
-	size(n) {
-		return o876.SpellBook.prop(this, '_size', n);
+
+	get size() {
+		return this._size;
 	}
 
-	inertia(v) {
-		return o876.SpellBook.prop(this, '_inertia', v);
+	set size(value) {
+		this._size = value;
 	}
 
-	thinker(th) {
-		return o876.SpellBook.prop(this, '_thinker', th);
+	get inertia() {
+		return this._inertia;
+	}
+
+	set inertia(value) {
+		this._inertia.set(value);
+	}
+
+	get thinker() {
+		return this._thinker;
+	}
+
+	set thinker(value) {
+		this._thinker = value;
 	}
 
 	think() {
@@ -117,13 +127,13 @@ module.exports = class Mobile {
 		let f = ff.computeForces();
 		if (f.x !== 0 || f.y !==  0) {
 			this.move(f);
-			this.thinker().changeMovement();
+			this.thinker.changeMovement();
 			this.bUnderForceEffect = true;
 		} else if (this.bUnderForceEffect) {
 			// nous étions toujours sous influence de forces, mais celles ci viennent de retomber à zero
 			// indiquer néanmoins les changement un e dernière fois
 			this.bUnderForceEffect = false;
-			this.thinker().changeMovement();
+			this.thinker.changeMovement();
 		}
 		ff.reduceForces();
 	}
@@ -224,7 +234,7 @@ module.exports = class Mobile {
 	dummy() {
 		let cm;
         if (!this._dummy) {
-            cm = new o876.collider.Dummy();
+            cm = new Dummy();
             cm._mobile = this;
             cm._tangibility = this.data.tangibility;
             this._dummy = cm;
@@ -232,27 +242,27 @@ module.exports = class Mobile {
             cm = this._dummy;
 		}
 		cm.radius(this._size);
-		cm.position(this.location.position());
-		this.collider().track(cm);
+		cm.position = this.location.position;
+		this.collider.track(cm);
 		return cm;
 	}
 
 	getCollidingMobiles() {
-        return this.collider().collides(this.dummy()).map(d => d._mobile);
+        return this.collider.collides(this.dummy()).map(d => d._mobile);
 	}
 
 	computeCollidingForces(aMobHits) {
-        let vPos = this.location.position();
+        let vPos = this.location.position;
         let x = vPos.x;
         let y = vPos.y;
-        let dist = o876.geometry.Helper.distance;
+        let dist = GeometryHelper.distance;
         // ajouter un vecteur force à tous ces mobiles
         return aMobHits.map(m => {
-        	let mPos = m.location.position();
+        	let mPos = m.location.position;
         	let mx = mPos.x;
         	let my = mPos.y;
             return this.force(
-                vPos.sub(m.location.position())
+                vPos.sub(m.location.position)
                     .normalize()
                     .scale((this._size + m._size - dist(x, y, mx, my)) / 2),
                 0
@@ -279,8 +289,8 @@ module.exports = class Mobile {
 	 */
 	move(vSpeed) {
 		let oLocation = this.location;
-        let vPos = oLocation.position();
-        let area = oLocation.area();
+        let vPos = oLocation.position;
+        let area = oLocation.area;
 
         //let nDist = vSpeed.distance();
         let nSize = this._size;
@@ -295,7 +305,7 @@ module.exports = class Mobile {
             bCrashWall,
 			(x, y) => area.isSolidPoint(x, y)
         );
-		this.inertia().translate(r.speed);
+		this.inertia.translate(r.speed);
 		vPos.set(r.pos);
         this.wallCollision = r.wcf;
 	}

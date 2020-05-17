@@ -5,7 +5,7 @@
  * d'effectuer des calcul de collision avec les murs.
  */
 const Thinker = require('./Thinker');
-const Vector = require('libs/geometry/Vector');
+const Vector = require('../../../geometry/Vector');
 
 module.exports = class MoverThinker extends Thinker {
 	constructor() {
@@ -18,7 +18,7 @@ module.exports = class MoverThinker extends Thinker {
 
 	$move() {
 		let m = this._mobile;
-		m.inertia().set(0, 0);
+		m.inertia.set(0, 0);
 		m.location.heading(this._angle);
 		m.move(this._speed);
 	}
@@ -45,8 +45,8 @@ module.exports = class MoverThinker extends Thinker {
 	getMovement() {
 		let m = this._mobile;
 		let loc = m.location;
-		let pos = loc.position();
-		let spd = m.inertia();
+		let pos = loc.position;
+		let spd = m.inertia;
 		return {
 			id: m.id,
 			a: loc.heading(),

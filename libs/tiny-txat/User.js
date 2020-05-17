@@ -1,9 +1,11 @@
-const o876 = require('../o876/index');
-const prop = o876.SpellBook.prop;
 const Events = require('events');
 
 class User {
-
+    /**
+     *
+     * @param id {number|null}
+     * @param name {string|null}
+     */
     constructor({id = null, name = null}) {
         this._id = id;
         this._sName = name;
@@ -15,16 +17,40 @@ class User {
         return this;
     }
 
-    id(id) {
-        return prop(this, '_id', id);
+    /**
+     * renvoie identifiant du user
+     * @returns {number}
+     */
+    get id() {
+        return this._id;
     }
 
-    name(s) {
-        return prop(this, '_sName', s);
+    /**
+     * défini identifiant du user
+     * @param value {number}
+     */
+    set id(value) {
+        this._id = value;
+    }
+
+    /**
+     * renvoie nom du user
+     * @returns {string}
+     */
+    get name() {
+        return this._sName;
+    }
+
+    /**
+     * défini nom du user
+     * @param value {string}
+     */
+    set name(value) {
+        this._sName = value;
     }
 
     idName() {
-        return {id: this.id(), name: this.name()};
+        return {id: this.id, name: this.name};
     }
 
     /**
@@ -32,7 +58,7 @@ class User {
      * @return {string}
      */
     display() {
-        return '#' + this.id() + ' (' + this.name() + ')';
+        return '#' + this.id + ' (' + this.name + ')';
     }
 
     sendMessage(oDestination, sMessage) {

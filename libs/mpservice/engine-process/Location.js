@@ -2,8 +2,7 @@
  * Une localisation
  */
 const Area = require('./Area');
-const o876 = require('../o876/index');
-const Vector = o876.geometry.Vector;
+const Vector = require('../../geometry/Vector');
 
 module.exports = class Location {
 	constructor(x = 0, y = 0, angle = 0, area = null) {
@@ -13,30 +12,35 @@ module.exports = class Location {
 	}
 
 	assign(other) {
-		this
-			.position(new Vector(other.position()))
-			.heading(other.heading())
-			.area(other.area());
+		this.position = new Vector(other.position);
+		this.heading = other.heading;
+		this.area = other.area;
 	}
 
-	position(p) {
-		return o876.SpellBook.prop(this, '_position', p);
+	set position(value) {
+		this._position.set(value);
 	}
 
-	area(a) {
-		if (a) {
-			if (typeof a !== 'object' || a.constructor.name !== 'Area') {
-				throw new Error('location.area must be an instance of Area. Instance of : "' + a.constructor.name + '" given');
-			}
+	get position() {
+		return this._position;
+	}
+
+	get area() {
+		return this._area;
+	}
+
+	set area(value) {
+		if (typeof value !== 'object' || value.constructor.name !== 'Area') {
+			throw new Error('location.area must be an instance of Area. Instance of : "' + a.constructor.name + '" given');
 		}
-        return o876.SpellBook.prop(this, '_area', a, 'o');
+		this._area = value;
 	}
 
-    /**
-	 * Défini un nouvel angle
-     * @param a {number}
-     */
-	heading(a) {
-		return o876.SpellBook.prop(this, '_heading', a);
+	get heading() {
+		return this._heading;
+	}
+
+	set heading(value) {
+		return this._heading = value;
 	}
 };

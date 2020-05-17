@@ -1,3 +1,6 @@
+const Events = require('events');
+const uniqid = require('uniqid');
+
 const Player = require('./Player');
 const Mobile = require('./Mobile');
 const Area = require('./Area');
@@ -9,10 +12,8 @@ const MissileThinker = require('./thinkers/MissileThinker');
 
 const ResourceLoader = require('../resource-loader/index');
 const logger = require('../logger/index');
-const Vector = require('libs/geometry/Vector');
-
-const Events = require('events');
-const uniqid = require('uniqid');
+const Vector = require('../../geometry/Vector');
+const GeometryHelper = require('../../geometry/GeometryHelper');
 
 const STRINGS = require('../consts/strings');
 const STATUS = require('../consts/status');
@@ -20,7 +21,6 @@ const COMMANDS = require('../consts/commands');
 const EVENTS = require('../consts/events')
 const RC = require('../consts/raycaster');
 
-const GeometryHelper = require('libs/geometry/GeometryHelper');
 
 /**
  * Cette classe gère les différents use cases issu du réseau ou de tout autre évènements
@@ -71,7 +71,7 @@ class Core {
      * @return {Vector}
      */
     static getLocationPosition(location) {
-        return location.position();
+        return location.position;
     }
 
     /**
@@ -80,7 +80,7 @@ class Core {
      * @return {Area}
      */
     static getLocationArea(location) {
-        return location.area();
+        return location.area;
     }
 
     /**
@@ -98,10 +98,10 @@ class Core {
 	 * @return {*}
      */
 	static getBlockAtLocation(location) {
-		let pos = location.position();
+		let pos = location.position;
 		let x = pos.x / RC.plane_spacing | 0;
 		let y = pos.y / RC.plane_spacing | 0;
-		return location.area().getCell(x, y);
+		return location.area.getCell(x, y);
 	}
 
     /**
@@ -115,13 +115,13 @@ class Core {
 		if (distance === undefined) {
 			distance = RC.plane_spacing;
 		}
-        let pos = location.position();
-        let angle = location.heading();
+        let pos = location.position;
+        let angle = location.heading;
         let x = pos.x + distance * Math.cos(angle);
         let y = pos.y + distance * Math.sin(angle);
         let locNew = new Location();
         locNew.assign(location);
-        locNew.position().set(x, y);
+        locNew.position.set(x, y);
         return locNew;
 	}
 
@@ -202,6 +202,10 @@ class Core {
     	return this._resourceLoader;
 	}
 
+	get events() {
+		return this._events;
+	}
+
     /**
      * Renvoie une instance d'Area
      * @param id
@@ -226,7 +230,7 @@ class Core {
 	getAreaMobiles(area) {
 		return Object
 			.values(this._mobiles)
-			.filter(px => px.location.area() === area);
+			.filter(px => px.location.area === area);
     }
 
 	/**
@@ -236,7 +240,7 @@ class Core {
 	getAreaPlayers(area) {
 		return Object
 			.values(this._players)
-			.filter(px => px.location.area() === area);
+			.filter(px => px.location.area === area);
     }
 
 
@@ -270,7 +274,7 @@ class Core {
 			aTransmit.push({
 				p,
 				m: mobs.map(
-					mobile => mobile.thinker().getMovement()
+					mobile => mobile.thinker.getMovement()
 				).filter(mov => !!mov)
 			});
 		}
@@ -303,7 +307,7 @@ class Core {
 		let level = await this._resourceLoader.loadLevel(id);
 		area.data(level);
 		logger.logfmt(STRINGS.game.level_built, id);
-		this._events.emit('area.built', {area});
+		this._events.emit(EVENTS.AREA_BUILT, {area});
         area.emitter.on(EVENTS.DOOR_OPEN, ({door}) => {
             this._events.emit(EVENTS.DOOR_OPEN, {
                 players: this.getAreaPlayers(area).map(p => p.id),
@@ -337,7 +341,7 @@ class Core {
 	processDoors() {
 		for (let a in this._areas) {
 			let area = this._areas[a];
-			let collider = area.collider();
+			let collider = area.collider;
 			// le soucis c'est que des mobiles peuvent coincer les portes
 			area._activeDoorList.items.forEach(door => {
 				let x = door.x;
@@ -364,8 +368,8 @@ class Core {
 		for (let id in mobiles) {
 			let m = mobiles[id];
 			m.think();
-			let area = m.location.area().id;
-			if (m.thinker().hasChangedMovement() || m.hasForces()) {
+			let area = m.location.area.id;
+			if (m.thinker.hasChangedMovement() || m.hasForces()) {
 				if (!m.isDead()) {
 					if (!(area in updateTheseMobiles)) {
 						updateTheseMobiles[area] = [];
@@ -430,9 +434,9 @@ class Core {
         this._players[id] = p;
         // obtenir et remplir la location
         // en cas d'absence de location, en créer une a partir de la position de départ du niveau
-        p.location.position().set(x, y);
-        p.location.heading(angle);
-        p.location.area(area);
+        p.location.position.set(x, y);
+        p.location.heading = angle;
+        p.location.area = area;
         // données du personnage
         p.character = playerData.character;
 		return p;
@@ -461,19 +465,19 @@ class Core {
         // il faut merger les data contenu dans blueprints
 		let oBlueprint = this._resourceLoader.loadResourceSync('b', ref);
 		m.data = Object.assign({}, oBlueprint, extra);
-        let area = m.location.area();
+        let area = m.location.area;
         let players = this.getAreaPlayers(area).map(p => p.id);
 
         // initialiser l'inertie (si jamais on doit transmettre une vitesse initiale
-		let angle = m.location.heading();
+		let angle = m.location.heading;
 		if (!('speed' in m.data)) {
 			throw new Error('no initial speed defined for mobile #', id);
 		}
 		let fInitialSpeed = m.data.speed;
 		let vInertia = GeometryHelper.polar2rect(angle, fInitialSpeed);
-		m.inertia().set(vInertia.dx, vInertia.dy);
+		m.inertia.set(vInertia.dx, vInertia.dy);
 
-        this._events.emit('mobile.created', { players, mobile: m });
+        this._events.emit(EVENTS.MOBILE_CREATED, { players, mobile: m });
         return m;
     }
 
@@ -492,11 +496,11 @@ class Core {
         let oMissile = this.createMobile(idMissile, ref, location, data);
         // il faut donner de la vitesse au missile ; c'est important pour que le client anime correctement le missile
         let th = new MissileThinker();
-        th.mobile(oMissile);
+        th.mobile = oMissile;
         th.owner = oOwner;
-        oMissile.thinker(th);
+        oMissile.thinker = th;
         oMissile.flagCrash = true;
-        let angle = location.heading();
+        let angle = location.heading;
         let v = GeometryHelper.polar2rect(angle, oMissile.data.speed);
         th.setMovement({a: angle, sx: v.dx, sy: v.dy});
         return oMissile;
@@ -506,10 +510,10 @@ class Core {
     destroyMobile(id) {
 		let mobile = this._mobiles[id];
 		if (mobile) {
-			let area = mobile.location.area();
+			let area = mobile.location.area;
 			let players = this.getAreaPlayers(area).map(p => p.id);
 			mobile.finalize();
-			this._events.emit('mobile.destroyed', { players, mobile });
+			this._events.emit(EVENTS.MOBILE_DESTROYED, { players, mobile });
 		}
 		delete this._mobiles[id];
 	}
@@ -533,21 +537,21 @@ class Core {
 	playClientMovement(idm, {t, a, x, y, sx, sy, id, c}) {
 		let mobile = this._mobiles[idm];
 		let loc = mobile.location;
-		loc.heading(a);
-		mobile.thinker().setMovement({t, a, x, y, sx, sy, id, c});
+		loc.heading = a;
+		mobile.thinker.setMovement({t, a, x, y, sx, sy, id, c});
 		if (c) {
 			// les command sont envoyée en tant qu'évènement
 			// décomposer...
 			for (let i = 1; i <= COMMANDS.LAST_COMMAND; i <<= 1) {
-				if (c & i) {
+				if ((c & i) !== 0) {
                     this._events.emit(EVENTS.MOBILE_COMMAND, {mobile, command: i});
 				}
 			}
 		}
-		let pos = loc.position();
-		let spd = mobile.inertia();
+		let pos = loc.position;
+		let spd = mobile.inertia;
 		return {
-			a: loc.heading(),
+			a: loc.heading,
 			x: pos.x,
 			y: pos.y,
 			sx: spd.x,
@@ -583,7 +587,7 @@ class Core {
 			logger.logfmt(STRINGS.game.player_created, id);
 			this._players[id] = p;
         }
-        let area = p.location.area();
+        let area = p.location.area;
         logger.logfmt(STRINGS.game.player_downloading_area, id, area.name);
         let live = {
         	doors: area.getDoorState()
@@ -601,7 +605,7 @@ class Core {
     clientHasLoadedLevel(client) {
     	let id = client.id;
         let p = this._players[id];
-        let area = p.location.area();
+        let area = p.location.area;
 
         // p.character contient des données spéciale gameplay
 
@@ -609,7 +613,7 @@ class Core {
         // transmettre la position de tous les mobiles
         let mobiles = Object
             .values(this._mobiles)
-            .filter(px => px.location.area() === area && px.id !== id);
+            .filter(px => px.location.area === area && px.id !== id);
         let subject = this.createMobile(
         	id,
 			p.character.blueprint,
@@ -619,9 +623,9 @@ class Core {
 			}
 		);
         let oThinker = new TangibleThinker();
-		oThinker.game(this);
-		subject.thinker(oThinker);
-		oThinker.mobile(subject);
+		oThinker.game = this;
+		subject.thinker = oThinker;
+		oThinker.mobile = subject;
 
 		// définir quelques variables
 

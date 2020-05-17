@@ -7,7 +7,7 @@ const RC_CONST = require('../consts/raycaster');
 
 const Door = require('./Door');
 const ActiveList = require('./ActiveList');
-const o876 = require('../o876');
+const Collider = require('../../collider/Collider');
 const Emitter = require('events');
 
 
@@ -32,7 +32,7 @@ module.exports = class Area {
         // position de départ
         this._startpoint = null;
         // collider
-        this._collider = new o876.collider.Collider();
+        this._collider = new Collider();
         // Emitter
         this.emitter = new Emitter();
     }

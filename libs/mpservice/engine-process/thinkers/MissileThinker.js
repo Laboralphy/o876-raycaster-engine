@@ -1,6 +1,6 @@
 const MoverThinker = require('./MoverThinker');
 const RC = require('../../consts/raycaster');
-const Vector = require('libs/geometry/Vector');
+const Vector = require('../../../geometry/Vector');
 
 /**
  * Gestion du déplacement des missile
