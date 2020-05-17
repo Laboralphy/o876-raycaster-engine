@@ -1,4 +1,4 @@
-import {computeWallCollisions} from "../../wall-collider";
+import {computeWallCollisions} from "libs/wall-collider";
 import Thinker from "./Thinker";
 import Vector from "../../geometry/Vector";
 

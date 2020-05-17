@@ -97,7 +97,7 @@ class Engine {
         this._tilesets = {};
         this._timeMod = 0;
         this._time = 0;
-        this._rc._optionsReactor.events.on('changed', ({key}) => {
+        this._rc.events.on('option.changed', ({key}) => {
             this.updateRaycasterOption(key);
         });
         this._tm.events.on('tagenter', event => this._tagEnter(event));
@@ -419,7 +419,7 @@ class Engine {
             // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
             rend.render(loc.x, loc.y, loc.angle, loc.z);
             this._events.emit('render');
-            this._filters.render(rend._renderCanvas);
+            this._filters.render(rend.renderCanvas);
             // display the raycaster internal canvas on the physical DOM canvas
             // requestAnimationFrame is called here to v-synchronize and have a neat animation
             requestAnimationFrame(() => {
@@ -430,7 +430,7 @@ class Engine {
     }
 
     screenshot(x, y, angle, z) {
-        const rc = this.raycaster;
+        const rc = this._rc;
         rc.render(x, y, angle, z);
         const oCanvas = CanvasHelper.createCanvas(this._renderCanvas.width, this._renderCanvas.height);
         rc.flip(oCanvas.getContext('2d'));
@@ -521,7 +521,7 @@ class Engine {
      * @param ref {string} reference of the block
      */
     alterBlock(x, y, ref) {
-        const rc = this.raycaster;
+        const rc = this._rc;
         const r = this._getRefIndex(ref);
         const m = this._materials[r];
         rc.setCellOffset(x, y, m.offset);
@@ -548,7 +548,7 @@ class Engine {
      */
     openDoor(x, y, bAutoclose) {
         if (this.isDoorLocked(x, y)) {
-            this.events.emit('door.locked', {x, y});
+            this._events.emit('door.locked', {x, y});
             return;
         }
         const dm = this._dm;
@@ -1034,7 +1034,7 @@ class Engine {
             oRCOptions.shading = data.shading;
         }
 
-        rc.config(oRCOptions);
+        rc.options = oRCOptions;
 
         let PROGRESS = 0;
         const showProgress = sLabel => {

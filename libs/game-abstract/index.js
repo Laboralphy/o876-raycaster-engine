@@ -89,6 +89,10 @@ class GameAbstract {
         return this._engine;
     }
 
+    get options() {
+        return this._options;
+    }
+
     /**
      * Should be called once !
      * @return {GameAbstract}
@@ -228,12 +232,12 @@ class GameAbstract {
      * @return {Promise<void>}
      */
     async loadLevel(name) {
-        this.log('loading level', name)
+        this.log('loading level', name);
         this._engine.stopDoomLoop();
         await this._engine.loadLevel(name, this._options.loadProgress);
-        this.log('data successfuly loaded and parsed')
+        this.log('data successfuly loaded and parsed');
         this._engine.startDoomLoop();
-        this.log('doom loop started')
+        this.log('doom loop started');
         this.enterLevel();
     }
 

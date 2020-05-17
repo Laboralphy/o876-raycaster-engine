@@ -66,7 +66,6 @@ parameter :
 - parameters : the tag parameters, defined during level design phase.
 - remove : if the event handler call this function, the tag is removed.
 
-
 think.xxxx
 Events emitted by thinker via their ".emit" method.
 

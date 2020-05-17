@@ -470,7 +470,7 @@ class Game extends GameAbstract {
             this.engine.tagManager.grid.removeTag(x, y, id);
         });
         /**
-         * ee = event emitter
+         * ee = event _events
          * @type {EventEmitter|module:events.internal|EventEmitter|number|ASTElementHandlers}
          */
         const ee = this.engine.events;
