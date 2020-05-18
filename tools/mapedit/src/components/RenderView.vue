@@ -17,8 +17,8 @@
     import Window from "./Window.vue";
     import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
-    import Engine from "../../../../lib/src/engine/Engine";
-    import CanvasHelper from "../../../../lib/src/canvas-helper";
+    import Engine from "../../../../src/libs/engine/Engine";
+    import CanvasHelper from "../../../../src/libs/canvas-helper";
 
 
     let engine = null;

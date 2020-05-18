@@ -1,4 +1,4 @@
-import MissileThinker from "../../lib/src/engine/thinkers/MissileThinker";
+import MissileThinker from "../../src/libs/engine/thinkers/MissileThinker";
 const MISSILE_SPEED = 20;
 
 class MagboltThinker extends MissileThinker {

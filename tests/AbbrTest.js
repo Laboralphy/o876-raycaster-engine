@@ -1,4 +1,4 @@
-import Abbr from '../lib/src/abbr';
+import Abbr from '../src/libs/abbr';
 
 describe('#abbr', function() {
     describe('testing', function() {

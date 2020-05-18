@@ -5,10 +5,10 @@ const CONFIG = {
     data_path: 'assets/data',
 
     // configurable at launch by command line
-    game_action_prefix: '/game', // this value must be identical with your Engine configuration
-    port: 8080, // server listening port
-    vault_path: 'vault',    // the folder where all map editor levels are located
-    game_path: 'game',  // the game project folder
+    game_action_prefix: process.env.GAME_ACTION_PREFIX || 'game', // this value must be identical with your Engine configuration
+    port: parseInt(process.env.SERVER_PORT || 8080), // server listening port
+    vault_path: '',    // the folder where all map editor levels are located
+    game_path: '',  // the game project folder
 
 };
 
@@ -21,6 +21,7 @@ function getVariable(s) {
 }
 
 function setVariable(s, v) {
+    console.log('setting variable', s, v);
     CONFIG[s] = v;
 }
 

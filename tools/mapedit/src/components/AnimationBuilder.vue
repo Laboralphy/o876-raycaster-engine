@@ -62,8 +62,8 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import UpdateIcon from "vue-material-design-icons/Update.vue";
     import AnimationIcon from "vue-material-design-icons/Animation.vue";
-    import TileAnimation from "../../../../lib/src/raycaster/TileAnimation";
-    import CanvasHelper from "../../../../lib/src/canvas-helper";
+    import TileAnimation from "../../../../src/libs/raycaster/TileAnimation";
+    import CanvasHelper from "../../../../src/libs/canvas-helper";
 
     const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');

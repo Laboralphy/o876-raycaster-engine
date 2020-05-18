@@ -1,4 +1,4 @@
-import F from '../lib/src/filters';
+import F from '../src/libs/filters';
 
 describe('#FilterManager', function() {
     it ('should work', function() {

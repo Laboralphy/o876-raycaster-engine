@@ -17,7 +17,7 @@ class Vault {
 
     constructor() {
         this._vaultPath = VAULT_PATH;
-        this._namespace = '';
+        this._namespace = '/';
     }
 
 
@@ -26,6 +26,7 @@ class Vault {
     }
 
     set vaultPath(value) {
+        console.log('set vault path:', value)
         this._vaultPath = value;
     }
 
@@ -45,16 +46,16 @@ class Vault {
      * compute the fully qualified name of the resource
      * @param name {string} resource name
      * @return {string} fully qualified resource name
-     * @private
      */
-    _fqn(name) {
+    fqn(name) {
         if (!name) {
             throw new Error('the given resource name is empty');
         }
         if (!this.namespace) {
             throw new Error('the given resource namespace is empty');
         }
-        return path.resolve(this.vaultPath, this.namespace, name);
+        console.log('fqn', path.join(this.vaultPath, this.namespace, name))
+        return path.join(this.vaultPath, this.namespace, name);
     }
 
     /**
@@ -64,11 +65,11 @@ class Vault {
      * @return {Promise<unknown>}
      */
     async save(filename, contents) {
-        return writeFile(this._fqn(filename), contents);
+        return writeFile(this.fqn(filename), contents);
     }
 
     async mkdir(foldername) {
-        return mkdirp(this._fqn(foldername));
+        return mkdirp(this.fqn(foldername));
     }
 
     /**
@@ -77,7 +78,7 @@ class Vault {
      * @return {Promise<Buffer>}
      */
     async load(filename) {
-        return readFile(this._fqn(filename));
+        return readFile(this.fqn(filename));
     }
 
     async loadJSON(filename) {
@@ -91,15 +92,15 @@ class Vault {
     }
 
     async stat(filename) {
-        return stat(this._fqn(filename));
+        return stat(this.fqn(filename));
     }
 
     async ls(path, options) {
-        return readDir(this._fqn(path), options);
+        return readDir(this.fqn(path), options);
     }
 
     async rm(filename) {
-        return unlink(this._fqn(filename));
+        return unlink(this.fqn(filename));
     }
 
     /**
@@ -128,7 +129,7 @@ class Vault {
                 aDeleted.push(filename);
             }
         }
-        await rmdir(this._fqn(foldername));
+        await rmdir(this.fqn(foldername));
         aDeleted.push(foldername);
         return aDeleted;
     }
