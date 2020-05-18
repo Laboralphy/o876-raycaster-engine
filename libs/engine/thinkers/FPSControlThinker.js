@@ -266,7 +266,7 @@ class FPSControlThinker extends TangibleThinker {
      * @param y
      */
     useBlock(x, y) {
-        this.engine.pushBlock(this.entity, x, y);
+        this.engine.pushCell(this.entity, x, y);
     }
 
 

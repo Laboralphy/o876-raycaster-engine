@@ -3539,8 +3539,9 @@
       "x": 10,
       "y": 5,
       "tags": [
-        "block",
-        "locator clue_skull_face_target"
+        "locator clue_skull_face_target",
+        "archive clue_skull_face",
+        "lock"
       ]
     },
     {
@@ -3554,7 +3555,7 @@
       "x": 10,
       "y": 9,
       "tags": [
-        "locator clue_skull_face 270"
+        "locator clue_skull_face"
       ]
     },
     {

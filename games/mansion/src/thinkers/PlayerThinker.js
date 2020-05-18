@@ -17,7 +17,7 @@ class PlayerThinker extends FPSControlThinker {
     useBlock(x, y) {
         if (!this.entity.data.camera) {
             // push blocks only if camera is dropped
-            this.engine.pushBlock(this.entity, x, y);
+            this.engine.pushCell(this.entity, x, y);
         }
     }
 

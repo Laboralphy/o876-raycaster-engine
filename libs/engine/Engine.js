@@ -520,7 +520,7 @@ class Engine {
      * @param y {number}
      * @param ref {string} reference of the block
      */
-    alterBlock(x, y, ref) {
+    alterCell(x, y, ref) {
         const rc = this.raycaster;
         const r = this._getRefIndex(ref);
         const m = this._materials[r];
@@ -535,7 +535,7 @@ class Engine {
      * @param x {number} block cell coordinate (x axis)
      * @param y {number} block cell coordinate (y axis)
      */
-    pushBlock(entity, x, y) {
+    pushCell(entity, x, y) {
         this.openDoor(x, y, true);
         this._tm.entityPushBlock(entity, x, y);
     }
@@ -603,6 +603,32 @@ class Engine {
                 dc.close();
             }
         }
+    }
+
+    getCellType(x, y) {
+        return this._rc.getCellPhys(x, y);
+    }
+
+    /**
+     * Returns true if the spécified cell is any king of door or curtain
+     * Returns false otherwise (including secret block)
+     * @param x
+     * @param y
+     * @returns {boolean|boolean}
+     */
+    isDoor(x, y) {
+        const c = this._rc.getCellPhys(x, y);
+        return c >= RC_CONSTS.PHYS_FIRST_DOOR && c <= RC_CONSTS.PHYS_LAST_DOOR;
+    }
+
+    /**
+     * Returns true if the spécified cell is secret block
+     * @param x
+     * @param y
+     */
+    isSecretBlock(x, y) {
+        const c = this._rc.getCellPhys(x, y);
+        return c === RC_CONSTS.PHYS_SECRET_BLOCK;
     }
 
 

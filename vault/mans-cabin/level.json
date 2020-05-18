@@ -3470,8 +3470,9 @@
       {
         "block": 23,
         "tags": [
-          "block",
-          "locator clue_skull_face_target"
+          "locator clue_skull_face_target",
+          "archive clue_skull_face",
+          "lock"
         ],
         "mark": {
           "color": "yellow",
@@ -4755,7 +4756,7 @@
       {
         "block": 18,
         "tags": [
-          "locator clue_skull_face 270"
+          "locator clue_skull_face"
         ],
         "mark": {
           "color": "yellow",

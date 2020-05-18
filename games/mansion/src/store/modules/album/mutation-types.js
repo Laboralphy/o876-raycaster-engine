@@ -8,3 +8,6 @@ export const STORE_PHOTO = 'STORE_PHOTO';
 // wraith : a photo of a wandering (non hostile) ghost
 // art : a photo of a piece of art (mostly painting)
 export const SET_ACTIVE_TYPE = 'SET_ACTIVE_TYPE';
+
+// change a photo type, use to store photos into archive.
+export const SET_PHOTO_TYPE = 'SET_PHOTO_TYPE';

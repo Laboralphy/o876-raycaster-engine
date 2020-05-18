@@ -1,13 +1,11 @@
 <template>
     <ul class="tab-list">
         <li :class="getActiveType === 'debug' ? 'selected' : ''" @click="selected('debug')">{{ STRINGS.PHOTO_TYPES_DEBUG }}</li>
-        <li :class="getActiveType === 'clues' ? 'selected' : ''" @click="selected('clues')">{{ STRINGS.PHOTO_TYPES_CLUE }}</li>
-        <li :class="getActiveType === 'wraiths' ? 'selected' : ''" @click="selected('wraiths')">{{
-            STRINGS.PHOTO_TYPES_WRAITH }}</li>
+        <li :class="getActiveType === 'clue' ? 'selected' : ''" @click="selected('clue')">{{ STRINGS.PHOTO_TYPES_CLUE }}</li>
+        <li :class="getActiveType === 'wraith' ? 'selected' : ''" @click="selected('wraith')">{{ STRINGS.PHOTO_TYPES_WRAITH }}</li>
         <li :class="getActiveType === 'art' ? 'selected' : ''" @click="selected('art')">{{ STRINGS.PHOTO_TYPES_ART }}</li>
         <li :class="getActiveType === 'ambient' ? 'selected' : ''" @click="selected('ambient')">{{ STRINGS.PHOTO_TYPES_AMBIENT }}</li>
-        <li :class="getActiveType === 'archives' ? 'selected' : ''" @click="selected('archives')">{{
-            STRINGS.PHOTO_TYPES_ARCHIVE }}</li>
+        <li :class="getActiveType === 'archive' ? 'selected' : ''" @click="selected('archive')">{{ STRINGS.PHOTO_TYPES_ARCHIVE }}</li>
     </ul>
 </template>
 

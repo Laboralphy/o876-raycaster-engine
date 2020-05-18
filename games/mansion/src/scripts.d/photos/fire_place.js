@@ -1,4 +1,4 @@
 export function main(game, remove, x, y) {
-    game.storePhoto('ambient', 500, 'fire_place');
+    game.runScript('actions.takeAmbientPhoto', 'fire_place', 500);
     remove();
 }
