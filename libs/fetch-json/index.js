@@ -1,4 +1,6 @@
 export async function fetchJSON(url, postData = null) {
+    if (url === 'game/levels')         console.trace();
+
     try {
         const bPost = !!postData;
         const oRequest = {
@@ -18,7 +20,7 @@ export async function fetchJSON(url, postData = null) {
         }
         return oJSON;
     } catch (e) {
-        throw new Error('FetchJSON Error - ' + e.message);
+        throw new Error('FetchJSON Error while fetching ' + url + ' - ' + e.message);
     }
 }
 

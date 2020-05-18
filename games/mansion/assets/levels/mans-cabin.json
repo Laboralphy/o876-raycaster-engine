@@ -3515,10 +3515,10 @@
     }
   ],
   "camera": {
-    "x": 7,
-    "y": 10,
+    "x": 10,
+    "y": 26,
     "z": 1,
-    "angle": 3.9269908169872414
+    "angle": 4.71238898038469
   },
   "tags": [
     {
@@ -3609,5 +3609,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/74902f8a2cc26cfa01aa2ba0e873cf70.jpg"
+  "preview": "assets/textures/b4cc3c39279b082b1395ec041386f7f3.jpg"
 }

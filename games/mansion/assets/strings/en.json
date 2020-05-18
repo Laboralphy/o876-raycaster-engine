@@ -18,8 +18,8 @@
   "PHOTO_TYPES_DEBUG": "_debug",
   "PHOTO_TYPES_ART": "Art",
   "PHOTO_TYPES_CLUE": "Clues",
-  "PHOTO_TYPES_WRAITHS": "Wraiths",
-  "PHOTO_TYPES_ARCHIVES": "Archives",
+  "PHOTO_TYPES_WRAITH": "Wraiths",
+  "PHOTO_TYPES_ARCHIVE": "Archives",
 
   "MAIN_TAB_ALBUM": "Album",
   "MAIN_TAB_INV": "Inventory",

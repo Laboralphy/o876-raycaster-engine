@@ -158,7 +158,7 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
-    const GAME_ACTION_PREFIX = '/' + CONFIG.getVariable('game_action_prefix');
+    const GAME_ACTION_PREFIX = '/game';
 
     // declare the assets directory as static resources
     app.use(GAME_ACTION_PREFIX + '/assets', express.static(getProjectFQN(CONFIG.getVariable('game_path'), 'assets')));
@@ -239,7 +239,7 @@ function run(options) {
     gpoe('port', 'port', 'SERVER_PORT', 80);
     gpoe('vault_path', 'vault_path', 'VAULT_PATH', '');
     gpoe('game_path', 'game_path', 'GAME_PATH', '');
-    gpoe('game_action_prefix', 'game_action_prefix', 'GAME_ACTION_PREFIX', 'game');
+    //gpoe('game_action_prefix', 'game_action_prefix', 'GAME_ACTION_PREFIX', 'game');
 
     initGameProject();
     initFavicon();
@@ -253,7 +253,7 @@ function run(options) {
     print('vault location :', CONFIG.getVariable('vault_path'));
     print('game project location :', CONFIG.getVariable('game_path'));
     print('server port :', CONFIG.getVariable('port'));
-    print('action prefix :', CONFIG.getVariable('game_action_prefix'));
+    print('action prefix :', 'game');
     print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
     print('service is now listening...')
 }

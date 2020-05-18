@@ -57,14 +57,12 @@ export default {
 
     [ACTIONS.SET_SHOT]: function({commit, dispatch}, payload) {
         if (!!TIMEOUT_SHOT) {
-            console.log('previous time out present', payload);
             // Scores are being displayed currently
             clearTimeout(TIMEOUT_SHOT); // cancel previous time out
             TIMEOUT_SHOT = null; // clear time out flag
         }
         commit(MUTATIONS.SET_SHOT, payload); // sets new shot data
         TIMEOUT_SHOT = setTimeout(() => {
-            console.log('hiding shot');
             commit(MUTATIONS.CLEAR_SHOT);
             TIMEOUT_SHOT = null;
         }, CONSTS.SHOT_DISPLAY_DURATION);

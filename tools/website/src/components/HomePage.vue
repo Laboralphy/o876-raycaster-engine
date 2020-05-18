@@ -98,7 +98,7 @@
         data: function() {
             return {
                 levels: [],
-                gameActionPrefix: CONFIG.getVariable('game_action_prefix'),
+                gameActionPrefix: 'game',
                 onlineVersion: false
             }
         },
