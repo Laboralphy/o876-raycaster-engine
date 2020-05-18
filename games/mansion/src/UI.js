@@ -63,6 +63,17 @@ class UI extends StoreAbstract {
     hide() {
         this.dispatch(UI_ACTIONS.HIDE_UI_FRAME, {});
     }
+
+    displayPhotoScore(nValue) {
+        this.dispatch(UI_ACTIONS.SET_SHOT, {
+            value: nValue,
+            energy: 0,
+            distance: Infinity,
+            angle: Infinity,
+            targets: 0,
+            shutter: false
+        });
+    }
 }
 
 export default UI;
