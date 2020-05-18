@@ -1,5 +1,6 @@
 import * as CONSTS from './consts';
-import * as MUTATIONS from './store/modules/logic/mutation-types';
+import * as LOGIC_MUTATIONS from './store/modules/logic/mutation-types';
+import * as UI_ACTIONS from './store/modules/ui/action-types';
 import GameAbstract from 'libs/game-abstract';
 import {quoteSplit}  from "libs/quote-split";
 import UI from './UI';
@@ -110,7 +111,7 @@ class Game extends GameAbstract {
         if (this.isCameraRaised()) {
             // if ghost
             const bGhost = true;
-            this.logic.commit(bGhost ? MUTATIONS.INC_ENERGY : MUTATIONS.DEPLETE_ENERGY);
+            this.logic.commit(bGhost ? LOGIC_MUTATIONS.INC_ENERGY : LOGIC_MUTATIONS.DEPLETE_ENERGY);
             this.syncCameraStore();
         }
     }
@@ -215,9 +216,18 @@ class Game extends GameAbstract {
         }
     }
 
+    /**
+     * stockage d'une photo d'indice
+     * @param type
+     * @param value
+     * @param ref
+     * @param oPosition
+     * @return {HTMLCanvasElement}
+     */
     storePhoto(type, value, ref, oPosition = null) {
         const oPhoto = this.capture(oPosition);
         this.album.storePhoto(oPhoto.toDataURL('image/jpeg'), type, value, ref);
+        this.ui.displayPhotoScore(value);
         return oPhoto;
     }
 
@@ -235,7 +245,7 @@ class Game extends GameAbstract {
             color: 'white',
             duration: CONSTS.FLASH_DURATION / 2
         }));
-        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
         // pour tous les fantomes present dans la ligne de mire
         // appliquer un filter ghostshot
         // calculer les dégats
@@ -259,7 +269,7 @@ class Game extends GameAbstract {
      */
     raiseCamera() {
         if (this.isCameraRaisable()) {
-            this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+            this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
             const oCamera = this.engine.camera;
             oCamera.data.camera = true;
             oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_CAMERA_SPEED);
@@ -276,7 +286,7 @@ class Game extends GameAbstract {
         oCamera.data.camera = false;
         oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
         this._cameraFilter.hide();
-        this.logic.commit(MUTATIONS.DEPLETE_ENERGY);
+        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
         this.syncCameraStore();
     }
 

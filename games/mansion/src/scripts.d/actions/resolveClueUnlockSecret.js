@@ -26,5 +26,5 @@ export async function main(game, ref, score = 0) {
     );
     await game.runScript('actions.photoMogrify', p0, p1);
     await game.ui.popup('EVENT_PHOTO_MOGRIFIED', 'photo-mogrify');
-    game.ui.popup('EVENT_PHOTO_STORED', 'album-clue', 'PHOTO_TYPES_CLUE');
+    game.ui.popup('EVENT_PHOTO_CLUE_STORED', 'album-clue');
 }
