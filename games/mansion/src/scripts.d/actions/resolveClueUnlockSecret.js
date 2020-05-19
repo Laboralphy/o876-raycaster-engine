@@ -28,5 +28,6 @@ export async function main(game, ref, score = 0) {
         pos                     // position d'ou doit etre prise la photo
     );
     await game.runScript('actions.photoMogrify', p0, p1);
+    await game.ui.popup('EVENT_PHOTO_MOGRIFY', 'photo-mogrify');
     return game.ui.popup('EVENT_PHOTO_CLUE_STORED', 'album-clue');
 }
