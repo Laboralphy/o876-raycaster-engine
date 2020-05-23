@@ -28,7 +28,7 @@
 
   "ALBUM_TAB_EMPTY": "Cette section est vide.",
 
-  "EVENT_PHOTO_ART_STORED": "Photo artistique stockée dans l'album.",
+  "EVENT_PHOTO_ART_STORED": "Photo artistique stockée da ns l'album.",
   "EVENT_PHOTO_CLUE_STORED": "Indice stocké dans l'album.",
   "EVENT_PHOTO_WRAITH_STORED": "Spectre stocké dans l'album.",
   "EVENT_PHOTO_NAMED_STORED": "\"%s\" stockée dans l'album.",
