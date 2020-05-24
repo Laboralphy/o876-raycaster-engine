@@ -89,6 +89,10 @@ class GameAbstract {
         return this._engine;
     }
 
+    get options() {
+        return this._options;
+    }
+
     /**
      * Should be called once !
      * @return {GameAbstract}
@@ -116,6 +120,7 @@ class GameAbstract {
         engine._config.cameraThinker = this._options.cameraThinker;
         engine.useThinkers(this._options.thinkers);
         engine.setRenderingCanvas(surface);         // configure the engine, so it uses our canvas
+        engine.events.on('level.loading', (phase, progress) => this.progressFunction(phase, progress));
         this._engine = engine;                      // keeping updateDummy of the engine instance
         return this;
     }
@@ -228,12 +233,12 @@ class GameAbstract {
      * @return {Promise<void>}
      */
     async loadLevel(name) {
-        this.log('loading level', name)
+        this.log('loading level', name);
         this._engine.stopDoomLoop();
-        await this._engine.loadLevel(name, this._options.loadProgress);
-        this.log('data successfuly loaded and parsed')
+        await this._engine.loadLevel(name);
+        this.log('data successfuly loaded and parsed');
         this._engine.startDoomLoop();
-        this.log('doom loop started')
+        this.log('doom loop started');
         this.enterLevel();
     }
 

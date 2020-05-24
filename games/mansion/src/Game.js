@@ -11,7 +11,7 @@ import Flash from "libs/engine/filters/Flash";
 import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
 import Position  from "libs/engine/Position";
-import GeometryHelper from "libs/geometry/GeometryHelper";
+import Helper from "libs/geometry/Helper";
 import ObjectExtender from "libs/object-helper/Extender";
 
 import THINKERS from './thinkers';
@@ -194,7 +194,7 @@ class Game extends GameAbstract {
         const oAimedCell = engine.raycaster.aimedCell;
         if (('xCell' in oAimedCell) && ('yCell' in oAimedCell)) {
             const p = engine.camera.position;
-            const d = GeometryHelper.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
+            const d = Helper.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
             if (d <= CONSTS.CAMERA_EXAMINATION_RANGE) {
                 const x = oAimedCell.xCell;
                 const y = oAimedCell.yCell;
@@ -480,7 +480,7 @@ class Game extends GameAbstract {
             this.engine.tagManager.grid.removeTag(x, y, id);
         });
         /**
-         * ee = event emitter
+         * ee = event _events
          * @type {EventEmitter|module:events.internal|EventEmitter|number|ASTElementHandlers}
          */
         const ee = this.engine.events;

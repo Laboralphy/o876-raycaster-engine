@@ -1,7 +1,16 @@
 class FilterManager {
 
     constructor() {
+        this._enabled = true;
         this._filters = [];
+    }
+
+    get enabled() {
+        return this._enabled;
+    }
+
+    set enabled(value) {
+        this._enabled = value;
     }
 
     /**
@@ -9,7 +18,9 @@ class FilterManager {
      * @param oFilter {AbstractFilter} the new filter
      */
     link(oFilter) {
-        this._filters.push(oFilter);
+        if (this._enabled) {
+            this._filters.push(oFilter);
+        }
     }
 
     /**
@@ -34,7 +45,9 @@ class FilterManager {
      * @param canvas {HTMLCanvasElement}
      */
     render(canvas) {
-        this._filters.forEach(f => f.render(canvas));
+        if (this._enabled) {
+            this._filters.forEach(f => f.render(canvas));
+        }
     }
 
 }

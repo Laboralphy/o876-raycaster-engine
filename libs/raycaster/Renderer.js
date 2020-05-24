@@ -9,9 +9,10 @@ import Translator from "../translator/Translator";
 import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
 import Extender from "../object-helper/Extender";
-import GeometryHelper from '../geometry/GeometryHelper';
+import Helper from '../geometry/Helper';
 import DebugDisplay from "./DebugDisplay";
 import LightMap from "../light-sources/LightMap";
+import Events from 'events';
 
 /**
  * @todo VR rendering
@@ -82,19 +83,7 @@ class Renderer {
         this._firstFloor = true; // if false then this instance is second story
         this._filters = [];
         this._bCheckFilters = false;
-    }
-
-
-    updateStaticLightMap() {
-        const lm = this._lightMap;
-        if (lm.isInvalid()) {
-            const max = this.options.shading.shades;
-            const csm = this._csm;
-            lm.traceAllSources();
-            lm.filter((x, y, n) => {
-                csm.setLightMap(x, y, n * max | 0);
-            });
-        }
+        this._events = new Events();
     }
 
     configOptions() {
@@ -128,6 +117,7 @@ class Renderer {
             },
         };
         this._optionsReactor = new Reactor(this._options);
+        this._optionsReactor.events.on('changed', payload => this._events.emit('option.changed', payload));
     }
 
     configTranslator() {
@@ -145,6 +135,14 @@ class Renderer {
 
     get options() {
 	    return this._options;
+    }
+
+    set options(value) {
+	    this._config(value);
+    }
+
+    get events() {
+	    return this._events;
     }
 
     get renderCanvas() {
@@ -322,7 +320,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
 
 */
 
-    config(opt) {
+    _config(opt) {
         Extender.objectExtends(this._options, opt);
     }
 
@@ -1936,7 +1934,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const yscr = SCREEN.width;
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
-            const z = GeometryHelper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const z = Helper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
             const x = Math.sin(fAlpha) * z;         // sprite x position
             const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
             const focal = SCREEN.focal;
