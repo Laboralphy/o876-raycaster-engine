@@ -993,7 +993,9 @@ class Engine {
         const TEXTURE_COUNT = 3;
         const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT + LS_COUNT;
 
-        const feedback = !!monitor ? monitor : () => {};
+        const feedback = (phase, progress) => {
+
+        };
         feedback('init', 0);
         this._locks = new MarkerRegistry();
         const oTranslator = new Translator();
@@ -1060,7 +1062,7 @@ class Engine {
             oRCOptions.shading = data.shading;
         }
 
-        rc.config(oRCOptions);
+        rc.options = oRCOptions;
 
         let PROGRESS = 0;
         const showProgress = sLabel => {

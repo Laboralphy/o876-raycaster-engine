@@ -42,6 +42,11 @@ loadEnvFile();
  */
 const devConfig = {
     mode: "development",
+    resolve: {
+        alias: {
+            libs: path.resolve(DIR_NAME, 'libs')
+        }
+    },
     entry: {
         libraycaster: path.resolve(DIR_NAME, 'libs/index.js'),
     },
@@ -103,6 +108,11 @@ const websiteConfig = require('./tools/website/webpack.config');
 const exampleConfig = {
     mode: "development",
     entry: lsIndex('examples', 'index.js'),
+    resolve: {
+        alias: {
+            libs: path.resolve(DIR_NAME, 'libs')
+        }
+    },
     output: {
         path: path.resolve(DIR_NAME, 'dist/examples'),
         libraryTarget: 'umd',

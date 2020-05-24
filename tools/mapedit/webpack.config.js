@@ -3,6 +3,11 @@ const {VueLoaderPlugin} = require('vue-loader');
 
 const rcmapeditConfig = {
     mode: "development",
+    resolve: {
+        alias: {
+            libs: path.resolve(__dirname, '../libs')
+        }
+    },
     entry: {
         mapedit: path.resolve(__dirname, 'src/index.js'),
     },

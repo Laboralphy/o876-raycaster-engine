@@ -1,5 +1,5 @@
 import TangibleThinker from "./TangibleThinker";
-import Helper from "libs/geometry/Helper";
+import Helper from "../../geometry/Helper";
 import * as CONSTS from "../consts";
 
 /**
