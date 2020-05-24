@@ -75,7 +75,7 @@ class ServiceEngine extends ServiceAbstract {
     /**
      * Fabrique un packet de creation de mobile
      * @param m
-     * @return {{id, x, y, a: number, sx: number, sy: number, bp: module.Level.blueprint|string, an: number}}
+     * @return {{id, x, y, a: number, sx: number, sy: number, bp: module.Level.blueprint|string, a: number}}
      */
     static buildMobileCreationPacket(m) {
         let mloc = m.location;
@@ -94,8 +94,8 @@ class ServiceEngine extends ServiceAbstract {
 
     /**
      * Fabrique un packet de mise à jour de mobile
-     * @param m
-     * @return {{id, x, y, a: number, sx: number, sy: number}}
+     * @param m {Mobile}
+     * @return {{id, x, y, a: number, sx: number, sy: number, f}}
      */
     static buildMobileUpdatePacket(m) {
         let mloc = m.location;
@@ -178,7 +178,6 @@ class ServiceEngine extends ServiceAbstract {
                 this.error(client, e);
             }
         });
-
     }
 }
 

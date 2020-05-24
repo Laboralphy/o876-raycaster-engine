@@ -4,7 +4,7 @@
 const PI = Math.PI;
 const PI2 = 2 * PI;
 
-class GeometryHelper {
+class Helper {
     /**
      * Distance between 2 points
      * @param x1 {Number} point 1 coordinates
@@ -65,7 +65,7 @@ class GeometryHelper {
     }
 
     static pointInCircle(x, y, xc, yc, r) {
-        return GeometryHelper.squareDistance(x, y, xc, yc) <= (r * r);
+        return Helper.squareDistance(x, y, xc, yc) <= (r * r);
     }
 
     static circleInRect(xc, yc, r, xr, yr, wr, hr) {
@@ -99,4 +99,4 @@ class GeometryHelper {
     }
 }
 
-export default GeometryHelper;
+export default Helper;

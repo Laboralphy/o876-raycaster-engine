@@ -6,7 +6,7 @@
  * @param ref {string}
  * @param score {number}
  */
-import GeometryHelper from "libs/geometry/GeometryHelper";
+import Helper from "libs/geometry/Helper";
 
 export async function main(game, ref, score = 0) {
     const CLUE_REF = 'clue_' + ref;
@@ -16,7 +16,7 @@ export async function main(game, ref, score = 0) {
     const block = game.locators[CLUE_REF_TARGET].cell;
     game.rotateDecals(block.x, block.y, false);
     game.engine.lockDoor(block.x, block.y, false);
-    pos.angle = GeometryHelper.angle(pos.x, pos.y, target.x, target.y);
+    pos.angle = Helper.angle(pos.x, pos.y, target.x, target.y);
     const p0 = game.capture();
     const p1 = game.storePhoto(
         'clues',                // type de photo

@@ -3,6 +3,7 @@ import ClientPrediction from './Predictor';
 import PingMonitor from "./PingMonitor";
 import RC from '../../consts/raycaster';
 import GameAbstract from "libs/game-abstract";
+import THINKERS from "./thinkers";
 
 class Engine extends GameAbstract {
 
@@ -19,6 +20,12 @@ class Engine extends GameAbstract {
 		this.setupListeners();
 	}
 
+	init() {
+		super.init();
+		this.engine.events.on('update', () => this.engineUpdateHandler());
+		this.engine.useThinkers(THINKERS);
+	}
+
 	/**
 	 * Initialisation du moniteur de ping
 	 */
@@ -33,11 +40,10 @@ class Engine extends GameAbstract {
 	 * Initialisation des écouteurs
 	 */
 	setupListeners() {
-		this.on('key.down', event => this.gameEventKey(event));
-		this.on('enter', event => this.gameEventEnter(event));
-		this.on('load', event => this.gameEventLoad(event));
-		this.on('doomloop', event => this.gameEventDoomLoop(event));
-		this.on('frame', event => this.gameEventFrame(event));
+		//this.on('key.down', event => this.gameEventKey(event));
+		this.on('level.loaded', event => this.gameEventEnter(event));
+		this.on('update', event => this.gameEventDoomLoop(event));
+		this.on('render', event => this.gameEventFrame(event));
 	}
 
 
@@ -56,18 +62,12 @@ class Engine extends GameAbstract {
 	 * @param data {*} donnée du niveau
 	 * @param liveData {*} donnée du niveau
 	 */
-	loadLevel(data, liveData) {
+	async loadLevel(data, liveData) {
 		this._levelLiveData = liveData;
+		this.engine.
 		this.initRaycaster(data);
-		let tm = this.oRaycaster.oThinkerManager;
+		let tm = this.engine.raycaster.oThinkerManager;
 		tm.defineAlias('Net', Thinkers.Net);
-	}
-
-	/**
-	 * Renvoie l'instance du raycaster
-	 */
-    getRaycaster() {
-		return this.oRaycaster;
 	}
 
 
@@ -124,31 +124,6 @@ class Engine extends GameAbstract {
 	 */
 	gameEventFrame(oEvent) {
 		this.renderPing();
-	}
-
-	/**
-	 * Chargement du niveau et des resource
-	 * Il s'agit principalement d'afficher la barre de progression
-	 * @param oEvent
-	 */
-	gameEventLoad(oEvent) {
-		let s = oEvent.phase;
-		let n = oEvent.progress;
-		let nMax = oEvent.max;
-		let oCanvas = this.oRaycaster.getScreenCanvas();
-		let oContext = this.oRaycaster.getScreenContext();
-		oContext.clearRect(0, 0, oCanvas.width, oCanvas.height);
-		let sMsg = s;
-		let y = oCanvas.height >> 1;
-		let nPad = 96;
-		let xMax = oCanvas.width - (nPad << 1);
-		oContext.font = '10px monospace';
-		oContext.fillStyle = 'white';
-		oContext.fillText(sMsg, nPad, oCanvas.height >> 1);
-		oContext.fillStyle = 'rgb(48, 24, 0)';
-		oContext.fillRect(nPad, y + 12, xMax, 8);
-		oContext.fillStyle = 'rgb(255, 128, 48)';
-		oContext.fillRect(nPad, y + 12, n * xMax / nMax, 8);
 	}
 
 

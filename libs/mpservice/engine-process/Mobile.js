@@ -4,7 +4,7 @@
  * Décision
  */
 
-const GeometryHelper = require('../../geometry/GeometryHelper');
+const GeometryHelper = require('../../geometry/Helper');
 const Vector = require('../../geometry/Vector');
 const RC_CONST = require('../consts/raycaster');
 const Location = require('./Location');
@@ -255,7 +255,7 @@ module.exports = class Mobile {
         let vPos = this.location.position;
         let x = vPos.x;
         let y = vPos.y;
-        let dist = GeometryHelper.distance;
+        let dist = Helper.distance;
         // ajouter un vecteur force à tous ces mobiles
         return aMobHits.map(m => {
         	let mPos = m.location.position;

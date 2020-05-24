@@ -6,7 +6,7 @@
  */
 
 import Vector from '../geometry/Vector';
-import GeometryHelper from "../geometry/GeometryHelper";
+import Helper from "../geometry/Helper";
 import SectorRegistry from "../sector-registry/SectorRegistry";
 
 class Collider extends SectorRegistry {
@@ -113,7 +113,7 @@ class Collider extends SectorRegistry {
         let vPos = oDummy.position;
         let x = vPos.x;
         let y = vPos.y;
-        let dist = GeometryHelper.distance;
+        let dist = Helper.distance;
         return aHitters.map(m => {
             let mPos = m.position;
             let mx = mPos.x;

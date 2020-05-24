@@ -1,20 +1,13 @@
 /**
  * Thinker du personnage controlé par le joueur
  */
-import FPSThinker from './FPSThinker';
-import COMMANDS from '../../../consts/commands'
+import FPSControlThinker from 'libs/engine/thinkers/FPSControlThinker';
+import COMMANDS from '../../../consts/commands';
 
-class PlayerThinker extends FPSThinker {
+class PlayerThinker extends FPSControlThinker {
 
 	constructor() {
 		super();
-		this.defineKeys({
-			df : ['z', 'w'],
-			db : 's',
-			dl : ['q', 'a'],
-			dr : 'd',
-			cu : ' '
-		});
 	}
 
 	/**
@@ -39,8 +32,8 @@ class PlayerThinker extends FPSThinker {
         }
     }
 
-	$active() {
-		super.$active();
+	s_move() {
+		super.s_move();
 		let c = 0;
 		let mobile = this.mobile;
 		let f = mobile.fTheta;
@@ -48,27 +41,11 @@ class PlayerThinker extends FPSThinker {
 		let y = mobile.y;
 		this._aCurrentEvents.forEach(e => {
 			switch (e) {
-				case 'df.c':
-					mobile.moveForward();
-					break;
-
-				case 'dl.c':
-					mobile.strafeLeft();
-					break;
-
-				case 'dr.c':
-					mobile.strafeRight();
-					break;
-
-				case 'db.c':
-					mobile.moveBackward();
-					break;
-
 				case 'b0.d':
 					c |= COMMANDS.PRIMARY_ACTION;
 					break;
 
-				case 'cu.d':
+				case 'use.d':
 					c |= COMMANDS.ACTIVATE;
 					break;
 			}

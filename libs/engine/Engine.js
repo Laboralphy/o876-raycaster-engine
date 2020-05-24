@@ -941,11 +941,10 @@ class Engine {
     /**
      * Builds a level with the specified content
      * @param data {*} level definition
-     * @param monitor {function} callback to a function called when the building process is progressing
      * @param extra {null|{blueprints: [], tilesets: []}} common blueprints and tilesets definition
      * @return {Promise<void>}
      */
-    async buildLevel(data, monitor, extra = null) {
+    async buildLevel(data, extra = null) {
         // validation json
 
         jsonValidate(data, SCHEMA_RCE_100);
@@ -967,7 +966,9 @@ class Engine {
         const TEXTURE_COUNT = 3;
         const ALL_COUNT = TEXTURE_COUNT + BLUEPRINT_COUNT + DECAL_COUNT + TAG_COUNT + LS_COUNT;
 
-        const feedback = !!monitor ? monitor : () => {};
+        const feedback = (phase, progress) => {
+            this._events.emit('level.loading', {phase, progress})
+        }
         feedback('init', 0);
         this._locks = new MarkerRegistry();
         const oTranslator = new Translator();
@@ -1246,7 +1247,7 @@ class Engine {
         }
 
         feedback('done', 1);
-        this.events.emit('level.load');
+        this.events.emit('level.loaded');
     }
 
 
@@ -1281,14 +1282,13 @@ class Engine {
     /**
      * Loads a level
      * @param sName {string}
-     * @param pMonitor {function}S
      * @return {Promise<void>}
      */
-    async loadLevel(sName, pMonitor) {
+    async loadLevel(sName) {
         const data = await this.fetchLevel(sName);
         const tilesets = await this.fetchData('tilesets');
         const blueprints = await this.fetchData('blueprints');
-        return this.buildLevel(data, pMonitor, { tilesets, blueprints });
+        return this.buildLevel(data, { tilesets, blueprints });
     }
 
 }

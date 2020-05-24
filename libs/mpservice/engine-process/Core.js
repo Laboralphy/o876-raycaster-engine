@@ -13,7 +13,7 @@ const MissileThinker = require('./thinkers/MissileThinker');
 const ResourceLoader = require('../resource-loader/index');
 const logger = require('../logger/index');
 const Vector = require('../../geometry/Vector');
-const GeometryHelper = require('../../geometry/GeometryHelper');
+const GeometryHelper = require('../../geometry/Helper');
 
 const STRINGS = require('../consts/strings');
 const STATUS = require('../consts/status');
@@ -474,7 +474,7 @@ class Core {
 			throw new Error('no initial speed defined for mobile #', id);
 		}
 		let fInitialSpeed = m.data.speed;
-		let vInertia = GeometryHelper.polar2rect(angle, fInitialSpeed);
+		let vInertia = Helper.polar2rect(angle, fInitialSpeed);
 		m.inertia.set(vInertia.dx, vInertia.dy);
 
         this._events.emit(EVENTS.MOBILE_CREATED, { players, mobile: m });
@@ -501,7 +501,7 @@ class Core {
         oMissile.thinker = th;
         oMissile.flagCrash = true;
         let angle = location.heading;
-        let v = GeometryHelper.polar2rect(angle, oMissile.data.speed);
+        let v = Helper.polar2rect(angle, oMissile.data.speed);
         th.setMovement({a: angle, sx: v.dx, sy: v.dy});
         return oMissile;
     }
