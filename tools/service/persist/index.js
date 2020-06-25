@@ -6,7 +6,7 @@ const Vault = require('./Vault');
 const TILE_PATH = 'tiles';
 
 const vault = new Vault();
-vault.vaultPath = '.';
+vault.path = '.';
 vault.namespace = '/';
 
 
@@ -33,7 +33,6 @@ async function saveLevel(sLevelName, data) {
 
 
 async function loadLevel(sLevelName) {
-	const sBasePath = path.resolve(__dirname,);
 	const jb = new JsonBlobz();
 	const sLevelPath = sLevelName;
 	const sTilePath = path.join(sLevelPath, TILE_PATH);
@@ -94,7 +93,7 @@ async function removeLevel(sUser, name) {
  * @param sPath {string} new vault path value
  */
 function setVaultPath(sPath) {
-	vault.vaultPath = sPath;
+	vault.path = sPath;
 }
 
 /**
@@ -102,7 +101,7 @@ function setVaultPath(sPath) {
  * @return {string}
  */
 function getVaultPath() {
-	return vault.vaultPath;
+	return vault.path;
 }
 
 

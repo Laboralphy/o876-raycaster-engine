@@ -1,4 +1,4 @@
-import GameAbstract from '../../src/libs/game-abstract';
+import GameAbstract from 'libs/game-abstract';
 
 class Game extends GameAbstract {
     // ... write your game here ...

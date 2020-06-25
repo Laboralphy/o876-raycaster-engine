@@ -66,7 +66,7 @@
 
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
-    import CanvasHelper from "../../../../src/libs/canvas-helper/CanvasHelper";
+    import CanvasHelper from "../../../../libs/canvas-helper/CanvasHelper";
 
     const {mapGetters: levelMapGetters, mapActions: levelMapAction} = createNamespacedHelpers('level');
 

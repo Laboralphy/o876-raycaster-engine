@@ -1,5 +1,5 @@
 import Events from 'events';
-import CanvasHelper from '../../../../../src/libs/canvas-helper';
+import CanvasHelper from '../../../../../libs/canvas-helper';
 
 const DEFAULT_CELL_WIDTH = 32;
 const DEFAULT_CELL_HEIGHT = 32;

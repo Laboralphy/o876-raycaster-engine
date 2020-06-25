@@ -1,4 +1,4 @@
-const Reactor = require('../src/libs/object-helper/Reactor').default;
+const Reactor = require('../libs/object-helper/Reactor').default;
 
 describe('#reactor', function() {
     it('should work on one level', function() {

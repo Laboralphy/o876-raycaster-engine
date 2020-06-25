@@ -1,4 +1,4 @@
-const OE = require('../src/libs/object-helper/Extender').default;
+const OE = require('../libs/object-helper/Extender').default;
 
 
 class MyTestClass {

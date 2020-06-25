@@ -1,4 +1,4 @@
-const TagGrid = require('../src/libs/tag-grid').default;
+const TagGrid = require('../libs/tag-grid').default;
 
 describe('#tags-grid', function() {
     it('should work 1', function() {

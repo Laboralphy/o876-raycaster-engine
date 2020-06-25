@@ -1,0 +1,35 @@
+Le raycaster utilisé par Engine
+
+rc.events
+rc.options
+
+rc.getCellPhys
+rc.setCellOffset
+rc.setCellPhys
+rc.setCellMaterial
+
+rc.render
+rc.flip
+
+rc.buildTileSet
+rc.buildSprite
+rc.disposeSprite
+rc.addLightSource
+
+rc.setBackground
+rc.setWallTextures
+rc.setFlatTextures
+
+rc.getMapSize
+
+rc.paintSurface
+
+rc.renderCanvas
+
+
+NullRenderer
+
+
+
+import -> require
+canvas -> nullcanvas

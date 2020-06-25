@@ -130,7 +130,7 @@ async function getPublishedLevels() {
             const data = JSON.parse(content);
             const name = path.basename(f.name, JSON_EXT);
             const exported = true;
-            const preview = CONFIG.getVariable('game_action_prefix') + '/' + data.preview;
+            const preview = 'game/' + data.preview;
             const st = await stat(sFileName);
             const date = Math.floor(st.mtimeMs);
             aLevels.push({

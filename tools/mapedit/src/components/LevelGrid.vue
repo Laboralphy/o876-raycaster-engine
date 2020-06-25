@@ -196,7 +196,7 @@
     import MagnifyMinusIcon from "vue-material-design-icons/MagnifyMinus.vue";
     import ContentSaveIcon from "vue-material-design-icons/ContentSave.vue";
     import FolderOpenIcon from "vue-material-design-icons/FolderOpen.vue";
-    import MarkerRegistry from "../../../../src/libs/marker-registry";
+    import MarkerRegistry from "../../../../libs/marker-registry";
     import Siblings from "./Siblings.vue";
     import SiblingButton from "./SiblingButton.vue";
     import SelectIcon from "vue-material-design-icons/Select.vue";

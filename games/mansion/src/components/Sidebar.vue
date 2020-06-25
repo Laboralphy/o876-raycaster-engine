@@ -1,0 +1,65 @@
+<template>
+    <div class="sidebar">
+        <ul>
+            <li><span @click="select('inv')">{{ STRINGS.MAIN_TAB_INV }}</span></li>
+            <li><span @click="select('album')">{{ STRINGS.MAIN_TAB_ALBUM }}</span></li>
+            <li><span @click="select('notes')">{{ STRINGS.MAIN_TAB_NOTES }}</span></li>
+        </ul>
+    </div>
+</template>
+
+<script>
+    import STRINGS from './mixins/strings';
+    import {createNamespacedHelpers} from 'vuex';
+    import * as MUTATIONS from '../store/modules/ui/mutation-types';
+
+
+    const {mapMutations: uiMapMutations} = createNamespacedHelpers('ui');
+
+    export default {
+        name: "Sidebar",
+        mixins: [STRINGS],
+        methods: {
+            ...uiMapMutations({
+                setActiveTab: MUTATIONS.SET_MAIN_ACTIVE_TAB
+            }),
+            select: function(tab) {
+                this.setActiveTab({value: tab});
+            }
+        }
+    }
+</script>
+
+<style scoped>
+    div.sidebar {
+        position: absolute;
+        width: 13%;
+        height: 90%;
+        top: 10%;
+        left: 8%;
+        text-align: right;
+        font-family: "KingthingsTrypewriter2", Courier, monospace;
+        font-size: 0.8em;
+    }
+
+    div.sidebar > ul > li {
+        margin-top: 1.4em;
+        padding-right: 0.5em;
+        list-style: none;
+    }
+
+    div.sidebar > ul > li > span {
+        background-color: rgb(203, 185, 150);
+        border: solid 0.05em rgb(59, 50, 50);
+        border-top-left-radius: 0.2em;
+        border-bottom-left-radius: 0.2em;
+        padding: 0.5em;
+        color: black;
+    }
+
+    div.sidebar > ul > li:hover > span {
+        background-color: rgb(227, 221, 210);
+        color: #171313;
+        cursor: pointer;
+    }
+</style>

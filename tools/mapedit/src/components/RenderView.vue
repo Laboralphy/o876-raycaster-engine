@@ -17,8 +17,8 @@
     import Window from "./Window.vue";
     import generate from '../libraries/generate';
     import {appendImages} from "../libraries/append-images";
-    import Engine from "../../../../src/libs/engine/Engine";
-    import CanvasHelper from "../../../../src/libs/canvas-helper";
+    import Engine from "../../../../libs/engine/Engine";
+    import CanvasHelper from "../../../../libs/canvas-helper";
 
 
     let engine = null;
@@ -72,13 +72,7 @@
                     engine.events.on('door.open', ({x, y, context}) => console.log('door open at', x, y));
                     engine.events.on('door.closing', ({x, y, context}) => console.log('door closing at', x, y));
                     engine.events.on('door.closed', ({x, y, context}) => console.log('door closed at', x, y));
-                    engine.setRenderingCanvas(canvas);
-                    const grad = context.createLinearGradient(x, y, x, y + h);
-                    grad.addColorStop(0, 'rgba(0, 66, 240)');
-                    grad.addColorStop(0.5, 'rgba(20, 120, 250)');
-                    grad.addColorStop(1, 'rgba(0, 66, 240)');
-                    context.fillStyle = grad;
-                    await engine.buildLevel(data, (phase, progress) => {
+                    engine.events.on('level.loading', (phase, progress) => {
                         context.fillStyle = 'black';
                         context.fillRect(x, y - h, w, h);
                         context.fillStyle = 'white';
@@ -86,6 +80,13 @@
                         context.fillStyle = grad;
                         context.fillRect(x, y, progress * w | 0, h);
                     });
+                    engine.setRenderingCanvas(canvas);
+                    const grad = context.createLinearGradient(x, y, x, y + h);
+                    grad.addColorStop(0, 'rgba(0, 66, 240)');
+                    grad.addColorStop(0.5, 'rgba(20, 120, 250)');
+                    grad.addColorStop(1, 'rgba(0, 66, 240)');
+                    context.fillStyle = grad;
+                    await engine.buildLevel(data);
                     window.GAME = engine;
                     setTimeout(() => !!engine && engine.startDoomLoop(), 200);
                 } catch (e) {

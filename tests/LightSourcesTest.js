@@ -1,4 +1,4 @@
-import LightMap from "../src/libs/light-sources/LightMap";
+import LightMap from "../libs/light-sources/LightMap";
 
 
 describe('#light-sources', function() {

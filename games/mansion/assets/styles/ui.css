@@ -1,0 +1,47 @@
+/*
+regular height for inline blocks, containing text or other readable things (small icons, gauge aligned with texts)
+*/
+
+.ui {
+    font-family: "Lucida Console", Monaco, monospace;
+}
+
+.ui.regular-height {
+    height: 1.2em;
+}
+
+.ui.row {
+    height: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+.ui.axial {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.ui-window-title {
+    font-family: "KingthingsTrypewriter2", Courier, monospace;
+    font-weight: bold;
+    font-size: 1.2em;
+    color: black;
+    text-shadow: rgba(0, 0, 0, 0.5) 0.08em 0.08em 0.2em;
+}
+
+div.ui-menu-window {
+    position: absolute;
+    background-color: rgb(181, 151, 91);
+    background-image: url(../uigfx/notebook-texture-2.jpg);
+    border: solid 0.2em rgb(37, 26, 26);
+    border-radius: 0.5em;
+}
+
+div.ui-size-60-90 {
+    width: 60%;
+    height: 90%;
+    top: 5%;
+    left: 20%;
+}

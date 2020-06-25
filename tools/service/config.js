@@ -9,7 +9,7 @@ const CONFIG = {
     port: parseInt(process.env.SERVER_PORT || 8080), // server listening port
     vault_path: '',    // the folder where all map editor levels are located
     game_path: '',  // the game project folder
-
+    base_path: '', // the base path (where the script is run from)
 };
 
 function getVariable(s) {
@@ -21,7 +21,6 @@ function getVariable(s) {
 }
 
 function setVariable(s, v) {
-    console.log('setting variable', s, v);
     CONFIG[s] = v;
 }
 

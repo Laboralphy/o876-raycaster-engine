@@ -1,0 +1,58 @@
+{
+  "ITEM_ACQUIRED" : "Vous obtenez : %s.",
+
+  "DOOR_LOCKED" : "Cette porte est verrouillée.",
+  "DOOR_UNLOCKED" : "Vous déverroullez la porte avec : %s.",
+
+  "ATTR_HITPOINTS" : "Mental",
+
+  "SHOT_FATAL" : "Cadrage fatal",
+  "SHOT_ZERO" : "Tir zéro",
+  "SHOT_CLOSE" : "A bout portant",
+  "SHOT_CORE" : "Tir à cœur",
+  "SHOT_DOUBLE" : "Double tir",
+  "SHOT_TRIPLE" : "Triple tir",
+  "SHOT_MULTIPLE" : "tir multiple",
+  "SHOT_VALUE" : "Valeur",
+
+  "PHOTO_TYPES_DEBUG": "_debug",
+  "PHOTO_TYPES_ART": "Art",
+  "PHOTO_TYPES_CLUE": "Indices",
+  "PHOTO_TYPES_WRAITH": "Spectres",
+  "PHOTO_TYPES_AMBIENT": "Ambiance",
+  "PHOTO_TYPES_ARCHIVE": "Archives",
+
+  "MAIN_TAB_ALBUM": "Album",
+  "MAIN_TAB_INV": "Inventaire",
+  "MAIN_TAB_NOTES": "Notes",
+
+  "ALBUM_TAB_EMPTY": "Cette section est vide.",
+
+  "EVENT_PHOTO_MOGRIFY": "La photo s'est altérée mystérieusement !",
+  "EVENT_PHOTO_ART_STORED": "Photo artistique stockée dans l'album.",
+  "EVENT_PHOTO_CLUE_STORED": "Indice stocké dans l'album.",
+  "EVENT_PHOTO_WRAITH_STORED": "Spectre stocké dans l'album.",
+  "EVENT_PHOTO_NAMED_STORED": "\"%s\" stockée dans l'album.",
+
+
+  "ITEMS": {
+    "k_cabin" : "Clé de la cabane"
+  },
+
+  "PHOTOS": {
+    "fire_place": {
+      "title": "La cheminée",
+      "description": [
+        "Cette cheminée irradie d'une lumière chaude, mais sur pas plus de 3 ou 4 mètres. Au dela de cette distance, l'air est glacial. Les tenèbres environnantes semble contenir et attenuer la lumière, tout en limitant la chaleur.",
+        "La lumière scintille en projetant des ombres, ce qui vous met mal à l'aise."
+      ]
+    },
+
+    "clue_skull_face": {
+      "title": "Impasse inquiétante",
+      "description": [
+        "Des traces de main sont apparues sur le mur au fond du couloir ; comme si quelqu'un s'était appuyé sur la paroi."
+      ]
+    }
+  }
+}

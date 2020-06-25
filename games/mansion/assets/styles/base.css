@@ -1,0 +1,28 @@
+/*
+Base style sheet
+*/
+
+/* black colored background with gray text */
+body {
+    color: #AAA;
+    background-color: black;
+    font-family: "Courier New", Courier, monospace;
+}
+
+/* canvas and images are optimized for speed rendering, no smoothing */
+canvas, img {
+    display: block;
+    padding: 0;
+}
+
+/* canvas opacity can be set to 0.5 with transition */
+canvas.screen {
+    transition-property: opacity;
+    transition-timing-function: linear;
+    transition-duration: 300ms;
+    opacity: 1;
+}
+
+canvas.screen.dimmed {
+    opacity: 0.5;
+}

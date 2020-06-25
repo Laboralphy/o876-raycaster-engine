@@ -1,4 +1,4 @@
-import TangibleThinker from "../../src/libs/engine/thinkers/TangibleThinker";
+import TangibleThinker from "../../libs/engine/thinkers/TangibleThinker";
 
 const ANGLE_INT_MAX_VALUE = 0.1;
 const SPEED = 6;

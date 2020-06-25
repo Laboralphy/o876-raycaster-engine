@@ -11,7 +11,7 @@
  */
 
 const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config({ path: './.env' });
 
 
 const ArgumentParser = require('../tools/argument-parser');
@@ -88,23 +88,23 @@ function main() {
 
     const gpr = x => x in r ? r[x] : undefined;
     const gpe = x => x in process.env ? process.env[x] : undefined;
-    const options = {};
+    const pwd = process.cwd();
+    const options = {
+        base_path: pwd
+    };
     const gpoe = (a, x, y, z) => {
         let r;
         r = gpr(x);
         if (r !== undefined) {
-            console.log('setting option', a, 'using argument variable:', x, r);
             options[a] = r;
             return;
         }
         r = gpe(y);
         if (r !== undefined) {
-            console.log('setting option', a, 'using env variable:', y, r);
             options[a] = r;
             return;
         }
         r = z;
-        console.log('setting option', a, 'using factory value:', r);
         options[a] = r;
     };
 
@@ -116,10 +116,10 @@ function main() {
         options.port = r.server_port;
     }
     if ('vault_dir' in r) {
-        options.vault_path = path.resolve(__dirname, '../', r.vault_dir);
+        options.vault_path = r.vault_dir;
     }
     if ('game_dir' in r) {
-        options.game_path = path.resolve(__dirname, '../', r.game_dir);
+        options.game_path = r.game_dir;
     }
     if ('prefix' in r) {
         options.game_action_prefix = r.prefix;

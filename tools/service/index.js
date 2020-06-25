@@ -14,7 +14,6 @@ const express = require('express');
 const path = require('path');
 const util = require('util');
 const fs = require('fs');
-const AppRootPath = require('app-root-path');
 
 const persist = require('./persist');
 const LZ = require('./level-zip');
@@ -22,8 +21,8 @@ const pm = require('./project-mgr');
 
 const app = express();
 
-const O876_RC_ROOT_PATH = path.resolve(AppRootPath.path);//__dirname, '../../');
 const CONFIG = require('./config');
+const O876_RC_ROOT_PATH = path.resolve(CONFIG.getVariable('base_path'));
 
 const readdir = util.promisify(fs.readdir);
 
@@ -31,14 +30,14 @@ function print(...args) {
     console.log(...args);
 }
 
-function getProjectFQN(sPath) {
-    return path.join(O876_RC_ROOT_PATH, sPath);
+function getProjectFQN(...aPath) {
+    return path.join(O876_RC_ROOT_PATH, ...aPath);
 }
 
 function initFavicon() {
     app.get('/favicon.ico', (req, res) => {
         print('serving favicon');
-        res.sendFile(getProjectFQN('favicon/favicon.png'));
+        res.sendFile(getProjectFQN('favicon', 'favicon.png'));
     });
 }
 
@@ -48,7 +47,7 @@ function initFavicon() {
  */
 function initMapEditor() {
     app.use(express.json({limit: '48mb'})); // for parsing application/json
-    app.use('/mapedit', express.static(getProjectFQN('tools/mapedit')));
+    app.use('/mapedit', express.static(getProjectFQN('tools', 'mapedit')));
     persist.setVaultPath(CONFIG.getVariable('vault_path'));
 
     // list levels
@@ -71,7 +70,7 @@ function initMapEditor() {
     app.get('/vault/:name.jpg', async (req, res) => {
         const name = req.params.name;
         const filename = await persist.getLevelPreview(name);
-        res.sendFile(path.resolve(persist.getVaultPath(), filename));
+        res.sendFile(getProjectFQN(filename));
     });
 
     // get the zipped version of a level
@@ -143,7 +142,7 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/', express.static(getProjectFQN('tools/website')));
+    app.use('/', express.static(getProjectFQN('tools', 'website')));
 }
 
 
@@ -159,13 +158,13 @@ function initDist() {
  * create the game project tree
  */
 function initGameProject() {
-    const GAME_ACTION_PREFIX = CONFIG.getVariable('game_action_prefix');
+    const GAME_ACTION_PREFIX = '/game';
 
     // declare the assets directory as static resources
-    app.use(GAME_ACTION_PREFIX + '/assets', express.static(path.join(CONFIG.getVariable('game_path'), 'assets')));
+    app.use(GAME_ACTION_PREFIX + '/assets', express.static(getProjectFQN(CONFIG.getVariable('game_path'), 'assets')));
 
     // declare the dist directory as static resources
-    app.use(GAME_ACTION_PREFIX + '/dist', express.static(path.join(CONFIG.getVariable('game_path'), 'dist')));
+    app.use(GAME_ACTION_PREFIX + '/dist', express.static(getProjectFQN(CONFIG.getVariable('game_path'), 'dist')));
 
     // get a list of published levels
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
@@ -202,10 +201,10 @@ function initGameProject() {
 
     // launch the game
     app.get(GAME_ACTION_PREFIX + '/index.html', (req, res) => {
-        res.sendFile(path.join(CONFIG.getVariable('game_path'), 'index.html'));
+        res.sendFile(getProjectFQN(CONFIG.getVariable('game_path'), 'index.html'));
     });
 
-    pm.run(AppRootPath.path);
+    pm.run(CONFIG.getVariable('base_path'));
 }
 
 
@@ -217,18 +216,15 @@ function run(options) {
         let r;
         r = gpo(x);
         if (r !== undefined) {
-            console.log('config', a, 'using option variable:', x, r);
             CONFIG.setVariable(a, r);
             return;
         }
         r = gpe(y);
         if (r !== undefined) {
-            console.log('config', a, 'using env variable:', y, r);
             CONFIG.setVariable(a, r);
             return;
         }
         r = z;
-        console.log('config', a, 'using factory value:', r);
         CONFIG.setVariable(a, r);
     };
 
@@ -239,10 +235,11 @@ function run(options) {
     print('---------------------------------');
     print(' ');
 
+    CONFIG.setVariable('base_path', options.base_path);
     gpoe('port', 'port', 'SERVER_PORT', 80);
     gpoe('vault_path', 'vault_path', 'VAULT_PATH', '');
     gpoe('game_path', 'game_path', 'GAME_PATH', '');
-    gpoe('game_action_prefix', 'game_action_prefix', 'GAME_ACTION_PREFIX', 'game');
+    //gpoe('game_action_prefix', 'game_action_prefix', 'GAME_ACTION_PREFIX', 'game');
 
     initGameProject();
     initFavicon();
@@ -252,11 +249,11 @@ function run(options) {
     initWebSite();
 
     app.listen(CONFIG.getVariable('port'));
-    print('base location :', AppRootPath.path);
+    print('base location :', options.base_path);
     print('vault location :', CONFIG.getVariable('vault_path'));
     print('game project location :', CONFIG.getVariable('game_path'));
     print('server port :', CONFIG.getVariable('port'));
-    print('action prefix :', CONFIG.getVariable('game_action_prefix'));
+    print('action prefix :', 'game');
     print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
     print('service is now listening...')
 }
