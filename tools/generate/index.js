@@ -30,6 +30,8 @@ const PHYS = [
 ];
 const DEFAULT_ANIMATION_NAME = 'default';
 
+const ERROR_SIGN = 'level generation : ';
+
 let combineTiles = async function() {};
 
 /**
@@ -72,12 +74,15 @@ async function generateTileset(tilesets, idTile) {
     const output = {id: idTile};
     const iTileIndex = tilesets.findIndex(t => t.id === idTile);
     if (iTileIndex < 0) {
-        throw new Error('this tileset does not exist : ' + idTile);
+        throw new Error(ERROR_SIGN + 'this tileset does not exist : ' + idTile);
     }
     const tile = tilesets[iTileIndex];
     // déterminer de suite s'il y a des tiles à recombiner
     // c'est le travail le plus difficile
     const nFrames = !!tile.animation ? tile.animation.frames : 1;
+    if (nFrames === 0) {
+        throw new Error(ERROR_SIGN + 'could not generate tileset ' + idTile + ' because there is no frame inside.');
+    }
     const {src, width, height} = await combineTiles(tilesets, iTileIndex, nFrames);
     output.src = src;
     output.width = width;
@@ -134,7 +139,7 @@ function generateBlueprint(things, id) {
     const output = {id};
     const thing = things.find(t => t.id === id);
     if (!thing) {
-        throw new Error('blueprint referenced thing "' + id + '" which could not be found');
+        throw new Error(ERROR_SIGN + 'blueprint references a thing (' + id + ') which could not be found');
     }
     output.tileset = thing.tile;
     output.thinker = thing.tangible ? 'StaticTangibleThinker' : 'StaticThinker';
@@ -191,6 +196,12 @@ function generateMetrics(input) {
 }
 
 async function generateTextures(input) {
+    if (input.tiles.walls.length === 0) {
+        throw new Error(ERROR_SIGN + 'no wall has been defined.')
+    }
+    if (input.tiles.flats.length === 0) {
+        throw new Error(ERROR_SIGN + 'no flat has been defined.')
+    }
     const walls = await combineTiles(input.tiles.walls, 0, input.tiles.walls.length);
     const flats = await combineTiles(input.tiles.flats, 0, input.tiles.flats.length);
     return {

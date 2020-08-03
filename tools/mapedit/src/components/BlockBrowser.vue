@@ -20,8 +20,8 @@
 </template>
 
 <script>
-    import * as ACTION from '../store/modules/level/action-types';
-    import * as MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
     import Block from "./Block.vue";
@@ -56,11 +56,12 @@
 
         methods: {
             ...levelMapActions({
-                deleteBlock: ACTION.DELETE_BLOCK
+                deleteBlock: LEVEL_ACTIONS.DELETE_BLOCK
             }),
 
             ...editorMapMutations({
-                selectBlock: MUTATION.BLOCKBROWSER_SET_SELECTED
+                selectBlock: EDITOR_MUTATIONS.BLOCKBROWSER_SET_SELECTED,
+                somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
 
@@ -80,6 +81,7 @@
                 if (confirm('Delete this block ?')) {
                     this.deleteBlock({id: this.getBlockBrowserSelected});
                     this.selectBlock({value: null});
+                    this.somethingHasChanged({value: true});
                 }
             },
 

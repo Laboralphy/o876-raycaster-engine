@@ -130,6 +130,17 @@ export default {
         if (iBlock >= 0) {
             state.blocks.splice(iBlock, 1);
         }
+        // ne faudrait-il pas remplacer tous les blocks de cet id par 0 ?
+        for (let y = 0, h = state.grid.length; y < h; ++y) {
+            const row = state.grid[y];
+            for (let x = 0, w = row.length; x < w; ++x) {
+                const cell = row[x];
+                if (cell.block === id) {
+                    cell.modified = true;
+                    cell.block = 0;
+                }
+            }
+        }
     },
 
     [MUTATION.SET_GRID_SIZE]: (state, {size}) => {

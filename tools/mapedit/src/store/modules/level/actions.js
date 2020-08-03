@@ -142,7 +142,7 @@ export default {
      * @param commit
      * @param id
      */
-    [ACTION.DELETE_BLOCK]: ({commit}, {id}) => {
+    [ACTION.DELETE_BLOCK]: ({commit, }, {id}) => {
         commit(MUTATION.DESTROY_BLOCK, {id});
     },
 
