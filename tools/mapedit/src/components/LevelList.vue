@@ -29,8 +29,8 @@
 
 <script>
     import {createNamespacedHelpers} from 'vuex';
-    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as EDITOR_ACTIONS from '../store/modules/editor/action-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
     import * as FH from '../libraries/fetch-helper';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
@@ -39,8 +39,8 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import PublishIcon from "vue-material-design-icons/Publish.vue";
 
-    const {mapGetters: editorMapGetters, mapActions: editorMapActions} = createNamespacedHelpers('editor');
-    const {mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapActions: editorActions} = createNamespacedHelpers('editor');
+    const {mapActions: levelActions} = createNamespacedHelpers('level');
 
     export default {
         name: "LevelList",
@@ -53,21 +53,21 @@
         },
 
         computed: {
-            ...editorMapGetters([
+            ...editorGetters([
                 'getLevelList'
             ])
         },
 
         methods: {
 
-            ...editorMapActions({
-                listLevels: EDITOR_ACTION.LIST_LEVELS,
-                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
-                setLevelName: EDITOR_ACTION.SET_LEVEL_NAME
+            ...editorActions({
+                listLevels: EDITOR_ACTIONS.LIST_LEVELS,
+                setStatusBarText: EDITOR_ACTIONS.SET_STATUSBAR_TEXT,
+                setLevelName: EDITOR_ACTIONS.SET_LEVEL_NAME
             }),
 
-            ...levelMapActions({
-                loadLevel: LEVEL_ACTION.LOAD_LEVEL
+            ...levelActions({
+                loadLevel: LEVEL_ACTIONS.LOAD_LEVEL
             }),
 
             loadAndExit: async function() {

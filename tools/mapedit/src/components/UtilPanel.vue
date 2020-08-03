@@ -48,9 +48,9 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_ACTIONS from '../store/modules/editor/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
 
     import Window from "./Window.vue";
@@ -61,8 +61,8 @@
     import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
 
 
-    const {mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapActions: editorActions, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "UtilPanel",
@@ -76,9 +76,9 @@
         },
 
         methods: {
-            ...levelMapActions({
-                shiftGrid: LEVEL_ACTION.SHIFT_GRID,
-                somethingHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
+            ...levelActions({
+                shiftGrid: LEVEL_ACTIONS.SHIFT_GRID,
+                somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
             doChanged: function () {

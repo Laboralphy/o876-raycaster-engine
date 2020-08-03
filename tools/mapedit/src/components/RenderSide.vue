@@ -27,8 +27,8 @@
     import MyButton from "./MyButton.vue";
     import {generate} from "../../../generate";
 
-    const {mapGetters: levelMapGetters} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "RenderSide",
@@ -42,11 +42,11 @@
         },
 
         computed: {
-            ...levelMapGetters([
+            ...levelGetters([
                 'getLevel'
             ]),
 
-            ...editorMapGetters([
+            ...editorGetters([
                 'getLevelName',
                 'getLevelGeneratedData'
             ]),

@@ -61,14 +61,14 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
     import {createNamespacedHelpers} from 'vuex';
 
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import CanvasHelper from "../../../../libs/canvas-helper/CanvasHelper";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapAction} = createNamespacedHelpers('level');
+    const {mapGetters: levelGetters, mapActions: levelMapAction} = createNamespacedHelpers('level');
 
 
     export default {
@@ -90,7 +90,7 @@
         },
 
         computed: {
-            ...levelMapGetters([
+            ...levelGetters([
                 'getTileWidth',
                 'getTileHeight',
                 'getFlagSmooth',
@@ -102,11 +102,11 @@
 
         methods: {
             ...levelMapAction({
-                setFlag: LEVEL_ACTION.SET_FLAG,
-                setTileWidth: LEVEL_ACTION.SET_TILE_WIDTH,
-                setTileHeight: LEVEL_ACTION.SET_TILE_HEIGHT,
-                replaceTileContent: LEVEL_ACTION.REPLACE_TILE_CONTENT,
-                replaceBlockOffset: LEVEL_ACTION.FEEDBACK_TILE_WIDTH
+                setFlag: LEVEL_ACTIONS.SET_FLAG,
+                setTileWidth: LEVEL_ACTIONS.SET_TILE_WIDTH,
+                setTileHeight: LEVEL_ACTIONS.SET_TILE_HEIGHT,
+                replaceTileContent: LEVEL_ACTIONS.REPLACE_TILE_CONTENT,
+                replaceBlockOffset: LEVEL_ACTIONS.FEEDBACK_TILE_WIDTH
             }),
 
             resizeCanvas: function(canvas, w, h) {

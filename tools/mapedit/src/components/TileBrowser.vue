@@ -64,7 +64,7 @@
 
 <script>
     import * as ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import * as CONSTS from '../consts';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
@@ -79,8 +79,8 @@
     import AnimationPlayIcon from "vue-material-design-icons/AnimationPlay.vue";
     import ChessRookIcon from "vue-material-design-icons/ChessRook.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "TileBrowser",
@@ -129,7 +129,7 @@
         },
 
         computed: {
-            ...levelMapGetters([
+            ...levelGetters([
                 'getWallTiles',
                 'getFlatTiles',
                 'getSpriteTiles',
@@ -139,7 +139,7 @@
             ]),
 
 
-            ...editorMapGetters([
+            ...editorGetters([
                 'getTileBrowserType'
             ]),
 
@@ -204,14 +204,14 @@
 
         methods: {
 
-            ...levelMapActions({
+            ...levelActions({
                 reorderTile: ACTION.REORDER_TILE,
                 deleteTile: ACTION.DELETE_TILE
             }),
 
 
-            ...editorMapMutations({
-                selectTileType: EDITOR_MUTATION.TILEBROWSER_SET_TILE_TYPE
+            ...editorMutations({
+                selectTileType: EDITOR_MUTATIONS.TILEBROWSER_SET_TILE_TYPE
             }),
 
             setTileSelection: function(idTile, value) {

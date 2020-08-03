@@ -84,13 +84,13 @@
     import * as CONSTS from '../consts';
     import * as RC_CONSTS from '../../../../libs/raycaster/consts';
 
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
 
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import Tile from "./Tile.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
 
     export default {
         name: "ThingBuilder",
@@ -137,7 +137,7 @@
 
 
         computed: {
-            ...levelMapGetters([
+            ...levelGetters([
                 'getThing',
                 'getTile'
             ]),
@@ -150,9 +150,9 @@
 
         methods: {
 
-            ...levelMapActions({
-                createThing: LEVEL_ACTION.CREATE_THING,
-                modifyThing: LEVEL_ACTION.MODIFY_THING
+            ...levelActions({
+                createThing: LEVEL_ACTIONS.CREATE_THING,
+                modifyThing: LEVEL_ACTIONS.MODIFY_THING
             }),
 
             importThing: function(id) {

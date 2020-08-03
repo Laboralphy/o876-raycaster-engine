@@ -34,8 +34,8 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
     import Block from "./Block.vue";
@@ -45,8 +45,8 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
 
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "TagManager",
@@ -60,7 +60,7 @@
         },
 
         computed: {
-            ...editorMapGetters([
+            ...editorGetters([
                 'getHighLightedTags',
                 'getLevelGridSelectedRegion',
                 'isLevelGridRegionSelected'
@@ -69,16 +69,16 @@
 
         methods: {
 
-            ...levelMapActions({
-                addCellTag: LEVEL_ACTION.ADD_CELL_TAG,
-                removeCellTag: LEVEL_ACTION.REMOVE_CELL_TAG
+            ...levelActions({
+                addCellTag: LEVEL_ACTIONS.ADD_CELL_TAG,
+                removeCellTag: LEVEL_ACTIONS.REMOVE_CELL_TAG
             }),
 
 
-            ...editorMapMutations({
-                setHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED,
-                addHighlightedTag: EDITOR_MUTATION.ADD_HIGHLIGHTED_TAG,
-                removeHighlightedTag: EDITOR_MUTATION.REMOVE_HIGHLIGHTED_TAG
+            ...editorMutations({
+                setHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED,
+                addHighlightedTag: EDITOR_MUTATIONS.ADD_HIGHLIGHTED_TAG,
+                removeHighlightedTag: EDITOR_MUTATIONS.REMOVE_HIGHLIGHTED_TAG
             }),
 
             deleteTagClick: async function(t) {

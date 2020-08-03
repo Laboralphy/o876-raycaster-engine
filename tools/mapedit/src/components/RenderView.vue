@@ -11,8 +11,8 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
     import generate from '../libraries/generate';
@@ -31,24 +31,24 @@
         engine.camera.thinker.keyDown(event.key);
     }
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "RenderView",
         components: {Window},
 
         computed: {
-            ...levelMapGetters(['getLevel', 'getFlagSmooth']),
+            ...levelGetters(['getLevel', 'getFlagSmooth']),
         },
 
         methods: {
-            ...levelMapActions({
-                setPreview: LEVEL_ACTION.SET_PREVIEW
+            ...levelActions({
+                setPreview: LEVEL_ACTIONS.SET_PREVIEW
             }),
 
-            ...editorMapMutations({
-                setLevelGeneratedData: EDITOR_MUTATION.SET_LEVEL_GENERATED_DATA
+            ...editorMutations({
+                setLevelGeneratedData: EDITOR_MUTATIONS.SET_LEVEL_GENERATED_DATA
             }),
 
             run: async function(level, canvas) {

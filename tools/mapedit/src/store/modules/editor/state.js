@@ -149,6 +149,7 @@ export default {
             },
             undo: [],
             hltags: [],
+            selectedTool: 0
         },
 
         tagManager: {}

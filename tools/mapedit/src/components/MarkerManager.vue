@@ -74,8 +74,8 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import * as CONSTS from '../consts';
     import {createNamespacedHelpers} from 'vuex';
 
@@ -97,8 +97,8 @@
     import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
     import ArrowBottomRightThickIcon from "vue-material-design-icons/ArrowBottomRightThick.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
 
 
@@ -125,24 +125,24 @@
         },
 
         computed: {
-            ...editorMapGetters([
+            ...editorGetters([
                 'getLevelGridSelectedRegion',
                 'isLevelGridRegionSelected'
             ]),
 
-            ...levelMapGetters([
+            ...levelGetters([
                 'getStartpoint'
             ])
         },
 
         methods: {
-            ...levelMapActions({
-                setCellMark: LEVEL_ACTION.SET_CELL_MARK,
-                setStartpoint: LEVEL_ACTION.SET_STARTING_POINT
+            ...levelActions({
+                setCellMark: LEVEL_ACTIONS.SET_CELL_MARK,
+                setStartpoint: LEVEL_ACTIONS.SET_STARTING_POINT
             }),
 
-            ...editorMapMutations({
-                somethingHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
+            ...editorMutations({
+                somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
             setShape: async function(nShape) {

@@ -7,7 +7,7 @@
     import * as ACTION from '../store/modules/editor/action-types';
 
 
-    const {mapActions: editorMapActions, mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
+    const {mapActions: editorActions, mapGetters: editorGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "FlashyText",
@@ -19,7 +19,7 @@
         },
 
         methods: {
-            ...editorMapActions({
+            ...editorActions({
                 setStatusBarText: [ACTION.SET_STATUSBAR_TEXT]
             }),
         },
@@ -33,7 +33,7 @@
 
         computed: {
 
-            ...editorMapGetters([
+            ...editorGetters([
                 'getStatusBarText'
             ]),
 

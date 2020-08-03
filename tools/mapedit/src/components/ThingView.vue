@@ -22,8 +22,8 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -31,8 +31,8 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import Thing from "./Thing.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapMutations: editorMapMutations, mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapMutations: editorMutations, mapGetters: editorGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "ThingView",
@@ -50,7 +50,7 @@
 
         computed: {
 
-            ...levelMapGetters([
+            ...levelGetters([
                 'getThings',
                 'getTiles',
                 'getThing',
@@ -59,7 +59,7 @@
             ]),
 
 
-            ...editorMapGetters([
+            ...editorGetters([
                 'getLevelGridThingSelected'
             ]),
 
@@ -83,12 +83,12 @@
         },
 
         methods: {
-            ...levelMapActions({
-                removeCellThing: LEVEL_ACTION.REMOVE_CELL_THING
+            ...levelActions({
+                removeCellThing: LEVEL_ACTIONS.REMOVE_CELL_THING
             }),
 
-            ...editorMapMutations({
-                somethingHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
+            ...editorMutations({
+                somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
             importThing: function(newValue) {

@@ -41,14 +41,14 @@
     import Popup from "./Popup.vue";
 
     import {createNamespacedHelpers} from 'vuex';
-    const {mapGetters: editorMapGetters} = createNamespacedHelpers('editor');
+    const {mapGetters: editorGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "Application",
         components: {FlashyText, StatusBar, MainMenu, MyButton, Window, Popup},
 
         computed: {
-            ...editorMapGetters([
+            ...editorGetters([
                 'getPopupVisible',
                 'getPopupContent',
                 'getPopupType',

@@ -65,8 +65,8 @@
     import TileAnimation from "../../../../libs/raycaster/TileAnimation";
     import CanvasHelper from "../../../../libs/canvas-helper";
 
-    const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetter, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelMapGetter, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapGetters: editorMapGetter, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "AnimationBuilder",
@@ -186,7 +186,7 @@
 
         methods: {
 
-            ...levelMapActions({
+            ...levelActions({
                 setTileAnimation: ACTION.SET_TILE_ANIMATION,
                 clearTileAnimation: ACTION.CLEAR_TILE_ANIMATION
             }),

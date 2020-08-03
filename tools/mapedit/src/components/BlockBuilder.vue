@@ -215,7 +215,7 @@
     import CloseCircleIcon from "vue-material-design-icons/CloseCircle.vue";
     import ContentDuplicateIcon from "vue-material-design-icons/ContentDuplicate.vue";
 
-    const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: levelMapGetter, mapActions: levelActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter} = createNamespacedHelpers('editor');
 
     export default {
@@ -408,7 +408,7 @@
         },
 
         methods: {
-            ...levelMapActions({
+            ...levelActions({
                 createBlock: ACTION.CREATE_BLOCK,
                 modifyBlock: ACTION.MODIFY_BLOCK
             }),

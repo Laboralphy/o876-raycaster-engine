@@ -23,7 +23,9 @@ export default {
     getPopupVisible: state => state.popup.visible,
     getPopupType: state => state.popup.type,
     getPopupContent: state => state.popup.content,
-    getPopupProgress: state => state.popup.progress
+    getPopupProgress: state => state.popup.progress,
+
+    getSelectedTool: state => state.models.levelGrid.selectedTool
 }
 
 

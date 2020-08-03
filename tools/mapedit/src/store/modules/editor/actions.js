@@ -39,5 +39,21 @@ export default {
 
     [ACTION.SET_LEVEL_NAME]: function({commit}, {name}) {
         commit(MUTATION.SET_LEVEL_NAME, {name});
+    },
+
+    [ACTION.SET_SELECTED_TOOL]: function({commit}, {value}) {
+        commit(MUTATION.SET_SELECTED_TOOL, {value});
+        switch (value) {
+            case 0:
+                // déselectionner le block en cours
+                commit(MUTATION.BLOCKBROWSER_SET_SELECTED, {value: null});
+                break;
+
+            case 1:
+                // désélectionner la région
+                commit(MUTATION.SELECT_REGION, {x1: -1, y1: -1, x2: -1, y2: -1});
+                break;
+        }
+        commit(MUTATION.SOMETHING_HAS_CHANGED, {value: true});
     }
 }

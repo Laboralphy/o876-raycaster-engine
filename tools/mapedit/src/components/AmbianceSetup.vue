@@ -52,7 +52,7 @@
 
 <script>
     import {createNamespacedHelpers} from 'vuex';
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
 
     import Window from "./Window.vue";
     import ImageLoader from "./ImageLoader.vue";
@@ -60,7 +60,7 @@
     import MyButton from "./MyButton.vue";
     import ImagePasteBin from "./ImagePasteBin.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
 
     export default {
         name: "AmbianceSetup",
@@ -85,13 +85,13 @@
         },
 
         computed: {
-            ...levelMapGetters(['getAmbiance'])
+            ...levelGetters(['getAmbiance'])
         },
 
         methods: {
 
-            ...levelMapActions({
-                setupAmbiance: LEVEL_ACTION.SETUP_AMBIANCE
+            ...levelActions({
+                setupAmbiance: LEVEL_ACTIONS.SETUP_AMBIANCE
             }),
 
             skyImageLoaded: function(event) {

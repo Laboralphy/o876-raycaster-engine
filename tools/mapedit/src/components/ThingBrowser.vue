@@ -21,8 +21,8 @@
 <script>
     import {createNamespacedHelpers} from 'vuex';
     import * as CONSTS from '../consts';
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import PlusIcon from "vue-material-design-icons/Plus.vue";
@@ -30,8 +30,8 @@
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import Thing from "./Thing.vue";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions} = createNamespacedHelpers('level');
-    const {mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "ThingBrowser",
@@ -46,7 +46,7 @@
 
         computed: {
 
-            ...levelMapGetters([
+            ...levelGetters([
                 'getThings',
                 'getTiles',
                 'getThing',
@@ -74,14 +74,14 @@
 
         methods: {
 
-            ...levelMapActions({
-                deleteThing: LEVEL_ACTION.DELETE_THING,
-                reorderThing: LEVEL_ACTION.REORDER_THING,
+            ...levelActions({
+                deleteThing: LEVEL_ACTIONS.DELETE_THING,
+                reorderThing: LEVEL_ACTIONS.REORDER_THING,
             }),
 
-            ...editorMapMutations({
-                selectThing: EDITOR_MUTATION.THINGBROWSER_SET_SELECTED,
-                somethingHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED
+            ...editorMutations({
+                selectThing: EDITOR_MUTATIONS.THINGBROWSER_SET_SELECTED,
+                somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
             createClicked: function() {

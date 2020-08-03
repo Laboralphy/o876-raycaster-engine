@@ -178,10 +178,10 @@
 </template>
 
 <script>
-    import * as LEVEL_ACTION from '../store/modules/level/action-types';
-    import * as EDITOR_ACTION from '../store/modules/editor/action-types';
-    import * as LEVEL_MUTATION from '../store/modules/level/mutation-types';
-    import * as EDITOR_MUTATION from '../store/modules/editor/mutation-types';
+    import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
+    import * as EDITOR_ACTIONS from '../store/modules/editor/action-types';
+    import * as LEVEL_MUTATIONS from '../store/modules/level/mutation-types';
+    import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import * as FH from '../libraries/fetch-helper';
     import Window from "./Window.vue";
@@ -211,8 +211,8 @@
 
     import SillyCanvasFactory from "../libraries/silly-canvas-factory";
 
-    const {mapGetters: levelMapGetters, mapActions: levelMapActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
-    const {mapGetters: editorMapGetters, mapActions: editorMapActions, mapMutations: editorMapMutations} = createNamespacedHelpers('editor');
+    const {mapGetters: levelGetters, mapActions: levelActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
+    const {mapGetters: editorGetters, mapActions: editorActions, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     const SCF = new SillyCanvasFactory();
 
@@ -249,7 +249,7 @@
         },
 
         computed: {
-            ...levelMapGetters([
+            ...levelGetters([
                 'getGridSize',
                 'getGrid',
                 'getBlocks',
@@ -258,7 +258,7 @@
                 'getFlagExport'
             ]),
 
-            ...editorMapGetters([
+            ...editorGetters([
                 'getLevelGridSelectedRegion',
                 'isLevelGridRegionSelected',
                 'getBlockBrowserSelected',
@@ -266,7 +266,8 @@
                 'getLevelGridTopMostUndo',
                 'getLevelName',
                 'getSomethingHasChanged',
-                'getLevelGridThingSelected'
+                'getLevelGridThingSelected',
+                'getSelectedTool'
             ]),
 
             getSelectedCoords: function() {
@@ -332,7 +333,6 @@
                 modifications: new MarkerRegistry(),
                 selecting: false,
                 selectedFloor: 0,
-                selectedTool: 0,
                 clipboard: null,
                 currentRoute: '',
                 select: {
@@ -353,6 +353,11 @@
                 }
             },
 
+            getSelectedTool: function(newValue, oldValue) {
+                // il faut retro signifier le sibling que le selected tools a changé
+                this.$refs.toolSiblings.highlighSiblingIndex(newValue);
+            },
+
             $route: {
                 handler: function (to, from) {
                     const s = to.fullPath;
@@ -367,39 +372,34 @@
         },
 
         methods: {
-            ...levelMapActions({
-                setGridSize: LEVEL_ACTION.SET_GRID_SIZE,
-                setGridCell: LEVEL_ACTION.SET_GRID_CELL,
-                setGridCells: LEVEL_ACTION.SET_GRID_CELLS,
-                setCellProps: LEVEL_ACTION.SET_CELL_PROPS
+            ...levelActions({
+                setGridSize: LEVEL_ACTIONS.SET_GRID_SIZE,
+                setGridCell: LEVEL_ACTIONS.SET_GRID_CELL,
+                setGridCells: LEVEL_ACTIONS.SET_GRID_CELLS,
+                setCellProps: LEVEL_ACTIONS.SET_CELL_PROPS
             }),
 
-            ...editorMapActions({
-                setStatusBarText: EDITOR_ACTION.SET_STATUSBAR_TEXT,
-                selectRegion: EDITOR_ACTION.SELECT_REGION,
-                popUndo: EDITOR_ACTION.POP_UNDO
+            ...editorActions({
+                setStatusBarText: EDITOR_ACTIONS.SET_STATUSBAR_TEXT,
+                selectRegion: EDITOR_ACTIONS.SELECT_REGION,
+                popUndo: EDITOR_ACTIONS.POP_UNDO,
+                setSelectedTool: EDITOR_ACTIONS.SET_SELECTED_TOOL
             }),
 
             ...levelMapMutation({
-                defineBlock: LEVEL_MUTATION.DEFINE_BLOCK
+                defineBlock: LEVEL_MUTATIONS.DEFINE_BLOCK
             }),
 
 
-            ...editorMapMutations({
-                selectBlock: EDITOR_MUTATION.BLOCKBROWSER_SET_SELECTED,
-                pushUndo: EDITOR_MUTATION.PUSH_UNDO,
-                setHasChanged: EDITOR_MUTATION.SOMETHING_HAS_CHANGED,
-                selectThing: EDITOR_MUTATION.LEVELGRID_THING_SET_SELECTED
+            ...editorMutations({
+                selectBlock: EDITOR_MUTATIONS.BLOCKBROWSER_SET_SELECTED,
+                pushUndo: EDITOR_MUTATIONS.PUSH_UNDO,
+                setHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED,
+                selectThing: EDITOR_MUTATIONS.LEVELGRID_THING_SET_SELECTED,
             }),
 
             selectTool: function ({index}) {
-                this.selectedTool = index;
-                switch (index) {
-                    case 0:
-                        // déselect texture
-                        this.selectBlock({value: null});
-                        break;
-                }
+                this.setSelectedTool({value: index});
             },
 
             selectFloor: function ({index}) {
@@ -750,7 +750,7 @@
                 const y = event.layerY;
                 this.selecting = false;
                 // déterminer si on est en mode "paint" avec un block selectionné
-                if (this.selectedTool === 1) {
+                if (this.getSelectedTool === 1) {
                     switch (this.getSelectedObjectType) {
                         case OBJECT_TYPE_BLOCK:
                             if (!!this.getBlockBrowserSelected) {

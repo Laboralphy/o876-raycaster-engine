@@ -1,12 +1,12 @@
 import * as MUTATION from '../store/modules/editor/mutation-types';
 import {createNamespacedHelpers} from "vuex";
-const {mapMutations: popupMapMutations} = createNamespacedHelpers('editor');
+const {mapMutations: popupMutations} = createNamespacedHelpers('editor');
 
 
 
 const PopupMixin = {
     methods: {
-        ...popupMapMutations({
+        ...popupMutations({
             showPopup: MUTATION.SHOW_POPUP,
             hidePopup: MUTATION.HIDE_POPUP,
             setPopupType: MUTATION.SET_POPUP_TYPE,

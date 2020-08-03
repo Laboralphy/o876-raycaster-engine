@@ -13,10 +13,14 @@
                 this.selectSiblingIndex(this.$children.indexOf(s));
             },
 
-            selectSiblingIndex: function(n) {
+            highlighSiblingIndex: function(n) {
                 this.$children.forEach((c, i) => {
-                    c.selected = i === n;
+                  c.selected = i === n;
                 });
+            },
+
+            selectSiblingIndex: function(n) {
+                this.highlighSiblingIndex(n);
                 this.$emit('input', {index: n});
             },
 

@@ -84,5 +84,11 @@ export default {
     },
     [MUTATION.SET_POPUP_PROGRESS]: (state, {value}) => {
         state.popup.progress = value;
+    },
+
+
+
+    [MUTATION.SET_SELECTED_TOOL]: (state, {value}) => {
+        state.models.levelGrid.selectedTool = value;
     }
 }

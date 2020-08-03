@@ -100,7 +100,7 @@
     import ImagePasteBin from "./ImagePasteBin.vue";
 
 
-    const {mapGetters: levelMapGetter, mapActions: levelMapActions} = createNamespacedHelpers('level');
+    const {mapGetters: levelMapGetter, mapActions: levelActions} = createNamespacedHelpers('level');
     const {mapGetters: editorMapGetter} = createNamespacedHelpers('editor');
 
 
@@ -158,7 +158,7 @@
         },
 
         methods: {
-            ...levelMapActions({
+            ...levelActions({
                 importTile: ACTION.LOAD_TILE,
                 importTiles: ACTION.LOAD_TILES
             }),
