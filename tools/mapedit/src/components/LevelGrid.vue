@@ -71,7 +71,7 @@
             <Siblings ref="toolSiblings" @input="selectTool">
                 <SiblingButton
                         title="Select tool"
-                        :default="true"
+                        :default="getSelectedTool === 0"
                         :disabled="!isSelectToolAvailable"
                 >
                     <SelectIcon
@@ -82,6 +82,7 @@
 
                 <SiblingButton
                         title="Draw tool"
+                        :default="getSelectedTool === 1"
                         :disabled="!isDrawToolAvailable"
                 >
                     <PencilIcon
