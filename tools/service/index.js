@@ -49,7 +49,8 @@ function initFavicon() {
 function getUserAuth(req) {
     return {
         id: 'local',
-        vaultPath: 'local'
+        vaultPath: 'local',
+        displayName: 'Local user'
     };
 }
 
@@ -71,6 +72,14 @@ function initMapEditor() {
                 console.error('GET /vault - error');
                 console.error(e);
             })
+    });
+
+    // returns a visual representation of the connected user
+    app.get('/userinfo', (req, res) => {
+        const oUser = getUserAuth(req);
+        return res.json({
+            name: oUser.displayName
+        });
     });
 
     // loads a level for the map editor
@@ -163,7 +172,11 @@ function initExamples() {
  * - map editor
  */
 function initWebSite() {
-    app.use('/', express.static(getProjectFQN('tools', 'website')));
+    app.get('/', (req, res) => {
+        res.sendFile(getProjectFQN('tools', 'website', 'index.html'));
+    });
+    app.use('/app', express.static(getProjectFQN('tools', 'website', 'app')));
+    app.use('/assets', express.static(getProjectFQN('tools', 'website', 'assets')));
 }
 
 

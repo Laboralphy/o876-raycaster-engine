@@ -17,6 +17,7 @@ import MapEditPage from "./components/MapEditPage.vue";
 import FeatPage from "./components/FeatPage.vue";
 import TechPage from "./components/TechPage.vue";
 import AboutPage from "./components/AboutPage.vue";
+import LoginPage from "./components/LoginPage.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -58,6 +59,12 @@ function createApplication() {
             path: '/about',
             components: {
                 default: AboutPage
+            }
+        },
+        {
+            path: '/login',
+            components: {
+                default: LoginPage
             }
         }
     ];

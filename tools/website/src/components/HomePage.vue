@@ -5,7 +5,7 @@
                 <div class="col lg-12">
                     <h3>Raycasting Game Engine Home Page</h3>
                     <p>
-                        This version of the O87 Raycasting Game Engine is hosted online.
+                        This version of the O876 Raycasting Game Engine is hosted online.
                     </p>
                     <ul>
                         <li>Click on the "Map Editor" tab to run the map editor software and create your own
@@ -99,7 +99,7 @@
             return {
                 levels: [],
                 gameActionPrefix: 'game',
-                onlineVersion: false
+                onlineVersion: true
             }
         },
 
