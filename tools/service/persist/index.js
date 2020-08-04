@@ -5,13 +5,18 @@ const Vault = require('./Vault');
 
 const TILE_PATH = 'tiles';
 
-const vault = new Vault();
-vault.path = '.';
-vault.namespace = '/';
+let VAULT_DEFAULT_PATH = '.';
 
+function getUserVault(sUser) {
+	const v = new Vault();
+	v.path = VAULT_DEFAULT_PATH;
+	v.namespace = sUser;
+	return v;
+}
 
-async function saveLevel(sLevelName, data) {
+async function saveLevel(sUser, sLevelName, data) {
 	try {
+		const vault = getUserVault(sUser);
 		const jb = new JsonBlobz();
 		const sLevelPath = sLevelName;
 		const sTilePath = path.join(sLevelPath, TILE_PATH);
@@ -32,7 +37,8 @@ async function saveLevel(sLevelName, data) {
 }
 
 
-async function loadLevel(sLevelName) {
+async function loadLevel(sUser, sLevelName) {
+	const vault = getUserVault(sUser);
 	const jb = new JsonBlobz();
 	const sLevelPath = sLevelName;
 	const sTilePath = path.join(sLevelPath, TILE_PATH);
@@ -52,7 +58,8 @@ async function loadLevel(sLevelName) {
 /**
  * lists all project saved so far
  */
-async function listLevels() {
+async function listLevels(sUser) {
+	const vault = getUserVault(sUser);
 	const aList = await vault.ls('.', {
 		withFileTypes: true
 	});
@@ -84,6 +91,7 @@ async function listLevels() {
 
 
 async function removeLevel(sUser, name) {
+	const vault = getUserVault(sUser);
 	await vault.rmdir(name, true);
 	return {status: 'done'};
 }
@@ -93,7 +101,7 @@ async function removeLevel(sUser, name) {
  * @param sPath {string} new vault path value
  */
 function setVaultPath(sPath) {
-	vault.path = sPath;
+	VAULT_DEFAULT_PATH = sPath;
 }
 
 /**
@@ -101,11 +109,12 @@ function setVaultPath(sPath) {
  * @return {string}
  */
 function getVaultPath() {
-	return vault.path;
+	return VAULT_DEFAULT_PATH;
 }
 
 
-async function getLevelPreview(sLevelName) {
+async function getLevelPreview(sUser, sLevelName) {
+	const vault = getUserVault(sUser);
 	const data = await vault.loadJSON(path.join(sLevelName, 'level.json'));
 	return vault.fqn(path.join(sLevelName, TILE_PATH, data.preview));
 }

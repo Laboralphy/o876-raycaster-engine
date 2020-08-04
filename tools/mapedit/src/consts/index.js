@@ -6,7 +6,6 @@ export const BLOCK_WIDTH = 96;
 export const BLOCK_HEIGHT = 96;
 
 export const SERVICE_LEVEL = '/vault/';
-
 export const SERVICE_URL_SAVE = '/vault/';
 export const SERVICE_URL_LOAD = '/vault/';
 export const SERVICE_URL_LIST = '/vault';

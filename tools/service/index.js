@@ -42,6 +42,18 @@ function initFavicon() {
 }
 
 /**
+ * Returns the client identity
+ * @param req {Request}
+ * @return {{id: string, vaultPath: string}}
+ */
+function getUserAuth(req) {
+    return {
+        id: 'local',
+        vaultPath: 'local'
+    };
+}
+
+/**
  * inits the map editor sub-service
  * and the map editor persistance sub-service
  */
@@ -52,7 +64,8 @@ function initMapEditor() {
 
     // list levels
     app.get('/vault', (req, res) => {
-        persist.listLevels()
+        const oUser = getUserAuth(req);
+        persist.listLevels(oUser.vaultPath)
             .then(r => res.json(r))
             .catch(e => {
                 console.error('GET /vault - error');
@@ -62,22 +75,25 @@ function initMapEditor() {
 
     // loads a level for the map editor
     app.get('/vault/:name.json', (req, res) => {
+        const oUser = getUserAuth(req);
         const name = req.params.name;
-        persist.loadLevel(name).then(r => res.json(r));
+        persist.loadLevel(oUser.vaultPath, name).then(r => res.json(r));
     });
 
     // load a preview thumbnail of a level
     app.get('/vault/:name.jpg', async (req, res) => {
+        const oUser = getUserAuth(req);
         const name = req.params.name;
-        const filename = await persist.getLevelPreview(name);
+        const filename = await persist.getLevelPreview(oUser.vaultPath, name);
         res.sendFile(getProjectFQN(filename));
     });
 
     // get the zipped version of a level
     app.get('/vault/:name.zip', async (req, res) => {
         try {
+            const oUser = getUserAuth(req);
             const name = req.params.name;
-            const data = await persist.loadLevel(name);
+            const data = await persist.loadLevel(oUser.vaultPath, name);
             const archive = await LZ.buildZip(name, data);
             res.download(archive.filename);
         } catch (e) {
@@ -88,9 +104,10 @@ function initMapEditor() {
     // save level in the vault under a specified name
     app.post('/vault/:name', async (req, res) => {
         try {
+            const oUser = getUserAuth(req);
             const name = req.params.name;
             const {data} = req.body;
-            const r = await persist.saveLevel(name, data);
+            const r = await persist.saveLevel(oUser.vaultPath, name, data);
             await res.json(r)
         } catch (e) {
             await res.json({status: 'error', error: e.message});
@@ -99,15 +116,19 @@ function initMapEditor() {
 
     // delete a specified level from the vault
     app.delete('/vault/:name', (req, res) => {
+        const oUser = getUserAuth(req);
         const name = req.params.name;
-        persist.removeLevel(name).then(r => res.json(r));
+        persist.removeLevel(oUser.vaultPath, name).then(r => res.json(r));
     });
 
     // export this level to the game assets
+    // only local work maybe exported
+    // not user-based (online)
     app.get('/export/:name', async (req, res) => {
         try {
+            const oUser = getUserAuth(req);
             const name = req.params.name;
-            const data = await persist.loadLevel(name);
+            const data = await persist.loadLevel(oUser.vaultPath, name);
             await LZ.exportLevel(name, data, {
                 textures: CONFIG.getVariable('texture_path'),
                 level: CONFIG.getVariable('level_path'),
@@ -169,8 +190,9 @@ function initGameProject() {
     // get a list of published levels
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
         try {
+            const oUser = getUserAuth(req);
             const aPublished = await pm.getPublishedLevels();
-            const aVault = await persist.listLevels();
+            const aVault = await persist.listLevels(oUser.vaultPath);
             aPublished.forEach(l => {
                 l.invault = aVault.findIndex(x => x.name === l.name) >= 0;
             });

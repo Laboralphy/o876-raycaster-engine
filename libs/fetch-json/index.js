@@ -1,6 +1,4 @@
 export async function fetchJSON(url, postData = null) {
-    if (url === 'game/levels')         console.trace();
-
     try {
         const bPost = !!postData;
         const oRequest = {
