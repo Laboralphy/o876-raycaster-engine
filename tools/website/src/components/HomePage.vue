@@ -110,7 +110,8 @@
 
             ...mainGetters([
                 'isOnline',
-                'isOffline'
+                'isOffline',
+                'getFlagOnline'
             ]),
 
             getPublishedLevels: function() {
@@ -159,8 +160,16 @@
             }
         },
 
-        mounted: function() {
-            this.fetchLevelData();
+        watch: {
+          getFlagOnline: {
+            handler: function(newValue, oldValue) {
+              if (oldValue === null && !newValue) {
+                // on est en localhost dev : il faut charger les niveaux
+                this.fetchLevelData();
+              }
+            },
+            immediate: true
+          }
         }
     }
 </script>

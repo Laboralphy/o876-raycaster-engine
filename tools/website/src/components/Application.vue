@@ -33,11 +33,16 @@
         mixins: [storeMixin],
         created: async function() {
           await this.checkOnline();
-          if (this.isOnline) {
-            this.checkUserAuth();
-          }
         },
         watch: {
+          getFlagOnline: {
+            handler: function(newValue, oldValue) {
+              if (oldValue === null && newValue) {
+                // on est en ligne, il faut faire un check user auth
+                this.checkUserAuth();
+              }
+            }
+          },
           $route: {
             handler: function(to, from) {
               // checks if user is connected

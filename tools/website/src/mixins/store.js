@@ -17,6 +17,7 @@ export default {
             'getUserDisplayName',
             'isOnline',
             'isOffline',
+            'getFlagOnline',
             'isUserAuthPending'
         ])
     }

@@ -42,12 +42,6 @@ function getProjectFQN(...aPath) {
     return path.join(O876_RC_ROOT_PATH, ...aPath);
 }
 
-function initFavicon() {
-    app.get('/favicon.ico', (req, res) => {
-        print('serving favicon');
-        res.sendFile(getProjectFQN('favicon', 'favicon.png'));
-    });
-}
 
 /**
  * Returns the client identity
@@ -55,7 +49,7 @@ function initFavicon() {
  * @return {{id: string, vaultPath: string}}
  */
 function getUserAuth(req) {
-    if (!!CONFIG.getVariable('local_dev')) {
+    if (CONFIG.getVariable('local_dev')) {
         return {
             id: 'local',
             displayName: 'local',
@@ -64,6 +58,13 @@ function getUserAuth(req) {
     } else {
         return req.user;
     }
+}
+
+function initFavicon() {
+    app.get('/favicon.ico', (req, res) => {
+        print('serving favicon');
+        res.sendFile(getProjectFQN('favicon', 'favicon.png'));
+    });
 }
 
 /**
@@ -304,7 +305,6 @@ function initGameProject() {
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
         try {
             const oUser = getUserAuth(req);
-            console.log(oUser);
             const aPublished = await pm.getPublishedLevels();
             const aVault = await persist.listLevels(oUser.vaultPath);
             aPublished.forEach(l => {
