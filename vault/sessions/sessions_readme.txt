@@ -1,0 +1,1 @@
+This folder is used to store all session files. It can be safely emptied when the server is offline.

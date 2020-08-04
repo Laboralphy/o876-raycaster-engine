@@ -11,3 +11,6 @@ tools/website/app/*
 
 # .env file
 .env
+
+# don't store sessions files
+vault/sessions/*.json

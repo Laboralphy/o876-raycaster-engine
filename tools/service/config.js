@@ -10,6 +10,7 @@ const CONFIG = {
     vault_path: '',    // the folder where all map editor levels are located
     game_path: '',  // the game project folder
     base_path: '', // the base path (where the script is run from)
+    local_dev: !!parseInt(process.env.LOCAL_DEV || 0) // if 0 then the server is set up as an online service, else it is set up for local development.
 };
 
 function getVariable(s) {

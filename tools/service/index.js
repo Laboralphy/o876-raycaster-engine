@@ -15,6 +15,13 @@ const path = require('path');
 const util = require('util');
 const fs = require('fs');
 
+// PASSPORT.JS imports and dependencies .... "unobtrusive" ???
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require("express-session");
+const bodyParser = require("body-parser");
+const FileStore = require('session-file-store')(session);
+
 const persist = require('./persist');
 const LZ = require('./level-zip');
 const pm = require('./project-mgr');
@@ -25,6 +32,7 @@ const CONFIG = require('./config');
 const O876_RC_ROOT_PATH = path.resolve(CONFIG.getVariable('base_path'));
 
 const readdir = util.promisify(fs.readdir);
+
 
 function print(...args) {
     console.log(...args);
@@ -47,11 +55,15 @@ function initFavicon() {
  * @return {{id: string, vaultPath: string}}
  */
 function getUserAuth(req) {
-    return {
-        id: 'local',
-        vaultPath: 'local',
-        displayName: 'Local user'
-    };
+    if (!!CONFIG.getVariable('local_dev')) {
+        return {
+            id: 'local',
+            displayName: 'local',
+            vaultPath: 'local'
+        };
+    } else {
+        return req.user;
+    }
 }
 
 /**
@@ -72,14 +84,6 @@ function initMapEditor() {
                 console.error('GET /vault - error');
                 console.error(e);
             })
-    });
-
-    // returns a visual representation of the connected user
-    app.get('/userinfo', (req, res) => {
-        const oUser = getUserAuth(req);
-        return res.json({
-            name: oUser.displayName
-        });
     });
 
     // loads a level for the map editor
@@ -164,6 +168,96 @@ function initExamples() {
     });
 }
 
+const USERS_STORE = {};
+
+function initPassport() {
+// Uses the LocalStrategy for PASSPORT.JS
+    passport.use(new LocalStrategy(
+        function(username, password, done) {
+            /*
+            User.findOne({ username: username }, function (err, user) {
+                if (err) { return done(err); }
+                if (!user) {
+                    return done(null, false, { message: 'Incorrect username.' });
+                }
+                if (!user.validPassword(password)) {
+                    return done(null, false, { message: 'Incorrect password.' });
+                }
+                return done(null, user);
+            });
+            */
+            if (username === password) {
+                const oUser = {
+                    id: 'user-' + username,
+                    vaultPath: 'user-' + username,
+                    displayName: username
+                };
+                USERS_STORE[oUser.id] = oUser;
+                return done(null, oUser);
+            } else {
+                return done(null, false, { message: 'incorrect username/password'});
+            }
+        }
+    ));
+
+    passport.serializeUser(function(user, done) {
+        done(null, user.id);
+    });
+
+    // retrieve user instance from id
+    passport.deserializeUser(function(id, done) {
+        if (id in USERS_STORE) {
+            done(null, USERS_STORE[id]);
+        } else {
+            done(null, false);
+        }
+    });
+
+    const fileStoreOptions = {
+        path: getProjectFQN(process.env.SESSION_PATH),
+        ttl: 3600 * 24
+    };
+
+    app.use(session({
+        store: new FileStore(fileStoreOptions),
+        secret: 'keyboard cat',
+        resave: false,
+        saveUninitialized: false
+    }));
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+
+    app.post('/login',
+        passport.authenticate('local'),
+        function(req, res) {
+            // If this function gets called, authentication was successful.
+            // `req.user` contains the authenticated user.
+            res.redirect('/');
+        }
+    );
+
+    // returns a visual representation of the connected user
+    app.get('/userinfo', (req, res) => {
+        const oUser = getUserAuth(req);
+        if (!!oUser) {
+            return res.json({
+                auth: true,
+                name: oUser.displayName
+            });
+        } else {
+            return res.json({
+                auth: false
+            });
+        }
+    });
+
+    app.get('/logout', function(req, res) {
+        req.logout();
+        res.redirect('/');
+    });
+}
+
 
 /**
  * inits the web site sub service
@@ -177,8 +271,14 @@ function initWebSite() {
     });
     app.use('/app', express.static(getProjectFQN('tools', 'website', 'app')));
     app.use('/assets', express.static(getProjectFQN('tools', 'website', 'assets')));
-}
 
+    // returns a visual representation of the connected user
+    app.get('/online', (req, res) => {
+        res.json({
+            result: !CONFIG.getVariable('local_dev')
+        });
+    });
+}
 
 /**
  * inits the dist sub service
@@ -204,6 +304,7 @@ function initGameProject() {
     app.get(GAME_ACTION_PREFIX + '/levels', async (req, res) => {
         try {
             const oUser = getUserAuth(req);
+            console.log(oUser);
             const aPublished = await pm.getPublishedLevels();
             const aVault = await persist.listLevels(oUser.vaultPath);
             aPublished.forEach(l => {
@@ -274,13 +375,15 @@ function run(options) {
     gpoe('port', 'port', 'SERVER_PORT', 80);
     gpoe('vault_path', 'vault_path', 'VAULT_PATH', '');
     gpoe('game_path', 'game_path', 'GAME_PATH', '');
-    //gpoe('game_action_prefix', 'game_action_prefix', 'GAME_ACTION_PREFIX', 'game');
 
     initGameProject();
     initFavicon();
     initMapEditor();
     initExamples();
     initDist();
+    if (!CONFIG.getVariable('local_dev')) {
+        initPassport();
+    }
     initWebSite();
 
     app.listen(CONFIG.getVariable('port'));
@@ -290,7 +393,8 @@ function run(options) {
     print('server port :', CONFIG.getVariable('port'));
     print('action prefix :', 'game');
     print('website url : http://localhost:' + CONFIG.getVariable('port') + '/');
-    print('service is now listening...')
+    print('local development : ' + (CONFIG.getVariable('local_dev') ? 'yes' : 'nope, online service'));
+    print('service is now listening...');
 }
 
 module.exports = {

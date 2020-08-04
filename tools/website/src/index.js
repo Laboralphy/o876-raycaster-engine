@@ -19,14 +19,19 @@ import TechPage from "./components/TechPage.vue";
 import AboutPage from "./components/AboutPage.vue";
 import LoginPage from "./components/LoginPage.vue";
 
+import store from "./store";
+
 Vue.use(Vuex);
 Vue.use(VueRouter);
+
+
 
 function createApplication() {
 
     const routes = [
         {
             path: '/',
+            name: 'home',
             components: {
                 default: HomePage
             }
@@ -72,6 +77,7 @@ function createApplication() {
     return new Vue({
         el: '#vue-application',
         router: new VueRouter({routes}),
+        store: new Vuex.Store(store),
         components: {
             Application
         },

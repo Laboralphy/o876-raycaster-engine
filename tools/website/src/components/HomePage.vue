@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="seamless" v-if="onlineVersion">
+        <div class="seamless" v-if="isOnline">
             <div class="row">
                 <div class="col lg-12">
                     <h3>Raycasting Game Engine Home Page</h3>
@@ -21,7 +21,7 @@
                 </div>
             </div>
         </div>
-        <div class="seamless" v-else>
+        <div class="seamless" v-if="isOffline">
             <div class="row">
                 <div class="col lg-12">
                     <h3>Local project status</h3>
@@ -92,18 +92,27 @@
     import {deleteJSON, fetchJSON} from "../../../../libs/fetch-json";
     import CONFIG from "../../../service/config";
 
+    import {createNamespacedHelpers} from 'vuex';
+
+    const {mapGetters: mainGetters} = createNamespacedHelpers('main');
+
     export default {
         name: "HomePage",
         components: {LevelThumbnail},
         data: function() {
             return {
                 levels: [],
-                gameActionPrefix: 'game',
-                onlineVersion: true
+                gameActionPrefix: 'game'
             }
         },
 
         computed: {
+
+            ...mainGetters([
+                'isOnline',
+                'isOffline'
+            ]),
+
             getPublishedLevels: function() {
                 return this.levels.filter(l => l.exported);
             },
@@ -136,9 +145,13 @@
             },
 
             fetchLevelData: function() {
-                return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
+                if (this.isOffline) {
+                  return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
                     this.levels.splice(0, this.levels.length, ...data);
-                });
+                  });
+                } else {
+                  return Promise.resolve([]);
+                }
             },
 
             runProject: function() {

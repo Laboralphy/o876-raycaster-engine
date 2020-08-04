@@ -129,14 +129,28 @@ h5 {
 .title.gray, .title.grey {
 	background: linear-gradient(45deg, rgb(32, 32, 32), rgb(24, 24, 24));
 	border: solid thin rgb(12, 12, 12);
-	color: #DDFFDD;
+	color: #DDDDDD;
+	text-shadow: 0 0 0.2em rgba(150, 150, 150, 1), 0.15em 0.15em 0.25em rgba(128, 128, 128, 1);
+}
+
+.title.light-gray, .title.light-grey {
+	background: linear-gradient(45deg, rgb(128, 128, 128), rgb(96, 96, 96));
+	border: solid thin rgb(36, 36, 36);
+	color: #FFFFFF;
 	text-shadow: 0 0 0.2em rgba(150, 150, 150, 1), 0.15em 0.15em 0.25em rgba(128, 128, 128, 1);
 }
 
 
 .btn.blue, button.blue { background-color: blue; }
-.btn.red, button.red { background-color: red; }
+.btn.blue:hover, button.blue:hover { background-color: #000099; }
+
+.btn.red, button.red { background-color: #630d0d; }
+.btn.red:hover, button.red:hover { background-color: #420909; }
+
 .btn.green, button.green { background-color: green; }
+.btn.green:hover, button.green:hover { background-color: #004c00; }
+
 .btn.yellow, button.yellow { background-color: yellow; }
+.btn.yellow:hover, button.yellow:hover { background-color: #929200; }
 
 
