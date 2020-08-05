@@ -12,6 +12,5 @@ require('./LightSourcesTest');
 require('./AbbrTest');
 require('./TagGridTest');
 require('./PaintingTest');
-require('./ArgumentParserTest');
 require('./FilterManagerTest');
 require('./JsonBlobzTest');

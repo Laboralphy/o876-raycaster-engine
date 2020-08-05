@@ -92,13 +92,13 @@ const testConfig = {
  * The map editor software
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string, publicPath: string}, devtool: string, entry: {mapedit: string}, plugins: [VueLoader.VueLoaderPlugin], module: {rules: [{test: RegExp, use: string}, {test: RegExp, use: [string, string]}, {test: RegExp, loader: string, options: {limit: number}}]}, target: string}}
  */
-const mapeditConfig = require('./tools/mapedit/webpack.config');
+const mapeditConfig = require('./mapedit/webpack.config');
 
 /**
  * The game projects management website
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string, publicPath: string}, devtool: string, entry: {website: string}, plugins: [VueLoader.VueLoaderPlugin], module: {rules: [{test: RegExp, use: string}, {test: RegExp, use: [string, string]}, {test: RegExp, loader: string, options: {limit: number}}]}, target: string}}
  */
-const websiteConfig = require('./tools/website/webpack.config');
+const websiteConfig = require('./website/webpack.config');
 
 
 /**

@@ -14,8 +14,8 @@ const path = require('path');
 require('dotenv').config({ path: './.env' });
 
 
-const ArgumentParser = require('../tools/argument-parser');
-const Service = require('../tools/service/index');
+const ArgumentParser = require('../srv/argument-parser');
+const Service = require('../srv');
 
 
 function initArgumentParser() {
