@@ -5,13 +5,16 @@
                 <div class="col lg-12">
                     <h3>Raycasting Game Engine Home Page</h3>
                     <p>
-                        This version of the O876 Raycasting Game Engine is hosted online.
+                        This online version of the Raycasting Game Engine Home Page provides different pages :
                     </p>
                     <ul>
-                        <li>Click on the "Map Editor" tab to run the map editor software and create your own
-                            raycasting game maps.</li>
-                        <li>The "Docs" map will give you insights of what raycasting technology is.</li>
-                        <li>The "Demos" tab will direct you to a set of small demos using this game engine</li>
+                      <li><span class="button-text">Map Editor</span> runs the map editor software
+                        and allows identified users to create their own raycasting game maps.</li>
+                      <li><span class="button-text">Docs</span> gives you insights of what raycasting technology is.</li>
+                      <li><span class="button-text">Demos</span> directs you to a set of small demos using this game engine.</li>
+                      <li><span class="button-text">Sign in</span> directs you to a login page.
+                        Identified users will be able to run the Map Editor,
+                        and they will have access to their own mapedit workspace.</li>
                     </ul>
                     <h4>For game developers</h4>
                     <p>
@@ -90,7 +93,7 @@
 <script>
     import LevelThumbnail from "./LevelThumbnail.vue";
     import {deleteJSON, fetchJSON} from "libs/fetch-json";
-    import CONFIG from "../../../srv/config";
+    import storeMixin from "../mixins/store";
 
     import {createNamespacedHelpers} from 'vuex';
 
@@ -99,6 +102,9 @@
     export default {
         name: "HomePage",
         components: {LevelThumbnail},
+
+        mixins: [storeMixin],
+
         data: function() {
             return {
                 levels: [],
@@ -107,12 +113,6 @@
         },
 
         computed: {
-
-            ...mainGetters([
-                'isOnline',
-                'isOffline',
-                'getFlagOnline'
-            ]),
 
             getPublishedLevels: function() {
                 return this.levels.filter(l => l.exported);

@@ -15,6 +15,7 @@ export default {
         ...mainGetters([
             'isUserAuthenticated',
             'getUserDisplayName',
+            'getUserDisplayData',
             'isOnline',
             'isOffline',
             'getFlagOnline',

@@ -10,7 +10,8 @@ function getUserAuth(req) {
         return {
             id: 'local',
             displayName: 'local',
-            vaultPath: 'local'
+            vaultPath: 'local',
+            dateCreation: Date.now()
         };
     } else {
         return ('user' in req) ? req.user : null;

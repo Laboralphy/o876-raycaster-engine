@@ -8,3 +8,14 @@
     padding: 0;
     margin: 0;
 }
+
+.button-text {
+    color: white;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    font-size: 0.77em;
+    border-radius: 0.35em;
+    background-color: #888;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.35);
+}

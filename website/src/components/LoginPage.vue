@@ -23,7 +23,7 @@
     </div>
     <div class="row" v-else>
       <div class="col lg-12">
-        <p>Let's log out !</p>
+        <p><b>{{ getUserDisplayData.name }}</b>, account created on : {{ getUserDisplayData.date }}.</p>
         <form method="get" action="/logout">
           <button class="red" type="submit">Log out</button>
         </form>

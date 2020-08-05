@@ -7,7 +7,9 @@
         </div>
         <div class="row">
             <div class="col lg-12">
-                <p>Here is a list of all examples and demos.</p>
+                <p>Here is a list of all examples and demos.
+                  All these demos actually use the Raycaster Engine and run on you browser.
+                  So you may use your keyboard to control the camera.</p>
                 <ul>
                     <li v-for="ex in examples"><a :href="'/examples/' + ex">{{ ex }}</a></li>
                 </ul>

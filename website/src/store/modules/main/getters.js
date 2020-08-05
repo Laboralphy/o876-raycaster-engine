@@ -4,5 +4,6 @@ export default {
     getFlagOnline: state => state.flags.online,
     isUserAuthenticated: state => state.user.auth,
     isUserAuthPending: state => state.user.pending,
-    getUserDisplayName: state => state.user.name
+    getUserDisplayName: state => state.user.name,
+    getUserDisplayData: state => state.user
 }

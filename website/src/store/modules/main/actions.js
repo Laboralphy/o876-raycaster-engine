@@ -6,13 +6,17 @@ import {fetchJSON} from 'libs/fetch-json';
 export default {
     [ACTIONS.CHECK_USER_AUTH]: async function({commit, dispatch}) {
         commit(MUTATIONS.SET_USER_PENDING, {value: true});
-        const oResult = await fetchJSON('/userinfo');
+        const oResult = await fetchJSON('/user.json');
         if (!!oResult && oResult.auth) {
+            const d = new Date(oResult.date);
             commit(MUTATIONS.SET_USER_AUTH, {value: true});
             commit(MUTATIONS.SET_USER_NAME, {value: oResult.name});
+            commit(MUTATIONS.SET_USER_DATE, {value: d.toLocaleDateString()});
+            console.log(oResult)
         } else {
             commit(MUTATIONS.SET_USER_AUTH, {value: false});
             commit(MUTATIONS.SET_USER_NAME, {value: ''});
+            commit(MUTATIONS.SET_USER_DATE, {value: ''});
         }
         commit(MUTATIONS.SET_USER_PENDING, {value: false});
     },

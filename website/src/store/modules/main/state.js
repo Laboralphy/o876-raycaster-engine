@@ -5,6 +5,7 @@ export default {
     user: {
         auth: false,
         pending: false,
-        name: ''
+        name: '',
+        date: ''
     }
 };

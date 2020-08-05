@@ -16,16 +16,16 @@
           </div>
           <div class="col lg-12" v-else>
             <p>The Map Editor is a web software that allows you to design your own maps for a Raycaster Game Project.</p>
-            <p>While online, the Map editor is only available to :</p>
-            <ul>
-              <li>Registred users (They'll have their own workspace).</li>
-              <li>Anonymous users (They'll share a common anonymous workspace).</li>
-            </ul>
+            <p>In an online context, the Map editor is only available to <b>identified users</b>. So they'll have access to their own workspace.</p>
             <nav>
-              <ul>
+              <ul v-if="isAccessGranted">
                 <li><button class="green" @click="openMapEditor()">Open Map Editor</button></li>
               </ul>
+              <ul v-else>
+                <li><button class="disabled" disabled="disabled">Open Map Editor</button></li>
+              </ul>
             </nav>
+            <span class="note" v-if="isAccessDenied">You must be logged in to use the Map Editor.</span>
           </div>
         </div>
     </div>
@@ -37,6 +37,15 @@
         name: "MapEditPage",
 
         mixins: [storeMixin],
+
+        computed: {
+          isAccessDenied: function () {
+            return this.isOnline && !this.isUserAuthenticated
+          },
+          isAccessGranted: function () {
+            return this.isOffline || this.isUserAuthenticated
+          }
+        },
 
         methods: {
             openMapEditor: function() {
