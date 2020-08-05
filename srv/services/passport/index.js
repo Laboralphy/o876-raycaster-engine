@@ -79,11 +79,6 @@ class Service extends ServiceAbstract {
         app.get('/user.json', (req, res) => {
             const oUser = getUserAuth(req);
             if (!!oUser) {
-                console.log({
-                    auth: true,
-                    name: oUser.name,
-                    date: oUser["date-creation"]
-                })
                 return res.json({
                     auth: true,
                     name: oUser.name,
