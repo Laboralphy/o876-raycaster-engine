@@ -1,12 +1,15 @@
 <template>
     <StatusBar>
         <MyButton @click="goHome"><HomeIcon decorative></HomeIcon></MyButton>
+        <span v-if="getUserAuth">[<b>{{ getUserName }}</b>]</span>
         <SimpleMenu :routes="routes.main"></SimpleMenu>
         <SimpleMenu style="float: right" :routes="routes.tools"></SimpleMenu>
     </StatusBar>
 </template>
 
 <script>
+    import {createNamespacedHelpers} from 'vuex';
+
     import StatusBar from "./StatusBar.vue";
     import MyButton from "./MyButton.vue";
     import SimpleMenu from "./SimpleMenu.vue";
@@ -25,6 +28,8 @@
     import InformationIcon from "vue-material-design-icons/Information.vue"
     import ToolboxIcon from "vue-material-design-icons/Toolbox.vue";
     import HomeIcon from "vue-material-design-icons/Home.vue"
+
+    const {mapGetters: editorGetters} = createNamespacedHelpers('editor');
 
     export default {
         name: "MainMenu",
@@ -46,6 +51,11 @@
             InformationIcon,
             HomeIcon
         },
+
+        computed: {
+            ...editorGetters(['getUserAuth', 'getUserName'])
+        },
+
         data: function() {
             return {
                 routes: {

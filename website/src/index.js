@@ -10,6 +10,7 @@ import "./styles/responsive/custom.css";
 import 'vue-material-design-icons/styles.css';
 import "./styles/base.css";
 
+import store from "./store";
 import Application from './components/Application.vue';
 import HomePage from "./components/HomePage.vue";
 import ExamplePage from "./components/ExamplePage.vue";
@@ -18,8 +19,8 @@ import FeatPage from "./components/FeatPage.vue";
 import TechPage from "./components/TechPage.vue";
 import AboutPage from "./components/AboutPage.vue";
 import LoginPage from "./components/LoginPage.vue";
-
-import store from "./store";
+import CreateUserPage from "./components/CreateUserPage.vue";
+import UserRegistered from "./components/UserRegistered.vue";
 
 Vue.use(Vuex);
 Vue.use(VueRouter);
@@ -71,7 +72,19 @@ function createApplication() {
             components: {
                 default: LoginPage
             }
-        }
+        },
+        {
+            path: '/createuser/success',
+            components: {
+                default: UserRegistered
+            }
+        },
+        {
+            path: '/createuser',
+            components: {
+                default: CreateUserPage
+            }
+        },
     ];
 
     return new Vue({

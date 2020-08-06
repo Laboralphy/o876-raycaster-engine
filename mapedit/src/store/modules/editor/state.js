@@ -1,8 +1,11 @@
 export default {
 
+    user: {
+        auth: false,
+        name: ''
+    },
 
     data: {
-
         phys: [
             {
                 id: 0,

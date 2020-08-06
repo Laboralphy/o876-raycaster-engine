@@ -25,7 +25,10 @@ export default {
     getPopupContent: state => state.popup.content,
     getPopupProgress: state => state.popup.progress,
 
-    getSelectedTool: state => state.models.levelGrid.selectedTool
+    getSelectedTool: state => state.models.levelGrid.selectedTool,
+
+    getUserAuth: state => state.user.auth,
+    getUserName: state => state.user.name
 }
 
 

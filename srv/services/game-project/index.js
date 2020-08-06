@@ -55,12 +55,15 @@ module.exports = class Service extends ServiceAbstract {
         });
 
         // unpublish a specified level
-        app.delete(GAME_ACTION_PREFIX + '/level/:name', (req, res) => {
-            pm
-                .unpublishLevel(req.params.name)
-                .then(() => res.json({status: 'done'}))
-                .catch(e => res.json({status: 'error', error: e.message}));
-        });
+        // only available for local developement
+        if (CONFIG.getVariable('local_dev')) {
+            app.delete(GAME_ACTION_PREFIX + '/level/:name', (req, res) => {
+                pm
+                    .unpublishLevel(req.params.name)
+                    .then(() => res.json({status: 'done'}))
+                    .catch(e => res.json({status: 'error', error: e.message}));
+            });
+        }
 
         // redirection -> launch the game
         app.get(GAME_ACTION_PREFIX + '/', (req, res) => {

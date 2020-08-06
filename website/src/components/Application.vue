@@ -16,6 +16,8 @@
                     </ul>
                 </nav>
                 <router-view></router-view>
+                <hr class="footpage-copyright"/>
+                <div class="footpage-copyright">Opensource project created by <b>Laboralphy</b>.</div>
             </Card>
         </div>
     </div>
@@ -60,4 +62,16 @@
     div.pad {
         padding: 0.85em;
     }
+
+    hr.footpage-copyright {
+        margin: 2em;
+    }
+
+    div.footpage-copyright {
+        text-align: center;
+        font-size: 0.9em;
+        color: #222;
+        padding: 2em;
+    }
+
 </style>

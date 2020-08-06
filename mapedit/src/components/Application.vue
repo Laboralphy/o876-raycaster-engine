@@ -33,6 +33,8 @@
 </template>
 
 <script>
+    import * as EDITOR_ACTIONS from '../store/modules/editor/action-types';
+
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MainMenu from "./MainMenu.vue";
@@ -41,7 +43,7 @@
     import Popup from "./Popup.vue";
 
     import {createNamespacedHelpers} from 'vuex';
-    const {mapGetters: editorGetters} = createNamespacedHelpers('editor');
+    const {mapGetters: editorGetters, mapActions: editorActions} = createNamespacedHelpers('editor');
 
     export default {
         name: "Application",
@@ -61,6 +63,16 @@
                     case 'error': return 'Error';
                 }
             }
+        },
+
+        methods: {
+          ...editorActions({
+              fetchUserData: EDITOR_ACTIONS.FETCH_USER_DATA
+          })
+        },
+
+        mounted() {
+          this.fetchUserData();
         }
     }
 </script>

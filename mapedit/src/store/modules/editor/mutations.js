@@ -90,5 +90,10 @@ export default {
 
     [MUTATION.SET_SELECTED_TOOL]: (state, {value}) => {
         state.models.levelGrid.selectedTool = value;
+    },
+
+    [MUTATION.SET_USER]: (state, {auth, name}) => {
+        state.user.name = name;
+        state.user.auth = auth;
     }
 }

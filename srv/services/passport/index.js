@@ -1,11 +1,12 @@
-const path = require('path');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require("express-session");
 const bodyParser = require("body-parser");
 const FileStore = require('session-file-store')(session);
+
 const ServiceAbstract = require('@laboralphy/ws-service/abstract');
 const CONFIG = require('../../config');
+
 const UserManager = require('../../user-mgr');
 
 const {getProjectFQN} = require('../../get-project-fqn');
@@ -24,10 +25,16 @@ class Service extends ServiceAbstract {
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         const app = application;
+        const fileStoreOptions = {
+            path: getProjectFQN(process.env.SESSION_PATH),
+            ttl: 3600 * 24
+        };
+
+        // What passport.js strategy should I use ?
         passport.use(new LocalStrategy(
             async (username, password, done) => {
-                // a partir du username/password
-                // déterminer l'identité du client
+                // from username/password
+                // détermine client identity
                 const u = await this.oUserManager.findUser(username, password);
                 if (!!u) {
                       return done(null, u);
@@ -37,6 +44,8 @@ class Service extends ServiceAbstract {
             }
         ));
 
+        // copy-paste from official doc...
+        // when passport asks for a serialization we provide a user.id
         passport.serializeUser((user, done) => {
             done(null, user.id);
         });
@@ -51,11 +60,7 @@ class Service extends ServiceAbstract {
             }
         });
 
-        const fileStoreOptions = {
-            path: getProjectFQN(process.env.SESSION_PATH),
-            ttl: 3600 * 24
-        };
-
+        // use sessions with file-store
         app.use(session({
             store: new FileStore(fileStoreOptions),
             secret: 'keyboard cat',
@@ -66,6 +71,12 @@ class Service extends ServiceAbstract {
         app.use(passport.initialize());
         app.use(passport.session());
 
+
+        // ROUTES
+
+
+        // login
+        // this route will try to authenticate a username/password
         app.post('/login',
             passport.authenticate('local'),
             (req, res) => {
@@ -75,6 +86,7 @@ class Service extends ServiceAbstract {
             }
         );
 
+        // user information
         // returns a visual representation of the connected user
         app.get('/user.json', (req, res) => {
             const oUser = getUserAuth(req);
@@ -91,6 +103,23 @@ class Service extends ServiceAbstract {
             }
         });
 
+        app.post('/user', async (req, res) => {
+            try {
+                const username = req.body.username;
+                const password = req.body.password;
+                await this.oUserManager.createUser(username, password);
+                res.redirect('/#/createuser/success');
+            } catch (e) {
+                console.error(e);
+                return res.json({
+                    status: 'error',
+                    error: 'could not create user : ' + e.message
+                });
+            }
+        });
+
+        // logout
+        // the user is being logged out
         app.get('/logout', (req, res) => {
             req.logout();
             res.redirect('/');

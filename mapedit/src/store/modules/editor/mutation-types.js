@@ -25,3 +25,4 @@ export const SET_POPUP_PROGRESS = 'SET_POPUP_PROGRESS';
 
 export const SET_SELECTED_TOOL = 'SET_SELECTED_TOOL';
 
+export const SET_USER = 'SET_USER';

@@ -1,6 +1,6 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types'
-import {getLevelList} from "../../../libraries/fetch-helper";
+import {getLevelList, getUserData} from "../../../libraries/fetch-helper";
 
 
 function getHighlightedTags(sr, grid) {
@@ -55,5 +55,9 @@ export default {
                 break;
         }
         commit(MUTATION.SOMETHING_HAS_CHANGED, {value: true});
+    },
+
+    [ACTION.FETCH_USER_DATA]: async function({commit}) {
+        commit(MUTATION.SET_USER, await getUserData());
     }
 }

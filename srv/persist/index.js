@@ -10,7 +10,7 @@ let VAULT_DEFAULT_PATH = '.';
 function getUserVault(sUser) {
 	const v = new Vault();
 	v.path = VAULT_DEFAULT_PATH;
-	v.namespace = sUser;
+	v.namespace = path.join(sUser, 'maps');
 	return v;
 }
 

@@ -88,6 +88,7 @@ class UserManager {
                 "date-last-visit": dNow.getTime()
             };
             await promfs.write(path.join(sHome, 'user.json'), JSON.stringify(oUser));
+            return oUser;
         } else {
             // nom d'utilisateur invalide
             throw new Error('user name is invalid (length must be inside range 3..64 characters)');
@@ -135,7 +136,6 @@ class UserManager {
             if (hashPass === oUser.password) {
                 return oUser;
             }
-            console.error('password incorrect');
         }
         return null;
     }

@@ -24,3 +24,6 @@ export function getLevelList() {
     return fetchJSON(CONSTS.SERVICE_URL_LIST);
 }
 
+export function getUserData() {
+    return fetchJSON(CONSTS.SERVICE_URL_USER);
+}

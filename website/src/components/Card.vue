@@ -1,6 +1,6 @@
 <template>
     <div class="card">
-        <div class="row">
+        <div v-if="title.length > 0" class="row">
           <div class="col lg-12">
             <h2 :class="'title ' + color">{{ title }}</h2>
           </div>
@@ -17,7 +17,7 @@
         props: {
             title: {
                 type: String,
-                default: 'no title',
+                default: '',
                 required: false
             },
             color: {

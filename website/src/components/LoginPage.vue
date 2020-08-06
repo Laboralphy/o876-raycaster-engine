@@ -2,28 +2,31 @@
   <div>
     <div class="row">
       <div class="col lg-12">
-        <h3>The login page</h3>
-      </div>
-    </div>
-    <div class="row" v-if="!isUserAuthenticated">
-      <div class="col lg-12">
-        <p>Let's log in !</p>
+        <h3 v-if="isUserAuthenticated">User profile : {{ getUserDisplayData.name }}</h3>
+        <h3 v-else>Sign in</h3>
       </div>
     </div>
     <div class="row" v-if="!isUserAuthenticated">
       <div class="col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-10 xs-offset-1">
-        <form method="post" action="/login">
-          <ul class="form">
-            <li><label><span>Username :</span><br/><input name="username" type="text" /></label></li>
-            <li><label><span>Password :</span><br/><input name="password" type="password" /></label></li>
-            <li><button class="green" type="submit">Sign in</button></li>
-          </ul>
-        </form>
+        <p>Enter your login/password to get access to your own level design workspace.
+          If you don't have an account hit the <span class="button-text">Register</span> button. </p>
+        <p class="note">Identifying users has no purpose other than storing level maps into different folders,
+          so users have their own workspace to store their level maps without fear of someone deleting their stuff.</p>
+      </div>
+    </div>
+    <div class="row" v-if="!isUserAuthenticated">
+      <div class="col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-10 xs-offset-1">
+        <UserPassForm
+            action="login"
+            action-caption="Sign in"
+            alt-action="createuser"
+            alt-action-caption="Register"
+        ></UserPassForm>
       </div>
     </div>
     <div class="row" v-else>
       <div class="col lg-12">
-        <p><b>{{ getUserDisplayData.name }}</b>, account created on : {{ getUserDisplayData.date }}.</p>
+        <p>Account created on : {{ getUserDisplayData.date }}.</p>
         <form method="get" action="/logout">
           <button class="red" type="submit">Log out</button>
         </form>
@@ -34,28 +37,14 @@
 
 <script>
 import storeMixin from '../mixins/store';
+import UserPassForm from "./UserPassForm.vue";
 
 export default {
   name: "LoginPage",
+  components: {UserPassForm},
   mixins: [storeMixin],
 }
 </script>
 
 <style scoped>
-  ul.form {
-    margin: 0;
-    padding: 0;
-  }
-
-  ul.form > li {
-    list-style-type: none;
-    margin-top: 2em;
-  }
-  ul.form > li > label > span {
-    font-weight: bold;
-  }
-
-  ul.form > li > label > input {
-    width: 100%;
-  }
 </style>

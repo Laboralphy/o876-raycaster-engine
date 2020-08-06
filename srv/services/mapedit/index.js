@@ -12,6 +12,7 @@ const {getUserAuth} = require('../../get-user-auth');
  * @extends {ServiceAbstract}
  */
 module.exports = class Service extends ServiceAbstract {
+
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         const app = application;
@@ -22,7 +23,7 @@ module.exports = class Service extends ServiceAbstract {
         // list levels
         app.get('/vault', (req, res) => {
             const oUser = getUserAuth(req);
-            persist.listLevels(oUser.vaultPath)
+            persist.listLevels(oUser.id)
                 .then(r => res.json(r))
                 .catch(e => {
                     console.error('GET /vault - error');
@@ -34,14 +35,14 @@ module.exports = class Service extends ServiceAbstract {
         app.get('/vault/:name.json', (req, res) => {
             const oUser = getUserAuth(req);
             const name = req.params.name;
-            persist.loadLevel(oUser.vaultPath, name).then(r => res.json(r));
+            persist.loadLevel(oUser.id, name).then(r => res.json(r));
         });
 
         // load a preview thumbnail of a level
         app.get('/vault/:name.jpg', async (req, res) => {
             const oUser = getUserAuth(req);
             const name = req.params.name;
-            const filename = await persist.getLevelPreview(oUser.vaultPath, name);
+            const filename = await persist.getLevelPreview(oUser.id, name);
             res.sendFile(getProjectFQN(filename));
         });
 
@@ -50,7 +51,7 @@ module.exports = class Service extends ServiceAbstract {
             try {
                 const oUser = getUserAuth(req);
                 const name = req.params.name;
-                const data = await persist.loadLevel(oUser.vaultPath, name);
+                const data = await persist.loadLevel(oUser.id, name);
                 const archive = await LZ.buildZip(name, data);
                 res.download(archive.filename);
             } catch (e) {
@@ -64,7 +65,7 @@ module.exports = class Service extends ServiceAbstract {
                 const oUser = getUserAuth(req);
                 const name = req.params.name;
                 const {data} = req.body;
-                const r = await persist.saveLevel(oUser.vaultPath, name, data);
+                const r = await persist.saveLevel(oUser.id, name, data);
                 await res.json(r)
             } catch (e) {
                 await res.json({status: 'error', error: e.message});
@@ -75,27 +76,30 @@ module.exports = class Service extends ServiceAbstract {
         app.delete('/vault/:name', (req, res) => {
             const oUser = getUserAuth(req);
             const name = req.params.name;
-            persist.removeLevel(oUser.vaultPath, name).then(r => res.json(r));
+            persist.removeLevel(oUser.id, name).then(r => res.json(r));
         });
 
-        // export this level to the game assets
-        // only local work maybe exported
-        // not user-based (online)
-        app.get('/export/:name', async (req, res) => {
-            try {
-                const oUser = getUserAuth(req);
-                const name = req.params.name;
-                const data = await persist.loadLevel(oUser.vaultPath, name);
-                await LZ.exportLevel(name, data, {
-                    textures: CONFIG.getVariable('texture_path'),
-                    level: CONFIG.getVariable('level_path'),
-                    game: CONFIG.getVariable('game_path')
-                });
-                await res.json({status: 'done'});
-            } catch (e) {
-                console.error(e);
-                await res.json({status: 'error', error: e.message});
-            }
-        });
+        // we keep export functionnalities only for local development
+        if (CONFIG.getVariable('local_dev')) {
+            // export this level to the game assets
+            // only local work maybe exported
+            // not user-based (online)
+            app.get('/export/:name', async (req, res) => {
+                try {
+                    const oUser = getUserAuth(req);
+                    const name = req.params.name;
+                    const data = await persist.loadLevel(oUser.id, name);
+                    await LZ.exportLevel(name, data, {
+                        textures: CONFIG.getVariable('texture_path'),
+                        level: CONFIG.getVariable('level_path'),
+                        game: CONFIG.getVariable('game_path')
+                    });
+                    await res.json({status: 'done'});
+                } catch (e) {
+                    console.error(e);
+                    await res.json({status: 'error', error: e.message});
+                }
+            });
+        }
     }
 }

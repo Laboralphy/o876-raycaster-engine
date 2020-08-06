@@ -4,3 +4,4 @@ export const SELECT_REGION = 'SELECT_REGION';
 export const POP_UNDO = 'POP_UNDO';
 export const SET_LEVEL_NAME = 'SET_LEVEL_NAME';
 export const SET_SELECTED_TOOL = 'SET_SELECTED_TOOL';
+export const FETCH_USER_DATA = 'FETCH_USER_DATA';

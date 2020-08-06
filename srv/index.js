@@ -32,9 +32,9 @@ function main() {
 
     const wss = new WSService();
 
+    wss.service(new Passport());
     wss.service(new WebSite());
     wss.service(new MapEdit());
-    wss.service(new Passport());
     wss.service(new GameProject());
     wss.service(new Examples());
 

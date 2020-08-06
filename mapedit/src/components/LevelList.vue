@@ -97,14 +97,18 @@
             },
 
             exportToGame: async function() {
-                const name = this.selectedLevel;
-                const result = await FH.exportLevel(name);
-                if (result.status === 'done') {
+                try {
+                  const name = this.selectedLevel;
+                  const result = await FH.exportLevel(name);
+                  if (result.status === 'done') {
                     await this.setStatusBarText({text: 'Level successfully published : ' + name});
                     alert('Level successfully published : ' + name)
-                } else {
+                  } else {
                     await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
                     alert('Error while publishing level : ' + name + ' - ' + result.error)
+                  }
+                } catch (e) {
+                  alert('This function is available only in local development context.')
                 }
             }
         },
