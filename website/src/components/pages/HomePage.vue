@@ -157,8 +157,9 @@ export default {
   watch: {
     getFlagOnline: {
       handler: function (newValue, oldValue) {
-        if (oldValue === null) {
-          if (!newValue) {
+        console.log('oldValue', oldValue, 'newValue', newValue)
+        if (typeof oldValue !== 'number') {
+          if (newValue === 0) {
             // on est en localhost dev : il faut charger les niveaux
             this.fetchLevelData();
           } else {
