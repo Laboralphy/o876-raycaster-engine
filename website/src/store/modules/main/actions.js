@@ -30,5 +30,19 @@ export default {
             const {result} = await fetchJSON('/online');
             commit(MUTATIONS.SET_FLAG_ONLINE, {value: result ? 1 : 0});
         }
+    },
+
+    [ACTIONS.FETCH_NEWS]: async function({commit, getters}) {
+        try {
+            console.log('fetching news')
+            const res = await fetch('/news');
+            if (res.status < 400) {
+                const blob = await res.blob();
+                const sText = await blob.text();
+                commit(MUTATIONS.SET_NEWS_CONTENT, {value: sText});
+            }
+        } catch (e) {
+            // no news, no need to do anything
+        }
     }
 }

@@ -5,5 +5,7 @@ export default {
     isUserAuthenticated: state => state.user.auth,
     isUserAuthPending: state => state.user.pending,
     getUserDisplayName: state => state.user.name,
-    getUserDisplayData: state => state.user
+    getUserDisplayData: state => state.user,
+    getNewsContent: state => state.news.content,
+    areNewsLoaded: state => state.news.done
 }

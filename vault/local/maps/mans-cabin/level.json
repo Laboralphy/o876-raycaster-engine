@@ -11602,7 +11602,7 @@
     "sky": "575056323d9fdfa6812cd378732aff98.png",
     "fog": {
       "distance": 50,
-      "color": "black"
+      "color": "#160f0b"
     },
     "filter": {
       "enabled": false,
@@ -11611,9 +11611,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 4,
-    "y": 8,
-    "angle": 1
+    "x": 10,
+    "y": 26,
+    "angle": 1.5
   },
-  "preview": "2abe72e12aec14c7cd09b2e690d068d1.jpg"
+  "preview": "22aaf061fc8651f1c20bbe1a4a87aa45.jpg"
 }

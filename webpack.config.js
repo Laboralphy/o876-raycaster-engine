@@ -1,24 +1,6 @@
-const {VueLoaderPlugin} = require('vue-loader');
-
 const path = require('path');
 const fs = require('fs');
-const DEV_CONFIG = false; // include dev examples or not ?
 const DIR_NAME = __dirname;
-
-/**
- * Lists all index files in a given location
- * @param sSource {string} source location
- * @param sEntry {string} entry point
- * @returns {{}}
- */
-function lsIndex(sSource, sEntry) {
-    const sPath = path.resolve(DIR_NAME, sSource);
-    const output = {};
-    fs
-        .readdirSync(sPath)
-        .forEach(f => output[f] = path.resolve(sPath, f, sEntry));
-    return output;
-}
 
 /**
  * checks if .env file exists and loads it
@@ -37,56 +19,16 @@ function loadEnvFile() {
 loadEnvFile();
 
 /**
- * The main library
- * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {libraycaster: string}, plugins: [], module: {rules: []}, target: string}}
+ * libraycaster.js
+ * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {libraycaster: string}, plugins: *[], module: {rules: *[]}, target: string}}
  */
-const devConfig = {
-    mode: "development",
-    resolve: {
-        alias: {
-            libs: path.resolve(DIR_NAME, 'libs')
-        }
-    },
-    entry: {
-        libraycaster: path.resolve(DIR_NAME, 'libs/index.js'),
-    },
-    output: {
-        path: path.resolve(DIR_NAME, 'dist'),
-        libraryTarget: 'umd',
-        filename: '[name].js'
-    },
-    devtool: 'source-map',
-    module: {
-        rules: [
-        ]
-    },
-    plugins: [],
-    target: 'web'
-};
+const devConfig = require('./webpack.config.dev');
 
 /**
- * The unit tests
- * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {tests: string}, plugins: [], module: {rules: []}, target: string}}
+ * Unit tests
+ * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {tests: string}, plugins: *[], module: {rules: *[]}, target: string}}
  */
-const testConfig = {
-    mode: "development",
-    entry: {
-        tests: path.resolve(DIR_NAME, 'tests/index.js')
-    },
-    output: {
-        path: path.resolve(DIR_NAME, 'dist/tests'),
-        libraryTarget: 'commonjs2',
-        filename: '[name].js'
-    },
-    devtool: 'source-map',
-    module: {
-        rules: [
-        ]
-    },
-    plugins: [
-    ],
-    target: 'node'
-};
+const testConfig = require('./webpack.config.test');
 
 /**
  * The map editor software
@@ -100,34 +42,11 @@ const mapeditConfig = require('./mapedit/webpack.config');
  */
 const websiteConfig = require('./website/webpack.config');
 
-
 /**
  * The examples
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {}, plugins: [], module: {rules: []}, target: string}}
  */
-const exampleConfig = {
-    mode: "development",
-    entry: lsIndex('examples', 'index.js'),
-    resolve: {
-        alias: {
-            libs: path.resolve(DIR_NAME, 'libs')
-        }
-    },
-    output: {
-        path: path.resolve(DIR_NAME, 'dist/examples'),
-        libraryTarget: 'umd',
-        filename: '[name].js',
-    },
-    devtool: 'source-map',
-    module: {
-        rules: [
-        ]
-    },
-    plugins: [
-    ],
-    target: 'web'
-};
-
+const exampleConfig = require('./webpack.config.examples');
 
 /**
  * The current game project
@@ -135,57 +54,15 @@ const exampleConfig = {
  * Check ".env" file to select your game project location
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {game: string}, plugins: [], module: {rules: []}, target: string}}
  */
-const gameConfig = {
-    mode: 'development',
-    resolve: {
-        alias: {
-            libs: path.resolve(DIR_NAME, 'libs')
-        }
-    },
-    entry: {
-        game: path.resolve(DIR_NAME, process.env.GAME_PATH, 'src/index.js')
-    },
-    output: {
-        path: path.resolve(DIR_NAME, process.env.GAME_PATH, 'dist'),
-        libraryTarget: 'umd',
-        filename: '[name].js'
-    },
-    devtool: 'source-map',
-    module: {
-        rules: [
-            {
-                test: /\.vue$/,
-                use: 'vue-loader'
-            },
-            {
-                test: /\.css$/,
-                use: [ 'style-loader', 'css-loader' ]
-            },
-            {
-                test: /\.(png|jpg|gif|svg|eot|ttf|woff|woff2)$/,
-                loader: 'file-loader',
-                options: {
-                    limit: 10000
-                }
-            }
-        ]
-    },
-    plugins: [
-        new VueLoaderPlugin()
-    ],
-    target: 'web'
-};
+const gameConfig = require('./webpack.config.game');
 
 const CONFIG = [
     testConfig,
     exampleConfig,
+    devConfig,
     mapeditConfig,
     websiteConfig,
     gameConfig
 ];
-
-if (DEV_CONFIG) {
-    CONFIG.push(devConfig);
-}
 
 module.exports = CONFIG;

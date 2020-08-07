@@ -2873,7 +2873,7 @@
     }
   },
   "shading": {
-    "color": "black",
+    "color": "#160f0b",
     "factor": 50,
     "brightness": 0,
     "filter": null
@@ -3515,10 +3515,10 @@
     }
   ],
   "camera": {
-    "x": 4,
-    "y": 8,
+    "x": 10,
+    "y": 26,
     "z": 1,
-    "angle": 3.141592653589793
+    "angle": 4.71238898038469
   },
   "tags": [
     {
@@ -3610,5 +3610,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/b4cc3c39279b082b1395ec041386f7f3.jpg"
+  "preview": "assets/textures/643c70fe957439bebc6ac003f1b21bbd.jpg"
 }

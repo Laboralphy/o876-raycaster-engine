@@ -155,7 +155,7 @@ async function unpublishLevel(name) {
 /**
  * Run a template element.
  * @param oItem {*}
- * @return {Promise<void>}
+ * @return {Promise<boolean>}
  */
 async function runTemplateItem(oItem) {
     const sTarget = path.resolve(BASE_DIR, oItem.path);
@@ -165,6 +165,9 @@ async function runTemplateItem(oItem) {
             await mkdirp(sTargetDir);
         }
         await copy(path.resolve(TEMPLATE_DIR, oItem.template), path.resolve(BASE_DIR, oItem.path));
+        return true;
+    } else {
+        return false;
     }
 }
 
@@ -235,13 +238,14 @@ async function run(sBaseDir) {
         {
             path: path.join(GAME_SRC_DIR, 'config', 'index.js'),
             template: 'config.js'
-        },
-
-
-
+        }
     ];
+    let bCreated = false;
     for (let i = 0, l = PROJECT_TREE.length; i < l; ++i) {
-        await runTemplateItem(PROJECT_TREE[i]);
+        bCreated |= await runTemplateItem(PROJECT_TREE[i]);
+    }
+    if (bCreated) {
+        console.log('project creation :', CONFIG.getVariable('game_path'));
     }
 }
 

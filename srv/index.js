@@ -6,6 +6,7 @@ const MapEdit = require('./services/mapedit');
 const Passport = require('./services/passport');
 const GameProject = require('./services/game-project');
 const Examples = require('./services/examples');
+const News = require('./services/news');
 
 const CONFIG = require('./config');
 
@@ -37,6 +38,7 @@ function main() {
     wss.service(new MapEdit());
     wss.service(new GameProject());
     wss.service(new Examples());
+    wss.service(new News());
 
     wss.listen(CONFIG.getVariable('port'));
     console.log('now listening...');

@@ -15,5 +15,9 @@ export default {
     },
     [MUTATIONS.SET_FLAG_ONLINE]: function(state, {value}) {
         state.flags.online = value;
+    },
+    [MUTATIONS.SET_NEWS_CONTENT]: function(state, {value}) {
+        state.news.content = value;
+        state.news.done = true;
     }
 }

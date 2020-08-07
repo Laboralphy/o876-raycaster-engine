@@ -3,8 +3,14 @@
         <div class="row">
             <div class="col lg-12">
                 <h3>About the O876 Raycaster Game Engine</h3>
-                <p>The O876 Raycaster Engine is an open-source, free-to-use Raycasting framework, for building web browser games.</p>
+                <p>The O876 Raycaster Game Engine is an open-source, free-to-use framework, for building web browser games base on raycasting technology.</p>
                 <p>This project has been developped with some useful products and libraries.</p>
+                <h3>For game developers...</h3>
+                <p>
+                  The purpose of this site is only to show the engine features. If you want to actually create a game with this technology,
+                  consider visiting the Project GitHub Repository located at :
+                  <a href="https://github.com/Laboralphy/o876-raycaster-engine">https://github.com/Laboralphy/o876-raycaster-engine</a>.
+                </p>
             </div>
         </div>
         <div class="row">

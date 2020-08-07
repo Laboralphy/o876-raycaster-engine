@@ -22,8 +22,8 @@ module.exports = class Service extends ServiceAbstract {
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         const app = application;
-        const sExamplePath = getProjectFQN('examples');
-        app.use('/examples', express.static(sExamplePath));
+        const sExamplePath = getProjectFQN('');
+        app.use('/news', express.static(sExamplePath));
         app.get('/examples-list', async (req, res) => {
             // get a list of all example
             const aList = await promfs.ls(sExamplePath);
@@ -31,10 +31,3 @@ module.exports = class Service extends ServiceAbstract {
         });
     }
 };
-
-
-
-
-
-
-
