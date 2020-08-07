@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import storeMixin from '../mixins/store';
+    import storeMixin from '../../mixins/store';
     export default {
         name: "MapEditPage",
 

@@ -90,7 +90,9 @@ class Service extends ServiceAbstract {
         // returns a visual representation of the connected user
         app.get('/user.json', (req, res) => {
             const oUser = getUserAuth(req);
-            if (!!oUser) {
+            const bLocalDev = CONFIG.getVariable('local_dev');
+            const bAuth = !bLocalDev && !!oUser && oUser.auth;
+            if (bAuth) {
                 return res.json({
                     auth: true,
                     name: oUser.name,

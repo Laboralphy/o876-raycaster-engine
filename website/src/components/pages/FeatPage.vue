@@ -36,14 +36,14 @@
                         <div class="row">
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-open-door-0.jpg" />
+                                    <img src="../../../assets/images/feat-open-door-0.jpg" />
                                     <figcaption>Double panel door</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-open-door-1.jpg" />
+                                    <img src="../../../assets/images/feat-open-door-1.jpg" />
                                     <figcaption>Top sliding door</figcaption>
                                 </figure>
 
@@ -67,7 +67,7 @@
                         <div class="row">
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-secret-door-0.jpg" />
+                                    <img src="../../../assets/images/feat-secret-door-0.jpg" />
                                     <figcaption>This wall has been pushed, and reveals a hidden zone !</figcaption>
                                 </figure>
 
@@ -92,21 +92,21 @@
                         <div class="row">
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/game-blight.jpg" />
+                                    <img src="../../../assets/images/game-blight.jpg" />
                                     <figcaption>Sprites from Blight Magic</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/game-scr19.jpg" />
+                                    <img src="../../../assets/images/game-scr19.jpg" />
                                     <figcaption>Sprites from Blight Magic</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/game-scr20.jpg" />
+                                    <img src="../../../assets/images/game-scr20.jpg" />
                                     <figcaption>Sprites from Blight Magic</figcaption>
                                 </figure>
 
@@ -129,14 +129,14 @@
                         <div class="row">
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/game-scr13.jpg" />
+                                    <img src="../../../assets/images/game-scr13.jpg" />
                                     <figcaption>Without floor and ceiling textures</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/game-scr18.jpg" />
+                                    <img src="../../../assets/images/game-scr18.jpg" />
                                     <figcaption>With floor and ceiling textures (looks better)</figcaption>
                                 </figure>
 
@@ -159,28 +159,28 @@
                         <div class="row">
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-sky-0.jpg" />
+                                    <img src="../../../assets/images/feat-sky-0.jpg" />
                                     <figcaption>Sky is visible outside</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-sky-1.jpg" />
+                                    <img src="../../../assets/images/feat-sky-1.jpg" />
                                     <figcaption>Red sky</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-sky-2.jpg" />
+                                    <img src="../../../assets/images/feat-sky-2.jpg" />
                                     <figcaption>Sky is visible through the ceilling</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-sky-3.jpg" />
+                                    <img src="../../../assets/images/feat-sky-3.jpg" />
                                     <figcaption>Dark sky and landscape</figcaption>
                                 </figure>
 
@@ -203,14 +203,14 @@
                         <div class="row">
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-anim-wall-0.gif" />
+                                    <img src="../../../assets/images/feat-anim-wall-0.gif" />
                                     <figcaption>Fireplace</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-anim-wall-1.gif" />
+                                    <img src="../../../assets/images/feat-anim-wall-1.gif" />
                                     <figcaption>Pixelated fireplace</figcaption>
                                 </figure>
 
@@ -235,21 +235,21 @@
                         <div class="row">
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-decal-0.jpg" />
+                                    <img src="../../../assets/images/feat-decal-0.jpg" />
                                     <figcaption>Ketchup on the wall !</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-light-effects-1.jpg" />
+                                    <img src="../../../assets/images/feat-light-effects-1.jpg" />
                                     <figcaption>Candles may affect wall textures</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col lg-4 sm-6 xs-12">
                                 <figure>
-                                    <img src="../../assets/images/feat-light-effects-0.jpg" />
+                                    <img src="../../../assets/images/feat-light-effects-0.jpg" />
                                     <figcaption>Light emmitting objects cast light and shadows on both floor and ceiling</figcaption>
                                 </figure>
 
@@ -273,7 +273,7 @@
                         <div class="row">
                             <div class="col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-12 xs-offset-0">
                                 <figure>
-                                    <img src="../../assets/images/vr-glasses.jpg" />
+                                    <img src="../../../assets/images/vr-glasses.jpg" />
                                     <figcaption>VR Glasses</figcaption>
                                 </figure>
 
@@ -283,28 +283,28 @@
                         <div class="row">
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-vr-00.jpg" />
+                                    <img src="../../../assets/images/feat-vr-00.jpg" />
                                     <figcaption>city : normal</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-vr-01.jpg" />
+                                    <img src="../../../assets/images/feat-vr-01.jpg" />
                                     <figcaption>city : vr-rendering</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-vr-10.jpg" />
+                                    <img src="../../../assets/images/feat-vr-10.jpg" />
                                     <figcaption>mansion : normal</figcaption>
                                 </figure>
 
                             </div>
                             <div class="col 4">
                                 <figure>
-                                    <img src="../../assets/images/feat-vr-11.jpg" />
+                                    <img src="../../../assets/images/feat-vr-11.jpg" />
                                     <figcaption>mansion : vr-rendering</figcaption>
                                 </figure>
 

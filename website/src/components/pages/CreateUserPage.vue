@@ -38,8 +38,8 @@
 </template>
 
 <script>
-import storeMixin from '../mixins/store';
-import UserPassForm from "./UserPassForm.vue";
+import storeMixin from '../../mixins/store';
+import UserPassForm from "../UserPassForm.vue";
 
 export default {
   name: "CreateUserPage",

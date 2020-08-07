@@ -91,9 +91,9 @@
 </template>
 
 <script>
-    import LevelThumbnail from "./LevelThumbnail.vue";
+    import LevelThumbnail from "../LevelThumbnail.vue";
     import {deleteJSON, fetchJSON} from "libs/fetch-json";
-    import storeMixin from "../mixins/store";
+    import storeMixin from "../../mixins/store";
 
     import {createNamespacedHelpers} from 'vuex';
 

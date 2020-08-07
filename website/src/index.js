@@ -12,14 +12,14 @@ import "./styles/base.css";
 
 import store from "./store";
 import Application from './components/Application.vue';
-import HomePage from "./components/HomePage.vue";
-import ExamplePage from "./components/ExamplePage.vue";
-import MapEditPage from "./components/MapEditPage.vue";
-import FeatPage from "./components/FeatPage.vue";
-import TechPage from "./components/TechPage.vue";
-import AboutPage from "./components/AboutPage.vue";
-import LoginPage from "./components/LoginPage.vue";
-import CreateUserPage from "./components/CreateUserPage.vue";
+import HomePage from "./components/pages/HomePage.vue";
+import ExamplePage from "./components/pages/ExamplePage.vue";
+import MapEditPage from "./components/pages/MapEditPage.vue";
+import FeatPage from "./components/pages/FeatPage.vue";
+import TechPage from "./components/pages/TechPage.vue";
+import AboutPage from "./components/pages/AboutPage.vue";
+import LoginPage from "./components/pages/LoginPage.vue";
+import CreateUserPage from "./components/pages/CreateUserPage.vue";
 import UserRegistered from "./components/UserRegistered.vue";
 
 Vue.use(Vuex);
