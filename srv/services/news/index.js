@@ -12,7 +12,9 @@ const path = require('path');
 module.exports = class Service extends ServiceAbstract {
 
     /**
-     * /news        route vers les news
+     * STATIC /news        static route to the news folder
+     * only when local_dev = 0
+     *
      * @param application
      * @param express
      */

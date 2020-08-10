@@ -19,20 +19,20 @@ function lsIndex(sSource, sEntry) {
 }
 
 /**
- * The examples
+ * The demos
  * a set of exmaples that use raycasting technology
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {}, plugins: [], module: {rules: []}, target: string}}
  */
-const exampleConfig = {
+const demoConfig = {
     mode: "development",
-    entry: lsIndex('examples', 'index.js'),
+    entry: lsIndex('demos', 'index.js'),
     resolve: {
         alias: {
             libs: path.resolve(DIR_NAME, 'libs')
         }
     },
     output: {
-        path: path.resolve(DIR_NAME, 'dist/examples'),
+        path: path.resolve(DIR_NAME, 'dist/demos'),
         libraryTarget: 'umd',
         filename: '[name].js',
     },
@@ -46,4 +46,4 @@ const exampleConfig = {
     target: 'web'
 };
 
-module.exports = exampleConfig;
+module.exports = demoConfig;

@@ -7,7 +7,7 @@
                         <li><button @click="$router.push('/')">Home</button></li>
                         <li><button @click="$router.push('/mapedit')">Map editor</button></li>
                         <li><button @click="$router.push('/tech')">Docs</button></li>
-                        <li><button @click="$router.push('/examples')">Demos</button></li>
+                        <li><button @click="$router.push('/demos')">Demos</button></li>
                         <li><button @click="$router.push('/about')">About</button></li>
                         <li v-if="isOnline"> - </li>
                         <li v-if="isOnline && isUserAuthPending"><button class="disabled">checking</button></li>

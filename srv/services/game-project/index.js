@@ -15,10 +15,13 @@ const {getUserAuth} = require('../../get-user-auth');
 module.exports = class Service extends ServiceAbstract {
 
     /**
-     * /            route principale, renvoie index.html
-     * /app         route statique des scripts transpilés
-     * /assets      route statique des assets
-     * /online      route dynamique d'information renvoie {result: boolean} avec result = si le site est onlin ou en mode dev
+     * STATIC /game/assets            static route to a game assets (the game is defined in the .env file)
+     * STATIC /game/dist              static route to the dist folder of a game
+     * GET /game/levels               a list of levels stored in the game "levels" folder
+     * DELETE /game/level/:idlevel    remove a level from the game (unpublish the level) the level is stored into the local vault
+     * GET /game
+     * GET /game/index.html     the game entry point
+     *
      * @param application
      * @param express
      */

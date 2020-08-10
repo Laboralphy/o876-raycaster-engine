@@ -7,6 +7,18 @@ const {getProjectFQN} = require('../../get-project-fqn');
 const {getUserAuth} = require('../../get-user-auth');
 
 /**
+ * STATIC /mapedit              the static route to the mapedit folder
+ * GET /vault                   list of all published levels in the game
+ * GET /vault/:idlevel.json     a json version of the specified level
+ * GET /vault/:idlevel.jpg      the specified level preview image
+ * GET /vault/:idlevel.zip      a zipped version of the specified level with all its assets
+ * POST /vault/:idlevel         modify the level (a new json must be provided (variable : "data")
+ * DELETE /vault/:idlevel       delete a level from the vault
+ * GET /export/:idlevel         publish a level
+ *
+ * all the /vault actions aim a different level whether it's local_dev time or online time
+ * when local_dev : /vault -> /vault/local/levels
+ * when online : /vault -> /vault/{user}/levels
  *
  * @type {Service}
  * @extends {ServiceAbstract}
@@ -28,7 +40,7 @@ module.exports = class Service extends ServiceAbstract {
                 .catch(e => {
                     console.error('GET /vault - error');
                     console.error(e);
-                })
+                });
         });
 
         // loads a level for the map editor

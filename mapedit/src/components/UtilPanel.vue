@@ -44,6 +44,10 @@
                 </table>
             </div>
         </div>
+        <div>
+            <h3>Level storage usage</h3>
+          <p>The levels and all its assets occupy <b>{{ getUsage100 }}%</b> of the maximum allowed size.</p>
+        </div>
     </Window>
 </template>
 
@@ -61,7 +65,7 @@
     import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
 
 
-    const {mapActions: levelActions} = createNamespacedHelpers('level');
+    const {mapActions: levelActions, mapGetters: levelGetters} = createNamespacedHelpers('level');
     const {mapActions: editorActions, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
@@ -73,6 +77,15 @@
             ArrowLeftThickIcon,
             MyButton,
             Window
+        },
+
+        computed: {
+          ...levelGetters([
+              'getLevelStorageUsage'
+          ]),
+          getUsage100: function() {
+              return Math.ceil(100 * this.getLevelStorageUsage / 48000000);
+          }
         },
 
         methods: {

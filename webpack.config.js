@@ -43,10 +43,10 @@ const mapeditConfig = require('./mapedit/webpack.config');
 const websiteConfig = require('./website/webpack.config');
 
 /**
- * The examples
+ * The demos
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {}, plugins: [], module: {rules: []}, target: string}}
  */
-const exampleConfig = require('./webpack.config.examples');
+const exampleConfig = require('./webpack.config.demos');
 
 /**
  * The current game project

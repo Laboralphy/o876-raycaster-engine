@@ -5,8 +5,9 @@ const WebSite = require('./services/website');
 const MapEdit = require('./services/mapedit');
 const Passport = require('./services/passport');
 const GameProject = require('./services/game-project');
-const Examples = require('./services/examples');
+const Examples = require('./services/demos');
 const News = require('./services/news');
+const Init = require('./services/init');
 
 const CONFIG = require('./config');
 
@@ -33,6 +34,7 @@ function main() {
 
     const wss = new WSService();
 
+    wss.service(new Init());
     wss.service(new Passport());
     wss.service(new WebSite());
     wss.service(new MapEdit());

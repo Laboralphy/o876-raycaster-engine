@@ -1,8 +1,5 @@
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const session = require("express-session");
-const bodyParser = require("body-parser");
-const FileStore = require('session-file-store')(session);
 
 const ServiceAbstract = require('@laboralphy/ws-service/abstract');
 const CONFIG = require('../../config');
@@ -22,13 +19,18 @@ class Service extends ServiceAbstract {
         this.oUserManager.vaultPath = CONFIG.getVariable('vault_path');
     }
 
+    /**
+     * POST /login          used by passport.js to log users in
+     * POST /logout         used by passport.js to log users out
+     * GET /user.json       get information about currently logged in user
+     * POST /user           create new user {username, password}
+     *
+     * @param application
+     * @param express
+     */
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         const app = application;
-        const fileStoreOptions = {
-            path: getProjectFQN(process.env.SESSION_PATH),
-            ttl: 3600 * 24
-        };
 
         // What passport.js strategy should I use ?
         passport.use(new LocalStrategy(
@@ -60,14 +62,6 @@ class Service extends ServiceAbstract {
             }
         });
 
-        // use sessions with file-store
-        app.use(session({
-            store: new FileStore(fileStoreOptions),
-            secret: 'keyboard cat',
-            resave: false,
-            saveUninitialized: false
-        }));
-        app.use(bodyParser.urlencoded({ extended: false }));
         app.use(passport.initialize());
         app.use(passport.session());
 
@@ -91,7 +85,7 @@ class Service extends ServiceAbstract {
         app.get('/user.json', (req, res) => {
             const oUser = getUserAuth(req);
             const bLocalDev = CONFIG.getVariable('local_dev');
-            const bAuth = !bLocalDev && !!oUser && oUser.auth;
+            const bAuth = !bLocalDev && !!oUser;
             if (bAuth) {
                 return res.json({
                     auth: true,
@@ -110,7 +104,9 @@ class Service extends ServiceAbstract {
                 const username = req.body.username;
                 const password = req.body.password;
                 await this.oUserManager.createUser(username, password);
-                res.redirect('/#/createuser/success');
+                return res.json({
+                    status: 'done'
+                });
             } catch (e) {
                 console.error(e);
                 return res.json({

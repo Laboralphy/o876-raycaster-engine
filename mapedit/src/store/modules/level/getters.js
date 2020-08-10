@@ -63,5 +63,6 @@ export default {
     getAmbiance: state => state.ambiance,
     getFlagSmooth: state => state.flags.smooth,
     getFlagStretch: state => state.flags.stretch,
-    getFlagExport: state => state.flags.export
+    getFlagExport: state => state.flags.export,
+    getLevelStorageUsage: state => JSON.stringify(state).length
 }

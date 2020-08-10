@@ -19,8 +19,8 @@
     <div class="row">
       <div class="col lg-6 lg-offset-3 sm-8 sm-offset-2 xs-10 xs-offset-1">
         <UserPassForm
-            action="user"
             action-caption="Create account"
+            @submit="userFormSubmit"
         ></UserPassForm>
       </div>
     </div>
@@ -45,6 +45,13 @@ export default {
   name: "CreateUserPage",
   components: {UserPassForm},
   mixins: [storeMixin],
+
+  methods: {
+    userFormSubmit: async function({username, password}) {
+      await this.createUser({username, password});
+      this.$router.push('/createuser/success');
+    }
+  }
 }
 </script>
 

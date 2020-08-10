@@ -12,7 +12,6 @@ export default {
             commit(MUTATIONS.SET_USER_AUTH, {value: true});
             commit(MUTATIONS.SET_USER_NAME, {value: oResult.name});
             commit(MUTATIONS.SET_USER_DATE, {value: d.toLocaleDateString()});
-            console.log(oResult)
         } else {
             commit(MUTATIONS.SET_USER_AUTH, {value: false});
             commit(MUTATIONS.SET_USER_NAME, {value: ''});
@@ -34,7 +33,6 @@ export default {
 
     [ACTIONS.FETCH_NEWS]: async function({commit, getters}) {
         try {
-            console.log('fetching news')
             const res = await fetch('/news');
             if (res.status < 400) {
                 const blob = await res.blob();
@@ -43,6 +41,13 @@ export default {
             }
         } catch (e) {
             // no news, no need to do anything
+        }
+    },
+
+    [ACTIONS.CREATE_USER]: async function({commit}, {username, password}) {
+        const oResult = await fetchJSON('/user', {username, password});
+        if (oResult.status !== 'done') {
+            throw new Error('user creation : ' + oResult.error);
         }
     }
 }

@@ -13,7 +13,7 @@ import "./styles/base.css";
 import store from "./store";
 import Application from './components/Application.vue';
 import HomePage from "./components/pages/HomePage.vue";
-import ExamplePage from "./components/pages/ExamplePage.vue";
+import ExamplePage from "./components/pages/DemoPage.vue";
 import MapEditPage from "./components/pages/MapEditPage.vue";
 import FeatPage from "./components/pages/FeatPage.vue";
 import TechPage from "./components/pages/TechPage.vue";
@@ -44,7 +44,7 @@ function createApplication() {
             }
         },
         {
-            path: '/examples',
+            path: '/demos',
             components: {
                 default: ExamplePage
             }

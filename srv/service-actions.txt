@@ -71,9 +71,9 @@ get a list of published levels.
 DELETE /game/level/:name
 unpublish a previously published level.
 
-GET /examples
+GET /demos
 get access to the example static directory
 
-GET /examples-list
+GET /demos-list
 get a list of all examples
 

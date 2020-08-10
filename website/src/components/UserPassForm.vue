@@ -1,15 +1,15 @@
 <template>
-  <form method="post" :action="'/' + action">
+  <form method="post" :action="getAction" @submit="formSubmit">
     <ul class="form">
-      <li><label><span>Username :</span><br/><input name="username" type="text" /></label></li>
-      <li><label><span>Password :</span><br/><input name="password" type="password" /></label></li>
+      <li><label><span>Username :</span><br/><input name="username" type="text" v-model="username"/></label></li>
+      <li><label><span>Password :</span><br/><input name="password" type="password" v-model="password"/></label></li>
       <li>
         <div class="row">
           <div class="col lg-6">
-            <button class="green">{{ actionCaption }}</button>
+            <button class="green" type="submit">{{ actionCaption }}</button>
           </div>
-          <div class="col lg-6" v-if="altAction.length > 0">
-            <button @click="$router.push('/' + altAction)" style="position: absolute; right: 1.3em">{{ altActionCaption }}</button>
+          <div class="col lg-6" v-if="altAction.trim().length > 0">
+            <button type="button" @click="$router.push(getAltAction)" style="position: absolute; right: 1.3em">{{ altActionCaption }}</button>
           </div>
         </div>
       </li>
@@ -23,7 +23,8 @@ export default {
   props: {
     action: {
       type: String,
-      require: true
+      require: false,
+      default: ''
     },
     actionCaption: {
       type: String,
@@ -40,7 +41,37 @@ export default {
       require: false,
       default: ''
     }
+  },
+
+  computed: {
+    getAction: function() {
+      const s = this.action.trim();
+      return s.length > 0 ? '/' + s : '';
+    },
+    getAltAction: function() {
+      const s = this.altAction.trim();
+      return s.length > 0 ? '/' + s : '';
+    }
+  },
+
+  data: function() {
+    return {
+      username: '',
+      password: ''
+    };
+  },
+
+  methods: {
+    formSubmit: function(event) {
+      this.$emit('submit', {username: this.username, password: this.password});
+      if (this.getAction.length === 0) {
+        event.preventDefault();
+        this.username = '';
+        this.password = '';
+      }
+    }
   }
+
 }
 </script>
 

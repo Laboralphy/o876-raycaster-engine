@@ -11,10 +11,13 @@ const {getProjectFQN} = require('../../get-project-fqn');
 module.exports = class Service extends ServiceAbstract {
 
     /**
-     * /            route principale, renvoie index.html
-     * /app         route statique des scripts transpilés
-     * /assets      route statique des assets
-     * /online      route dynamique d'information renvoie {result: boolean} avec result = si le site est onlin ou en mode dev
+     * GET /               route principale, renvoie index.html
+     * STATIC /app         route statique des scripts transpilés
+     * STATIC /assets      route statique des assets du site web
+     * GET /online         route dynamique d'information renvoie {result: boolean} avec result = si le site est onlin ou en mode dev
+     * STATIC /dist        route statique pour les dist du websites
+     * GET /favicon        route vers favicon
+     *
      * @param application
      * @param express
      */

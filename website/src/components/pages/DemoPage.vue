@@ -11,7 +11,7 @@
                   All these demos actually use the Raycaster Engine and run on you browser.
                   So you may use your keyboard to control the camera.</p>
                 <ul>
-                    <li v-for="ex in examples"><a :href="'/examples/' + ex">{{ ex }}</a></li>
+                    <li v-for="ex in demos"><a :href="'/demo/' + ex">{{ ex }}</a></li>
                 </ul>
             </div>
         </div>
@@ -22,18 +22,18 @@
     import {fetchJSON} from "libs/fetch-json";
 
     export default {
-        name: "ExamplePage",
+        name: "DemoPage",
 
         data: function() {
             return {
-                examples: []
+                demos: []
             }
         },
 
         mounted: async function() {
-            // gettings all examples
-            const oResponse = await fetchJSON('/examples-list');
-            this.examples = oResponse.list;
+            // gettings all demos
+            const oResponse = await fetchJSON('/demos');
+            this.demos = oResponse.list;
         }
     }
 </script>

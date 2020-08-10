@@ -12,22 +12,21 @@ const promfs = require('../../../libs/prom-fs');
 module.exports = class Service extends ServiceAbstract {
 
     /**
-     * /            route principale, renvoie index.html
-     * /app         route statique des scripts transpilés
-     * /assets      route statique des assets
-     * /online      route dynamique d'information renvoie {result: boolean} avec result = si le site est onlin ou en mode dev
+     * GET /demos            a list of built demos
+     * GET /demo/:iddemo     a static route to a specific demo folder
+     *
      * @param application
      * @param express
      */
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         const app = application;
-        const sExamplePath = getProjectFQN('examples');
-        app.use('/news', express.static(sExamplePath));
-        app.get('/examples-list', async (req, res) => {
+        const sExamplePath = getProjectFQN('demos');
+        app.get('/demos', async (req, res) => {
             // get a list of all example
             const aList = await promfs.ls(sExamplePath);
             return res.json({list: aList});
         });
+        app.use('/demo', express.static(sExamplePath));
     }
 };
