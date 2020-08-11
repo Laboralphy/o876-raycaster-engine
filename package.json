@@ -59,7 +59,7 @@
     "passport": "^0.4.1",
     "passport-local": "^1.0.0",
     "pngjs": "^3.4.0",
-    "serialize-javascript": ">=2.1.1",
+    "serialize-javascript": ">=3.1.0",
     "session-file-store": "^1.4.0",
     "set-value": ">=2.0.1",
     "socket.io": "^2.3.0",
