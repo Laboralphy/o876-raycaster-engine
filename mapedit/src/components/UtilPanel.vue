@@ -46,7 +46,7 @@
         </div>
         <div>
             <h3>Level storage usage</h3>
-          <p>The levels and all its assets occupy <b>{{ getUsage100 }}%</b> of the maximum allowed size.</p>
+          <p>The level and all its assets occupy <b>{{ getUsage100 }}%</b> of the maximum allowed size.</p>
         </div>
     </Window>
 </template>
@@ -84,7 +84,12 @@
               'getLevelStorageUsage'
           ]),
           getUsage100: function() {
-              return Math.ceil(100 * this.getLevelStorageUsage / 48000000);
+              const f = 100 * this.getLevelStorageUsage / 48000000;
+              if (f < 0.01) {
+                return 0;
+              } else {
+                return Math.ceil(f);
+              }
           }
         },
 
