@@ -228,6 +228,14 @@
         "width": 64,
         "height": 96,
         "animation": null
+      },
+      {
+        "id": 70,
+        "type": "wall",
+        "content": "001065fcce2424b9622fb224e8cc2548.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
       }
     ],
     "flats": [
@@ -524,6 +532,38 @@
         "width": 28,
         "height": 64,
         "animation": null
+      },
+      {
+        "id": 68,
+        "type": "sprite",
+        "content": "ce43fb1c44489fdcd9f675e3e1d060d8.png",
+        "width": 64,
+        "height": 64,
+        "animation": null
+      },
+      {
+        "id": 69,
+        "type": "sprite",
+        "content": "001065fcce2424b9622fb224e8cc2548.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 71,
+        "type": "sprite",
+        "content": "75f6977bfe29b3ab7ec7d89000ce3e2c.png",
+        "width": 16,
+        "height": 30,
+        "animation": null
+      },
+      {
+        "id": 72,
+        "type": "sprite",
+        "content": "81242f80210ec50208d45b1736345ab7.png",
+        "width": 40,
+        "height": 40,
+        "animation": null
       }
     ]
   },
@@ -652,6 +692,27 @@
         "s": null,
         "f": 26,
         "c": 24
+      }
+    },
+    {
+      "id": 38,
+      "ref": "",
+      "phys": 0,
+      "offs": 0,
+      "preview": "b377832272cf08c5bdba1313f431590d.png",
+      "light": {
+        "enabled": true,
+        "value": "0.5",
+        "inner": "32",
+        "outer": "90"
+      },
+      "faces": {
+        "n": null,
+        "e": null,
+        "w": null,
+        "s": null,
+        "f": 27,
+        "c": 25
       }
     },
     {
@@ -965,6 +1026,27 @@
         "e": 62,
         "w": 62,
         "s": 62,
+        "f": null,
+        "c": null
+      }
+    },
+    {
+      "id": 37,
+      "ref": "",
+      "phys": 1,
+      "offs": 0,
+      "preview": "a8977fd17f147880066baddace1e80af.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": 70,
+        "e": 70,
+        "w": 70,
+        "s": 70,
         "f": null,
         "c": null
       }
@@ -1555,6 +1637,51 @@
         "outer": 0
       },
       "tile": 67
+    },
+    {
+      "id": 19,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 68
+    },
+    {
+      "id": 20,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 71
+    },
+    {
+      "id": 21,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 72
     }
   ],
   "grid": [
@@ -3214,13 +3341,22 @@
       {
         "block": 21,
         "upperblock": 15,
-        "tags": [],
+        "tags": [
+          "lock",
+          "photo cyan_sigil"
+        ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 1
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 19
+          }
+        ]
       },
       {
         "block": 14,
@@ -3807,7 +3943,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 5
+          }
+        ]
       },
       {
         "block": 18,
@@ -3909,7 +4051,18 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 0,
+            "id": 9
+          },
+          {
+            "x": 2,
+            "y": 0,
+            "id": 12
+          }
+        ]
       },
       {
         "block": 22,
@@ -4131,7 +4284,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 6
+          }
+        ]
       },
       {
         "block": 18,
@@ -4185,6 +4344,22 @@
       },
       {
         "block": 18,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": [
+          {
+            "x": 1,
+            "y": 0,
+            "id": 7
+          }
+        ]
+      },
+      {
+        "block": 14,
         "tags": [],
         "mark": {
           "color": 0,
@@ -4195,10 +4370,13 @@
       },
       {
         "block": 14,
-        "tags": [],
+        "upperblock": 0,
+        "tags": [
+          "locator clue_cyan_sigil"
+        ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 2
         },
         "modified": true,
         "things": []
@@ -4226,18 +4404,7 @@
         "things": []
       },
       {
-        "block": 14,
-        "upperblock": 0,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
-      },
-      {
-        "block": 22,
+        "block": 29,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -4547,7 +4714,7 @@
         "things": []
       },
       {
-        "block": 14,
+        "block": 38,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -4558,15 +4725,24 @@
         "things": []
       },
       {
-        "block": 22,
+        "block": 37,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "item book_sigils",
+          "locator clue_cyan_sigil_target"
+        ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 3
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 21
+          }
+        ]
       },
       {
         "block": 0,
@@ -4833,7 +5009,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 2,
+            "id": 7
+          }
+        ]
       },
       {
         "block": 14,
@@ -4879,7 +5061,7 @@
         "things": []
       },
       {
-        "block": 22,
+        "block": 28,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -5170,7 +5352,7 @@
         "things": []
       },
       {
-        "block": 14,
+        "block": 38,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -5489,7 +5671,7 @@
         "things": []
       },
       {
-        "block": 22,
+        "block": 34,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -5497,7 +5679,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 0,
+            "id": 20
+          }
+        ]
       },
       {
         "block": 22,
@@ -5800,7 +5988,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "block": 22
       },
       {
         "tags": [],
@@ -5809,17 +5998,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
-      },
-      {
-        "upperblock": 0,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
+        "things": [],
+        "block": 22
       },
       {
         "upperblock": 0,
@@ -5829,7 +6009,19 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "block": 22
+      },
+      {
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": [],
+        "block": 22
       },
       {
         "tags": [],
@@ -5838,7 +6030,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "block": 22
       },
       {
         "upperblock": 0,
@@ -7595,7 +7788,8 @@
         "block": 21,
         "upperblock": 0,
         "tags": [
-          "lock k_cabin"
+          "lock key_cabin",
+          "discard key_cabin"
         ],
         "mark": {
           "color": 0,
@@ -10729,7 +10923,7 @@
         "block": 3,
         "upperblock": 0,
         "tags": [
-          "item k_cabin"
+          "item key_cabin"
         ],
         "mark": {
           "color": 0,
@@ -11611,9 +11805,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 10,
-    "y": 26,
-    "angle": 1.5
+    "x": 15,
+    "y": 8,
+    "angle": 0
   },
-  "preview": "22aaf061fc8651f1c20bbe1a4a87aa45.jpg"
+  "preview": "b39be4b474d27761e1f51d1220d154f1.jpg"
 }

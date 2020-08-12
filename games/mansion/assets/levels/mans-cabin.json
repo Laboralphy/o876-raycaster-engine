@@ -233,6 +233,34 @@
       "width": 28,
       "height": 64,
       "animations": []
+    },
+    {
+      "id": 68,
+      "src": "assets/textures/6215b4a1c4bfc92d14ee4ed404464b47.png",
+      "width": 64,
+      "height": 64,
+      "animations": []
+    },
+    {
+      "id": 69,
+      "src": "assets/textures/751bb364063f7d25d09ccfcc27b29e8f.png",
+      "width": 64,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 71,
+      "src": "assets/textures/ab456bb95918e94a1ff883d3e26b45b5.png",
+      "width": 16,
+      "height": 30,
+      "animations": []
+    },
+    {
+      "id": 72,
+      "src": "assets/textures/99b5095887bb42054e6e18ef1f9f6c91.png",
+      "width": 40,
+      "height": 40,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -403,6 +431,30 @@
     {
       "id": 18,
       "tileset": 67,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 19,
+      "tileset": 68,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 20,
+      "tileset": 71,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 21,
+      "tileset": 72,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -658,7 +710,7 @@
         14,
         14,
         14,
-        22,
+        29,
         0,
         0,
         0,
@@ -689,8 +741,8 @@
         14,
         14,
         14,
-        14,
-        22,
+        38,
+        37,
         0,
         0,
         0,
@@ -722,7 +774,7 @@
         14,
         14,
         14,
-        22,
+        28,
         0,
         0,
         0,
@@ -752,7 +804,7 @@
         22,
         14,
         14,
-        14,
+        38,
         14,
         22,
         0,
@@ -784,7 +836,7 @@
         22,
         22,
         22,
-        22,
+        34,
         22,
         22,
         0,
@@ -814,11 +866,11 @@
         18,
         18,
         29,
-        0,
-        0,
-        0,
-        0,
-        0,
+        22,
+        22,
+        22,
+        22,
+        22,
         0,
         0,
         0,
@@ -2420,6 +2472,20 @@
         }
       },
       {
+        "code": 38,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 7,
+          "c": 5
+        }
+      },
+      {
         "code": 3,
         "phys": "@PHYS_WALL",
         "offset": 0,
@@ -2650,6 +2716,20 @@
         }
       },
       {
+        "code": 37,
+        "phys": "@PHYS_WALL",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": 28,
+          "e": 28,
+          "w": 28,
+          "s": 28,
+          "f": null,
+          "c": null
+        }
+      },
+      {
         "code": 21,
         "phys": "@PHYS_DOOR_DOUBLE",
         "offset": 0,
@@ -2862,7 +2942,7 @@
     ],
     "textures": {
       "flats": "assets/textures/b75720ab6b1ab0492f67802e05710043.png",
-      "walls": "assets/textures/e7b4fb8ba8a77a62ea3580fa0633c250.png",
+      "walls": "assets/textures/f605ca3e24b25a920ec4097f93c422ac.png",
       "sky": "assets/textures/a6adf0e1434abfa91ed8c917df8e90a8.png",
       "smooth": false,
       "stretch": false
@@ -3064,6 +3144,22 @@
       "animation": null
     },
     {
+      "x": 1356,
+      "y": 396,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 9,
+      "animation": null
+    },
+    {
+      "x": 1376,
+      "y": 416,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 12,
+      "animation": null
+    },
+    {
       "x": 138,
       "y": 480,
       "z": 0,
@@ -3080,8 +3176,24 @@
       "animation": "default"
     },
     {
+      "x": 1120,
+      "y": 458,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 7,
+      "animation": "default"
+    },
+    {
       "x": 138,
       "y": 608,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 7,
+      "animation": "default"
+    },
+    {
+      "x": 1120,
+      "y": 630,
       "z": 0,
       "angle": 0,
       "blueprint": 7,
@@ -3474,10 +3586,34 @@
       }
     },
     {
+      "x": 17,
+      "y": 4,
+      "w": {
+        "tileset": 68,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 10,
       "y": 5,
       "w": {
         "tileset": 63,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 11,
+      "y": 6,
+      "e": {
+        "tileset": 32,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 11,
+      "y": 7,
+      "e": {
+        "tileset": 33,
         "align": "@DECAL_ALIGN_CENTER"
       }
     },
@@ -3490,10 +3626,26 @@
       }
     },
     {
+      "x": 22,
+      "y": 8,
+      "w": {
+        "tileset": 72,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 3,
       "y": 11,
       "n": {
         "tileset": 67,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 20,
+      "y": 11,
+      "n": {
+        "tileset": 71,
         "align": "@DECAL_ALIGN_CENTER"
       }
     },
@@ -3515,10 +3667,10 @@
     }
   ],
   "camera": {
-    "x": 10,
-    "y": 26,
+    "x": 15,
+    "y": 8,
     "z": 1,
-    "angle": 4.71238898038469
+    "angle": 0
   },
   "tags": [
     {
@@ -3526,6 +3678,14 @@
       "y": 4,
       "tags": [
         "bgm inside"
+      ]
+    },
+    {
+      "x": 17,
+      "y": 4,
+      "tags": [
+        "lock",
+        "photo cyan_sigil"
       ]
     },
     {
@@ -3545,10 +3705,25 @@
       ]
     },
     {
+      "x": 19,
+      "y": 7,
+      "tags": [
+        "locator clue_cyan_sigil"
+      ]
+    },
+    {
       "x": 1,
       "y": 8,
       "tags": [
         "photo skull_face"
+      ]
+    },
+    {
+      "x": 22,
+      "y": 8,
+      "tags": [
+        "item book_sigils",
+        "locator clue_cyan_sigil_target"
       ]
     },
     {
@@ -3576,7 +3751,8 @@
       "x": 10,
       "y": 18,
       "tags": [
-        "lock k_cabin"
+        "lock key_cabin",
+        "discard key_cabin"
       ]
     },
     {
@@ -3590,7 +3766,7 @@
       "x": 9,
       "y": 27,
       "tags": [
-        "item k_cabin"
+        "item key_cabin"
       ]
     }
   ],
@@ -3603,6 +3779,20 @@
       "v": 0.5
     },
     {
+      "x": 1376,
+      "y": 544,
+      "r0": 32,
+      "r1": 90,
+      "v": 0.5
+    },
+    {
+      "x": 1312,
+      "y": 672,
+      "r0": 32,
+      "r1": 90,
+      "v": 0.5
+    },
+    {
       "x": 1120,
       "y": 928,
       "r0": 24,
@@ -3610,5 +3800,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/643c70fe957439bebc6ac003f1b21bbd.jpg"
+  "preview": "assets/textures/c8af6cacd5e7d9d3f4758d6862572bdb.jpg"
 }

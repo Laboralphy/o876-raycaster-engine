@@ -1,4 +1,5 @@
 import * as TYPES from './mutation-types';
+
 export default {
     /**
      * Adds a quest item to the player inventory

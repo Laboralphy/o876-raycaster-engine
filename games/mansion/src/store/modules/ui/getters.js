@@ -18,6 +18,7 @@ export default {
     getShotScore: state => state.shot.value,
 
     getUIActiveTab: state => state.uiframe.activeTab,
+    getInventoryActiveTab: state => state.uiframe.activeInventoryTab,
 
     isPhotoDetailsVisible: state => state.photodetails.visible,
     getPhotoDetailsDescription: state => state.photodetails.description.slice(0),

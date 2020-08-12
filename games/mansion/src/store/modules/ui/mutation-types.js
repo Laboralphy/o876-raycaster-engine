@@ -34,8 +34,8 @@ export const UI_FADE_IN = 'UI_FADE_IN';
 // wraith : a photo of a wandering (non hostile) ghost
 // art : a photo of a piece of art (mostly painting)
 export const SET_ALBUM_ACTIVE_TYPE = 'SET_ALBUM_ACTIVE_TYPE';
-
 export const SET_MAIN_ACTIVE_TAB = 'SET_MAIN_ACTIVE_TAB';
+export const SET_ITEM_TYPE_ACTIVE_TYPE = 'SET_ITEM_TYPE_ACTIVE_TYPE';
 
 
 export const SET_PHOTO_DETAILS = 'SET_PHOTO_DETAILS';

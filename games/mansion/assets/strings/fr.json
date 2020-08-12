@@ -22,6 +22,11 @@
   "PHOTO_TYPES_AMBIENT": "Ambiance",
   "PHOTO_TYPES_ARCHIVE": "Archives",
 
+  "ITEM_TYPES_ALL": "Tous",
+  "ITEM_TYPES_QUEST": "Intrigue",
+  "ITEM_TYPES_KEY": "Clés",
+  "ITEM_TYPES_BOOK": "Livres",
+
   "MAIN_TAB_ALBUM": "Album",
   "MAIN_TAB_INV": "Inventaire",
   "MAIN_TAB_NOTES": "Notes",
@@ -36,7 +41,20 @@
 
 
   "ITEMS": {
-    "k_cabin" : "Clé de la cabane"
+    "key_cabin" : {
+      "name": "Clé de la cabane",
+      "description": [
+        "Une clé grossière, usée par les éléments. Elle se trouvait clouée prés du portail de la cabane."
+      ]
+    },
+    "book_glyphs" : {
+      "name": "Grimoire des glyphes",
+      "description": [
+        "Une collection de glyphes avec la symbolique associés à chacun. C'est un travail manuscrit, probablement une compilation de plusieurs autres ouvrages.",
+        "Au vu des nombreuses ratures et corrections, et de la présence insolite de la rune ELBERETH, ce livre est certainement un original composé par un érudit ayant beaucoup travaillé sur le sujet... et beaucoup joué à Nethack."
+      ]
+    }
+
   },
 
   "PHOTOS": {
@@ -52,6 +70,14 @@
       "title": "Impasse inquiétante",
       "description": [
         "Des traces de main sont apparues sur le mur au fond du couloir ; comme si quelqu'un s'était appuyé sur la paroi."
+      ]
+    },
+
+    "clue_cyan_sigil": {
+      "title": "Livre du Sigil",
+      "description": [
+        "Cette photo est apparue après avoir photographié le sigil cyan qui verrouille une des portes de la cabane.",
+        "La force qui maintient les sigils peut parfois s'affaiblir si on agit ailleurs dans la zone."
       ]
     }
   }

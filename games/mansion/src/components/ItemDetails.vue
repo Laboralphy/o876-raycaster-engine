@@ -1,7 +1,7 @@
 <template>
-    <div class="photo-details" @click.self="close">
+    <div class="item-details" @click.self="close">
         <div class="container ui-menu-window">
-            <TitleAndCo :title="title"><div class="score">{{ computedScore }}</div></TitleAndCo>
+            <TitleAndCo :title="title"><div class="score" v-if="score > 0">{{ computedScore }}</div></TitleAndCo>
             <hr />
             <Photo :content="content" :caption="''" :big="true"></Photo>
             <p class="description" v-for="d in description">{{ d }}</p>
@@ -12,6 +12,7 @@
 <script>
     import * as UI_MUTATIONS from '../store/modules/ui/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
+
     import TitleAndCo from "./TitleAndCo.vue";
     import Photo from "./Photo.vue";
 
@@ -20,7 +21,7 @@
 
 
     export default {
-        name: "PhotoDetails",
+        name: "ItemDetails",
         components: {Photo, TitleAndCo},
         props: {
             title: {
@@ -65,7 +66,7 @@
 </script>
 
 <style scoped>
-    div.photo-details {
+    div.item-details {
         position: absolute;
         top: 0;
         left: 0;
@@ -74,7 +75,7 @@
         background-color: rgba(0, 0, 0, 0.5);
     }
 
-    div.photo-details > div.container {
+    div.item-details > div.container {
         width: 66%;
         height: 50%;
         top: 25%;

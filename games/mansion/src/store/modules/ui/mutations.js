@@ -65,6 +65,10 @@ export default {
         state.uiframe.activeTab = value;
     },
 
+    [TYPES.SET_ITEM_TYPE_ACTIVE_TYPE]: function(state, {value}) {
+        state.uiframe.activeInventoryTab = value;
+    },
+
     [TYPES.SET_PHOTO_DETAILS]: function(state, {visible, title = '', content = '', description = '', value = 0}) {
         const p = state.photodetails;
         p.visible = visible;

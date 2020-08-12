@@ -23,6 +23,7 @@ export default {
     },
 
     data: {
-        items: []
+        items: [],
+        itemTypes: ['all', 'quest', 'book']
     }
 };

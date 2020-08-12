@@ -38,7 +38,7 @@ class UI extends StoreAbstract {
      * @return {Promise<any>}
      */
     popup(sText, sIconRef, ...params) {
-        const icon = !!sIconRef && sIconRef.length > 0 ? 'assets/icons/i-' + sIconRef + '.png' : '';
+        const icon = !!sIconRef && sIconRef.length > 0 ? 'assets/icons/' + sIconRef + '.png' : '';
         let text = sText in STRINGS ? STRINGS[sText] : sText;
         for (let i = 0, l = params.length; i < l; ++i) {
             const p = params[i];

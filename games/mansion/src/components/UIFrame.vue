@@ -2,7 +2,7 @@
     <section :class="getComputedClass">
         <Sidebar></Sidebar>
         <Album v-if="getUIActiveTab === 'album'"></Album>
-        <DivDummy v-if="getUIActiveTab === 'inv'" title="inventory"></DivDummy>
+        <Inventory v-if="getUIActiveTab === 'inv'" title="inventory"></Inventory>
         <DivDummy v-if="getUIActiveTab === 'notes'" title="Notes"></DivDummy>
         <PhotoDetails
                 v-if="isPhotoDetailsVisible"
@@ -21,12 +21,13 @@
     import Sidebar from "./Sidebar.vue";
     import DivDummy from "./DivDummy.vue";
     import PhotoDetails from "./PhotoDetails.vue";
+    import Inventory from "./Inventory.vue";
 
     const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
         name: "UIFrame",
-        components: {PhotoDetails, DivDummy, Sidebar, Album},
+        components: {Inventory, PhotoDetails, DivDummy, Sidebar, Album},
         computed: {
             ...uiMapGetters([
                 'getUIActiveTab',

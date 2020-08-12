@@ -1,7 +1,14 @@
 [
   {
-    "id": "k_cabin",
-    "type": "key-one",
-    "icon": "key-crude"
+    "id": "key_cabin",
+    "type": "key",
+    "icon": "key-crude",
+    "thumbnail": "key-chrome"
+  },
+  {
+    "id": "book_glyphs",
+    "type": "book",
+    "icon": "grimoir",
+    "thumbnail": "note-sigils"
   }
 ]

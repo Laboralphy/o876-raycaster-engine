@@ -34,7 +34,7 @@ regular height for inline blocks, containing text or other readable things (smal
 div.ui-menu-window {
     position: absolute;
     background-color: rgb(181, 151, 91);
-    background-image: url(../uigfx/notebook-texture-2.jpg);
+    background-image: url(../uigfx/backgrounds/notebook-texture-2.jpg);
     border: solid 0.2em rgb(37, 26, 26);
     border-radius: 0.5em;
 }

@@ -21,13 +21,8 @@ export function init(game, remove, x, y) {
  */
 export function push(game, remove, x, y, key) {
     if (!!key && game.logic.hasQuestItem(key)) {
-        const d = game.logic.getItemData(key);
-        const bDiscard = d.type === CONSTS.ITEM_TYPE_DISCARDABLE_KEY;
-        if (bDiscard) { // the item is a discardable key
-            game.logic.removeQuestItem(key); // remove key from inventory
-        }
         remove(); // removes tag
-        game.ui.popup('DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key);
+        game.ui.popup('DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key + '.name');
         game.removeDecals(x, y); // remove keyhole decal from door
         game.engine.lockDoor(x, y, false); // unlock door
     } else {

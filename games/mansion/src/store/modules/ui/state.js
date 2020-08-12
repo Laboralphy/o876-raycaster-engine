@@ -14,7 +14,8 @@ export default {
     uiframe: {
         visible: false,
         fullyVisible: false,
-        activeTab: 'album'
+        activeTab: 'album',
+        activeInventoryTab: 'all'
     },
 
     shot: { // information sur le dernier tir
