@@ -209,6 +209,15 @@ export default {
         }
     },
 
+    [MUTATION.MODIFY_CELL_TAG]: (state, {x, y, oldValue, newValue}) => {
+        const cell = state.grid[y][x];
+        const iTag = cell.tags.indexOf(oldValue);
+        if (iTag >= 0) {
+            cell.modified = true;
+            cell.tags[iTag] = newValue;
+        }
+    },
+
     [MUTATION.SET_CELL_MARK]: (state, {x, y, shape, color}) => {
         const cell = state.grid[y][x];
         if (cell.mark.color !== color && color !== null) {

@@ -1,24 +1,27 @@
 import GhostThinker from "./GhostThinker";
-import * as RC_CONSTS from "libs/raycaster/consts";
 
-class VengefulThinker extends GhostThinker {
 
+/**
+ * Le thinker va faire bouger une apparition en ligne droite entre deux locators pendant un temps donné
+ */
+class WraithThinker extends GhostThinker {
     constructor() {
         super();
         this.transitions = {
+            "s_init": {
+                "1": "s_spawn"
+            },
             "s_spawn": {
                 // commencer la phase d'apparition = alpha in
                 "1": "s_spawning"
             },
             "s_spawning": {
                 // lorsque la full opacity est atteinte ...
-                "t_fullOpacity": "s_idle"
+                "t_fullOpacity": "s_walking"
             },
-            "s_kill": {
-                "1": "s_dying"
-            },
-            "s_dying": {
-                "t_doneDying": "s_fadeOut"
+            "s_walking": {
+                // lorsqu'on marche on va verifier qu'on a atteind notre destination
+                "t_done": "s_fadeOut"
             },
             "s_fadeOut": {
                 "t_doneFadeOut": "s_dead"
@@ -30,12 +33,15 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
+    s_init() {
+        // abstract
+    }
+
     /**
      * The ghost just has spawned, still invisible
      */
     s_spawn() {
         this._nOpacity = 0;
-        this.entity.sprite.setCurrentAnimation('walk');
         this.setOpacityFlags();
     }
 
@@ -48,35 +54,28 @@ class VengefulThinker extends GhostThinker {
     }
 
     /**
-     * The state of "doing nothing"
-     * The ghost is pulsating
+     * The ghost is pulsating and walking to its destination
      */
-    s_idle() {
+    s_walking() {
         this.pulse();
     }
 
     /**
-     * the ghost has been killed
+     * The ghost is vanishing
      */
-    s_kill() {
-        this.entity.sprite.setCurrentAnimation('death');
-    }
-
-    s_dying() {
-        this.pulse();
-    }
-
     s_fadeOut() {
         --this._nOpacity;
         this.setOpacityFlags();
     }
 
+    /**
+     * The ghost will cease to exist
+     */
     s_dead() {
         if (!this.entity.dead) {
             this.entity.dead = true;
         }
     }
-
 
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -89,14 +88,6 @@ class VengefulThinker extends GhostThinker {
      */
     t_fullOpacity() {
         return this._nOpacity >= 4;
-    }
-
-    /**
-     * Tests if dead opacity is depleted
-     * @returns {boolean}
-     */
-    t_doneDying() {
-        return this.entity.sprite.getCurrentAnimation().frozen;
     }
 
     t_doneFadeOut() {
@@ -112,12 +103,10 @@ class VengefulThinker extends GhostThinker {
     }
 
     /**
-     * returns true if target is in melee attack range
+     * This function is to be overriden
+     * @return {boolean}
      */
-    t_targetInMeleeRange() {
-        this.entity.position.vector()
+    t_done() {
+        return true;
     }
 }
-
-
-export default VengefulThinker;

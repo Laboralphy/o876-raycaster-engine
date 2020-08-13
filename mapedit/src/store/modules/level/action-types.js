@@ -19,6 +19,7 @@ export const SET_GRID_SIZE = 'SET_GRID_SIZE';
 export const SET_CELL_PROPS = 'SET_CELL_PROPS';
 export const ADD_CELL_TAG = 'ADD_CELL_TAG';
 export const REMOVE_CELL_TAG = 'REMOVE_CELL_TAG';
+export const MODIFY_CELL_TAG = 'MODIFY_CELL_TAG';
 export const SET_CELL_MARK = 'SET_CELL_MARK';
 export const SET_GRID_CELL = 'SET_GRID_CELL';
 export const SET_GRID_CELLS = 'SET_GRID_CELLS';

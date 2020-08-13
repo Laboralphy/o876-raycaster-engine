@@ -3343,7 +3343,7 @@
         "upperblock": 15,
         "tags": [
           "lock",
-          "photo cyan_sigil"
+          "photo m0_cyan_sigil"
         ],
         "mark": {
           "color": "cyan",
@@ -3606,8 +3606,8 @@
       {
         "block": 23,
         "tags": [
-          "locator clue_skull_face_target",
-          "archive clue_skull_face",
+          "locator m0_bloody_deadend.target",
+          "archive m0_bloody_deadend",
           "lock"
         ],
         "mark": {
@@ -4372,7 +4372,7 @@
         "block": 14,
         "upperblock": 0,
         "tags": [
-          "locator clue_cyan_sigil"
+          "locator m0_book_sigils"
         ],
         "mark": {
           "color": "cyan",
@@ -4506,7 +4506,7 @@
       {
         "block": 22,
         "tags": [
-          "photo skull_face"
+          "photo m0_skull_face"
         ],
         "mark": {
           "color": "yellow",
@@ -4729,7 +4729,7 @@
         "upperblock": 0,
         "tags": [
           "item book_sigils",
-          "locator clue_cyan_sigil_target"
+          "locator m0_book_sigils"
         ],
         "mark": {
           "color": "cyan",
@@ -4932,7 +4932,7 @@
       {
         "block": 18,
         "tags": [
-          "locator clue_skull_face"
+          "locator m0_bloody_deadend"
         ],
         "mark": {
           "color": "yellow",

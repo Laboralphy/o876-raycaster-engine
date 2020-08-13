@@ -44,8 +44,6 @@ class GameAbstract {
             // begun to load the level, at 1 the game has completed.
             loadProgress: (phase, f) => this.progressFunction(phase, f),
 
-
-
             // this is an url. when the game needs to load a level from the server, it uses this url.
             // DO NOT CHANGE ! // DO NOT CHANGE ! // DO NOT CHANGE !
             fetchLevelAction: ENGINE_CONSTS.FETCH_LEVEL_URL,

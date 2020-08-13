@@ -193,6 +193,10 @@ export default {
         commit(MUTATION.REMOVE_CELL_TAG, {x, y, value});
     },
 
+    [ACTION.MODIFY_CELL_TAG]: ({commit}, {x, y, oldValue, newValue}) => {
+        commit(MUTATION.MODIFY_CELL_TAG, {x, y, oldValue, newValue});
+    },
+
     [ACTION.LOAD_LEVEL]: async ({commit}, {name}) => {
         const content = await loadLevel(name);
         if (!content) {

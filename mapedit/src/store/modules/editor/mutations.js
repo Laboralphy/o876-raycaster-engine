@@ -44,6 +44,13 @@ export default {
             tags.splice(iTag, 1);
         }
     },
+    [MUTATION.MODIFY_HIGHLIGHTED_TAG]: (state, {oldTag, newTag}) => {
+        const tags = state.models.levelGrid.hltags;
+        const iTag = tags.indexOf(oldTag);
+        if (iTag >= 0) {
+            tags.splice(iTag, 1, newTag);
+        }
+    },
     [MUTATION.ADD_HIGHLIGHTED_TAG]: (state, {tag}) => {
         const tags = state.models.levelGrid.hltags;
         const iTag = tags.indexOf(tag);

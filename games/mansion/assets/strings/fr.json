@@ -58,7 +58,7 @@
   },
 
   "PHOTOS": {
-    "fire_place": {
+    "m0_fire_place": {
       "title": "La cheminée",
       "description": [
         "Cette cheminée irradie d'une lumière chaude, mais sur pas plus de 3 ou 4 mètres. Au dela de cette distance, l'air est glacial. Les tenèbres environnantes semble contenir et attenuer la lumière, tout en limitant la chaleur.",
@@ -66,14 +66,14 @@
       ]
     },
 
-    "clue_skull_face": {
+    "m0_bloody_deadend": {
       "title": "Impasse inquiétante",
       "description": [
         "Des traces de main sont apparues sur le mur au fond du couloir ; comme si quelqu'un s'était appuyé sur la paroi."
       ]
     },
 
-    "clue_cyan_sigil": {
+    "m0_cyan_sigil": {
       "title": "Livre du Sigil",
       "description": [
         "Cette photo est apparue après avoir photographié le sigil cyan qui verrouille une des portes de la cabane.",
