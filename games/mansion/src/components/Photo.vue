@@ -1,6 +1,6 @@
 <template>
     <figure :class="'photo' + (big ? ' big' : '')" @click="$emit('click')">
-        <img :src="content" alt="photo"/>
+        <img :class="gray ? 'gray' : 'color'" :src="content" alt="photo"/>
         <figcaption :title="caption">{{ caption }}</figcaption>
     </figure>
 </template>
@@ -20,6 +20,11 @@
                 default: ''
             },
             big: {
+                type: Boolean,
+                require: false,
+                default: false
+            },
+            gray: {
                 type: Boolean,
                 require: false,
                 default: false
@@ -62,5 +67,9 @@
         overflow: hidden;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+
+    figure.photo img.gray {
+        filter: grayscale(100%);
     }
 </style>

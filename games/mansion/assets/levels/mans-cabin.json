@@ -370,7 +370,7 @@
       "tileset": 53,
       "thinker": "StaticTangibleThinker",
       "size": 8,
-      "ref": "",
+      "ref": "o_barrel",
       "fx": []
     },
     {
@@ -3667,10 +3667,10 @@
     }
   ],
   "camera": {
-    "x": 15,
-    "y": 8,
+    "x": 10,
+    "y": 13,
     "z": 1,
-    "angle": 0
+    "angle": 4.71238898038469
   },
   "tags": [
     {
@@ -3699,9 +3699,16 @@
       "x": 10,
       "y": 5,
       "tags": [
-        "locator m0_bloody_deadend.target",
+        "locator m0_bloody_deadend_target",
         "archive m0_bloody_deadend",
         "lock"
+      ]
+    },
+    {
+      "x": 10,
+      "y": 6,
+      "tags": [
+        "locator wraith_skull_face_target"
       ]
     },
     {
@@ -3719,18 +3726,26 @@
       ]
     },
     {
+      "x": 9,
+      "y": 8,
+      "tags": [
+        "event m0_wraith_skull_face"
+      ]
+    },
+    {
       "x": 22,
       "y": 8,
       "tags": [
         "item book_sigils",
-        "locator m0_book_sigils"
+        "locator m0_book_sigils_target"
       ]
     },
     {
       "x": 10,
       "y": 9,
       "tags": [
-        "locator m0_bloody_deadend"
+        "locator m0_bloody_deadend",
+        "locator wraith_skull_face"
       ]
     },
     {

@@ -1,4 +1,5 @@
 import GhostThinker from "./GhostThinker";
+import Easing from "libs/easing";
 
 
 /**
@@ -7,6 +8,10 @@ import GhostThinker from "./GhostThinker";
 class WraithThinker extends GhostThinker {
     constructor() {
         super();
+        this._easing = {
+            x: new Easing(),
+            y: new Easing()
+        };
         this.transitions = {
             "s_init": {
                 "1": "s_spawn"
@@ -20,11 +25,16 @@ class WraithThinker extends GhostThinker {
                 "t_fullOpacity": "s_walking"
             },
             "s_walking": {
+                // on va vérifer qu'on a pas été shooté
+                "t_shot": "s_shot",
                 // lorsqu'on marche on va verifier qu'on a atteind notre destination
                 "t_done": "s_fadeOut"
             },
             "s_fadeOut": {
                 "t_doneFadeOut": "s_dead"
+            },
+            "s_shot": {
+                "1": "s_fadeOut"
             }
         }
     }
@@ -34,7 +44,31 @@ class WraithThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
     s_init() {
-        // abstract
+        // décider de la marche à suivre
+        // un spectre va toujours se déplacer en ligne droite, ou bien rester immobile
+        // - déterminer le point d'apparition et le point de destination
+        const entity = this.entity;
+        const data = entity.data.wraith;
+        const pFrom = this.entity.position;
+        const pTo = data.destination;
+        if (pTo === undefined) {
+            throw new Error('WraithThinker : "destination" must be specified in wraith data');
+        }
+        const duration = data.duration || 3000;
+
+        // easing X
+        const xe = this._easing.x;
+        xe.setFunction(data.easing || Easing.LINEAR);
+        xe.setOutputRange(pFrom.x, pTo.x);
+        xe.setStepCount(duration);
+
+        // easing Y
+        const ye = this._easing.y;
+        ye.setFunction(data.easing || Easing.LINEAR);
+        ye.setOutputRange(pFrom.y, pTo.y);
+        ye.setStepCount(duration);
+
+        this.setLocation(pFrom.x, pFrom.y);
     }
 
     /**
@@ -43,6 +77,7 @@ class WraithThinker extends GhostThinker {
     s_spawn() {
         this._nOpacity = 0;
         this.setOpacityFlags();
+        this.elapsedTime = 0;
     }
 
     /**
@@ -57,6 +92,11 @@ class WraithThinker extends GhostThinker {
      * The ghost is pulsating and walking to its destination
      */
     s_walking() {
+        // displacement
+        const t = this.elapsedTime;
+        const x = this._easing.x.compute(t).y;
+        const y = this._easing.y.compute(t).y;
+        this.entity.position.set({x, y});
         this.pulse();
     }
 
@@ -77,6 +117,13 @@ class WraithThinker extends GhostThinker {
         }
     }
 
+    /**
+     * Que faire quand on a été shooté
+     */
+    s_shot() {
+        // mort directe
+    }
+
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -90,23 +137,17 @@ class WraithThinker extends GhostThinker {
         return this._nOpacity >= 4;
     }
 
+    t_done() {
+        return this._easing.x.over() && this._easing.y.over();
+    }
+
     t_doneFadeOut() {
         return this._nOpacity <= 0;
     }
 
-    /**
-     * returns true if the time is out
-     * @returns {boolean}
-     */
-    t_timeOut() {
-        return this.engine.getTime() >= this._nTimeOut;
-    }
-
-    /**
-     * This function is to be overriden
-     * @return {boolean}
-     */
-    t_done() {
-        return true;
+    t_shot() {
+        return !!this.entity.data.shot;
     }
 }
+
+export default WraithThinker;

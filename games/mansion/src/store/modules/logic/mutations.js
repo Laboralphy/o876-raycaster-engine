@@ -80,5 +80,9 @@ export default {
     [TYPES.DEPLETE_ENERGY]: function(state) {
         const e = state.camera.energy;
         e.value = 0;
+    },
+
+    [TYPES.SHOOT]: function(state, {time}) {
+        state.camera.lastShotTime = time;
     }
 }

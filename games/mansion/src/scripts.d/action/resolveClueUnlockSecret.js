@@ -11,11 +11,11 @@ import GeometryHelper from "libs/geometry/Helper";
 export async function main(game, ref, score = 0) {
     // clue_ref et clue_ref_target sont deux position permettant de prendre une photo dans un autre lieu
     // cible de l'enigme
-    const TARGET_REF = ref + '.target';
+    const TARGET_REF = ref + '_target';
     const block = game.locators[TARGET_REF].cell;
     game.engine.lockDoor(block.x, block.y, false);
     // fait apparaitre une marque permettant de reconnaitre le block secret
     game.rotateDecals(block.x, block.y, false);
     // prend la photo
-    return game.runScript('actions.showRemotePlace', ref, score);
+    return game.runScript('action.showRemotePlace', ref, score);
 }

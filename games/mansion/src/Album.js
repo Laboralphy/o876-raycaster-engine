@@ -23,6 +23,13 @@ class Album extends StoreAbstract {
     archivePhoto(ref) {
         this.commit(ALBUM_MUTATIONS.SET_PHOTO_TYPE, {ref, type: CONSTS.PHOTO_TYPE_ARCHIVE});
     }
+
+    hasTakenPhoto(ref) {
+        const photos = this.prop('getAllPhotos');
+        return !!photos.find(p => {
+            return p.ref === ref;
+        });
+    }
 }
 
 export default Album;

@@ -6,6 +6,7 @@ import Automaton from "../../automaton";
  */
 class Thinker {
     constructor() {
+        this._timeStart = null;
         this._duration = 0;
         this._entity = null;
         this._engine = null;
@@ -76,9 +77,24 @@ class Thinker {
     }
 
     /**
+     * return elapsed time since creation or since modification
+     * @return {number}
+     */
+    get elapsedTime() {
+        return this._engine.getTime() - this._timeStart;
+    }
+
+    set elapsedTime(value) {
+        this._timeStart = this._engine.getTime() - value;
+    }
+
+    /**
      * thinks
      */
     think() {
+        if (this._timeStart === null) {
+            this._timeStart = this._engine.getTime()
+        }
         this._automaton.process();
     }
 }

@@ -17,9 +17,9 @@ import ObjectExtender from "libs/object-helper/Extender";
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
+import MarkerRegistry from "libs/marker-registry";
 
 class Game extends GameAbstract {
-
     init() {
         this._debug = true;
         super.init();
@@ -32,12 +32,15 @@ class Game extends GameAbstract {
         this.logic.loadData();
         this.log('initialize camera visual filter')
         this._cameraFilter = new CameraObscura();
-        this.log('initialize update event');
+        this.log('initialize event handlers');
         this.engine.events.on('update', () => this.engineUpdateHandler());
+        this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
+        this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS);
         this.initScreenHandler();
         this._locators = {};
+        this._activeGhosts = [];
     }
 
 //
@@ -129,6 +132,16 @@ class Game extends GameAbstract {
         });
     }
 
+    engineEntityDestroyedHandler(entity) {
+        const sType = entity.data.type;
+        if (sType === 'w' || sType === 'v') {
+            const i = this._activeGhosts.indexOf(entity);
+            if (i >= 0) {
+                this._activeGhosts.splice(i, 1);
+            }
+        }
+    }
+
 
 //                _       _
 //  ___  ___ _ __(_)_ __ | |_ ___
@@ -168,7 +181,7 @@ class Game extends GameAbstract {
 
     keyDownHandler(key) {
         super.keyDownHandler(key);
-        this.runScript('keys.' + key.toLowerCase() + '.keydown');
+        this.runScript('key.' + key.toLowerCase() + '.keydown');
     }
 
 //        _                                    _   _
@@ -205,7 +218,7 @@ class Game extends GameAbstract {
                     const tags = tagGrid.getTagCommand(id);
                     const [command, item] = tags;
                     if (command === 'photo') {
-                        const oPhotoScripts = Scripts.photos;
+                        const oPhotoScripts = Scripts.photo;
                         const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
                         if (item in oPhotoScripts) {
                             oPhotoScripts[item].main(this, remove, x, y);
@@ -236,6 +249,12 @@ class Game extends GameAbstract {
      * shoot a photo
      */
     flashCamera() {
+        const nLastTime = this.logic.prop('getCameraLastShotTime');
+        const nThisTime = this.engine.getTime();
+        if ((nThisTime - nLastTime) < CONSTS.CAMERA_RETRIGGER_DELAY) {
+            // trop peu de temps depuis la dernière photo
+            return;
+        }
         // capture screenshot
         this.engine.raycaster.screenshot();
         this.engine.filters.link(new Flash({
@@ -246,12 +265,38 @@ class Game extends GameAbstract {
             color: 'white',
             duration: CONSTS.FLASH_DURATION / 2
         }));
+        // obtenir la liste des entité photographiée
+        const aVisibleEntities = [];
+        this
+            .engine
+            .raycaster
+            .visibleCells
+            .iterate((x, y) => {
+                aVisibleEntities.push(...this.engine.horde.getEntitiesAt(x, y));
+            });
+        aVisibleEntities.forEach(e => {
+            if (e.data.type === 'w') {
+                this.wraithShot(e);
+            }
+        });
+
         this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
         // pour tous les fantomes present dans la ligne de mire
         // appliquer un filter ghostshot
         // calculer les dégats
         // lancer des script pour les spectres
         this.checkAimedCell();
+        this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
+    }
+
+    wraithShot(wraith) {
+        wraith.data.shot = true;
+        this.storePhoto(
+            CONSTS.PHOTO_TYPE_WRAITH, // type de photo
+            wraith.data.wraith.score, // score de la photo
+            wraith.ref,               // information supplémentaire (titre, description)
+        );
+
     }
 
     /**
@@ -354,6 +399,10 @@ class Game extends GameAbstract {
         return this.engine.camera.thinker.frozen;
     }
 
+    get player() {
+        return this.engine.camera;
+    }
+
 //  _                _                   _        _   _
 // | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
 // | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
@@ -363,12 +412,16 @@ class Game extends GameAbstract {
     /**
      * Spawns a ghost at the given cell coordinates
      * @param sRef {string} ghsot reference id
-     * @param xCell {number}
-     * @param yCell {number}
+     * @param xCell {number|string}
+     * @param [yCell] [{number}
      * @returns {Entity}
      */
-    spawnGhost(sRef, xCell, yCell) {
-        return engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
+    spawnGhost(sRef, xCell, yCell = undefined) {
+        const oGhost = yCell === undefined && (typeof xCell === 'string')
+            ? this.engine.createEntity(sRef, this.locators[xCell].position)
+            : this.engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
+        this._activeGhosts.push(oGhost);
+        return oGhost;
     }
 
 
@@ -462,7 +515,7 @@ class Game extends GameAbstract {
      * when 'tag.item.push' is triggered, the script "item" is loaded and the function "item.push()" is called.
      */
     initTagHandlers() {
-        const oScriptActions = Scripts.tags;
+        const oScriptActions = Scripts.tag;
         this.logGroup('tag handlers')
         this.log('calling init on each tag scripts');
         const aDeleted = [];
@@ -470,7 +523,7 @@ class Game extends GameAbstract {
             const sCommand = tag[0];
             try {
                 const parameters = tag.slice(1);
-                this.runScript('tags.' + sCommand + '.init', function () {
+                this.runScript('tag.' + sCommand + '.init', function () {
                     aDeleted.push({x, y, id});
                 }, x, y, ...parameters);
             } catch (e) {

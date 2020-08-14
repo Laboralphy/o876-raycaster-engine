@@ -16,6 +16,7 @@ let LAST_ID = 0;
 class Entity {
     constructor() {
         this._id = ++LAST_ID;
+        this._ref = '';
         this._position = new Position();
         this._visible = false;
         this._sprite = null;
@@ -43,6 +44,14 @@ class Entity {
 
     get id() {
         return this._id;
+    }
+
+    get ref() {
+        return this._ref;
+    }
+
+    set ref(value) {
+        this._ref = value;
     }
 
     think(engine) {

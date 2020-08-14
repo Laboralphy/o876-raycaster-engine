@@ -72,9 +72,11 @@ class MoverThinker extends Thinker {
     /**
      * Jump to another position without translation (disappear, then reappear)
      * no collision is computed
-     * @param v
+     * @param x {number}
+     * @param y {number}
+     * @param angle {number}
      */
-    setLocation(x, y) {
+    setLocation(x, y, angle = null) {
         const entity = this.entity;
         const position = entity.position;
         const engine = this.engine;
@@ -86,6 +88,9 @@ class MoverThinker extends Thinker {
         const ySector2 = y / ps | 0;
         position.x = x;
         position.y = y;
+        if (angle !== null) {
+            position.angle = angle;
+        }
         if (xSector1 !== xSector2 || ySector1 !== ySector2) {
             this._xSector = xSector2;
             this._ySector = ySector2;
@@ -106,6 +111,11 @@ class MoverThinker extends Thinker {
         };
     }
 
+    /**
+     * Change movement speed
+     * @param sx {number}
+     * @param sy {number}
+     */
     setSpeed(sx, sy) {
         if (sx instanceof Vector) {
             this.changeMovement();

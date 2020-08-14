@@ -1,5 +1,6 @@
 import MoverThinker from "libs/engine/thinkers/MoverThinker";
 import * as RC_CONSTS from "libs/raycaster/consts";
+import Easing from "libs/easing";
 
 class GhostThinker extends MoverThinker {
 
@@ -9,7 +10,6 @@ class GhostThinker extends MoverThinker {
         this._nTime = 0;
         this._nTimeOut = 0;
         this._target = null; // cible designée
-        this._speed = 0; // vitesse de déplacement actuelle
     }
 
     get target() {
@@ -83,7 +83,6 @@ class GhostThinker extends MoverThinker {
     getDistanceToTarget() {
         return this.vectorToTarget().length();
     }
-
 
     moveForward() {
         const oGhostPos = this.entity.position;

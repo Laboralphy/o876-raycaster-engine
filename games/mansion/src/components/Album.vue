@@ -9,6 +9,7 @@
                 :key="photo.id"
                 :content="photo.content"
                 :caption="STRINGS.PHOTOS[photo.ref].title"
+                :gray="getActiveType === 'archive'"
                 @click="photoClicked(photo.id)"
             ></Photo>
         </div>
@@ -45,6 +46,7 @@
         computed: {
             ...albumMapGetters([
                 'getPhotos',
+                'getActiveType'
             ])
         },
 

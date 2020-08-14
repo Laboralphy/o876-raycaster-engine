@@ -1,3 +1,8 @@
+/**
+ * Le StoreAbstract est une classe à surcharger
+ * Elle donne des outils de base pour communiquer avec le store
+ * (lancer des action, des mutation, lire les getters)
+ */
 class StoreAbstract {
     /**
      * the constructor requires a store instance

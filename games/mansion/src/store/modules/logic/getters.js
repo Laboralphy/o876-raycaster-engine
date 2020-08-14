@@ -8,5 +8,5 @@ export default {
 
     getPlayerEnergy: state => state.camera.energy.value,
     getPlayerEnergyMax: state => state.camera.energy.maximum,
-
+    getCameraLastShotTime: state => state.camera.lastShotTime
 };

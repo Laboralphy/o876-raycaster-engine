@@ -847,10 +847,24 @@ class Engine {
             resref = this._refs[resref];
         }
         if (!(resref in this._blueprints)) {
-            throw new Error('this blueprint does not exist : "' + resref + '". did you mean "' + suggest(resref, Object.keys(this._blueprints) + '" (id) or "' + Object.keys[this._refs]) + '" (reference) ?');
+            const aWarn = [resref + ' is not a valid resource reference !'];
+            const aObjects = Object.keys(this._blueprints);
+            if (aObjects.length > 0) {
+                aWarn.push('Did you mean : "' + suggest(resref, aObjects) + '" (blueprint) ?');
+            }
+            const aRefs = Object.keys(this._refs);
+            if (aRefs.length > 0) {
+                aWarn.push('Did you mean : "' + suggest(resref, aRefs) + '" (refs) ?');
+            }
+            throw new Error('this blueprint does not exist : "' + resref + '".');
         }
         const bp = this._blueprints[resref];
         const entity = new Entity();
+
+        // ref
+        if ('ref' in bp) {
+            entity.ref = bp.ref;
+        }
 
         // position
         entity.position.set(position);
@@ -1311,8 +1325,8 @@ class Engine {
      */
     async loadLevel(sName) {
         let pLevel = null;
-        const pTilesets = [];
-        const pBlueprints = [];
+        const pTilesets = await this.fetchData('tilesets');
+        const pBlueprints = await this.fetchData('blueprints');
         const p = {
             ref: sName,
             /**

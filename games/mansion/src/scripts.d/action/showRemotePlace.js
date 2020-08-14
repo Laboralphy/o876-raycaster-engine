@@ -12,7 +12,7 @@ import GeometryHelper from "libs/geometry/Helper";
 export async function main(game, ref, score = 0) {
     // clue_ref et clue_ref_target sont deux position permettant de prendre une photo dans un autre lieu
     // cible de l'enigme
-    const CLUE_REF_TARGET = ref + '.target';
+    const CLUE_REF_TARGET = ref + '_target';
     const pos = game.locators[ref].position;
     const target = game.locators[CLUE_REF_TARGET].position;
     pos.angle = GeometryHelper.angle(pos.x, pos.y, target.x, target.y);
@@ -23,7 +23,7 @@ export async function main(game, ref, score = 0) {
         ref,               // information supplémentaire (titre, description)
         pos                     // position d'ou doit etre prise la photo
     );
-    await game.runScript('actions.photoMogrify', p0, p1);
+    await game.runScript('action.photoMogrify', p0, p1);
     await game.ui.popup('EVENT_PHOTO_MOGRIFY', 'photo-mogrify');
     return game.ui.popup('EVENT_PHOTO_CLUE_STORED', 'album-clue');
 }
