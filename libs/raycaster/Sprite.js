@@ -21,11 +21,20 @@ class Sprite {
         this._children = []; // these sprites will be rendered above the current sprite
         this._flags = 0;
         this._lastRendered = {
-            x: 0,
-            y: 0,
-            w: 0,
-            h: 0
+            tileset: null,
+            dx: 0,
+            dy: 0,
+            dw: 0,
+            dh: 0,
+            sx: 0,
+            sy: 0,
+            sw: 0,
+            sh: 0
         };
+    }
+
+    get lastRendered() {
+        return this._lastRendered;
     }
 
     get flags() {

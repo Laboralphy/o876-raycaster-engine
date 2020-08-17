@@ -1,4 +1,4 @@
-import Helper from "../geometry/Helper";
+import Geometry from "../geometry";
 import * as CONSTS from "./consts";
 import ArrayHelper from "../array-helper";
 import SectorRegistry from "../sector-registry/SectorRegistry";
@@ -53,6 +53,7 @@ class Horde {
      * @param entity {Entity}
      */
     unlinkEntity(entity) {
+        entity._sector.remove(entity);
         entity._sector = null;
         const aEntities = this._entities;
         const iEntity = aEntities.indexOf(entity);
@@ -71,7 +72,7 @@ class Horde {
         }
         const oEntityLoc = entity.position;
         const oCameraLoc = camera.position;
-        const fTarget = Helper.angle(oCameraLoc.x, oCameraLoc.y, oEntityLoc.x, oEntityLoc.y);
+        const fTarget = Geometry.angle(oCameraLoc.x, oCameraLoc.y, oEntityLoc.x, oEntityLoc.y);
         // backup
         let fAngle1 = oEntityLoc.angle + (Math.PI / SPRITE_DIRECTION_COUNT) - fTarget;
         if (fAngle1 < 0) {

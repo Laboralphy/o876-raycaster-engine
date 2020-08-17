@@ -17,6 +17,7 @@ export default {
             power: 100,
             depleteRate: 0.7
         },
+        captureRadius: 1,
         lastShotTime: 0,
         sensor: {
 

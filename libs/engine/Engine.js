@@ -48,6 +48,7 @@ class Engine {
 
         // instanciate at construct
         this._thinkers = {};
+        this._thinkerContext = {};
         this.useThinkers(thinkers);
         this._collider = new Collider(); // this collider is freely used by certain thinkers
         this._collider.setCellWidth(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
@@ -574,15 +575,13 @@ class Engine {
      * @param bLock
      */
     lockDoor(x, y, bLock) {
-        if (bLock) {
-            this._locks.mark(x, y);
-        } else {
-            this._locks.unmark(x, y);
+        if (this.isDoor(x, y) || this.isSecretBlock(x, y)) {
+            if (bLock) {
+                this._locks.mark(x, y);
+            } else {
+                this._locks.unmark(x, y);
+            }
         }
-    }
-
-    isDoorLocked(x, y) {
-        return this._locks.isMarked(x, y);
     }
 
     /**
@@ -612,23 +611,77 @@ class Engine {
     /**
      * Returns true if the spécified cell is any king of door or curtain
      * Returns false otherwise (including secret block)
-     * @param x
-     * @param y
-     * @returns {boolean|boolean}
+     * @param x {number} door coordinates (x axis)
+     * @param y {number} door coordinates (y axis)
+     * @return {boolean|*}
      */
     isDoor(x, y) {
-        const c = this._rc.getCellPhys(x, y);
+        let c;
+        const oDoor = this._dm.getDoorContext(x, y);
+        if (!!oDoor) {
+            c = oDoor.data.phys;
+        } else {
+            c = this._rc.getCellPhys(x, y);
+        }
         return c >= RC_CONSTS.PHYS_FIRST_DOOR && c <= RC_CONSTS.PHYS_LAST_DOOR;
     }
 
     /**
      * Returns true if the spécified cell is secret block
-     * @param x
-     * @param y
+     * @param x {number} door coordinates (x axis)
+     * @param y {number} door coordinates (y axis)
+     * @return {boolean|*}
      */
     isSecretBlock(x, y) {
-        const c = this._rc.getCellPhys(x, y);
+        let c;
+        const oDoor = this._dm.getDoorContext(x, y);
+        if (!!oDoor) {
+            c = oDoor.data.phys;
+        } else {
+            c = this._rc.getCellPhys(x, y);
+        }
         return c === RC_CONSTS.PHYS_SECRET_BLOCK;
+    }
+
+    /**
+     * Returns true if the cell is a door and is closed
+     * @param x {number} door coordinates (x axis)
+     * @param y {number} door coordinates (y axis)
+     * @return {boolean|*}
+     */
+    isDoorClosed(x, y) {
+        const oDoor = this._dm.getDoorContext(x, y);
+        if (!!oDoor) {
+            // if there is a door context : use it !
+            return oDoor.isClosed();
+        } else {
+            // no door context : check cell type
+            // we must use this basic check, because we dont want to validate an open door
+            const c = this.getCellType(x, y);
+            return (c >= RC_CONSTS.PHYS_FIRST_DOOR && c <= RC_CONSTS.PHYS_LAST_DOOR) || c === RC_CONSTS.PHYS_SECRET_BLOCK;
+        }
+    }
+
+    /**
+     * Returns true if the cell is a door and is open
+     * @param x {number} door coordinates (x axis)
+     * @param y {number} door coordinates (y axis)
+     * @return {boolean|*}
+     */
+    isDoorOpen(x, y) {
+        // an open door always has a door context
+        const oDoor = this._dm.getDoorContext(x, y);
+        return !!oDoor && oDoor.isDoorOpen(x, y);
+    }
+
+    /**
+     * Returns true if the cell is a door and is locked
+     * @param x {number} door coordinates (x axis)
+     * @param y {number} door coordinates (y axis)
+     * @return {boolean|*}
+     */
+    isDoorLocked(x, y) {
+        return (this.isDoor(x, y) || this.isSecretBlock(x, y)) && this._locks.isMarked(x, y);
     }
 
 
@@ -710,13 +763,18 @@ class Engine {
      * @param sThinker {string} reference of thinker
      * @param pThinker {prototype}
      */
-    useThinker(sThinker, pThinker) {
+    _useThinker(sThinker, pThinker) {
         this._thinkers[sThinker] = pThinker;
     }
 
-    useThinkers(oThinkers) {
+    useThinkers(oThinkers, oContext = undefined) {
+        if (oContext !== undefined) {
+            for (let s in oContext) {
+                this._thinkerContext[s] = oContext[s];
+            }
+        }
         for (let sThinker in oThinkers) {
-            this.useThinker(sThinker, oThinkers[sThinker]);
+            this._useThinker(sThinker, oThinkers[sThinker]);
         }
     }
 
@@ -747,7 +805,7 @@ class Engine {
     /**
      * Creates a new instance of a specified thinker class
      * @param sThinker {string} thinker class name to be instanciated, the class must have been previously register with
-     * either the method useThinker(), or the method useThinkers() (with an "s")
+     * either the method _useThinker(), or the method useThinkers() (with an "s")
      * @returns {Thinker}
      */
     createThinkerInstance(sThinker) {
@@ -757,6 +815,7 @@ class Engine {
         const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
         const oThinker = new pThinker();
         oThinker.engine = this;
+        oThinker._context = this._thinkerContext;
         return oThinker;
     }
 

@@ -9,7 +9,7 @@ import Translator from "../translator/Translator";
 import TileAnimation from "./TileAnimation";
 import Sprite from './Sprite';
 import Extender from "../object-helper/Extender";
-import Helper from '../geometry/Helper';
+import Geometry from '../geometry';
 import DebugDisplay from "./DebugDisplay";
 import LightMap from "../light-sources/LightMap";
 import Events from 'events';
@@ -1934,7 +1934,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const yscr = SCREEN.width;
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
-            const z = Helper.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const z = Geometry.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
             const x = Math.sin(fAlpha) * z;         // sprite x position
             const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
             const focal = SCREEN.focal;
@@ -1970,10 +1970,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                 oSprite.flags                                   // flags
             ];
             const lr = oSprite._lastRendered;
-            lr.x = dx0;
-            lr.y = dy0;
-            lr.w = dw0;
-            lr.h = dh0;
+            lr.tileset = ts;
+            lr.sx = data[1];
+            lr.sy = (oSprite.flags & 2) > 0 ? 0 : data[2];
+            lr.sw = wspr;
+            lr.sh = hspr;
+            lr.dx = dx0;
+            lr.dy = dy0;
+            lr.dw = dw0;
+            lr.dh = dh0;
             scene.zbuffer.push(data);
         }
     }

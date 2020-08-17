@@ -6,6 +6,7 @@ import Automaton from "../../automaton";
  */
 class Thinker {
     constructor() {
+        this._context = null;
         this._timeStart = null;
         this._duration = 0;
         this._entity = null;
@@ -15,6 +16,10 @@ class Thinker {
         this.defineTransistions({
             "idle": {}
         });
+    }
+
+    get context() {
+        return this._context;
     }
 
     get automaton() {

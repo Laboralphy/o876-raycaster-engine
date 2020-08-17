@@ -201,7 +201,8 @@ class GameAbstract {
         context.stroke();
         context.strokeStyle = 'white';
         context.beginPath();
-        context.arc(xCenter, yCenter, SIZE - (LINEWIDTH >> 1), 0, Math.PI * 2 * f);
+        const fPhase = Math.PI * 1.5;
+        context.arc(xCenter, yCenter, SIZE - (LINEWIDTH >> 1), fPhase, Math.PI * 2 * f + fPhase);
         context.stroke();
     }
 

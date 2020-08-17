@@ -1,5 +1,7 @@
 import GhostThinker from "./GhostThinker";
 import Easing from "libs/easing";
+import * as CONSTS from "../consts";
+import Geometry from "libs/geometry";
 
 
 /**
@@ -69,6 +71,7 @@ class WraithThinker extends GhostThinker {
         ye.setStepCount(duration);
 
         this.setLocation(pFrom.x, pFrom.y);
+        this.updateSightData();
     }
 
     /**
@@ -93,11 +96,13 @@ class WraithThinker extends GhostThinker {
      */
     s_walking() {
         // displacement
+        const entity = this.entity;
         const t = this.elapsedTime;
         const x = this._easing.x.compute(t).y;
         const y = this._easing.y.compute(t).y;
-        this.entity.position.set({x, y});
+        entity.position.set({x, y});
         this.pulse();
+        this.updateSightData();
     }
 
     /**

@@ -37,6 +37,7 @@ class Logic extends StoreAbstract {
     hasQuestItem(ref) {
         return this.prop('getQuestItems').indexOf(ref) >= 0;
     }
+
 }
 
 export default Logic;

@@ -1,10 +1,12 @@
 /**
  * Functions concerning angles and distances
  */
+import Vector from "./Vector";
+
 const PI = Math.PI;
 const PI2 = 2 * PI;
 
-class Helper {
+class Geometry {
     /**
      * Distance between 2 points
      * @param x1 {Number} point 1 coordinates
@@ -65,7 +67,7 @@ class Helper {
     }
 
     static pointInCircle(x, y, xc, yc, r) {
-        return Helper.squareDistance(x, y, xc, yc) <= (r * r);
+        return Geometry.squareDistance(x, y, xc, yc) <= (r * r);
     }
 
     static circleInRect(xc, yc, r, xr, yr, wr, hr) {
@@ -79,8 +81,8 @@ class Helper {
     /**
      * Renvoie l'ange que fait la doite x1, y1, x2, y2
      * avec l'axe des X+
-     * @param x1 {number}
-     * @param y1 {number}
+     * @param x1 {number|Vector}
+     * @param y1 {number|Vector}
      * @param x2 {number}
      * @param y2 {number}
      * @return {number}
@@ -99,4 +101,4 @@ class Helper {
     }
 }
 
-export default Helper;
+export default Geometry;

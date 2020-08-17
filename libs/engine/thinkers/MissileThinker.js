@@ -1,5 +1,5 @@
 import TangibleThinker from "./TangibleThinker";
-import Helper from "../../geometry/Helper";
+import Geometry from "../../geometry";
 import * as CONSTS from "../consts";
 
 /**
@@ -53,7 +53,7 @@ class MissileThinker extends TangibleThinker {
         engine._collider.updateDummy(dummy);
 
         // set proper speed vector
-        const {dx, dy} = Helper.polar2rect(oOwnerLocation.angle, speed);
+        const {dx, dy} = Geometry.polar2rect(oOwnerLocation.angle, speed);
         this.setSpeed(dx, dy);
     }
 

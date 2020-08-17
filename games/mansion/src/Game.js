@@ -10,14 +10,15 @@ import FadeIn  from "libs/engine/filters/FadeIn";
 import Flash from "libs/engine/filters/Flash";
 import Halo  from "libs/engine/filters/Halo";
 import CameraObscura from "./filters/CameraObscura";
+import GhostScreamer from "./filters/GhostScreamer";
 import Position  from "libs/engine/Position";
-import Helper from "libs/geometry/Helper";
+import Index from "libs/geometry";
 import ObjectExtender from "libs/object-helper/Extender";
+import * as Interpolator from "libs/interpolator";
 
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
-import MarkerRegistry from "libs/marker-registry";
 
 class Game extends GameAbstract {
     init() {
@@ -32,15 +33,17 @@ class Game extends GameAbstract {
         this.logic.loadData();
         this.log('initialize camera visual filter')
         this._cameraFilter = new CameraObscura();
+        this._ghostScream = new GhostScreamer();
         this.log('initialize event handlers');
         this.engine.events.on('update', () => this.engineUpdateHandler());
         this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.log('initialize thinkers');
-        this.engine.useThinkers(THINKERS);
+        this.engine.useThinkers(THINKERS, {game: this});
         this.initScreenHandler();
         this._locators = {};
         this._activeGhosts = [];
+        window.GAME = this;
     }
 
 //
@@ -112,8 +115,9 @@ class Game extends GameAbstract {
     engineUpdateHandler() {
         // checks for camera energy
         if (this.isCameraRaised()) {
-            // if ghost
-            const bGhost = true;
+            const ecto = this.getEctoData();
+            const bGhost = ecto.types.includes('g');
+            const bWraith = ecto.types.includes('w');
             this.logic.commit(bGhost ? LOGIC_MUTATIONS.INC_ENERGY : LOGIC_MUTATIONS.DEPLETE_ENERGY);
             this.syncCameraStore();
         }
@@ -176,6 +180,7 @@ class Game extends GameAbstract {
         this.initTagHandlers();
         this.engine.filters.link(this._cameraFilter);
         this.engine.filters.link(new Halo('black'));
+        this.engine.filters.link(this._ghostScream);
         this.engine.filters.link(new FadeIn({duration: 600}));
     }
 
@@ -208,7 +213,7 @@ class Game extends GameAbstract {
         const oAimedCell = engine.raycaster.aimedCell;
         if (('xCell' in oAimedCell) && ('yCell' in oAimedCell)) {
             const p = engine.camera.position;
-            const d = Helper.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
+            const d = Index.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
             if (d <= CONSTS.CAMERA_EXAMINATION_RANGE) {
                 const x = oAimedCell.xCell;
                 const y = oAimedCell.yCell;
@@ -245,6 +250,13 @@ class Game extends GameAbstract {
         return oPhoto;
     }
 
+    filterGhostInSight() {
+        this._activeGhosts.filter(g => {
+            const ds = g.data.sight;
+            return (ds.visible && ds.captureFactor > 0);
+        });
+    }
+
     /**
      * shoot a photo
      */
@@ -265,18 +277,12 @@ class Game extends GameAbstract {
             color: 'white',
             duration: CONSTS.FLASH_DURATION / 2
         }));
-        // obtenir la liste des entité photographiée
-        const aVisibleEntities = [];
-        this
-            .engine
-            .raycaster
-            .visibleCells
-            .iterate((x, y) => {
-                aVisibleEntities.push(...this.engine.horde.getEntitiesAt(x, y));
-            });
-        aVisibleEntities.forEach(e => {
-            if (e.data.type === 'w') {
-                this.wraithShot(e);
+
+        // checks if ghost or wraith are in sight
+        this.filterGhostInSight().forEach(g => {
+            this._ghostScream.addGhost(g);
+            if (g.data.type === 'w') {
+                this.wraithShot(g);
             }
         });
 
@@ -287,6 +293,30 @@ class Game extends GameAbstract {
         // lancer des script pour les spectres
         this.checkAimedCell();
         this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
+    }
+
+    getEctoData() {
+        let nEnergy = 0;
+        let nGhostCount = 0;
+        const aTypes = new Set();
+        let nMinDistance = Infinity;
+        this.filterGhostInSight().forEach(g => {
+            const sight = g.data.sight;
+            nEnergy += Math.min(sight.captureFactor, Math.max(0, Interpolator.linear(
+                sight.distance,
+                CONSTS.CAMERA_OPTIMAL_DISTANCE, sight.captureFactor,
+                CONSTS.CAMERA_MAXIMAL_DISTANCE, 0
+            )));
+            aTypes.add(g.data.type);
+            ++nGhostCount;
+            nMinDistance = Math.min(nMinDistance, sight.distance);
+        });
+        return {
+            energy: nEnergy,
+            count: nGhostCount,
+            types: [...aTypes],
+            distance: nMinDistance
+        };
     }
 
     wraithShot(wraith) {
@@ -421,6 +451,8 @@ class Game extends GameAbstract {
             ? this.engine.createEntity(sRef, this.locators[xCell].position)
             : this.engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
         this._activeGhosts.push(oGhost);
+        oGhost.thinker.target = this.player;
+        console.log(oGhost.thinker.context);
         return oGhost;
     }
 

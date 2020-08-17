@@ -4250,7 +4250,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 7
+          }
+        ]
       },
       {
         "block": 20,
@@ -4512,7 +4518,7 @@
         ],
         "mark": {
           "color": "yellow",
-          "shape": 1
+          "shape": 0
         },
         "modified": true,
         "things": [
@@ -4584,7 +4590,7 @@
         "things": []
       },
       {
-        "block": 18,
+        "block": 38,
         "tags": [],
         "mark": {
           "color": 0,
@@ -4596,14 +4602,21 @@
       {
         "block": 21,
         "tags": [
-          "event m0_wraith_skull_face"
+          "event m0_wraith_skull_face",
+          "photo m0_bloody_hands"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 1
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 14
+          }
+        ]
       },
       {
         "block": 18,
@@ -4732,7 +4745,7 @@
         "block": 37,
         "upperblock": 0,
         "tags": [
-          "item book_sigils",
+          "item book_glyphs",
           "locator m0_book_sigils_target"
         ],
         "mark": {
@@ -4921,7 +4934,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 7
+          }
+        ]
       },
       {
         "block": 20,
@@ -11810,9 +11829,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 10,
-    "y": 13,
-    "angle": 1.5
+    "x": 5,
+    "y": 8,
+    "angle": 0
   },
   "preview": "b39be4b474d27761e1f51d1220d154f1.jpg"
 }

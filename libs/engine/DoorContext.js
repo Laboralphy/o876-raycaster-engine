@@ -56,6 +56,10 @@ class DoorContext {
         return this._phase === CONSTS.DOOR_PHASE_OPEN;
     }
 
+    isClosed() {
+        return this._phase === CONSTS.DOOR_PHASE_CLOSE || this._phase === CONSTS.DOOR_PHASE_DONE;
+    }
+
     isDone() {
         return this._phase === CONSTS.DOOR_PHASE_DONE;
     }

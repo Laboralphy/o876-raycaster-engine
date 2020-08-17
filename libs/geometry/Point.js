@@ -1,7 +1,7 @@
 /**
  * Created by ralphy on 04/09/17.
  */
-import Helper from './Helper';
+import Geometry from './index';
 
 class Point {
 	constructor(x, y) {
@@ -20,7 +20,7 @@ class Point {
 	 * @return {number}
 	 */
 	distance(p) {
-		return Helper.distance(p.x, p.y, this.x, this.y);
+		return Geometry.distance(p.x, p.y, this.x, this.y);
 	}
 }
 

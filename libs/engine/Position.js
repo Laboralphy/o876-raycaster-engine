@@ -1,5 +1,5 @@
 import Vector from "../geometry/Vector";
-import Helper from "../geometry/Helper";
+import Geometry from "../geometry";
 
 
 class Position {
@@ -15,7 +15,7 @@ class Position {
     }
 
     set angle(value) {
-        this._angle = Helper.normalizeAngle(value);
+        this._angle = Geometry.normalizeAngle(value);
     }
 
     set({x = null, y = null, z = null, angle = null}) {

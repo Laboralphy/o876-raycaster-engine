@@ -1,7 +1,7 @@
 import MarkerRegistry from "../marker-registry/MarkerRegistry";
 import Bresenham from "../bresenham";
 import Grid from "../grid/Grid";
-import Helper from "../geometry/Helper";
+import Geometry from "../geometry";
 import {linear} from "../interpolator";
 import LightSource from "./LightSource";
 
@@ -71,7 +71,7 @@ class LightMap {
         let ii = 0;
         this._sources.filter(s => {
             const m = s.metrics;
-            return Helper.circleInRect(m.x, m.y, m.r1, x, y, w, h);
+            return Geometry.circleInRect(m.x, m.y, m.r1, x, y, w, h);
         }).forEach(s => {
             ++ii;
             this.invalidate();
@@ -154,7 +154,7 @@ class LightMap {
                     // light blocked : abort
                     return false;
                 }
-                const dist = Helper.distance(x0, y0, x, y);
+                const dist = Geometry.distance(x0, y0, x, y);
                 let result = 0;
                 if (dist <= r0) {
                     // full intensity

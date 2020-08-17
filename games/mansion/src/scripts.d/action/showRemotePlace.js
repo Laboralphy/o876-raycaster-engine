@@ -7,7 +7,7 @@
  * @param score {number}
  */
 import * as CONSTS from "../../consts";
-import GeometryHelper from "libs/geometry/Helper";
+import GeometryHelper from "libs/geometry";
 
 export async function main(game, ref, score = 0) {
     // clue_ref et clue_ref_target sont deux position permettant de prendre une photo dans un autre lieu

@@ -2,6 +2,7 @@
 // Effets visuels associés au smartphone
 // Classe abstraite
 
+import * as CONSTS from "../consts";
 import AbstractFilter from "libs/filters/AbstractFilter";
 import Easing from "libs/easing";
 import Rainbow from "libs/rainbow";
@@ -28,7 +29,7 @@ const STYLE_BG_CIRCLE = 'rgba(255, 255, 255, 0.5)';
 const STYLE_FG_CIRCLE = 'rgba(128, 255, 255, 1)';
 const STYLE_SHAD_CIRCLE = 'rgba(0, 128, 255, 0.25)';
 
-const CIRCLE_STD_RADIUS = 0.15;
+const CIRCLE_STD_RADIUS = CONSTS.CAMERA_CIRCLE_SIZE;
 
 const CIRCLE_NORMAL_ALPHA = 0.75;
 

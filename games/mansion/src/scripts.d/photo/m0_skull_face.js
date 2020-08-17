@@ -7,6 +7,6 @@
  */
 
 export function main(game, remove, x, y) {
-    game.runScript('action.resolveClueUnlockSecret', 'm0_bloody_deadend', 1000);
+    game.runScript('action.takeArtPhoto', 'w_cowled_skull', 1000);
     remove();   // supprimer le tag, qui ne doit servir qu'une fois.
 }

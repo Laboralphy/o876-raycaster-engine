@@ -1,6 +1,8 @@
 import MoverThinker from "libs/engine/thinkers/MoverThinker";
 import * as RC_CONSTS from "libs/raycaster/consts";
 import Easing from "libs/easing";
+import * as CONSTS from "../consts";
+import Geometry from "libs/geometry";
 
 class GhostThinker extends MoverThinker {
 
@@ -14,6 +16,10 @@ class GhostThinker extends MoverThinker {
 
     get target() {
         return this._target;
+    }
+
+    set target(value) {
+        this._target = value;
     }
 
     /**
@@ -91,6 +97,34 @@ class GhostThinker extends MoverThinker {
 
     setTimeOut(n) {
         this._nTimeOut = this.engine.getTime() + n;
+    }
+
+    updateSightData() {
+        const entity = this.entity;
+        if (!('sight' in entity.data)) {
+            entity.data.sight = {
+                visible: false,
+                captureFactor: 0,
+                distance: 0,
+            };
+        }
+        const nScrWidth = this.engine.raycaster.renderCanvas.width >> 1;
+        const data = entity.data.sight;
+        const aVisibleSectors = this.engine.raycaster.visibleCells;
+        const bVisible = data.visible = !!entity.sector && aVisibleSectors.isMarked(entity.sector.x, entity.sector.y);
+        const oPlayerPos = this.target.position;
+        const oGhostPos = entity.position;
+        data.distance = Geometry.distance(oPlayerPos.x, oPlayerPos.y, oGhostPos.x, oGhostPos.y);
+        if (bVisible) {
+            const r = entity.sprite.lastRendered;
+            const fGhostPos = Math.abs(r.dx + (r.dw / 2) - nScrWidth);
+            const fCaptSize = this.context.game.logic.prop('getCameraCaptureRadius')
+                * CONSTS.CAMERA_CIRCLE_SIZE
+                * nScrWidth;
+            data.captureFactor = Math.max(0, 1 - fGhostPos / fCaptSize);
+        } else {
+            data.captureFactor = 0;
+        }
     }
 }
 

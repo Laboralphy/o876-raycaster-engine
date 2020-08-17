@@ -9,6 +9,9 @@ export const PLAYER_CAMERA_SPEED = 3; // player wlaking speed in camera mode
 
 export const CAMERA_RETRIGGER_DELAY = 1000; // minimum number of milliseconds between two shots
 export const CAMERA_EXAMINATION_RANGE = 512; // maximum distance a photo may be taken for examination purpose
+export const CAMERA_CIRCLE_SIZE = 0.15;
+export const CAMERA_OPTIMAL_DISTANCE = 512;
+export const CAMERA_MAXIMAL_DISTANCE = 1024;
 export const PHOTO_ALBUM_WIDTH = 240;
 export const PHOTO_ALBUM_HEIGHT = 240;
 
@@ -18,4 +21,5 @@ export const PHOTO_TYPE_ARCHIVE = 'archive';
 export const PHOTO_TYPE_CLUE = 'clue';
 export const PHOTO_TYPE_AMBIENT = 'ambient';
 export const PHOTO_TYPE_WRAITH = 'wraith';
+export const PHOTO_TYPE_ART = 'art';
 
