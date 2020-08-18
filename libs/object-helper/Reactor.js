@@ -45,7 +45,8 @@ class Reactor {
     notify(path, oRoot) {
         path = path.substr(1);
         this._log[path] = true;
-        this._events.emit(REACTOR_CHANGED_EVENT_NAME, {key: path, root: oRoot});
+        const value = Extender.objectGet(oRoot, path);
+        this._events.emit(REACTOR_CHANGED_EVENT_NAME, {key: path, root: oRoot, value});
     }
 
     /**
@@ -140,6 +141,7 @@ class Reactor {
     makeReactiveObject(obj, path, oRoot) {
         if (path === undefined) {
             path = '';
+            oRoot = obj;
         }
         for (let key in obj) {
             if (obj.hasOwnProperty(key)) {

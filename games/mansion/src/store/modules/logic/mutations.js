@@ -84,5 +84,9 @@ export default {
 
     [TYPES.SHOOT]: function(state, {time}) {
         state.camera.lastShotTime = time;
+    },
+
+    [TYPES.SET_CAMERA_WIDTH]: function(state, {value}) {
+        state.camera.width = value;
     }
 }

@@ -542,14 +542,6 @@
         "animation": null
       },
       {
-        "id": 69,
-        "type": "sprite",
-        "content": "001065fcce2424b9622fb224e8cc2548.png",
-        "width": 64,
-        "height": 96,
-        "animation": null
-      },
-      {
         "id": 71,
         "type": "sprite",
         "content": "75f6977bfe29b3ab7ec7d89000ce3e2c.png",
@@ -563,6 +555,14 @@
         "content": "81242f80210ec50208d45b1736345ab7.png",
         "width": 40,
         "height": 40,
+        "animation": null
+      },
+      {
+        "id": 73,
+        "type": "sprite",
+        "content": "b9a9b0c1dc63bbb5b3357285888014b3.png",
+        "width": 64,
+        "height": 64,
         "animation": null
       }
     ]
@@ -1682,6 +1682,21 @@
         "outer": 0
       },
       "tile": 72
+    },
+    {
+      "id": 22,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 73
     }
   ],
   "grid": [
@@ -3655,13 +3670,21 @@
       },
       {
         "block": 21,
-        "tags": [],
+        "tags": [
+          "locator red_sigil_0"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 22
+          }
+        ]
       },
       {
         "block": 19,
@@ -4650,7 +4673,9 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "locator spawn_red_sigil_0_ghost"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -4746,7 +4771,8 @@
         "upperblock": 0,
         "tags": [
           "item book_glyphs",
-          "locator m0_book_sigils_target"
+          "locator m0_book_glyphs_target",
+          "event m0_book_glyphs_taken"
         ],
         "mark": {
           "color": "cyan",
@@ -11829,7 +11855,7 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 5,
+    "x": 19,
     "y": 8,
     "angle": 0
   },

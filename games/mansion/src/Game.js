@@ -38,6 +38,7 @@ class Game extends GameAbstract {
         this.engine.events.on('update', () => this.engineUpdateHandler());
         this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
+        this.engine.events.on('option.changed', ({key, value}) => this.engineOptionChanged(key, value));
         this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS, {game: this});
         this.initScreenHandler();
@@ -115,10 +116,7 @@ class Game extends GameAbstract {
     engineUpdateHandler() {
         // checks for camera energy
         if (this.isCameraRaised()) {
-            const ecto = this.getEctoData();
-            const bGhost = ecto.types.includes('g');
-            const bWraith = ecto.types.includes('w');
-            this.logic.commit(bGhost ? LOGIC_MUTATIONS.INC_ENERGY : LOGIC_MUTATIONS.DEPLETE_ENERGY);
+            //this.logic.commit(bGhost ? LOGIC_MUTATIONS.INC_ENERGY : LOGIC_MUTATIONS.DEPLETE_ENERGY);
             this.syncCameraStore();
         }
     }
@@ -143,6 +141,13 @@ class Game extends GameAbstract {
             if (i >= 0) {
                 this._activeGhosts.splice(i, 1);
             }
+        }
+    }
+
+    engineOptionChanged(key, value) {
+        switch (key) {
+            case 'screen.width':
+                this.logic.updateCameraWidth(value);
         }
     }
 
@@ -250,17 +255,10 @@ class Game extends GameAbstract {
         return oPhoto;
     }
 
-    filterGhostInSight() {
-        this._activeGhosts.filter(g => {
-            const ds = g.data.sight;
-            return (ds.visible && ds.captureFactor > 0);
-        });
-    }
-
     /**
      * shoot a photo
      */
-    flashCamera() {
+    triggerCamera() {
         const nLastTime = this.logic.prop('getCameraLastShotTime');
         const nThisTime = this.engine.getTime();
         if ((nThisTime - nLastTime) < CONSTS.CAMERA_RETRIGGER_DELAY) {
@@ -278,11 +276,14 @@ class Game extends GameAbstract {
             duration: CONSTS.FLASH_DURATION / 2
         }));
 
-        // checks if ghost or wraith are in sight
-        this.filterGhostInSight().forEach(g => {
-            this._ghostScream.addGhost(g);
-            if (g.data.type === 'w') {
-                this.wraithShot(g);
+        // checks if ghost or wraith are in visibility
+        this._activeGhosts.forEach(g => {
+            const value = this.logic.getGhostValue(g);
+            if (value > 0) {
+                if (g.data.type === 'w') {
+                    this._ghostScream.addGhost(g);
+                    this.wraithShot(g, value);
+                }
             }
         });
 
@@ -295,38 +296,13 @@ class Game extends GameAbstract {
         this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
     }
 
-    getEctoData() {
-        let nEnergy = 0;
-        let nGhostCount = 0;
-        const aTypes = new Set();
-        let nMinDistance = Infinity;
-        this.filterGhostInSight().forEach(g => {
-            const sight = g.data.sight;
-            nEnergy += Math.min(sight.captureFactor, Math.max(0, Interpolator.linear(
-                sight.distance,
-                CONSTS.CAMERA_OPTIMAL_DISTANCE, sight.captureFactor,
-                CONSTS.CAMERA_MAXIMAL_DISTANCE, 0
-            )));
-            aTypes.add(g.data.type);
-            ++nGhostCount;
-            nMinDistance = Math.min(nMinDistance, sight.distance);
-        });
-        return {
-            energy: nEnergy,
-            count: nGhostCount,
-            types: [...aTypes],
-            distance: nMinDistance
-        };
-    }
-
-    wraithShot(wraith) {
+    wraithShot(wraith, fScore) {
         wraith.data.shot = true;
         this.storePhoto(
             CONSTS.PHOTO_TYPE_WRAITH, // type de photo
-            wraith.data.wraith.score, // score de la photo
+            Math.round(wraith.data.wraith.score * fScore), // score de la photo
             wraith.ref,               // information supplémentaire (titre, description)
         );
-
     }
 
     /**

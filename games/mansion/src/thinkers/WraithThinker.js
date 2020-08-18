@@ -71,7 +71,7 @@ class WraithThinker extends GhostThinker {
         ye.setStepCount(duration);
 
         this.setLocation(pFrom.x, pFrom.y);
-        this.updateSightData();
+        this.updateVisibilityData();
     }
 
     /**
@@ -102,7 +102,7 @@ class WraithThinker extends GhostThinker {
         const y = this._easing.y.compute(t).y;
         entity.position.set({x, y});
         this.pulse();
-        this.updateSightData();
+        this.updateVisibilityData();
     }
 
     /**

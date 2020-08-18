@@ -10,5 +10,6 @@ export default {
     getPlayerEnergyMax: state => state.camera.energy.maximum,
 
     getCameraLastShotTime: state => state.camera.lastShotTime,
-    getCameraCaptureRadius: state => state.camera.captureRadius
+    getCameraCaptureRadius: state => state.camera.captureRadius,
+    getCameraWidth: state => state.camera.width
 };

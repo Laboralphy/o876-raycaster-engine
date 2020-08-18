@@ -7,9 +7,13 @@ describe('#reactor', function() {
             gamma: 2
         };
         const r = new Reactor();
+        expect(obj).toBeDefined();
         r.makeReactiveObject(obj);
+        expect(obj).toBeDefined();
         r.clear();
+        expect(obj).toBeDefined();
         expect(obj.alpha).toBe(1);
+        expect(obj).toBeDefined();
         expect(obj.gamma).toBe(2);
         obj.alpha = 2;
         expect(r._log).toEqual({'alpha': true});

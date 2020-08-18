@@ -12,15 +12,18 @@ class VengefulThinker extends GhostThinker {
             },
             "s_spawning": {
                 // lorsque la full opacity est atteinte ...
-                "t_fullOpacity": "s_idle"
+                "t_fullOpacity": "s_idle" // passer en idle (customisable selon thinker)
             },
             "s_kill": {
+                // lorsque mort -> phase de combustion
                 "1": "s_dying"
             },
             "s_dying": {
-                "t_doneDying": "s_fadeOut"
+                // lorsque combustion terminée -> phase de disparition
+                "t_doneDying": "s_despawn"
             },
-            "s_fadeOut": {
+            "s_despawn": {
+                // lorsque disparition terminée -> supression entité
                 "t_doneFadeOut": "s_dead"
             }
         }
@@ -53,6 +56,7 @@ class VengefulThinker extends GhostThinker {
      */
     s_idle() {
         this.pulse();
+        this.updateVisibilityData();
     }
 
     /**
@@ -66,7 +70,7 @@ class VengefulThinker extends GhostThinker {
         this.pulse();
     }
 
-    s_fadeOut() {
+    s_despawn() {
         --this._nOpacity;
         this.setOpacityFlags();
     }

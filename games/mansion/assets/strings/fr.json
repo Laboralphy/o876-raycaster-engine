@@ -61,15 +61,14 @@
     "m0_fire_place": {
       "title": "La cheminée",
       "description": [
-        "Cette cheminée irradie d'une lumière chaude, mais sur pas plus de 3 ou 4 mètres. Au dela de cette distance, l'air est glacial. Les tenèbres environnantes semble contenir et attenuer la lumière, tout en limitant la chaleur.",
-        "La lumière scintille en projetant des ombres, ce qui vous met mal à l'aise."
+        "Cette cheminée irradie d'une lumière chaude, mais sur pas plus de 3 ou 4 mètres. Au dela de cette distance, l'air est glacial."
       ]
     },
 
     "m0_bloody_deadend": {
       "title": "Impasse inquiétante",
       "description": [
-        "Des traces de main sont apparues sur le mur au fond du couloir ; comme si quelqu'un s'était appuyé sur la paroi."
+        "Des traces de mains sont apparues sur le mur au fond du couloir ; comme si quelqu'un s'était appuyé sur la paroi."
       ]
     },
 
@@ -84,7 +83,8 @@
     "w_cowled_skull": {
       "title": "Crâne cagoulé",
       "description": [
-        "L'un des doyens du cultes, mort depuis longtemps. Sa dépouille à été conservée et momifiée."
+        "L'un des doyens du cultes, mort depuis longtemps. Sa dépouille à été conservée et momifiée dans son sarcophage.",
+        "Un cultiste plus chelou que les autres a voulu lui tirer le portrait. Mais en ouvrant le sarcophage, il a ruiné le processus de momification ; et depuis le fantôme cri vengence."
       ]
     }
   }

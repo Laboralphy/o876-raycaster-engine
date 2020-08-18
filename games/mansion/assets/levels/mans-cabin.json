@@ -242,13 +242,6 @@
       "animations": []
     },
     {
-      "id": 69,
-      "src": "assets/textures/751bb364063f7d25d09ccfcc27b29e8f.png",
-      "width": 64,
-      "height": 96,
-      "animations": []
-    },
-    {
       "id": 71,
       "src": "assets/textures/ab456bb95918e94a1ff883d3e26b45b5.png",
       "width": 16,
@@ -260,6 +253,13 @@
       "src": "assets/textures/99b5095887bb42054e6e18ef1f9f6c91.png",
       "width": 40,
       "height": 40,
+      "animations": []
+    },
+    {
+      "id": 73,
+      "src": "assets/textures/8e9acea400cdb8aa9bd4151943358e1a.png",
+      "width": 64,
+      "height": 64,
       "animations": []
     }
   ],
@@ -455,6 +455,14 @@
     {
       "id": 21,
       "tileset": 72,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 22,
+      "tileset": 73,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -3618,6 +3626,14 @@
       }
     },
     {
+      "x": 14,
+      "y": 5,
+      "w": {
+        "tileset": 73,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 11,
       "y": 6,
       "e": {
@@ -3691,7 +3707,7 @@
     }
   ],
   "camera": {
-    "x": 5,
+    "x": 19,
     "y": 8,
     "z": 1,
     "angle": 0
@@ -3729,6 +3745,13 @@
       ]
     },
     {
+      "x": 14,
+      "y": 5,
+      "tags": [
+        "locator red_sigil_0"
+      ]
+    },
+    {
       "x": 10,
       "y": 6,
       "tags": [
@@ -3758,11 +3781,19 @@
       ]
     },
     {
+      "x": 13,
+      "y": 8,
+      "tags": [
+        "locator spawn_red_sigil_0_ghost"
+      ]
+    },
+    {
       "x": 22,
       "y": 8,
       "tags": [
         "item book_glyphs",
-        "locator m0_book_sigils_target"
+        "locator m0_book_glyphs_target",
+        "event m0_book_glyphs_taken"
       ]
     },
     {

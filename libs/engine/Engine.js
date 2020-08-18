@@ -98,8 +98,8 @@ class Engine {
         this._tilesets = {};
         this._timeMod = 0;
         this._time = 0;
-        this._rc.events.on('option.changed', ({key}) => {
-            this.updateRaycasterOption(key);
+        this._rc.events.on('option.changed', ({key, value}) => {
+            this.updateRaycasterOption(key, value);
         });
         this._tm.events.on('tagenter', event => this._tagEnter(event));
         this._tm.events.on('tagleave', event => this._tagLeave(event));
@@ -118,12 +118,13 @@ class Engine {
     /**
      * One of the raycaster options has changed value, we should check it here
      */
-    updateRaycasterOption(key) {
+    updateRaycasterOption(key, value) {
         switch (key) {
             case 'metrics.spacing':
                 this._cellSize = this._rc.options.metrics.spacing;
                 break;
         }
+        this.events.emit('option.changed', {key, value});
     }
 
 

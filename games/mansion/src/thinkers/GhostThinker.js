@@ -1,8 +1,10 @@
 import MoverThinker from "libs/engine/thinkers/MoverThinker";
 import * as RC_CONSTS from "libs/raycaster/consts";
-import Easing from "libs/easing";
 import * as CONSTS from "../consts";
 import Geometry from "libs/geometry";
+import Bresenham from "libs/bresenham";
+
+const PULSE_MAP = [2 ,3, 4, 3];
 
 class GhostThinker extends MoverThinker {
 
@@ -64,7 +66,7 @@ class GhostThinker extends MoverThinker {
      */
     pulse() {
         ++this._nTime;
-        this._nOpacity = (this._nTime & 1) + 3;
+        this._nOpacity = PULSE_MAP[(this._nTime >> 1) & 3];
         this.setOpacityFlags();
     }
 
@@ -99,33 +101,77 @@ class GhostThinker extends MoverThinker {
         this._nTimeOut = this.engine.getTime() + n;
     }
 
-    updateSightData() {
+    /**
+     * Updates ghost visibility data
+     * That means, all data aimed at resolving how many energy a ghost worth
+     */
+    updateVisibilityData() {
         const entity = this.entity;
-        if (!('sight' in entity.data)) {
-            entity.data.sight = {
-                visible: false,
-                captureFactor: 0,
-                distance: 0,
+        if (!('visibility' in entity.data)) {
+            entity.data.visibility = {
+                visible: false, // ghost is visible (even partially) ?
+                offset: 0, // last rendered position of the ghost sprite
+                size: 0, // apparent size of ghost
+                distance: 0, // distance from player to ghost
             };
         }
-        const nScrWidth = this.engine.raycaster.renderCanvas.width >> 1;
-        const data = entity.data.sight;
-        const aVisibleSectors = this.engine.raycaster.visibleCells;
-        const bVisible = data.visible = !!entity.sector && aVisibleSectors.isMarked(entity.sector.x, entity.sector.y);
+        const vis = entity.data.visibility;
+        // visible or not visible ?
+        const bVisible = vis.visible = !!entity.sector && this.engine.raycaster.visibleCells.isMarked(entity.sector.x, entity.sector.y);
+        if (!bVisible) {
+            // no need to proceed
+            return;
+        }
+        // distance from player to ghost
         const oPlayerPos = this.target.position;
         const oGhostPos = entity.position;
-        data.distance = Geometry.distance(oPlayerPos.x, oPlayerPos.y, oGhostPos.x, oGhostPos.y);
-        if (bVisible) {
-            const r = entity.sprite.lastRendered;
-            const fGhostPos = Math.abs(r.dx + (r.dw / 2) - nScrWidth);
-            const fCaptSize = this.context.game.logic.prop('getCameraCaptureRadius')
-                * CONSTS.CAMERA_CIRCLE_SIZE
-                * nScrWidth;
-            data.captureFactor = Math.max(0, 1 - fGhostPos / fCaptSize);
-        } else {
-            data.captureFactor = 0;
-        }
+        vis.distance = Geometry.distance(oPlayerPos.x, oPlayerPos.y, oGhostPos.x, oGhostPos.y);
+
+        // ghost position on screen
+        const r = entity.sprite.lastRendered;
+        vis.offset = r.dx;
+        vis.size = r.dw;
     }
+
+	testSolid(x, y) {
+		return !this.testWalkable(x, y);
+	}
+
+	testWalkable(x, y) {
+        const c = this.context.game.engine.getCellType(x, y);
+        return c === RC_CONSTS.PHYS_NONE;
+	}
+
+
+    /**
+     * Renvoie true si le sujet peut voir la cible.
+     * pour que la fonction renvoie true il faut que le sujet puisse voir la cible
+     * ceci prend en compte l'invisibilité de la cible,
+     * le niveau de detection et l'aveuglement du sujet,
+     * les obstacle muraux qui cacheraient éventuellement la cible
+     * Si on spécifié les coordonnées d'une secteur, celui ci sera utilisée
+     * sinon on utilisera le secteur du mobile
+     * @param oTarget cible qu'on cherche à voir
+     * @return boolean
+     */
+    isEntityVisible(oTarget) {
+        const oMe = this.entity;
+        const xMe = oMe.sector.x;
+        const yMe = oMe.sector.y;
+        if (!this.testWalkable(xMe, yMe)) {
+            return false;
+        }
+        const xTarget = oTarget.sector.x;
+        const yTarget = oTarget.sector.y;
+        return Bresenham.line(
+            xMe,
+            yMe,
+            xTarget,
+            yTarget,
+            (x, y) => this.testWalkable(x, y));
+    }
+
+
 }
 
 

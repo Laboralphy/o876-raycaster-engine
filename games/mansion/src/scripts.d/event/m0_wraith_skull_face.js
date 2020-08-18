@@ -2,7 +2,7 @@
 faire apparaitre le wraith mais uniquement si la photo correspondant à été prise et si on est du bon coté de la porte
  */
 export function main(game, remove, x, y) {
-    game.runScript('action.spawnWraith', 'w_cowled_skull', 'wraith_skull_face', 5000, 1000);
+    game.runScript('action.spawnWraith', 'w_cowled_skull', 'wraith_skull_face', 60000, 1000);
     remove();
     return;
     if (!game.album.hasTakenPhoto('m0_bloody_deadend')) {

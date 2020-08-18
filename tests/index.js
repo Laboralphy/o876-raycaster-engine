@@ -14,3 +14,4 @@ require('./TagGridTest');
 require('./PaintingTest');
 require('./FilterManagerTest');
 require('./JsonBlobzTest');
+require('./RangeColliderTest');

@@ -11,7 +11,7 @@ export const CAMERA_RETRIGGER_DELAY = 1000; // minimum number of milliseconds be
 export const CAMERA_EXAMINATION_RANGE = 512; // maximum distance a photo may be taken for examination purpose
 export const CAMERA_CIRCLE_SIZE = 0.15;
 export const CAMERA_OPTIMAL_DISTANCE = 512;
-export const CAMERA_MAXIMAL_DISTANCE = 1024;
+export const CAMERA_MAXIMAL_DISTANCE = 768;
 export const PHOTO_ALBUM_WIDTH = 240;
 export const PHOTO_ALBUM_HEIGHT = 240;
 

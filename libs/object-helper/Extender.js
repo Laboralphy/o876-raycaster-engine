@@ -74,7 +74,7 @@ class Extender {
         const aBranches = sBranch.split('.');
         aBranches.pop();
         aBranches.reduce((prev, next) => {
-            if (!(next in prev) || prev[next] === null || typeof prev[next] !== 'object') {
+            if (!(next in prev) || prev[next] === null || typeof prev[next] !== 'object') {
                 prev[next] = {};
             }
             return prev[next];
@@ -102,6 +102,9 @@ class Extender {
      * @return {*}
      */
     static objectGet(oObj, sBranch) {
+        if (oObj === undefined) {
+            throw new Error('objectGet : undefined object')
+        }
         const {node, key} = Extender.objectReachBranch(oObj, sBranch);
         return node[key];
     }
