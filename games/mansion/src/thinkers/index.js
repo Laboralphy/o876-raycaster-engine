@@ -1,9 +1,9 @@
 import PlayerThinker from "./PlayerThinker";
-import VengefulThinker from "./VengefulThinker";
+import ChaserThinker from "./ChaserThinker";
 import WraithThinker from "./WraithThinker";
 
 export default {
     PlayerThinker,
-    VengefulThinker,
+    ChaserThinker,
     WraithThinker
 };

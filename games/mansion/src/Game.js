@@ -36,7 +36,7 @@ class Game extends GameAbstract {
         this._ghostScream = new GhostScreamer();
         this.log('initialize event handlers');
         this.engine.events.on('update', () => this.engineUpdateHandler());
-        this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
+        //this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.engine.events.on('option.changed', ({key, value}) => this.engineOptionChanged(key, value));
         this.log('initialize thinkers');
@@ -116,7 +116,7 @@ class Game extends GameAbstract {
     engineUpdateHandler() {
         // checks for camera energy
         if (this.isCameraRaised()) {
-            //this.logic.commit(bGhost ? LOGIC_MUTATIONS.INC_ENERGY : LOGIC_MUTATIONS.DEPLETE_ENERGY);
+            this.logic.updateCameraEnergy(this._activeGhosts);
             this.syncCameraStore();
         }
     }
@@ -277,15 +277,38 @@ class Game extends GameAbstract {
         }));
 
         // checks if ghost or wraith are in visibility
+        const aGhostDetails = {
+            value: 0,
+            energy: this.logic.prop('getPlayerEnergy'),
+            distance: Infinity,
+            angle: Infinity,
+            targets: 0,
+            shutter: false
+        };
         this._activeGhosts.forEach(g => {
-            const value = this.logic.getGhostValue(g);
-            if (value > 0) {
-                if (g.data.type === 'w') {
-                    this._ghostScream.addGhost(g);
-                    this.wraithShot(g, value);
+            const oScore = this.logic.getGhostScore(g);
+            if (oScore.value > 0) {
+                switch (g.data.type) {
+                    case 'w':
+                        this._ghostScream.addGhost(g);
+                        this.wraithShot(g, oScore.value);
+                        break;
+
+                    case 'v':
+                        this._ghostScream.addGhost(g);
+                        this.ghostShot(g, oScore.value);
+                        aGhostDetails.value += Math.round(g.data.score * oScore.value);
+                        aGhostDetails.distance = Math.min(aGhostDetails.distance, oScore.distance);
+                        aGhostDetails.angle = Math.min(aGhostDetails.angle, oScore.precision);
+                        ++aGhostDetails.targets;
+                        break;
                 }
             }
         });
+        if (aGhostDetails.targets > 0) {
+            console.log(aGhostDetails);
+            this.ui.displayPhotoDetailScore(aGhostDetails);
+        }
 
         this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
         // pour tous les fantomes present dans la ligne de mire
@@ -296,13 +319,17 @@ class Game extends GameAbstract {
         this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
     }
 
-    wraithShot(wraith, fScore) {
-        wraith.data.shot = true;
+    wraithShot(entity, fScore) {
+        entity.data.shot = true;
         this.storePhoto(
             CONSTS.PHOTO_TYPE_WRAITH, // type de photo
-            Math.round(wraith.data.wraith.score * fScore), // score de la photo
-            wraith.ref,               // information supplémentaire (titre, description)
+            Math.round(entity.data.wraith.score * fScore), // score de la photo
+            entity.ref,               // information supplémentaire (titre, description)
         );
+    }
+
+    ghostShot(entity, fScore) {
+        this.logic.damageGhost(entity, fScore);
     }
 
     /**

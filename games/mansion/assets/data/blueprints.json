@@ -4,12 +4,16 @@
     "ref": "g_bashed_boy",
     "tileset": "g_bashed_boy",
     "scale": 3,
-    "thinker": "VengefulThinker",
+    "thinker": "ChaserThinker",
     "size": 16,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
       "type": "v",
-      "ref": "g_bashed_boy"
+      "ref": "g_bashed_boy",
+      "speed": 2,
+      "vitality": 100,
+      "power": 5,
+      "score": 100
     }
   },
   {

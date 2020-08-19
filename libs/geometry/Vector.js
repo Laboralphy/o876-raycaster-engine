@@ -32,10 +32,10 @@ class Vector {
     /**
 	 * Mutable !
 	 * Modifie x et y
-     * @param x
-     * @param y
+     * @param x {number|Vector}
+     * @param [y] {number}
      */
-	set(x, y) {
+	set(x, y = 0) {
 		if (x instanceof Vector) {
 			return this.set(x.x, x.y);
 		}

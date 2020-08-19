@@ -5,6 +5,7 @@ import * as Interpolator from "libs/interpolator";
 import * as CONSTS from "./consts";
 import Geometry from "libs/geometry";
 import RangeCollider from "libs/range-collider";
+import * as LOGIC_MUTATIONS from "./store/modules/logic/mutation-types";
 
 class Logic extends StoreAbstract {
     constructor(store) {
@@ -94,9 +95,9 @@ class Logic extends StoreAbstract {
      * Gets how much energy a ghost worth
      * and how many points the ghost photo will score
      * @param entity {Entity}
-     * @return {number} ghost value from 0 (no value) to 1 (maximum possible value)
+     * @return {{value, precision, distance}} ghost value from 0 (no value) to 1 (maximum possible value)
      */
-    getGhostValue(entity) {
+    getGhostScore(entity) {
         const {visible, size, offset, distance} = entity.data.visibility;
         if (!visible) {
             return 0;
@@ -118,7 +119,32 @@ class Logic extends StoreAbstract {
         const fDistance = distance < CONSTS.CAMERA_OPTIMAL_DISTANCE
             ? 1
             : Logic._linear_0_1(distance, CONSTS.CAMERA_MAXIMAL_DISTANCE, CONSTS.CAMERA_OPTIMAL_DISTANCE);
-        return fFactor * fPrecision * fDistance;
+        return {
+            value: fFactor * fPrecision * fDistance,
+            precision: fPrecision,
+            distance
+        };
+    }
+
+    damageGhost(entity, amount) {
+        entity.data.vitality -= 25 * amount;
+        console.log(entity.data.vitality)
+        if (entity.data.vitality <= 0) {
+            entity.thinker.kill();
+        }
+    }
+
+    updateCameraEnergy(aGhosts) {
+        const nEnergy = aGhosts.reduce((prev, curr) => {
+            const oScore = this.getGhostScore(curr);
+            return prev + oScore.value;
+        }, 0);
+        if (nEnergy > 0) {
+            this.commit(LOGIC_MUTATIONS.INC_ENERGY, {amount: nEnergy});
+        } else {
+            this.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+        }
+
     }
 }
 

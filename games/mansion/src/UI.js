@@ -64,6 +64,24 @@ class UI extends StoreAbstract {
         this.dispatch(UI_ACTIONS.HIDE_UI_FRAME, {});
     }
 
+    displayPhotoDetailScore({
+                                value,
+                                energy,
+                                distance,
+                                angle,
+                                targets,
+                                shutter
+                            }) {
+        this.dispatch(UI_ACTIONS.SET_SHOT, {
+            value,
+            energy,
+            distance,
+            angle,
+            targets,
+            shutter
+        });
+    }
+
     displayPhotoScore(nValue) {
         this.dispatch(UI_ACTIONS.SET_SHOT, {
             value: nValue,

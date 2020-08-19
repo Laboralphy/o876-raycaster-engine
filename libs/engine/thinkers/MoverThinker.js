@@ -16,9 +16,9 @@ class MoverThinker extends Thinker {
         this._cwc = null;
         this._xSector = -1;
         this._ySector = -1;
-        this.defineTransistions({
-            "s_move": {}
-        });
+        this.transitions = {
+            "s_move": []
+        };
     }
 
     /**
@@ -113,10 +113,10 @@ class MoverThinker extends Thinker {
 
     /**
      * Change movement speed
-     * @param sx {number}
-     * @param sy {number}
+     * @param sx {number|Vector}
+     * @param [sy] {number}
      */
-    setSpeed(sx, sy) {
+    setSpeed(sx, sy = 0) {
         if (sx instanceof Vector) {
             this.changeMovement();
             this._speed.set(sx);
@@ -125,8 +125,6 @@ class MoverThinker extends Thinker {
             this._speed.set(sx, sy);
         }
     }
-
-
 
 
     /**

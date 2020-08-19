@@ -8,14 +8,13 @@ class Thinker {
     constructor() {
         this._context = null;
         this._timeStart = null;
-        this._duration = 0;
         this._entity = null;
         this._engine = null;
         this._automaton = new Automaton();
         this._automaton.instance = this;
-        this.defineTransistions({
-            "idle": {}
-        });
+        // this.defineTransistions({
+        //     "idle": []
+        // });
     }
 
     get context() {
@@ -71,14 +70,6 @@ class Thinker {
         if (sMeth in this) {
             this[sMeth]();
         }
-    }
-
-    /**
-     * Defines a a duration of the current state. After the duration, the state goes to "_newState"
-     * @param n {number}
-     */
-    duration(n) {
-        this._duration = n;
     }
 
     /**

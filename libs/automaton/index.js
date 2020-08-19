@@ -13,35 +13,37 @@
  const sm = new Automaton();
 
  class Client {
-     test1(x) {
-         return x < 0;
+      test1() {
+         return this.x < 0;
      }
 
-     state1(...args) {
-          console.log('we are in state1:', ...args);
+     state1() {
+          console.log('we are in state1:');
      }
 
-     state2(...args) {
-          console.log('we are in state2:', ...args);
+     state2() {
+          console.log('we are in state2:');
      }
  }
 
  sm.transitions = {
-    'state1': {
-        'test1': 'state2'
+    'state1': [
+        ['test1', 'state2']
     },
     'state2': {
     }
  };
 
  sm.instance = new Client();
- sm.process(5);
- sm.process(9);
- sm.process(4);
- sm.process(1);
- sm.process(0);
- sm.process(-1); // <-- will go to state 2
- sm.process(-3); // <-- is now in state 2
+ sm.instance.x = 1;
+ sm.process();
+ sm.process();
+ sm.process();
+ sm.process();
+ sm.process();
+ sm.instance.x = -1;
+ sm.process(); // <-- will go to state 2
+ sm.process(); // <-- is now in state 2
  sm.process(0);
 
 
@@ -120,7 +122,10 @@ class Automaton {
      */
     set transitions(value) {
         this._transitions = value;
-        this._state = Object.keys(value).shift();
+        if (this._state === '') {
+            this._state = Object.keys(value).shift();
+            this.log('initial state', this._state);
+        }
     }
 
     /**
@@ -153,7 +158,7 @@ class Automaton {
      * @return {boolean} outcome
      * @private
      */
-    _invokeTransition(test, state, ...args) {
+    _invokeTransition(test, state) {
         if (test == 0) {
             this.log('test', test, false);
             return false;
@@ -163,7 +168,7 @@ class Automaton {
             return true;
         }
         if (test in this._instance) {
-            if (this._instance[test](...args)) {
+            if (this._instance[test]()) {
                 this.log('test', test, true, 'new state', state);
                 this._state = state;
                 return true;
@@ -176,21 +181,36 @@ class Automaton {
         return false;
     }
 
-    _invokeState(s, ...args) {
-        this.log('state', s, ...args);
+    _invokeState(s) {
         if (s in this._instance) {
-            this._instance[s](...args);
+            this.log('state', s);
+            this._instance[s]();
+        } else {
+            this.log('state', s, '(virtual)');
         }
     }
 
-    process(...args) {
+    process() {
         const state = this._state;
-        this._invokeState(state, ...args);
+        if (Array.isArray(state)) {
+            state.forEach(s => {
+                this._state = s;
+                this._invokeState(s);
+            });
+        } else {
+            this._invokeState(state);
+        }
         // compute transition
         if (state in this._transitions) {
             const transitions = this._transitions[state];
-            for (let t in transitions) {
-                if (transitions.hasOwnProperty(t) && this._invokeTransition(t, transitions[t], ...args)) {
+            for (let i = 0, l = transitions.length; i < l; ++i) {
+                const transition = transitions[i];
+                if (transition.length < 2) {
+                    throw new Error('transition must have at least 2 items [test, state]');
+                }
+                const test = transition[0];
+                const states = transition.slice(1);
+                if (this._invokeTransition(test, states)) {
                     break;
                 }
             }

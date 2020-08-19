@@ -3,6 +3,7 @@ import * as RC_CONSTS from "libs/raycaster/consts";
 import * as CONSTS from "../consts";
 import Geometry from "libs/geometry";
 import Bresenham from "libs/bresenham";
+import Easing from "libs/easing";
 
 const PULSE_MAP = [2 ,3, 4, 3];
 
@@ -14,6 +15,31 @@ class GhostThinker extends MoverThinker {
         this._nTime = 0;
         this._nTimeOut = 0;
         this._target = null; // cible designée
+        this.transitions = {
+            "s_init": [
+                ["1", "s_spawn"]
+            ],
+
+            // faire varier l'opacité pour apparition
+            "s_spawn": [
+                // lorsque la full opacity est atteinte ...
+                ["t_full_opacity", "s_idle"]
+            ],
+
+            // diminuer l'opacité
+            "s_despawn": [
+                // lorsque l'opacité est à 0 on dead
+                ["t_zero_opacity", "s_dead"]
+            ]
+        };
+    }
+
+    set transitions(value) {
+        super.transitions = {
+            ...this.automaton._transitions,
+            ...value
+        };
+        this.automaton.state = 's_init';
     }
 
     get target() {
@@ -60,7 +86,6 @@ class GhostThinker extends MoverThinker {
         }
     }
 
-
     /**
      * makes the ghost pulse
      */
@@ -93,12 +118,23 @@ class GhostThinker extends MoverThinker {
     }
 
     moveForward() {
-        const oGhostPos = this.entity.position;
-        oGhostPos.set(oGhostPos.front(this._speed));
+        this.pulse();
+        this.updateVisibilityData();
+        const ms = this.entity.data.speed;
+        const a = this.entity.position.angle;
+        this.setSpeed(
+            ms * Math.cos(a),
+            ms * Math.sin(a)
+        );
+        this.s_move();
     }
 
     setTimeOut(n) {
         this._nTimeOut = this.engine.getTime() + n;
+    }
+
+    isTimeOut() {
+        return this._nTimeOut <= this.engine.getTime();
     }
 
     /**
@@ -171,7 +207,83 @@ class GhostThinker extends MoverThinker {
             (x, y) => this.testWalkable(x, y));
     }
 
+    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
+    s_init() {
+        // décider de la marche à suivre
+        // un spectre va toujours se déplacer en ligne droite, ou bien rester immobile
+        // - déterminer le point d'apparition et le point de destination
+
+        const {x, y} = this.entity.position;
+        this.setLocation(x, y);
+        this.updateVisibilityData();
+        this._nOpacity = 0;
+        this.setOpacityFlags();
+        this.elapsedTime = 0;
+    }
+
+    /**
+     * The ghost is spawning, the alpha prop is increasing
+     */
+    s_spawn() {
+        ++this._nOpacity;
+        this.setOpacityFlags();
+    }
+
+    /**
+     * The ghost is vanishing
+     */
+    s_despawn() {
+        --this._nOpacity;
+        this.setOpacityFlags();
+    }
+
+    /**
+     * The ghost will cease to exist
+     */
+    s_dead() {
+        if (!this.entity.dead) {
+            this.entity.dead = true;
+        }
+    }
+
+    s_time_1000() {
+        this.setTimeOut(1000);
+    }
+
+    s_time_500() {
+        this.setTimeOut(500);
+    }
+
+    s_time_250() {
+        this.setTimeOut(250);
+    }
+
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+
+    /**
+     * tests if sprite has reach full opacity
+     * @returns {boolean}
+     */
+    t_full_opacity() {
+        return this._nOpacity >= 4;
+    }
+
+    t_zero_opacity() {
+        return this._nOpacity <= 0;
+    }
+
+    /**
+     * returns true if the time is out
+     * @returns {boolean}
+     */
+    t_time_out() {
+        return this.engine.getTime() >= this._nTimeOut;
+    }
 }
 
 

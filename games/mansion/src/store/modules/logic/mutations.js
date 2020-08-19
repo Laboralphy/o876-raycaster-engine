@@ -59,8 +59,9 @@ export default {
      * Increase camera charged energy
      * @param state
      */
-    [TYPES.INC_ENERGY]: function(state) {
+    [TYPES.INC_ENERGY]: function(state, {amount}) {
         const e = state.camera.energy;
+        e.rate = amount;
         e.value = Math.min(e.maximum, e.value + e.rate);
     },
 
