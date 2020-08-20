@@ -19,6 +19,7 @@ import * as Interpolator from "libs/interpolator";
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
+import DataBuilder from "./DataBuilder";
 
 class Game extends GameAbstract {
     init() {
@@ -36,7 +37,7 @@ class Game extends GameAbstract {
         this._ghostScream = new GhostScreamer();
         this.log('initialize event handlers');
         this.engine.events.on('update', () => this.engineUpdateHandler());
-        //this.engine.events.on('level.fetch', () => this.engineUpdateHandler());
+        this.engine.events.on('level.fetch', payload => this.engineLevelFetchHandler(payload));
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.engine.events.on('option.changed', ({key, value}) => this.engineOptionChanged(key, value));
         this.log('initialize thinkers');
@@ -44,6 +45,7 @@ class Game extends GameAbstract {
         this.initScreenHandler();
         this._locators = {};
         this._activeGhosts = [];
+        this._spectralTable = null;
         window.GAME = this;
     }
 
@@ -157,6 +159,20 @@ class Game extends GameAbstract {
         if (sEvent in oEvents) {
             this.runScript(oEvents[sEvent], entity, ...args);
         }
+    }
+
+    async engineLevelFetchHandler(payload) {
+        const {ref, level, blueprints, tilesets} = payload;
+        if (this._spectralTable === null) {
+            this._spectralTable = await this.engine.fetchData('spectral-table');
+        }
+        if (!(ref in this._spectralTable)) {
+            throw new Error('this level "' + ref + '" has no entry in the spectral table');
+        }
+        const st = this._spectralTable[ref];
+        blueprints(DataBuilder.buildWraithBlueprints(st.wraiths));
+        blueprints(DataBuilder.buildGhostBlueprints(st.ghosts));
+        this.log('this level has', st.wraiths.length, 'wraith(s) and', st.ghosts.length, 'ghost(s)');
     }
 
 
