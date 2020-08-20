@@ -3707,10 +3707,10 @@
     }
   ],
   "camera": {
-    "x": 19,
-    "y": 8,
+    "x": 10,
+    "y": 26,
     "z": 1,
-    "angle": 0
+    "angle": 4.71238898038469
   },
   "tags": [
     {
@@ -3725,7 +3725,8 @@
       "y": 4,
       "tags": [
         "lock",
-        "photo m0_cyan_sigil"
+        "photo m0_cyan_sigil",
+        "archive m0_cyan_sigil"
       ]
     },
     {
@@ -3762,7 +3763,7 @@
       "x": 19,
       "y": 7,
       "tags": [
-        "locator m0_book_sigils"
+        "locator m0_book_glyphs"
       ]
     },
     {
@@ -3808,7 +3809,7 @@
       "x": 18,
       "y": 14,
       "tags": [
-        "photo fire_place"
+        "photo m0_fire_place"
       ]
     },
     {

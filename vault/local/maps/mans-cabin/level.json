@@ -3358,7 +3358,8 @@
         "upperblock": 15,
         "tags": [
           "lock",
-          "photo m0_cyan_sigil"
+          "photo m0_cyan_sigil",
+          "archive m0_cyan_sigil"
         ],
         "mark": {
           "color": "cyan",
@@ -4403,7 +4404,7 @@
         "block": 14,
         "upperblock": 0,
         "tags": [
-          "locator m0_book_sigils"
+          "locator m0_book_glyphs"
         ],
         "mark": {
           "color": "cyan",
@@ -6667,7 +6668,7 @@
       {
         "block": 25,
         "tags": [
-          "photo fire_place"
+          "photo m0_fire_place"
         ],
         "mark": {
           "color": 0,
@@ -11855,9 +11856,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 19,
-    "y": 8,
-    "angle": 0
+    "x": 10,
+    "y": 26,
+    "angle": 1.5
   },
   "preview": "b39be4b474d27761e1f51d1220d154f1.jpg"
 }

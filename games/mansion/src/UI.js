@@ -65,20 +65,22 @@ class UI extends StoreAbstract {
     }
 
     displayPhotoDetailScore({
-                                value,
-                                energy,
-                                distance,
-                                angle,
-                                targets,
-                                shutter
-                            }) {
+        value,
+        energy,
+        distance,
+        angle,
+        targets,
+        shutter,
+        damage
+    }) {
         this.dispatch(UI_ACTIONS.SET_SHOT, {
             value,
             energy,
             distance,
             angle,
             targets,
-            shutter
+            shutter,
+            damage
         });
     }
 

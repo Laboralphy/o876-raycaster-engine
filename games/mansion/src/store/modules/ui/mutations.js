@@ -38,7 +38,7 @@ export default {
     },
 
     [TYPES.SET_SHOT]: function(state, {
-        value, energy, distance, angle, targets, shutter
+        value, energy, distance, angle, targets, shutter, damage
     }) {
         state.shot.visible = true;
         state.shot.shutter = shutter;
@@ -47,7 +47,9 @@ export default {
         state.shot.angle = angle;
         state.shot.targets = targets;
         state.shot.value = value;
+        state.shot.damage = damage;
     },
+
 
     [TYPES.CLEAR_SHOT]: function(state) {
         state.shot.visible = false;

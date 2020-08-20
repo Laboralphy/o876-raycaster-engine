@@ -12,9 +12,9 @@ import GeometryHelper from "libs/geometry";
 export async function main(game, ref, score = 0) {
     // clue_ref et clue_ref_target sont deux position permettant de prendre une photo dans un autre lieu
     // cible de l'enigme
-    const CLUE_REF_TARGET = ref + '_target';
-    const pos = game.locators[ref].position;
-    const target = game.locators[CLUE_REF_TARGET].position;
+    const refTarget = ref + '_target';
+    const pos = game.getLocator(ref).position;
+    const target = game.getLocator(refTarget).position;
     pos.angle = GeometryHelper.angle(pos.x, pos.y, target.x, target.y);
     const p0 = game.capture();
     const p1 = game.storePhoto(

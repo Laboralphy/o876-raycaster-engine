@@ -116,7 +116,7 @@ class Game extends GameAbstract {
     engineUpdateHandler() {
         // checks for camera energy
         if (this.isCameraRaised()) {
-            this.logic.updateCameraEnergy(this._activeGhosts);
+            this.logic.updateCameraEnergy(this._activeGhosts, this.isAimingCellSupernatural());
             this.syncCameraStore();
         }
     }
@@ -142,12 +142,20 @@ class Game extends GameAbstract {
                 this._activeGhosts.splice(i, 1);
             }
         }
+        this.triggerEntityEvent(entity, 'death');
     }
 
     engineOptionChanged(key, value) {
         switch (key) {
             case 'screen.width':
                 this.logic.updateCameraWidth(value);
+        }
+    }
+
+    triggerEntityEvent(entity, sEvent, ...args) {
+        const oEvents = entity.data.events;
+        if (sEvent in oEvents) {
+            this.runScript(oEvents[sEvent], entity, ...args);
         }
     }
 
@@ -205,17 +213,18 @@ class Game extends GameAbstract {
      * sync camera energy property with store
      */
     syncCameraStore() {
-        this._cameraFilter.energy.current = this.logic.prop('getPlayerEnergy');
-        this._cameraFilter.energy.max = this.logic.prop('getPlayerEnergyMax');
+        this._cameraFilter.energy.current = this.logic.prop('getCameraEnergy');
+        this._cameraFilter.energy.max = this.logic.prop('getCameraEnergyMax');
+        this._cameraFilter.energy.forcePulse = this.logic.prop('isCameraAimingSupernatural');
     }
 
     /**
-     * checks if a "photo" tagged cell is currently aimed
-     * if so, triggers the corresponding script
+     * Renvoie la référence du tag photo de la cellule actuellemenbt visée en mode photo
      */
-    checkAimedCell() {
+    getAimedCellPhotoTags() {
         const engine = this.engine;
         const oAimedCell = engine.raycaster.aimedCell;
+        let aPhotos = null;
         if (('xCell' in oAimedCell) && ('yCell' in oAimedCell)) {
             const p = engine.camera.position;
             const d = Index.distance(p.x, p.y, oAimedCell.x, oAimedCell.y);
@@ -226,18 +235,39 @@ class Game extends GameAbstract {
                 const aTags = tagGrid.cell(x, y);
                 aTags.forEach(id => {
                     const tags = tagGrid.getTagCommand(id);
-                    const [command, item] = tags;
+                    const [command, ref] = tags;
                     if (command === 'photo') {
-                        const oPhotoScripts = Scripts.photo;
-                        const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
-                        if (item in oPhotoScripts) {
-                            oPhotoScripts[item].main(this, remove, x, y);
+                        if (aPhotos === null) {
+                            aPhotos = [];
                         }
+                        aPhotos.push({ref, id, x, y});
                     }
                 });
             }
-            //this.storePhoto('debug', Math.random() * 100 + 100 | 0, 'blip blap blop bloup debug' + (Math.random() * 10 + 10 | 0).toString());
         }
+        return aPhotos;
+    }
+
+    isAimingCellSupernatural() {
+        return this.getAimedCellPhotoTags() !== null;
+    }
+
+    /**
+     * checks if a "photo" tagged cell is currently aimed
+     * if so, triggers the corresponding script
+     */
+    execAimedCellPhotoScript() {
+        const aPhotos = this.getAimedCellPhotoTags();
+        if (aPhotos === null) {
+            return;
+        }
+        const oPhotoScripts = Scripts.photo;
+        aPhotos.forEach(({ref, id, x, y}) => {
+            const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
+            if (ref in oPhotoScripts) {
+                oPhotoScripts[ref].main(this, remove, x, y);
+            }
+        });
     }
 
     /**
@@ -276,14 +306,36 @@ class Game extends GameAbstract {
             duration: CONSTS.FLASH_DURATION / 2
         }));
 
+        this.processCapturedEntities();
+
+        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+        // pour tous les fantomes present dans la ligne de mire
+        // appliquer un filter ghostshot
+        // calculer les dégats
+        // lancer des script pour les spectres
+        this.execAimedCellPhotoScript();
+        this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
+    }
+
+    /**
+     * Parcoure la liste des entity dans le champ de vision.
+     * Effectue un traitement spécifique à chaque type d'entité
+     * Pour chaque entité :
+     * 1) verifier le type
+     * 2) composer et afficher le détail des scores
+     * 3) déclencher l'évènement de capture
+     */
+    processCapturedEntities() {
+
         // checks if ghost or wraith are in visibility
         const aGhostDetails = {
             value: 0,
-            energy: this.logic.prop('getPlayerEnergy'),
+            energy: this.logic.prop('getCameraEnergy'),
             distance: Infinity,
             angle: Infinity,
             targets: 0,
-            shutter: false
+            shutter: false,
+            damage: 0,
         };
         this._activeGhosts.forEach(g => {
             const oScore = this.logic.getGhostScore(g);
@@ -296,7 +348,7 @@ class Game extends GameAbstract {
 
                     case 'v':
                         this._ghostScream.addGhost(g);
-                        this.ghostShot(g, oScore.value);
+                        aGhostDetails.damage += this.ghostShot(g, oScore.value);
                         aGhostDetails.value += Math.round(g.data.score * oScore.value);
                         aGhostDetails.distance = Math.min(aGhostDetails.distance, oScore.distance);
                         aGhostDetails.angle = Math.min(aGhostDetails.angle, oScore.precision);
@@ -306,17 +358,8 @@ class Game extends GameAbstract {
             }
         });
         if (aGhostDetails.targets > 0) {
-            console.log(aGhostDetails);
             this.ui.displayPhotoDetailScore(aGhostDetails);
         }
-
-        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
-        // pour tous les fantomes present dans la ligne de mire
-        // appliquer un filter ghostshot
-        // calculer les dégats
-        // lancer des script pour les spectres
-        this.checkAimedCell();
-        this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
     }
 
     wraithShot(entity, fScore) {
@@ -329,7 +372,11 @@ class Game extends GameAbstract {
     }
 
     ghostShot(entity, fScore) {
-        this.logic.damageGhost(entity, fScore);
+        const nDamage = this.logic.damageGhost(entity, fScore);
+        if (nDamage > 0) {
+            this.triggerEntityEvent(entity, 'damaged', nDamage);
+        }
+        return nDamage;
     }
 
     /**
@@ -365,7 +412,7 @@ class Game extends GameAbstract {
         oCamera.data.camera = false;
         oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
         this._cameraFilter.hide();
-        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+        this.logic.shutdownCameraIndicators();
         this.syncCameraStore();
     }
 
@@ -451,11 +498,15 @@ class Game extends GameAbstract {
      */
     spawnGhost(sRef, xCell, yCell = undefined) {
         const oGhost = yCell === undefined && (typeof xCell === 'string')
-            ? this.engine.createEntity(sRef, this.locators[xCell].position)
+            ? this.engine.createEntity(sRef, this.getLocator(xCell).position)
             : this.engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
         this._activeGhosts.push(oGhost);
         oGhost.thinker.target = this.player;
-        console.log(oGhost.thinker.context);
+        oGhost.data.events = {
+            death: null,
+            attack: null,
+            damaged: null
+        }
         return oGhost;
     }
 
@@ -587,11 +638,12 @@ class Game extends GameAbstract {
         this.logGroupEnd();
     }
 
-    /**
-     * Renvoie la position d'un tag "locator"
-     */
-    get locators() {
-        return this._locators;
+    getLocator(sRef) {
+        if (sRef in this._locators) {
+            return this._locators[sRef];
+        } else {
+            throw new Error('invalid locator reference : "' + sRef + '"');
+        }
     }
 }
 

@@ -21,6 +21,7 @@ export default {
     shot: { // information sur le dernier tir
         visible: false,
         value: 0, // valeur du score,
+        damage: 0, // valeur des dégats
         distance: 0, // distance à laquelle à été prise la photo
         angle: 0, // difference d'angle entre la camera et le fantome
         energy: 0, // quantité d'energy disponible lors du shot

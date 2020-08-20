@@ -35,7 +35,7 @@ class WraithThinker extends GhostThinker {
         // - déterminer le point d'apparition et le point de destination
         super.s_init();
         const data = this.entity.data.wraith;
-        const pFrom = this.entity.location;
+        const pFrom = this.entity.position;
         const pTo = data.destination;
         if (pTo === undefined) {
             throw new Error('WraithThinker : "destination" must be specified in wraith data');
@@ -74,7 +74,7 @@ class WraithThinker extends GhostThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
 
-    t_arrival() {
+    t_arrived() {
         return this._easing.x.over() && this._easing.y.over();
     }
 

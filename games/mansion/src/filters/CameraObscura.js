@@ -28,13 +28,14 @@ const DURATION_RAISING = 400;
 const STYLE_BG_CIRCLE = 'rgba(255, 255, 255, 0.5)';
 const STYLE_FG_CIRCLE = 'rgba(128, 255, 255, 1)';
 const STYLE_SHAD_CIRCLE = 'rgba(0, 128, 255, 0.25)';
+const STYLE_FG_CIRCLE_FP = 'rgba(192, 192, 192, 1)';
+const STYLE_SHAD_CIRCLE_FP = 'rgba(128, 128, 128, 0.25)';
 
 const CIRCLE_STD_RADIUS = CONSTS.CAMERA_CIRCLE_SIZE;
 
 const CIRCLE_NORMAL_ALPHA = 0.75;
 
 class CameraObscura extends AbstractFilter {
-
     constructor() {
         super();
         CanvasHelper
@@ -54,7 +55,8 @@ class CameraObscura extends AbstractFilter {
         this._oEnergyData = {
             current: 25,
             max: 100,
-            radius: 1
+            radius: 1,
+            forcePulse: false
         };
         this._oManagedEnergyData = new Reactor(this._oEnergyData);
 
@@ -64,6 +66,11 @@ class CameraObscura extends AbstractFilter {
         this._nPulseTime = 0;
         this._fAlpha = CIRCLE_NORMAL_ALPHA;
     }
+
+    get forcePulse() {
+        return this._oEnergyData.forcePulse;
+    }
+
 
     get y() {
         switch (this._nState) {
@@ -101,7 +108,10 @@ class CameraObscura extends AbstractFilter {
                 this.processing(STATE_HIDDEN);
                 break;
         }
-        if (this._oEnergyData.current === this._oEnergyData.max) {
+        if (this.forcePulse) {
+            ++this._nPulseTime;
+            this._fAlpha = 0.25 * Math.sin(this._nPulseTime / 2.5) + 0.75;
+        } else if (this._oEnergyData.current === this._oEnergyData.max) {
             ++this._nPulseTime;
             this._fAlpha = 0.25 * Math.sin(this._nPulseTime / 1.25) + 0.75;
         } else {
@@ -130,8 +140,9 @@ class CameraObscura extends AbstractFilter {
     }
 
     renderCircle() {
+        const fp = this.forcePulse;
         const data = this._oEnergyData;
-        const energy = data.current;
+        const energy = fp ? data.max : data.current;
         const energyMax = data.max;
         const PI_M_2 = Math.PI * 2;
         const PI_D_2 = Math.PI / 2;
@@ -151,13 +162,13 @@ class CameraObscura extends AbstractFilter {
         ctx.stroke();
         ctx.closePath();
         ctx.beginPath();
-        ctx.strokeStyle = STYLE_SHAD_CIRCLE;
+        ctx.strokeStyle = fp ? STYLE_SHAD_CIRCLE_FP : STYLE_SHAD_CIRCLE;
         ctx.lineWidth = 8;
         ctx.arc(x, y, r, -PI_D_2, fAngle);
         ctx.stroke();
         ctx.closePath();
         ctx.beginPath();
-        ctx.strokeStyle = STYLE_FG_CIRCLE;
+        ctx.strokeStyle = fp ? STYLE_FG_CIRCLE_FP : STYLE_FG_CIRCLE;
         ctx.lineWidth = 2;
         ctx.arc(x, y, r, -PI_D_2, fAngle);
         ctx.stroke();
@@ -183,7 +194,7 @@ class CameraObscura extends AbstractFilter {
         ctx.save();
 
         // 2 blur
-        const bAlphaChanging = state === STATE_FALLING || state === STATE_RAISING;
+        const bAlphaChanging = state === STATE_FALLING || state === STATE_RAISING;
         if (bAlphaChanging) {
             ctx.globalAlpha = 1 - (y * 2);
         }

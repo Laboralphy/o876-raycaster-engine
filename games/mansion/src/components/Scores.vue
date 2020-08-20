@@ -1,6 +1,7 @@
 <template>
     <div :class="'ui scores ' + (isShotVisible ? 'visible' : 'hidden')">
-        <div class="value">{{ STRINGS.SHOT_VALUE }} {{ getShotScore }}pt{{ getShotScore > 1 ? 's' : '' }}</div>
+        <div class="value damage" v-if="isShotDamaging">{{ STRINGS.SHOT_DAMAGE }} {{ getShotScore }}pt{{ getShotScore > 1 ? 's' : '' }}</div>
+        <div class="value" v-else>{{ STRINGS.SHOT_VALUE }} {{ getShotScore }}pt{{ getShotScore > 1 ? 's' : '' }}</div>
         <div class="fatal" v-if="isShotFatal">{{ STRINGS.SHOT_FATAL }}</div>
         <div v-if="isShotZero">{{ STRINGS.SHOT_ZERO }}</div>
         <div v-if="isShotCore">{{ STRINGS.SHOT_CORE }}</div>
@@ -31,7 +32,8 @@
                 'isShotClose',
                 'isShotDouble',
                 'isShotTriple',
-                'isShotMultiple'
+                'isShotMultiple',
+                'isShotDamaging'
              ])
         }
     }
@@ -49,6 +51,11 @@
     .value {
         font-size: 1.3em;
         font-weight: bold;
+    }
+
+    .damage {
+      color: yellow;
+      text-shadow: #ee9b63 0 0 0.5em;
     }
 
     .fatal {

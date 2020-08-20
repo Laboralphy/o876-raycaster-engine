@@ -127,14 +127,25 @@ class Logic extends StoreAbstract {
     }
 
     damageGhost(entity, amount) {
-        entity.data.vitality -= 25 * amount;
-        console.log(entity.data.vitality)
+        const nDamage = Math.ceil(
+            amount
+            * this.prop('getCameraEnergy')
+            * this.prop('getCameraPower')
+            / 100
+        );
+        entity.data.vitality -= nDamage;
         if (entity.data.vitality <= 0) {
             entity.thinker.kill();
         }
+        return nDamage;
     }
 
-    updateCameraEnergy(aGhosts) {
+    /**
+     * Change camera energy indicator to match the store value
+     * @param aGhosts {Entity[]} ghost that are actually being aimed by the camera
+     * @param bSupernatural {boolean} true : la camaera est en train de viser un phenomène surnaturel
+     */
+    updateCameraEnergy(aGhosts, bSupernatural) {
         const nEnergy = aGhosts.reduce((prev, curr) => {
             const oScore = this.getGhostScore(curr);
             return prev + oScore.value;
@@ -142,9 +153,14 @@ class Logic extends StoreAbstract {
         if (nEnergy > 0) {
             this.commit(LOGIC_MUTATIONS.INC_ENERGY, {amount: nEnergy});
         } else {
-            this.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+            this.commit(LOGIC_MUTATIONS.DEC_ENERGY);
         }
+        this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: bSupernatural});
+    }
 
+    shutdownCameraIndicators() {
+        this.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+        this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: false});
     }
 }
 

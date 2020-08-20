@@ -1,3 +1,4 @@
+const CONSTS = require('../../consts')
 /**
  * La photo doit faire place au passage secret
  * @param game
@@ -7,6 +8,6 @@
  */
 
 export function main(game, remove, x, y) {
-    game.runScript('action.takeArtPhoto', 'w_cowled_skull', 1000);
+    game.runScript('action.takeArtPhoto', 'w_cowled_skull', CONSTS.PHOTO_SCORE_COMMON);
     remove();   // supprimer le tag, qui ne doit servir qu'une fois.
 }

@@ -1,3 +1,5 @@
+const CONSTS = require('../../consts');
+
 /**
  * La photo doit faire place au passage secret
  * @param game
@@ -13,7 +15,7 @@ export function main(game, remove, x, y) {
         return;
     }
     if (game.engine.isDoorClosed(x, y)) {
-        game.runScript('action.resolveClueUnlockSecret', 'm0_bloody_deadend', 1000);
+        game.runScript('action.resolveClueUnlockSecret', 'm0_bloody_deadend', CONSTS.PHOTO_SCORE_COMMON);
         remove();   // supprimer le tag, qui ne doit servir qu'une fois.
     }
 }

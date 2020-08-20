@@ -89,5 +89,9 @@ export default {
 
     [TYPES.SET_CAMERA_WIDTH]: function(state, {value}) {
         state.camera.width = value;
+    },
+
+    [TYPES.AIMING_SUPERNATURAL]: function(state, {value}) {
+        state.camera.sensor.supernatural = value;
     }
 }
