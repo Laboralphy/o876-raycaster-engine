@@ -161,19 +161,7 @@ class Game extends GameAbstract {
         }
     }
 
-    async engineLevelFetchHandler(payload) {
-        const {ref, level, blueprints, tilesets} = payload;
-        if (this._spectralTable === null) {
-            this._spectralTable = await this.engine.fetchData('spectral-table');
-        }
-        if (!(ref in this._spectralTable)) {
-            throw new Error('this level "' + ref + '" has no entry in the spectral table');
-        }
-        const st = this._spectralTable[ref];
-        blueprints(DataBuilder.buildWraithBlueprints(st.wraiths));
-        blueprints(DataBuilder.buildGhostBlueprints(st.ghosts));
-        this.log('this level has', st.wraiths.length, 'wraith(s) and', st.ghosts.length, 'ghost(s)');
-    }
+
 
 
 //                _       _
@@ -660,6 +648,23 @@ class Game extends GameAbstract {
         } else {
             throw new Error('invalid locator reference : "' + sRef + '"');
         }
+    }
+
+    async loadLevel(name) {
+        if (this._spectralTable === null) {
+            this._spectralTable = await this.engine.fetchData('spectral-table');
+        }
+        if (!(name in this._spectralTable)) {
+            throw new Error('this level "' + ref + '" has no entry in the spectral table');
+        }
+        const ghostData = await this.engine.fetchData('ghosts');
+        const {wraiths, ghosts} = this._spectralTable[name];
+        const bpWraiths = DataBuilder.buildWraithBlueprints(wraiths);
+        const bpGhosts = DataBuilder.buildGhostBlueprints(ghosts, ghostData);
+        console.log(bpGhosts)
+        const blueprints = [...bpWraiths, ...bpGhosts];
+        this.log('this level has', wraiths.length, 'wraith(s) and', ghosts.length, 'ghost(s)');
+        return super.loadLevel(name, {blueprints});
     }
 }
 

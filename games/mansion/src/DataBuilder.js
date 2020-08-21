@@ -1,9 +1,9 @@
 class DataBuilder {
     static buildWraithBlueprints(aWraiths) {
         return aWraiths.map(w => ({
-            "id": w.id,
-            "ref": w.id,
-            "tileset": w.id,
+            "id": w,
+            "ref": w,
+            "tileset": w,
             "scale": 3,
             "thinker": "WraithThinker",
             "size": 16,
@@ -14,8 +14,13 @@ class DataBuilder {
         }))
     }
 
-    static buildGhostBlueprints(aGhosts) {
-        return aGhosts.map(({id, thinker, speed, vitality, power, score, level}) => ({
+    static buildGhostBlueprints(aGhosts, data) {
+        return aGhosts
+            .map(id => {
+                console.log(data)
+                return data.find(d => d.id == id);
+            })
+            .map(({id, thinker, speed, vitality, power, score, level}) => ({
             id,
             ref: id,
             tileset: id,

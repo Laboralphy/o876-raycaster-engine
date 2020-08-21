@@ -234,10 +234,10 @@ class GameAbstract {
      * @param name {string} level name
      * @return {Promise<void>}
      */
-    async loadLevel(name) {
+    async loadLevel(name, extra = {}) {
         this.log('loading level', name);
         this._engine.stopDoomLoop();
-        await this._engine.loadLevel(name);
+        await this._engine.loadLevel(name, extra);
         this.log('data successfuly loaded and parsed');
         this._engine.startDoomLoop();
         this.log('doom loop started');
@@ -259,19 +259,21 @@ class GameAbstract {
         this.log('starting game engine');
         this._runCalled = true;
         this.init();
-        const aLevels = await fetchJSON(this._options.fetchLevelListAction);
-        const aExpLevels = aLevels.filter(level => level.exported);
-        const level = aExpLevels.shift();
-        if (!!level) {
-            try {
-                await this.loadLevel(level.name);
-                this.log('level', level.name, 'successfully loaded');
-            } catch (e) {
-                console.error(e);
-                this.displayMessage('Error: ' + e.message);
+        if (this._options.autoload) {
+            const aLevels = await fetchJSON(this._options.fetchLevelListAction);
+            const aExpLevels = aLevels.filter(level => level.exported);
+            const level = aExpLevels.shift();
+            if (!!level) {
+                try {
+                    await this.loadLevel(level.name);
+                    this.log('level', level.name, 'successfully loaded');
+                } catch (e) {
+                    console.error(e);
+                    this.displayMessage('Error: ' + e.message);
+                }
+            } else {
+                this.displayMessage('Error: There is no published level !');
             }
-        } else {
-            this.displayMessage('Error: There is no published level !');
         }
     }
 }

@@ -1155,10 +1155,12 @@ class Engine {
 
         // creates blueprints
         let nBp = TEXTURE_COUNT;
+        console.log(data.blueprints)
         for (let i = 0, l = data.blueprints.length; i < l; ++i) {
             const oThatBP =  data.blueprints[i];
             showProgress('creating blueprints');
             const resref = oThatBP.id;
+            if (resref === undefined) console.log(oThatBP)
             const oBP = await this.createBlueprint(resref, oThatBP, data);
             if (typeof oBP.ref === 'string' && oBP.ref.length > 0) {
                 this._refs[oBP.ref] = resref;
@@ -1383,50 +1385,16 @@ class Engine {
      * @param sName {string}
      * @return {Promise<void>}
      */
-    async loadLevel(sName) {
-        let pLevel = null;
-        const pTilesets = await this.fetchData('tilesets');
-        const pBlueprints = await this.fetchData('blueprints');
-        const p = {
-            ref: sName,
-            /**
-             * defines level definition data. The returned value may be a valid level data structure
-             * or a promise that resolve into a valid level data structure.
-             * each time the function is called, it replaces the previous data set
-             * @param pl {*} the level definition data.
-             */
-            level: function(pl) {
-                pLevel = pl instanceof Promise ? pl : Promise.resolve(pl);
-            },
-            /**
-             * add a tilesets definition data. Each data set is appended to the list
-             * @param pts {*} tileset definition data
-             */
-            tilesets: function(pts) {
-                pTilesets.push(pts instanceof Promise ? pts : Promise.resolve(pts))
-            },
-            /**
-             * add a blueprint definition data. Each data set is appended to the list
-             * @param pbp {*} blueprint definition data
-             */
-            blueprints: function(pbp) {
-                pBlueprints.push(pbp instanceof Promise ? pbp : Promise.resolve(pbp))
-            }
-        };
-        // the event will provide level(), tilesets(), and blueprints() functions
-        // each of this function will adds
-        this._events.emit('level.fetch', p);
-        const pData = !!pLevel ? pLevel : this.fetchLevel(sName);
-        const data = await pData;
-        const aTilesets = await Promise.all(pTilesets);
-        const aBlueprints = await Promise.all(pBlueprints);
-        const tilesets = [
-            ...aTilesets
-        ];
-        const blueprints = [
-            ...aBlueprints
-        ];
-        return this.buildLevel(data, { tilesets, blueprints });
+    async loadLevel(sName, extra = {}) {
+        // fetched tilesets
+//        const fts = await this.fetchData('tilesets');
+//        const tilesets = 'tilesets' in extra ? [...fts, ...extra.tilesets] : fts;
+        // fetched blueprints
+//        const fbp = await this.fetchData('blueprints');
+//        const blueprints = 'blueprints' in extra ? [...fbp, ...extra.blueprints] : fbp;
+
+        const data = await this.fetchLevel(sName);
+        return this.buildLevel(data, extra);
     }
 
 }
