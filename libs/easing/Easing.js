@@ -135,8 +135,8 @@ class Easing {
             x = this._x = Math.max(0, Math.min(this._xMax, x));
         }
         const f = this._f;
-        if (f) {
-            const v = this._f(x / this._xMax);
+        if (f && typeof f === 'function') {
+            const v = f(x / this._xMax);
             this._y = this._yTo * v + (this._yFrom * (1 - v));
             return this;
         } else {

@@ -67,12 +67,14 @@
                     context.fillStyle = 'white';
                     context.fillText('generating data', x, y - h);
                     const data = await generate(level, appendImages);
+                    // n'utilisons pas le thinker fournit par le niveau
+                    data.camera.thinker = '';
                     this.setLevelGeneratedData({value: data});
                     engine = new Engine();
                     engine.events.on('door.open', ({x, y, context}) => console.log('door open at', x, y));
                     engine.events.on('door.closing', ({x, y, context}) => console.log('door closing at', x, y));
                     engine.events.on('door.closed', ({x, y, context}) => console.log('door closed at', x, y));
-                    engine.events.on('level.loading', (phase, progress) => {
+                    engine.events.on('level.loading', ({phase, progress}) => {
                         context.fillStyle = 'black';
                         context.fillRect(x, y - h, w, h);
                         context.fillStyle = 'white';

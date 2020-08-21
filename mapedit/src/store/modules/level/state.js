@@ -34,7 +34,8 @@ export default {
     startpoint: {
         x: -1,
         y: -1,
-        angle: 0
+        angle: 0,
+        thinker: ''
     },
     preview: ''
 };

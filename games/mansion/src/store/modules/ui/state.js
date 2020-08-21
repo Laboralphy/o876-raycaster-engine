@@ -35,5 +35,9 @@ export default {
         title: '',
         value: 0,
         description: ['']
+    },
+
+    mainmenu: {
+        visible: false,
     }
 };

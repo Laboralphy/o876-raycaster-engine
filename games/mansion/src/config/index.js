@@ -5,5 +5,6 @@ export default {
         PlayerThinker
     },
     cameraThinker: 'PlayerThinker',
-    mouseSensitivity: 0.01
+    mouseSensitivity: 0.01,
+    autoload: false
 };

@@ -320,6 +320,10 @@ export default {
     },
 
     [ACTION.SHIFT_GRID]: ({commit}, {direction}) => {
-        commit(ACTION.SHIFT_GRID, {direction});
+        commit(MUTATION.SHIFT_GRID, {direction});
+    },
+
+    [ACTION.SET_CAMERA_THINKER]: ({commit}, {value}) => {
+        commit(MUTATION.SET_CAMERA_THINKER, {value});
     }
 }

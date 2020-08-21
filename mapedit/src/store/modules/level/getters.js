@@ -64,5 +64,6 @@ export default {
     getFlagSmooth: state => state.flags.smooth,
     getFlagStretch: state => state.flags.stretch,
     getFlagExport: state => state.flags.export,
-    getLevelStorageUsage: state => JSON.stringify(state).length
+    getLevelStorageUsage: state => JSON.stringify(state).length,
+    getCameraThinker: state => state.startpoint.thinker
 }

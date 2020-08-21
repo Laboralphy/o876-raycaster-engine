@@ -445,7 +445,8 @@ function generateCamera(input) {
         x: input.startpoint.x,
         y: input.startpoint.y,
         z: 1,
-        angle: input.startpoint.angle * Math.PI
+        angle: input.startpoint.angle * Math.PI,
+        thinker: input.startpoint.thinker
     };
 }
 

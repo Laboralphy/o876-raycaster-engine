@@ -1,5 +1,5 @@
 <template>
-    <div class="ui-menu-window ui-size-60-90 album">
+    <div class="ui-panel-window ui-size-60-90 album">
         <TitleAndCo :title="STRINGS.MAIN_TAB_ALBUM">
             <PhotoTypes></PhotoTypes>
         </TitleAndCo>

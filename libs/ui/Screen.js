@@ -26,6 +26,7 @@ class Screen {
         };
         this._surface = null;
         this._overlay = null;
+        this._enablePointerlock = true;
         const pl = new PointerLock();
         pl.init();
         pl.on('mousemove', event => this._events.emit('mousemove', event));
@@ -139,9 +140,11 @@ class Screen {
                 this.overlay.addEventListener('click', this._handlers.click);
             } else {
                 this._handlers.click = event => {
-                    const oClicked = this._getClickEventOffset(event);
-                    this._events.emit('click', oClicked);
-                    this._pointerlock.requestPointerLock(this.surface);
+                    if (this._enablePointerlock) {
+                        const oClicked = this._getClickEventOffset(event);
+                        this._events.emit('click', oClicked);
+                        this._pointerlock.requestPointerLock(this.surface);
+                    }
                 };
                 this.surface.addEventListener('click', this._handlers.click);
             }

@@ -45,8 +45,7 @@ class Game extends GameAbstract {
         this.initScreenHandler();
         this._locators = {};
         this._activeGhosts = [];
-        this._spectralTable = null;
-        window.GAME = this;
+        this.loadLevel('mans-intro');
     }
 
 //
@@ -633,9 +632,14 @@ class Game extends GameAbstract {
         for (let s in oScriptActions) {
             const script = oScriptActions[s];
             actions.forEach(a => {
+                // "a" vaut 'push', 'enter', 'exit'
                 if (a in script) {
-                    this.log('script', s, a)
-                    ee.on('tag.' + s + '.' + a,({x, y, parameters, remove}) => script[a](this, remove, x, y, ...parameters));
+                    this.log('script', s, a);
+                    ee.on('tag.' + s + '.' + a,({entity, x, y, parameters, remove}) => {
+                        if (entity === this.player) {
+                            script[a](this, remove, x, y, ...parameters)
+                        }
+                    });
                 }
             });
         }
@@ -648,23 +652,6 @@ class Game extends GameAbstract {
         } else {
             throw new Error('invalid locator reference : "' + sRef + '"');
         }
-    }
-
-    async loadLevel(name) {
-        if (this._spectralTable === null) {
-            this._spectralTable = await this.engine.fetchData('spectral-table');
-        }
-        if (!(name in this._spectralTable)) {
-            throw new Error('this level "' + ref + '" has no entry in the spectral table');
-        }
-        const ghostData = await this.engine.fetchData('ghosts');
-        const {wraiths, ghosts} = this._spectralTable[name];
-        const bpWraiths = DataBuilder.buildWraithBlueprints(wraiths);
-        const bpGhosts = DataBuilder.buildGhostBlueprints(ghosts, ghostData);
-        console.log(bpGhosts)
-        const blueprints = [...bpWraiths, ...bpGhosts];
-        this.log('this level has', wraiths.length, 'wraith(s) and', ghosts.length, 'ghost(s)');
-        return super.loadLevel(name, {blueprints});
     }
 }
 

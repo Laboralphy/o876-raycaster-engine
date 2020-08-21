@@ -548,7 +548,7 @@ class Engine {
      * @param y {number} position of cell y
      * @param bAutoclose {boolean} if true, then the door will auto close after a certain time (see DOOR_MAINTAIN_DURATION constant)
      */
-    openDoor(x, y, bAutoclose) {
+    openDoor(x, y, bAutoclose = true) {
         if (this.isDoorLocked(x, y)) {
             this.events.emit('door.locked', {x, y});
             return;
@@ -1155,12 +1155,10 @@ class Engine {
 
         // creates blueprints
         let nBp = TEXTURE_COUNT;
-        console.log(data.blueprints)
         for (let i = 0, l = data.blueprints.length; i < l; ++i) {
             const oThatBP =  data.blueprints[i];
             showProgress('creating blueprints');
             const resref = oThatBP.id;
-            if (resref === undefined) console.log(oThatBP)
             const oBP = await this.createBlueprint(resref, oThatBP, data);
             if (typeof oBP.ref === 'string' && oBP.ref.length > 0) {
                 this._refs[oBP.ref] = resref;
@@ -1322,6 +1320,10 @@ class Engine {
             }
         };
 
+        const miniPause = t => new Promise(resolve => {
+            setTimeout(() => resolve(), t);
+        });
+
         // DECALS
         for (let iDecal = 0, nDecalLength = data.decals.length; iDecal < nDecalLength; ++iDecal) {
             const decal = data.decals[iDecal];
@@ -1331,6 +1333,7 @@ class Engine {
             await installDecal(decal, 's');
             await installDecal(decal, 'f');
             await installDecal(decal, 'c');
+            await miniPause(16);
             showProgress('applying decals');
         }
 
@@ -1383,18 +1386,22 @@ class Engine {
     /**
      * Loads a level
      * @param sName {string}
+     * @param extra {{tilesets: [], blueprints: []}} extra json data to be loaded as tilesets and blueprints
      * @return {Promise<void>}
      */
-    async loadLevel(sName, extra = {}) {
-        // fetched tilesets
-//        const fts = await this.fetchData('tilesets');
-//        const tilesets = 'tilesets' in extra ? [...fts, ...extra.tilesets] : fts;
-        // fetched blueprints
-//        const fbp = await this.fetchData('blueprints');
-//        const blueprints = 'blueprints' in extra ? [...fbp, ...extra.blueprints] : fbp;
-
+    async loadLevel(sName, extra= {}) {
+        const xts = 'tilesets' in extra ? extra.tilesets : [];
+        const xbp = 'blueprints' in extra ? extra.blueprints : [];
+        const fts = [
+            ...await this.fetchData('tilesets'),
+            ...xts
+        ];
+        const fbp = [
+            ...await this.fetchData('blueprints'),
+            ...xbp
+        ];
         const data = await this.fetchLevel(sName);
-        return this.buildLevel(data, extra);
+        return this.buildLevel(data, {tilesets: fts, blueprints: fbp});
     }
 
 }

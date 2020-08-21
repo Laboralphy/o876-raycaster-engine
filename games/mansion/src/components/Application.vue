@@ -1,6 +1,5 @@
 <template>
     <div class="ui-components" data-request-pointer-lock="">
-
         <section v-if="isHUDVisible">
             <HUD pos="tl">
                 <Vitals></Vitals>
@@ -13,9 +12,8 @@
             <HUD pos="tr"><p>top-right</p></HUD>
             <HUD pos="br"><p>bottom right</p></HUD>
         </section>
-
         <UIFrame v-if="isUIFrameVisible"></UIFrame>
-
+        <MainMenu v-if="isMainMenuVisible"></MainMenu>
         <Popups></Popups>
     </div>
 </template>
@@ -27,17 +25,19 @@
     import {createNamespacedHelpers} from 'vuex';
     import Scores from "./Scores.vue";
     import UIFrame from "./UIFrame.vue";
+    import MainMenu from "./MainMenu.vue";
 
     const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
 
     export default {
         name: "Application",
-        components: {UIFrame, Scores, Vitals, HUD, Popups},
+        components: {MainMenu, UIFrame, Scores, Vitals, HUD, Popups},
         computed: {
             ...uiMapGetters([
                 'isHUDVisible',
                 'isShotVisible',
-                'isUIFrameVisible'
+                'isUIFrameVisible',
+                'isMainMenuVisible'
             ])
         }
     }

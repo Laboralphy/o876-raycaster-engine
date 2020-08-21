@@ -1,6 +1,6 @@
 <template>
     <div class="photo-details" @click.self="close">
-        <div class="container ui-menu-window">
+        <div class="container ui-panel-window">
             <TitleAndCo :title="title"><div class="score">{{ computedScore }}</div></TitleAndCo>
             <hr />
             <Photo :content="content" :caption="''" :big="true"></Photo>

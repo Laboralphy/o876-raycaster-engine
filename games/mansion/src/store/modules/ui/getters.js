@@ -5,6 +5,7 @@ export default {
     isHUDVisible: state => state.hud.visible,
     isUIFrameVisible: state => state.uiframe.visible,
     isUIFrameFullyVisible: state => state.uiframe.fullyVisible,
+    isMainMenuVisible: state => state.mainmenu.visible,
 
     isShotVisible: state => state.shot.visible,
     isShotFatal: state => state.shot.targets > 0 && state.shot.shutter,

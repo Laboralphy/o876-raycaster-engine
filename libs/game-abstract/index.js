@@ -127,19 +127,11 @@ class GameAbstract {
     }
 
     keyUpHandler(key) {
-        const engine = this._engine;
-        // warn the camera thinker
-        if (!!engine && !!engine.camera) {
-            engine.camera.thinker.keyUp(key)
-        }
+        this.invokeCameraThinkerFunction('keyUp', key);
     }
 
     keyDownHandler(key) {
-        const engine = this._engine;
-        // warn the camera thinker
-        if (!!engine && !!engine.camera) {
-            engine.camera.thinker.keyDown(key)
-        }
+        this.invokeCameraThinkerFunction('keyDown', key);
     }
 
     initListeners() {
@@ -158,10 +150,7 @@ class GameAbstract {
         });
         if (this._options.pointerlock) {
             this.screen.on('mousemove', event => {
-                const engine = this._engine;
-                if (!!engine && !!engine.camera) {
-                    engine.camera.thinker.look(event.x);
-                }
+                this.invokeCameraThinkerFunction('look', event.x);
             });
         }
     }
@@ -180,8 +169,17 @@ class GameAbstract {
         Extender.objectExtends(this._options, options, true);
     }
 
+    invokeCameraThinkerFunction(sFunction, ...args) {
+        if (this._engine && this._engine.camera && this._engine.camera.thinker) {
+            const t = this._engine.camera.thinker;
+            if (typeof t[sFunction] === 'function') {
+                t[sFunction](...args);
+            }
+        }
+    }
+
     setMouseSensitivity(f) {
-        this._engine.camera.thinker.setLookFactor(f);
+        this.invokeCameraThinkerFunction('setLookFactor', f);
     }
 
     progressFunction(phase, f) {
@@ -232,6 +230,7 @@ class GameAbstract {
     /**
      * loads a level and starts the doomloop.
      * @param name {string} level name
+     * @param extra {object} extra json data to be loaded as tilesets and blueprints
      * @return {Promise<void>}
      */
     async loadLevel(name, extra = {}) {
@@ -265,6 +264,7 @@ class GameAbstract {
             const level = aExpLevels.shift();
             if (!!level) {
                 try {
+                    this.log('autoloading level', level.name);
                     await this.loadLevel(level.name);
                     this.log('level', level.name, 'successfully loaded');
                 } catch (e) {

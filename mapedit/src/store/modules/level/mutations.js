@@ -406,6 +406,10 @@ export default {
         state.startpoint.angle = angle;
     },
 
+    [MUTATION.SET_CAMERA_THINKER]: (state, {value}) => {
+        state.startpoint.thinker = value;
+    },
+
     [MUTATION.SHIFT_GRID]: (state, {direction}) => {
         const gl = state.grid.length;
         if (gl === 0) {

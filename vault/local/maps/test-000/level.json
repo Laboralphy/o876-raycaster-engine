@@ -1712,7 +1712,8 @@
   "startpoint": {
     "x": 6,
     "y": 8,
-    "angle": 1.5
+    "angle": 1.5,
+    "thinker": ""
   },
   "preview": "34cbf95f65252c72a5ac0ae425e24828.jpg"
 }

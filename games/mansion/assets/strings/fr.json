@@ -32,6 +32,55 @@
   "MAIN_TAB_INV": "Inventaire",
   "MAIN_TAB_NOTES": "Notes",
 
+  "GAME_TITLE": "Patelin Chelou",
+  "GAME_SUB_TITLE": "Tout un village mystérieusement vidé de ses habitants... Mystère ! Allons piquer tout ce qu'il reste !",
+  "MAIN_MENU_OPTION_START": "Démarrer",
+  "MAIN_MENU_PLOT_SUMMARY": {
+    "step1": [
+      "Perdu au coeur de la forêt...",
+      "Un village sinistre."
+    ],
+    "step2": [
+      "Plus aucune âme qui vive.",
+      "Plus aucun habitant... Tous disparus."
+    ],
+    "step3": [
+      "D'après vos recherches, ce patelin,",
+      "abritait une communauté de dégénérés,",
+      "adeptes de magie noire, sorcellerie,",
+      "et toutes ces conneries."
+    ],
+    "step4": [
+      "La nuit, de sombres assemblées,",
+      "et des cérémonies impies,",
+      "se seraient tenues dans ces bois.",
+      "...C'est ce qu'on dit."
+    ],
+    "step5": [
+      "A cause de cette réputation détestable",
+      "personne n'ose s'aventurer aux alentours.",
+      "Même après la disparition des villageois."
+    ],
+    "step6": [
+      "Un investigateur rationnel comme vous",
+      "n'a que faire de ces ragots."
+    ],
+    "step7": [
+      "Vous décidez d'explorer le village,",
+      "car si votre hypothèse est juste..."
+    ],
+    "step8": [
+      "Il pourrait bien y avoir là bas,",
+      "de grandes quantités de reliques,",
+      "de talismans et grimoires mystérieux"
+    ],
+    "step9": [
+      "Sans plus personne pour les garder,",
+      "il ne tient qu'à vous de mettre",
+      "la main sur ces trésors..."
+    ]
+  },
+
   "ALBUM_TAB_EMPTY": "Cette section est vide.",
 
   "EVENT_PHOTO_MOGRIFY": "La photo s'est altérée mystérieusement !",
