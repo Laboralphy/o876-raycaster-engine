@@ -102,5 +102,9 @@ export default {
     [MUTATION.SET_USER]: (state, {auth, name}) => {
         state.user.name = name;
         state.user.auth = auth;
+    },
+
+    [MUTATION.UTILPANEL_SET_USE_REGION]: (state, {value}) => {
+        state.models.utilPanel.useRegion = value;
     }
 }

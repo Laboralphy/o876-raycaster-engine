@@ -20,6 +20,52 @@ function getTileStructure(type, state) {
     }
 }
 
+function shiftArray(grid, direction) {
+    switch (direction) {
+        case 'n': {
+            const r = grid.shift();
+            grid.push(r);
+            break;
+        }
+
+        case 's': {
+            const r = grid.pop();
+            grid.unshift(r);
+            break;
+        }
+
+        case 'e': {
+            grid.forEach(row => {
+                const cell = row.pop();
+                row.unshift(cell);
+            });
+            break;
+        }
+
+        case 'w': {
+            grid.forEach(row => {
+                const cell = row.shift();
+                row.push(cell);
+            });
+            break;
+        }
+    }
+}
+
+function moveStartpoint(sp, width, height, direction) {
+    const xy = {
+        n: {x: 0, y: -1},
+        e: {x: 1, y: 0},
+        w: {x: -1, y: 0},
+        s: {x: 0, y: 1},
+    };
+    const {x, y} = xy[direction];
+    if (sp.x >= 0 && sp.y >= 0) {
+        sp.x = (sp.x + x + width) % width;
+        sp.y = (sp.y + y + height) % height;
+    }
+}
+
 export default {
     [MUTATION.ADD_TILE]: (state, {id, type, content, width, height}) => {
         const tiles = getTileStructure(type, state);
@@ -415,46 +461,41 @@ export default {
         if (gl === 0) {
             return;
         }
-        const xy = {
-            n: {x: 0, y: -1},
-            e: {x: 1, y: 0},
-            w: {x: -1, y: 0},
-            s: {x: 0, y: 1},
-        };
-        const {x, y} = xy[direction];
-        const sp = state.startpoint;
-        if (sp.x >= 0 && sp.y >= 0) {
-            sp.x = (sp.x + x + gl) % gl;
-            sp.y = (sp.y + y + gl) % gl;
-        }
-        switch (direction) {
-            case 'n': {
-                const r = state.grid.shift();
-                state.grid.push(r);
-                break;
-            }
-
-            case 's': {
-                const r = state.grid.pop();
-                state.grid.unshift(r);
-                break;
-            }
-
-            case 'e': {
-                state.grid.forEach(row => {
-                    const cell = row.pop();
-                    row.unshift(cell);
-                });
-                break;
-            }
-
-            case 'w': {
-                state.grid.forEach(row => {
-                    const cell = row.shift();
-                    row.push(cell);
-                });
-                break;
-            }
-        }
+        moveStartpoint(state.startpoint, gl, gl, direction);
+        shiftArray(state.grid, direction);
     },
+
+    [MUTATION.SHIFT_REGION]: function(state, {direction, region}) {
+        const gl = state.grid.length;
+        if (gl === 0) {
+            return;
+        }
+        const localGrid = [];
+        const {x1, y1, x2, y2} = region;
+        // copier la partie de grille qui va bouger
+        for (let y = 0; y < (y2 - y1 + 1); ++y) {
+            const row = [];
+            for (let x = 0; x < (x2 - x1 + 1); ++x) {
+                row.push(state.grid[y + y1][x + x1]);
+            }
+            localGrid.push(row);
+        }
+        if (state.startpoint.x >= x1
+            && state.startpoint.x <= x2
+            && state.startpoint.y >= y1
+            && state.startpoint.y <= y2
+        ) {
+            const localStartPoint = {x: state.startpoint.x - x1, y: state.startpoint.y - y1};
+            moveStartpoint(localStartPoint, x2 - x1 + 1, y2 - y1 + 1, direction);
+            state.startpoint.x = localStartPoint.x + x1;
+            state.startpoint.y = localStartPoint.y + y1;
+        }
+        shiftArray(localGrid, direction);
+        // replacer la grille
+        for (let y = 0; y < (y2 - y1 + 1); ++y) {
+            for (let x = 0; x < (x2 - x1 + 1); ++x) {
+                state.grid[y + y1][x + x1] = localGrid[y][x];
+            }
+        }
+    }
 }

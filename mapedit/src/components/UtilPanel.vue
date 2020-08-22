@@ -8,6 +8,7 @@
         <div>
             <h3>Map shifting</h3>
             <p>Shifts the entire map on the grid by one cell up, left, right or down. Cells that are shift out from one side of the grid, reappear to the opposite side.</p>
+            <label><input v-model="modelUseRegion" type="checkbox" />Only shift cells *inside* the selected region.</label>
             <div class="shiftpad">
                 <table>
                     <tr>
@@ -64,9 +65,8 @@
     import ArrowUpThickIcon from "vue-material-design-icons/ArrowUpThick.vue";
     import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
 
-
     const {mapActions: levelActions, mapGetters: levelGetters} = createNamespacedHelpers('level');
-    const {mapActions: editorActions, mapMutations: editorMutations} = createNamespacedHelpers('editor');
+    const {mapActions: editorActions, mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
 
     export default {
         name: "UtilPanel",
@@ -83,6 +83,19 @@
           ...levelGetters([
               'getLevelStorageUsage'
           ]),
+          ...editorGetters([
+              'getUtilPanelUseRegion'
+          ]),
+
+          modelUseRegion: {
+            get: function() {
+              return this.getUtilPanelUseRegion;
+            },
+            set: function(value) {
+              this.setUseRegion({value});
+            }
+          },
+
           getUsage100: function() {
               const f = 100 * this.getLevelStorageUsage / 48000000;
               if (f < 0.01) {
@@ -95,7 +108,12 @@
 
         methods: {
             ...levelActions({
-                shiftGrid: LEVEL_ACTIONS.SHIFT_GRID,
+              shiftGrid: LEVEL_ACTIONS.SHIFT_GRID,
+              shiftRegion: LEVEL_ACTIONS.SHIFT_REGION,
+            }),
+
+            ...editorMutations({
+                setUseRegion: EDITOR_MUTATIONS.UTILPANEL_SET_USE_REGION,
                 somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
 
@@ -104,7 +122,11 @@
             },
 
             doShiftGrid: function (direction) {
-                this.shiftGrid({direction});
+                if (this.getUtilPanelUseRegion) {
+                  this.shiftRegion({direction});
+                } else {
+                  this.shiftGrid({direction});
+                }
                 this.doChanged();
             }
         }

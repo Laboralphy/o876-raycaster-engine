@@ -323,6 +323,11 @@ export default {
         commit(MUTATION.SHIFT_GRID, {direction});
     },
 
+    [ACTION.SHIFT_REGION]: ({commit, rootGetters}, {direction}) => {
+        const {x1, y1, x2, y2} = rootGetters['editor/getLevelGridSelectedRegion'];
+        commit(MUTATION.SHIFT_REGION, {direction, region: {x1, y1, x2, y2}});
+    },
+
     [ACTION.SET_CAMERA_THINKER]: ({commit}, {value}) => {
         commit(MUTATION.SET_CAMERA_THINKER, {value});
     }

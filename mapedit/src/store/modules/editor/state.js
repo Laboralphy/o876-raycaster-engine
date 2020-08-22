@@ -125,6 +125,10 @@ export default {
 
     models: {
 
+        utilPanel: {
+            useRegion: false
+        },
+
         blockBrowser: {
             selected: null
         },

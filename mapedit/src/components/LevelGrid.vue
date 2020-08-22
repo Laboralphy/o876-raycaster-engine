@@ -222,6 +222,7 @@
     const OBJECT_TYPE_TAG = 'OBJECT_TYPE_TAG';
     const OBJECT_TYPE_MARK = 'OBJECT_TYPE_MARK';
     const OBJECT_TYPE_THING = 'OBJECT_TYPE_THING';
+    const OBJECT_TYPE_UTIL = 'OBJECT_TYPE_UTIL';
 
     export default {
         name: "LevelGrid",
@@ -305,6 +306,9 @@
                     case '/level/things':
                         return OBJECT_TYPE_THING;
 
+                    case '/level/utilpanel':
+                        return OBJECT_TYPE_UTIL;
+
                     default:
                         return '';
                 }
@@ -315,7 +319,7 @@
              */
             isSelectToolAvailable: function() {
                 const s = this.getSelectedObjectType;
-                return s === OBJECT_TYPE_BLOCK || s === OBJECT_TYPE_MARK || s === OBJECT_TYPE_TAG;
+                return s === OBJECT_TYPE_BLOCK || s === OBJECT_TYPE_MARK || s === OBJECT_TYPE_TAG || s === "OBJECT_TYPE_UTIL";
             },
 
             /**

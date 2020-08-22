@@ -16,6 +16,7 @@ export default {
     getHighLightedTags: state => state.models.levelGrid.hltags,
     getLevelList: state => state.levelList,
     getLevelName: state => state.levelName,
+    getUtilPanelUseRegion: state => state.models.utilPanel.useRegion,
 
     getStatusBarText: state => state.statusBar.content,
     getLevelGeneratedData: state => state.levelData,
