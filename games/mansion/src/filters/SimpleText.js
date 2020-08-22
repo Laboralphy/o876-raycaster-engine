@@ -27,7 +27,13 @@ class SimpleText extends AbstractFilter {
 
     processText() {
         const {text, x, y} = this.oInput;
-        this.oEasingAlpha.from(0).to(1).steps(FONT_ALPHA_TIME).use(Easing.SMOOTHSTEP);
+        this
+            .oEasingAlpha
+            .reset()
+            .from(0)
+            .to(1)
+            .steps(FONT_ALPHA_TIME)
+            .use(Easing.SMOOTHSTEP);
         const cvs = this.oCanvas;
         const ctx = cvs.getContext('2d');
         ctx.clearRect(0, 0, cvs.width, cvs.height);
@@ -63,7 +69,13 @@ class SimpleText extends AbstractFilter {
 
             case 1:
                 if (--this.nTime <= 0) {
-                    this.oEasingAlpha.from(1).to(0).steps(FONT_ALPHA_TIME).use(Easing.SMOOTHSTEP);
+                    this
+                        .oEasingAlpha
+                        .reset()
+                        .from(1)
+                        .to(0)
+                        .steps(FONT_ALPHA_TIME)
+                        .use(Easing.SMOOTHSTEP);
                     ++this.nPhase;
                 }
                 break;

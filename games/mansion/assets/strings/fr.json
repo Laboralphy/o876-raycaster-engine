@@ -35,51 +35,54 @@
   "GAME_TITLE": "Patelin Chelou",
   "GAME_SUB_TITLE": "Tout un village mystérieusement vidé de ses habitants... Mystère ! Allons piquer tout ce qu'il reste !",
   "MAIN_MENU_OPTION_START": "Démarrer",
-  "MAIN_MENU_PLOT_SUMMARY": {
-    "step1": [
-      "Perdu au coeur de la forêt...",
-      "Un village sinistre."
+  "PLOT_SUMMARY": [
+    [
+      "Ce village sinistre,",
+      "paumé au coeur de la forêt..."
     ],
-    "step2": [
-      "Plus aucune âme qui vive.",
-      "Plus aucun habitant... Tous disparus."
+    [
+      "...s'est subitement vidé de ses habitants."
     ],
-    "step3": [
-      "D'après vos recherches, ce patelin,",
-      "abritait une communauté de dégénérés,",
-      "adeptes de magie noire, sorcellerie,",
-      "et toutes ces conneries."
+    [
+      "...ses \"habitants\".",
+      "Tous des dégénérés, supersticieux,",
+      "adeptes de magie noire, de sorcellerie."
     ],
-    "step4": [
+    [
+      "Ce village maintenant désert,",
+      "n'abritait rien de moins",
+      "qu'une dangereuse communauté de fanatiques."
+    ],
+    [
       "La nuit, de sombres assemblées,",
-      "et des cérémonies impies,",
-      "se seraient tenues dans ces bois.",
-      "...C'est ce qu'on dit."
+      "et des cérémonies blasphématoires,",
+      "se tenaient dans ces bois.",
+      "Les indices ne manquent pas."
     ],
-    "step5": [
+    [
       "A cause de cette réputation détestable",
       "personne n'ose s'aventurer aux alentours.",
       "Même après la disparition des villageois."
     ],
-    "step6": [
-      "Un investigateur rationnel comme vous",
+    [
+      "Mais un investigateur rationnel comme vous",
       "n'a que faire de ces ragots."
     ],
-    "step7": [
+    [
       "Vous décidez d'explorer le village,",
       "car si votre hypothèse est juste..."
     ],
-    "step8": [
+    [
       "Il pourrait bien y avoir là bas,",
       "de grandes quantités de reliques,",
       "de talismans et grimoires mystérieux"
     ],
-    "step9": [
+    [
       "Sans plus personne pour les garder,",
       "il ne tient qu'à vous de mettre",
       "la main sur ces trésors..."
     ]
-  },
+  ],
 
   "ALBUM_TAB_EMPTY": "Cette section est vide.",
 
