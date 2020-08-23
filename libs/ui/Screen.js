@@ -130,11 +130,13 @@ class Screen {
         if (pointerlock && PointerLock.hasPointerLockFeature()) {
             if (!!this.overlay) {
                 this._handlers.click = event => {
-                    const oClicked = this._getClickEventOffset(event);
-                    this._events.emit('click', oClicked);
-                    const oTarget = event.target;
-                    if (oTarget === this._surface || oTarget === this._overlay || oTarget.hasAttribute(pointerlockAttribute)) {
-                        this._pointerlock.requestPointerLock(this.surface);
+                    if (this._enablePointerlock) {
+                        const oClicked = this._getClickEventOffset(event);
+                        this._events.emit('click', oClicked);
+                        const oTarget = event.target;
+                        if (oTarget === this._surface || oTarget === this._overlay || oTarget.hasAttribute(pointerlockAttribute)) {
+                            this._pointerlock.requestPointerLock(this.surface);
+                        }
                     }
                 };
                 this.overlay.addEventListener('click', this._handlers.click);
