@@ -37,50 +37,38 @@
   "MAIN_MENU_OPTION_START": "Démarrer",
   "PLOT_SUMMARY": [
     [
-      "Ce village sinistre,",
-      "paumé au coeur de la forêt..."
+      "Vos indices vous ont mené à un",
+      "village perdu au coeur de la forêt."
     ],
     [
-      "...s'est subitement vidé de ses habitants."
+      "Ce village, aujourd'hui abandonné,",
+      "était, d'après les histoires locales,",
+      "un repaire de fanatiques..."
     ],
     [
-      "...ses \"habitants\".",
-      "Tous des dégénérés, supersticieux,",
-      "adeptes de magie noire, de sorcellerie."
+      "...de dégénérés supersticieux,",
+      "adeptes de magie noire, de sorcellerie,",
+      "et de cérémonies blasphématoires."
     ],
     [
-      "Ce village maintenant désert,",
-      "n'abritait rien de moins",
-      "qu'une dangereuse communauté de fanatiques."
+      "Cette communauté s'est batit une sinistre",
+      "réputation et aucun étranger n'osait",
+      "s'aventurer dans la forêt environnante."
     ],
     [
-      "La nuit, de sombres assemblées,",
-      "et des cérémonies blasphématoires,",
-      "se tenaient dans ces bois.",
-      "Les indices ne manquent pas."
+      "D'après vos recherches, le village",
+      "s'est vidé de tous ses habitants en une nuit.",
+      "Aucun document n'en précise la raison."
     ],
     [
-      "A cause de cette réputation détestable",
-      "personne n'ose s'aventurer aux alentours.",
-      "Même après la disparition des villageois."
+      "L'endroit, maintenant désert, pourrait",
+      "encore récéler de nombreuses reliques,",
+      "grimoires anciens et tableaux de valeur."
     ],
     [
-      "Mais un investigateur rationnel comme vous",
-      "n'a que faire de ces ragots."
-    ],
-    [
-      "Vous décidez d'explorer le village,",
-      "car si votre hypothèse est juste..."
-    ],
-    [
-      "Il pourrait bien y avoir là bas,",
-      "de grandes quantités de reliques,",
-      "de talismans et grimoires mystérieux"
-    ],
-    [
-      "Sans plus personne pour les garder,",
-      "il ne tient qu'à vous de mettre",
-      "la main sur ces trésors..."
+      "Il est temps pour vous d'aller explorer",
+      "le village et faire main basse sur tous",
+      "ces trésors."
     ]
   ],
 

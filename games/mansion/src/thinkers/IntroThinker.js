@@ -32,7 +32,7 @@ class IntroThinker extends Thinker {
             .reset()
             .from(locStart.y)
             .to(locFinish.y)
-            .steps(90000)
+            .steps(70000)
             .use(Easing.SMOOTHSTEP);
         this.elapsedTime = 0;
     }
