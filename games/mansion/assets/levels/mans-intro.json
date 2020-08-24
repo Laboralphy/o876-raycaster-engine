@@ -282,6 +282,48 @@
       "width": 19,
       "height": 96,
       "animations": []
+    },
+    {
+      "id": 84,
+      "src": "assets/textures/53e2d4671768a6a38ad02884c7a11768.png",
+      "width": 41,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 85,
+      "src": "assets/textures/6fbbc0369b7fc3f525f2f8760b72bdb5.png",
+      "width": 97,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 86,
+      "src": "assets/textures/6a6687908c160b67705578c0dde1ba2e.png",
+      "width": 41,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 87,
+      "src": "assets/textures/da7afbfdb985a644801276fe933dc606.png",
+      "width": 68,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 88,
+      "src": "assets/textures/3b54da3b5423829ef170cc679d600729.png",
+      "width": 57,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 89,
+      "src": "assets/textures/1aa98644d57a48485ffb17bf2dd5c8df.png",
+      "width": 64,
+      "height": 96,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -508,6 +550,54 @@
     {
       "id": 25,
       "tileset": 78,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 26,
+      "tileset": 84,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 27,
+      "tileset": 85,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 28,
+      "tileset": 86,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 29,
+      "tileset": 87,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 30,
+      "tileset": 88,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 31,
+      "tileset": 89,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -8623,6 +8713,14 @@
       "animation": null
     },
     {
+      "x": 544,
+      "y": 812,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 26,
+      "animation": null
+    },
+    {
       "x": 570,
       "y": 826,
       "z": 0,
@@ -8637,6 +8735,14 @@
       "angle": 0,
       "blueprint": 8,
       "animation": "default"
+    },
+    {
+      "x": 672,
+      "y": 812,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 28,
+      "animation": null
     },
     {
       "x": 543,
@@ -8684,6 +8790,14 @@
       "z": 0,
       "angle": 0,
       "blueprint": 3,
+      "animation": null
+    },
+    {
+      "x": 432,
+      "y": 1312,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 27,
       "animation": null
     },
     {
@@ -8855,6 +8969,22 @@
       "animation": null
     },
     {
+      "x": 736,
+      "y": 3168,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 30,
+      "animation": null
+    },
+    {
+      "x": 734,
+      "y": 3168,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 29,
+      "animation": null
+    },
+    {
       "x": 390,
       "y": 3552,
       "z": 0,
@@ -8917,6 +9047,14 @@
       "y": 19,
       "w": {
         "tileset": 65,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 5,
+      "y": 20,
+      "e": {
+        "tileset": 89,
         "align": "@DECAL_ALIGN_CENTER"
       }
     },
@@ -9117,6 +9255,20 @@
     },
     {
       "x": 9,
+      "y": 20,
+      "tags": [
+        "lookat w"
+      ]
+    },
+    {
+      "x": 9,
+      "y": 21,
+      "tags": [
+        "lookat s"
+      ]
+    },
+    {
+      "x": 9,
       "y": 27,
       "tags": [
         "open mi_door_0"
@@ -9152,6 +9304,20 @@
     },
     {
       "x": 9,
+      "y": 49,
+      "tags": [
+        "lookat e"
+      ]
+    },
+    {
+      "x": 9,
+      "y": 50,
+      "tags": [
+        "lookat s"
+      ]
+    },
+    {
+      "x": 9,
       "y": 52,
       "tags": [
         "locator mi_finish"
@@ -9167,5 +9333,5 @@
       "v": 0.5
     }
   ],
-  "preview": "assets/textures/416dec04976a4421e77f36b2bed570f5.jpg"
+  "preview": "assets/textures/d360718e77f6dd167aa1f5578681004d.jpg"
 }
