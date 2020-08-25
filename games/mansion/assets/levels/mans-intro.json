@@ -285,42 +285,35 @@
     },
     {
       "id": 84,
-      "src": "assets/textures/53e2d4671768a6a38ad02884c7a11768.png",
-      "width": 41,
-      "height": 96,
-      "animations": []
-    },
-    {
-      "id": 85,
-      "src": "assets/textures/6fbbc0369b7fc3f525f2f8760b72bdb5.png",
-      "width": 97,
+      "src": "assets/textures/28b15e785f9521b1d002fb4c2caa7293.png",
+      "width": 44,
       "height": 96,
       "animations": []
     },
     {
       "id": 86,
-      "src": "assets/textures/6a6687908c160b67705578c0dde1ba2e.png",
-      "width": 41,
+      "src": "assets/textures/3399c336fc67aff9946aa8b5fcd2a1f9.png",
+      "width": 32,
       "height": 96,
       "animations": []
     },
     {
       "id": 87,
-      "src": "assets/textures/da7afbfdb985a644801276fe933dc606.png",
-      "width": 68,
+      "src": "assets/textures/048a22c71c3335ba4e587862208dae99.png",
+      "width": 32,
       "height": 96,
       "animations": []
     },
     {
       "id": 88,
-      "src": "assets/textures/3b54da3b5423829ef170cc679d600729.png",
-      "width": 57,
+      "src": "assets/textures/fc7a7afa09d316b75954117884cf16ed.png",
+      "width": 32,
       "height": 96,
       "animations": []
     },
     {
       "id": 89,
-      "src": "assets/textures/1aa98644d57a48485ffb17bf2dd5c8df.png",
+      "src": "assets/textures/135520113a6e0fa803233c59cc408e4e.png",
       "width": 64,
       "height": 96,
       "animations": []
@@ -561,15 +554,19 @@
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
-      "fx": []
+      "fx": [
+        "@FX_LIGHT_ADD"
+      ]
     },
     {
       "id": 27,
-      "tileset": 85,
+      "tileset": 89,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
-      "fx": []
+      "fx": [
+        "@FX_LIGHT_ADD"
+      ]
     },
     {
       "id": 28,
@@ -590,14 +587,6 @@
     {
       "id": 30,
       "tileset": 88,
-      "thinker": "StaticThinker",
-      "size": 1,
-      "ref": "",
-      "fx": []
-    },
-    {
-      "id": 31,
-      "tileset": 89,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -8713,14 +8702,6 @@
       "animation": null
     },
     {
-      "x": 544,
-      "y": 812,
-      "z": 0,
-      "angle": 0,
-      "blueprint": 26,
-      "animation": null
-    },
-    {
       "x": 570,
       "y": 826,
       "z": 0,
@@ -8735,14 +8716,6 @@
       "angle": 0,
       "blueprint": 8,
       "animation": "default"
-    },
-    {
-      "x": 672,
-      "y": 812,
-      "z": 0,
-      "angle": 0,
-      "blueprint": 28,
-      "animation": null
     },
     {
       "x": 543,
@@ -8793,11 +8766,11 @@
       "animation": null
     },
     {
-      "x": 432,
+      "x": 426,
       "y": 1312,
       "z": 0,
       "angle": 0,
-      "blueprint": 27,
+      "blueprint": 26,
       "animation": null
     },
     {
@@ -8969,19 +8942,19 @@
       "animation": null
     },
     {
+      "x": 592,
+      "y": 3088,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 28,
+      "animation": null
+    },
+    {
       "x": 736,
       "y": 3168,
       "z": 0,
       "angle": 0,
-      "blueprint": 30,
-      "animation": null
-    },
-    {
-      "x": 734,
-      "y": 3168,
-      "z": 0,
-      "angle": 0,
-      "blueprint": 29,
+      "blueprint": 27,
       "animation": null
     },
     {
@@ -9053,9 +9026,25 @@
     {
       "x": 5,
       "y": 20,
+      "n": {
+        "tileset": 86,
+        "align": "@DECAL_ALIGN_LEFT"
+      },
       "e": {
-        "tileset": 89,
-        "align": "@DECAL_ALIGN_CENTER"
+        "tileset": 86,
+        "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 5,
+      "y": 20,
+      "s": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_RIGHT"
+      },
+      "e": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_LEFT"
       }
     },
     {
@@ -9103,6 +9092,78 @@
       },
       "e": {
         "tileset": 30,
+        "align": "@DECAL_ALIGN_LEFT"
+      }
+    },
+    {
+      "x": 8,
+      "y": 36,
+      "n": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_LEFT"
+      },
+      "e": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 10,
+      "y": 42,
+      "w": {
+        "tileset": 87,
+        "align": "@DECAL_ALIGN_LEFT"
+      },
+      "n": {
+        "tileset": 87,
+        "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 12,
+      "y": 46,
+      "w": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_LEFT"
+      },
+      "n": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 12,
+      "y": 46,
+      "w": {
+        "tileset": 87,
+        "align": "@DECAL_ALIGN_RIGHT"
+      },
+      "s": {
+        "tileset": 87,
+        "align": "@DECAL_ALIGN_LEFT"
+      }
+    },
+    {
+      "x": 12,
+      "y": 49,
+      "w": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_LEFT"
+      },
+      "n": {
+        "tileset": 88,
+        "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 12,
+      "y": 49,
+      "w": {
+        "tileset": 87,
+        "align": "@DECAL_ALIGN_RIGHT"
+      },
+      "s": {
+        "tileset": 87,
         "align": "@DECAL_ALIGN_LEFT"
       }
     },
@@ -9333,5 +9394,5 @@
       "v": 0.5
     }
   ],
-  "preview": "assets/textures/d360718e77f6dd167aa1f5578681004d.jpg"
+  "preview": "assets/textures/2b0bc80cb52e255d703caccef2038efe.jpg"
 }

@@ -3,11 +3,10 @@
             :caption="getComputedCaption"
     >
         <template v-slot:toolbar>
-            <MyButton hint="Remove this thing from the map">
+            <MyButton @click="deleteClicked" hint="Remove this thing from the map">
                 <DeleteIcon
                         hint="Remove this thing from the map"
                         decorative
-                        @click="deleteClicked"
                 ></DeleteIcon>
             </MyButton>
         </template>

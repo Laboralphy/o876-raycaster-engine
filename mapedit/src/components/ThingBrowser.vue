@@ -29,6 +29,7 @@
     import PencilIcon from "vue-material-design-icons/Pencil.vue";
     import DeleteIcon from "vue-material-design-icons/Delete.vue";
     import Thing from "./Thing.vue";
+    import CanvasHelper from "libs/canvas-helper";
 
     const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
     const {mapMutations: editorMutations} = createNamespacedHelpers('editor');
@@ -61,7 +62,12 @@
                 return this.getThings.map(t => {
                     const tile = this.getSpriteTile(t.tile);
                     if (!tile) {
-                        throw new Error('this thing references the tile #' + t.tile + ' which is undefined');
+                        //throw new Error('this thing references the tile #' + t.tile + ' which is undefined');
+                        return {
+                          content: this.createNoTile(),
+                          id: t.id,
+                          animation: []
+                        };
                     }
                     return {
                         content: tile.content,
@@ -83,6 +89,22 @@
                 selectThing: EDITOR_MUTATIONS.THINGBROWSER_SET_SELECTED,
                 somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
+
+            createNoTile: function() {
+              const cvs = CanvasHelper.createCanvas(64, 64);
+              const ctx = cvs.getContext('2d');
+              ctx.strokeStyle = 'red';
+              ctx.lineWidth = 4;
+              ctx.beginPath();
+              ctx.moveTo(0, 0);
+              ctx.lineTo(64, 64);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.moveTo(64, 0);
+              ctx.lineTo(0, 64);
+              ctx.stroke();
+              return CanvasHelper.getData(cvs);
+            },
 
             createClicked: function() {
                 this.$router.push('/build-thing/0');

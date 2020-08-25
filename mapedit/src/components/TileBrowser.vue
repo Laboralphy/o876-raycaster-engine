@@ -135,7 +135,8 @@
                 'getSpriteTiles',
                 'getTileWidth',
                 'getTileHeight',
-                'getTile'
+                'getTile',
+                'getThings'
             ]),
 
 
@@ -206,7 +207,7 @@
 
             ...levelActions({
                 reorderTile: ACTION.REORDER_TILE,
-                deleteTile: ACTION.DELETE_TILE
+                deleteTile: ACTION.DELETE_TILE,
             }),
 
 
@@ -281,8 +282,12 @@
                 }
                 for (let id in this.selectedTiles) {
                     if (this.selectedTiles[id]) {
+                      if (this.getThings.find(t => t.id === id)) {
+                        alert('This tile "#' + id + ' is used in "things"');
+                      } else {
                         this.setTileSelection(id, false);
                         this.deleteTile({id: parseInt(id)});
+                      }
                     }
                 }
             },

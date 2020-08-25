@@ -1,7 +1,6 @@
 import STRINGS from "../../../assets/strings";
 import SimpleText from "../../filters/SimpleText";
 import Link from "../../../../../libs/engine/filters/Link";
-import Splash from "../../filters/Splash";
 const STORY = STRINGS.PLOT_SUMMARY;
 
 export function main(game, remove, x, y) {
