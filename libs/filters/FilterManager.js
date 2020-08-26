@@ -5,6 +5,10 @@ class FilterManager {
         this._filters = [];
     }
 
+    get filters() {
+        return this._filters;
+    }
+
     get enabled() {
         return this._enabled;
     }
@@ -21,6 +25,13 @@ class FilterManager {
         if (this._enabled) {
             this._filters.push(oFilter);
         }
+    }
+
+    /**
+     * removes all filters
+     */
+    clear() {
+        this._filters = [];
     }
 
     /**

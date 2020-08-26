@@ -2988,9 +2988,7 @@
       {
         "block": 39,
         "upperblock": 0,
-        "tags": [
-          "event mi_story_start"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0

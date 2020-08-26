@@ -32,12 +32,8 @@ class Game extends GameAbstract {
         this._album = new Album(this._ui.store);
         this.log('load state data');
         this.logic.loadData();
-        this.log('initialize camera visual filter')
-        this._cameraFilter = new CameraObscura();
-        this._ghostScream = new GhostScreamer();
         this.log('initialize event handlers');
         this.engine.events.on('update', () => this.engineUpdateHandler());
-        this.engine.events.on('level.fetch', payload => this.engineLevelFetchHandler(payload));
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.engine.events.on('option.changed', ({key, value}) => this.engineOptionChanged(key, value));
         this.log('initialize thinkers');
@@ -45,6 +41,13 @@ class Game extends GameAbstract {
         this.initScreenHandler();
         this._locators = {};
         this._activeGhosts = [];
+        this.log('initializing common visual filters');
+        this._cameraFilter = new CameraObscura();
+        this.engine.filters.link(this._cameraFilter);
+        this._haloBlack = new Halo('black');
+        this.engine.filters.link(this._haloBlack);
+        this._ghostScream = new GhostScreamer();
+        this.engine.filters.link(this._ghostScream);
         this.loadLevel('mans-intro');
     }
 
@@ -194,9 +197,6 @@ class Game extends GameAbstract {
     enterLevel() {
         super.enterLevel();
         this.initTagHandlers();
-        this.engine.filters.link(this._cameraFilter);
-        this.engine.filters.link(new Halo('black'));
-        this.engine.filters.link(this._ghostScream);
         this.engine.filters.link(new FadeIn({duration: 600}));
     }
 

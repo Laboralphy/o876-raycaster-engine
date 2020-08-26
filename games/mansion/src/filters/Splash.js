@@ -6,7 +6,7 @@
 import AbstractFilter from "libs/filters/AbstractFilter";
 
 class Splash extends AbstractFilter {
-    constructor() {
+    constructor(photos, nMaxSplash) {
         super();
         this.sClass = 'Splash';
         this.oCanvas = null;
@@ -20,6 +20,9 @@ class Splash extends AbstractFilter {
         this.oPhotoRect = null;
         this.nSplash = 0;
         this.nMaxSplash = 4;
+        if (!!photos) {
+            this.splash(photos, nMaxSplash);
+        }
     }
 
 

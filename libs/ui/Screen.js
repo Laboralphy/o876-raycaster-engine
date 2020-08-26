@@ -137,6 +137,7 @@ class Screen {
                         if (oTarget === this._surface || oTarget === this._overlay || oTarget.hasAttribute(pointerlockAttribute)) {
                             this._pointerlock.requestPointerLock(this.surface);
                         }
+
                     }
                 };
                 this.overlay.addEventListener('click', this._handlers.click);

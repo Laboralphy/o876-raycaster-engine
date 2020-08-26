@@ -234,11 +234,12 @@ class GameAbstract {
      * @return {Promise<void>}
      */
     async loadLevel(name, extra = {}) {
+        const engine = this._engine;
         this.log('loading level', name);
-        this._engine.stopDoomLoop();
-        await this._engine.loadLevel(name, extra);
+        engine.stopDoomLoop();
+        await engine.loadLevel(name, extra);
         this.log('data successfuly loaded and parsed');
-        this._engine.startDoomLoop();
+        engine.startDoomLoop();
         this.log('doom loop started');
         this.enterLevel();
     }
