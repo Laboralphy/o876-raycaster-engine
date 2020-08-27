@@ -7,6 +7,7 @@ import STRINGS from "../../assets/strings";
 import CinemaScope from "../filters/CinemaScope";
 import Splash from "../filters/Splash";
 import CanvasHelper from "libs/canvas-helper";
+import AbstractFilter from "libs/filters/AbstractFilter";
 const STORY = STRINGS.PLOT_SUMMARY;
 
 class IntroThinker extends Thinker {
@@ -28,46 +29,112 @@ class IntroThinker extends Thinker {
         this.automaton.state = 's_init';
     }
 
-    displayStory() {
+    displayStory(t) {
         const engine = this.context.game.engine;
-        engine.delayCommand(() => {
-            engine
-                .filters
-                .link(this._storyFilter);
-        }, 3000);
+        engine
+            .filters
+            .link(this._storyFilter);
     }
 
     async composeStory() {
         const engine = this.engine;
-        const aTexts = STORY.map(s => {
+        const storyMap = [
+            {
+                "type": "text",
+                "text": "arrival"
+            },
+            {
+                "type": "text",
+                "text": "dread_lair"
+            },
+            {
+                "type": "splash",
+                "photos": [
+                    "s0-cult.jpg",
+                    "s0-kabbale-1.jpg",
+                ],
+                "loops": 3
+            },
+            {
+                "type": "text",
+                "text": "dark_rituals"
+            },
+            {
+                "type": "splash",
+                "photos": [
+                    "s0-ritual-forest.jpg",
+                    "ng-01.jpg",
+                    "ng-02.jpg",
+                    "ng-07.jpg",
+                    "ng-10.jpg"
+                ],
+                "loops": 3
+            },
+            {
+                "type": "text",
+                "text": "vill_desert" 
+            },
+            {
+                "type": "text",
+                "text": "ppl_gone"
+            },
+            {
+                "type": "text",
+                "text": "something_happened"
+            },
+            {
+                "type": "text",
+                "text": "lost_relics"
+            },
+            {
+                "type": "splash",
+                "photos": [
+                    "s0-amulet.jpg",
+                    "s5-altar.jpg",
+                    "s5-altar-2.jpg"
+                ],
+                "loops": 4
+            },
+            {
+                "type": "text",
+                "text": "phat_loot"
+            }
+        ];
+        const buildTextFilter = data => {
+            const s = STRINGS.PLOT_STRUCT[data.text];
+            if (s === undefined) {
+                throw new Error('this resource string does not exist : ' + data.text);
+            }
             const oText = new SimpleText();
             const cvs = engine.getRenderingCanvas();
             oText.text(s, cvs.width >> 1, cvs.height >> 1);
-            return oText;
-        });
-        const rscNames = [
-            'ng-01.png',            // 0
-            'ng-02.png',            // 1
-            'ng-05.png',            // 2
-            'ng-07.png',            // 3
-            's0-amulet.png',        // 4
-            's0-cult.png',          // 5
-            's0-kabbale-0.png',     // 6
-            's0-kabbale-1.png'      // 7
-        ]
-        const loadedRsc = rscNames.map(r => CanvasHelper.loadCanvas(r));
-        const rsc = Promise.all(loadedRsc);
-        const aSplashes = [
-            new Splash([
-                rsc[4]
-            ], 2),
-            new Splash([
-                rsc[5],
-                rsc[6],
-                rsc[7]
-            ], 2),
+            return Promise.resolve(oText);
+        };
+        const buildSplashFilter = async ({photos, loops}) => {
+            try {
+                const promPhotos = photos.map(p => CanvasHelper.loadCanvas('assets/splashes/intro/' + p));
+                const aResolvedPhotos = await Promise.all(promPhotos);
+                return new Splash(
+                    aResolvedPhotos,
+                    loops
+                );
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        const promStory = storyMap.map(data => {
+            switch (data.type) {
+                case 'text':
+                    return buildTextFilter(data);
 
-        ];
+                case 'splash':
+                    return buildSplashFilter(data);
+
+                default:
+                    throw new Error('unknown intro verb: ' + data.type + ' need [text, splash]');
+            }
+        });
+        return Promise.all(promStory);
     }
 
     keyDown(key) {
@@ -92,10 +159,14 @@ class IntroThinker extends Thinker {
             .use(Easing.SMOOTHSTEP);
         this.elapsedTime = 0;
         this._fadeOut = new FadeOut({duration: 1000});
-        this._storyFilter = new Link(this.composeStory());
+        this._storyFilter = null;
+        this.composeStory().then(s => {
+            this._storyFilter = new Link(s);
+            //this.engine.filters.link(this._storyFilter);
+            this.engine.delayCommand(() => this.displayStory(), 3000 - this.elapsedTime);
+        });
         this._cinemascope = new CinemaScope(15);
-        engine.filters.link(this._cinemascope);
-        this.displayStory();
+        this.engine.filters.link(this._cinemascope);
     }
 
     s_run() {
@@ -116,7 +187,9 @@ class IntroThinker extends Thinker {
         this.context.game.loadLevel('mans-cabin').then(() => {
             this.context.game.screen._enablePointerlock = true;
             this._fadeOut.terminate();
-            this._storyFilter.terminate();
+            if (this._storyFilter instanceof AbstractFilter) {
+                this._storyFilter.terminate();
+            }
             this._cinemascope.terminate();
         });
     }

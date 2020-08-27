@@ -9,6 +9,7 @@ class Link extends AbstractFilter {
 
     constructor(children) {
         super();
+        console.log(children)
         this._children = children;
     }
 

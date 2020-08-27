@@ -1,3 +1,5 @@
+import AbstractFilter from "libs/filters/AbstractFilter";
+
 class FilterManager {
 
     constructor() {
@@ -22,8 +24,12 @@ class FilterManager {
      * @param oFilter {AbstractFilter} the new filter
      */
     link(oFilter) {
-        if (this._enabled) {
-            this._filters.push(oFilter);
+        if (oFilter instanceof AbstractFilter) {
+            if (this._enabled) {
+                this._filters.push(oFilter);
+            }
+        } else {
+            throw new Error('A non-filter instance shall not be linked to the filter manager');
         }
     }
 
@@ -62,6 +68,5 @@ class FilterManager {
     }
 
 }
-
 
 export default FilterManager;

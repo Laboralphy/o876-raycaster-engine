@@ -8,6 +8,8 @@ import Easing from "libs/easing";
 
 const FONT_SIZE = 12;
 const FONT_ALPHA_TIME = 10;
+const TIME_AT_0_LENGTH = 12;
+const TIME_PER_CHAR = 3;
 /*
 - qq prob de tags
 - la function text avait besoin du canvas
@@ -23,10 +25,6 @@ class SimpleText extends AbstractFilter {
         this.nTime = 0;
         this.nPhase = 0;
         this.oInput = {};
-    }
-
-    processText() {
-        const {text, x, y} = this.oInput;
         this
             .oEasingAlpha
             .reset()
@@ -34,6 +32,10 @@ class SimpleText extends AbstractFilter {
             .to(1)
             .steps(FONT_ALPHA_TIME)
             .use(Easing.SMOOTHSTEP);
+    }
+
+    processText() {
+        const {text, x, y} = this.oInput;
         const cvs = this.oCanvas;
         const ctx = cvs.getContext('2d');
         ctx.clearRect(0, 0, cvs.width, cvs.height);
@@ -42,15 +44,16 @@ class SimpleText extends AbstractFilter {
         ctx.strokeStyle = 'black';
         ctx.textAlign = 'center';
         ctx.textBaseLine = 'middle';
-        this.nTime = 6;
+        this.nTime = TIME_AT_0_LENGTH;
         let yText = y;
         let xText = x;
         text.forEach(function(t, i) {
             ctx.strokeText(t, xText, yText);
             ctx.fillText(t, xText, yText);
-            this.nTime += t.length << 1;
+            this.nTime += t.length * TIME_PER_CHAR;
             yText += FONT_SIZE * 1.2 | 0;
         }, this);
+        this.nTime = Math.round(this.nTime);
     }
 
     text(aText, x, y) {
