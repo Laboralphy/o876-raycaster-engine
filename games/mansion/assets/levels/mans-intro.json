@@ -317,6 +317,104 @@
       "width": 64,
       "height": 96,
       "animations": []
+    },
+    {
+      "id": 90,
+      "src": "assets/textures/3081cdce42b58b9aa015ee13e041d123.png",
+      "width": 41,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 91,
+      "src": "assets/textures/de4a60f87f43e90a40202483f797aec2.png",
+      "width": 64,
+      "height": 81,
+      "animations": []
+    },
+    {
+      "id": 92,
+      "src": "assets/textures/a0e81413c461b789b0fa9ca734f7dae7.png",
+      "width": 64,
+      "height": 82,
+      "animations": []
+    },
+    {
+      "id": 93,
+      "src": "assets/textures/37ad533bb89fbbdd37aefe906f5a5b15.png",
+      "width": 64,
+      "height": 81,
+      "animations": []
+    },
+    {
+      "id": 94,
+      "src": "assets/textures/90ac31bde0ab38ecb25d922dbd05b558.png",
+      "width": 15,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 95,
+      "src": "assets/textures/e17a233f00e00222dc1f178168f2807a.png",
+      "width": 12,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 98,
+      "src": "assets/textures/aabcb5f926509955b03d8e0f1ab76e8d.png",
+      "width": 45,
+      "height": 60,
+      "animations": []
+    },
+    {
+      "id": 99,
+      "src": "assets/textures/c6448dda1481c1a56f0a584c923acaae.png",
+      "width": 50,
+      "height": 33,
+      "animations": []
+    },
+    {
+      "id": 100,
+      "src": "assets/textures/0d01bc7d6a6e477c856f5ec0c6dde312.png",
+      "width": 17,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 101,
+      "src": "assets/textures/e13d9801e14fcfe57950e314bdc63e46.png",
+      "width": 24,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 102,
+      "src": "assets/textures/ae0f0367f54bb1e50b7beaa6e0049b5f.png",
+      "width": 30,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 103,
+      "src": "assets/textures/256a55d8513667536b162ede29aebd49.png",
+      "width": 30,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 104,
+      "src": "assets/textures/4ebbaf8f43adaa9c1ad44b82ff5fdd7a.png",
+      "width": 64,
+      "height": 91,
+      "animations": []
+    },
+    {
+      "id": 105,
+      "src": "assets/textures/ebe8c3a248cec4d2e5c116930475b740.png",
+      "width": 64,
+      "height": 91,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -559,16 +657,6 @@
       ]
     },
     {
-      "id": 27,
-      "tileset": 89,
-      "thinker": "StaticThinker",
-      "size": 1,
-      "ref": "",
-      "fx": [
-        "@FX_LIGHT_ADD"
-      ]
-    },
-    {
       "id": 28,
       "tileset": 86,
       "thinker": "StaticThinker",
@@ -587,6 +675,120 @@
     {
       "id": 30,
       "tileset": 88,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 31,
+      "tileset": 90,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 32,
+      "tileset": 91,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 33,
+      "tileset": 92,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 34,
+      "tileset": 93,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": [
+        "@FX_LIGHT_ADD"
+      ]
+    },
+    {
+      "id": 35,
+      "tileset": 94,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 36,
+      "tileset": 95,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 37,
+      "tileset": 98,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 38,
+      "tileset": 99,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 39,
+      "tileset": 100,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 40,
+      "tileset": 101,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 42,
+      "tileset": 102,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 43,
+      "tileset": 103,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 44,
+      "tileset": 104,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 45,
+      "tileset": 105,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -1458,9 +1660,9 @@
         6,
         1,
         1,
-        1,
+        53,
         2,
-        1,
+        53,
         1,
         1,
         6,
@@ -1642,7 +1844,7 @@
         9,
         17,
         9,
-        2,
+        54,
         9,
         17,
         9,
@@ -1703,7 +1905,7 @@
         14,
         14,
         43,
-        2,
+        54,
         9,
         14,
         14,
@@ -1764,7 +1966,7 @@
         14,
         14,
         9,
-        2,
+        54,
         43,
         14,
         14,
@@ -1825,7 +2027,7 @@
         14,
         14,
         17,
-        2,
+        54,
         9,
         14,
         14,
@@ -1886,7 +2088,7 @@
         9,
         9,
         9,
-        2,
+        54,
         9,
         9,
         9,
@@ -1944,13 +2146,13 @@
         0,
         22,
         6,
+        53,
+        53,
+        53,
         2,
-        2,
-        2,
-        2,
-        2,
-        2,
-        2,
+        53,
+        53,
+        53,
         6,
         0,
         0,
@@ -2254,8 +2456,8 @@
         1,
         2,
         1,
-        1,
-        1,
+        53,
+        53,
         6,
         0,
         0,
@@ -7821,7 +8023,7 @@
           "e": null,
           "w": null,
           "s": null,
-          "f": 3,
+          "f": 9,
           "c": null
         }
       },
@@ -7952,15 +8154,43 @@
         }
       },
       {
+        "code": 53,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 1,
+          "c": null
+        }
+      },
+      {
+        "code": 54,
+        "phys": "@PHYS_NONE",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": null,
+          "e": null,
+          "w": null,
+          "s": null,
+          "f": 3,
+          "c": null
+        }
+      },
+      {
         "code": 3,
         "phys": "@PHYS_WALL",
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 7,
-          "e": 7,
-          "w": 7,
-          "s": 7,
+          "n": 34,
+          "e": 34,
+          "w": 34,
+          "s": 34,
           "f": null,
           "c": null
         }
@@ -8027,10 +8257,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 14,
-          "e": 14,
-          "w": 14,
-          "s": 14,
+          "n": 12,
+          "e": 12,
+          "w": 12,
+          "s": 12,
           "f": null,
           "c": null
         }
@@ -8055,10 +8285,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 14,
-          "e": 12,
-          "w": 12,
-          "s": 14,
+          "n": 12,
+          "e": 10,
+          "w": 10,
+          "s": 12,
           "f": null,
           "c": null
         }
@@ -8069,10 +8299,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 12,
-          "e": 14,
-          "w": 14,
-          "s": 12,
+          "n": 10,
+          "e": 12,
+          "w": 12,
+          "s": 10,
           "f": null,
           "c": null
         }
@@ -8083,10 +8313,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 13,
-          "e": 13,
-          "w": 13,
-          "s": 13,
+          "n": 11,
+          "e": 11,
+          "w": 11,
+          "s": 11,
           "f": null,
           "c": null
         }
@@ -8098,25 +8328,25 @@
         "ref": "",
         "faces": {
           "n": [
-            19,
+            17,
             4,
             120,
             "@LOOP_FORWARD"
           ],
           "e": [
-            19,
+            17,
             4,
             120,
             "@LOOP_FORWARD"
           ],
           "w": [
-            19,
+            17,
             4,
             120,
             "@LOOP_FORWARD"
           ],
           "s": [
-            19,
+            17,
             4,
             120,
             "@LOOP_FORWARD"
@@ -8131,10 +8361,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 17,
-          "e": 17,
-          "w": 17,
-          "s": 17,
+          "n": 15,
+          "e": 15,
+          "w": 15,
+          "s": 15,
           "f": null,
           "c": null
         }
@@ -8145,10 +8375,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 16,
-          "e": 16,
-          "w": 16,
-          "s": 16,
+          "n": 14,
+          "e": 14,
+          "w": 14,
+          "s": 14,
           "f": null,
           "c": null
         }
@@ -8159,16 +8389,58 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 10,
-          "e": 10,
-          "w": 10,
-          "s": 10,
+          "n": 8,
+          "e": 8,
+          "w": 8,
+          "s": 8,
           "f": null,
           "c": null
         }
       },
       {
         "code": 33,
+        "phys": "@PHYS_WALL",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": 25,
+          "e": 25,
+          "w": 25,
+          "s": 25,
+          "f": null,
+          "c": null
+        }
+      },
+      {
+        "code": 37,
+        "phys": "@PHYS_WALL",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": 26,
+          "e": 26,
+          "w": 26,
+          "s": 26,
+          "f": null,
+          "c": null
+        }
+      },
+      {
+        "code": 42,
+        "phys": "@PHYS_WALL",
+        "offset": 0,
+        "ref": "",
+        "faces": {
+          "n": 15,
+          "e": 10,
+          "w": 10,
+          "s": 15,
+          "f": null,
+          "c": null
+        }
+      },
+      {
+        "code": 44,
         "phys": "@PHYS_WALL",
         "offset": 0,
         "ref": "",
@@ -8182,57 +8454,15 @@
         }
       },
       {
-        "code": 37,
-        "phys": "@PHYS_WALL",
-        "offset": 0,
-        "ref": "",
-        "faces": {
-          "n": 28,
-          "e": 28,
-          "w": 28,
-          "s": 28,
-          "f": null,
-          "c": null
-        }
-      },
-      {
-        "code": 42,
-        "phys": "@PHYS_WALL",
-        "offset": 0,
-        "ref": "",
-        "faces": {
-          "n": 17,
-          "e": 12,
-          "w": 12,
-          "s": 17,
-          "f": null,
-          "c": null
-        }
-      },
-      {
-        "code": 44,
-        "phys": "@PHYS_WALL",
-        "offset": 0,
-        "ref": "",
-        "faces": {
-          "n": 29,
-          "e": 29,
-          "w": 29,
-          "s": 29,
-          "f": null,
-          "c": null
-        }
-      },
-      {
         "code": 45,
         "phys": "@PHYS_WALL",
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 32,
-          "e": 30,
-          "w": 30,
-          "s": 32,
+          "n": 30,
+          "e": 28,
+          "w": 28,
+          "s": 30,
           "f": null,
           "c": null
         }
@@ -8243,10 +8473,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 30,
-          "e": 32,
-          "w": 32,
-          "s": 30,
+          "n": 28,
+          "e": 30,
+          "w": 30,
+          "s": 28,
           "f": null,
           "c": null
         }
@@ -8257,10 +8487,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 9,
-          "e": 9,
-          "w": 9,
-          "s": 9,
+          "n": 7,
+          "e": 7,
+          "w": 7,
+          "s": 7,
           "f": 7,
           "c": 5
         }
@@ -8271,10 +8501,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 14,
-          "e": 14,
-          "w": 14,
-          "s": 14,
+          "n": 12,
+          "e": 12,
+          "w": 12,
+          "s": 12,
           "f": 6,
           "c": 4
         }
@@ -8285,10 +8515,10 @@
         "offset": 16,
         "ref": "",
         "faces": {
-          "n": 26,
-          "e": 26,
-          "w": 26,
-          "s": 26,
+          "n": 24,
+          "e": 24,
+          "w": 24,
+          "s": 24,
           "f": 1,
           "c": 1
         }
@@ -8299,11 +8529,11 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 6,
+          "n": 35,
           "e": null,
           "w": null,
           "s": null,
-          "f": 3,
+          "f": 2,
           "c": null
         }
       },
@@ -8313,10 +8543,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 8,
-          "e": 8,
-          "w": 8,
-          "s": 8,
+          "n": 6,
+          "e": 6,
+          "w": 6,
+          "s": 6,
           "f": 3,
           "c": null
         }
@@ -8369,10 +8599,10 @@
         "offset": 4,
         "ref": "",
         "faces": {
-          "n": 15,
-          "e": 15,
-          "w": 15,
-          "s": 15,
+          "n": 13,
+          "e": 13,
+          "w": 13,
+          "s": 13,
           "f": 7,
           "c": 5
         }
@@ -8383,26 +8613,12 @@
         "offset": 16,
         "ref": "",
         "faces": {
-          "n": 18,
-          "e": 18,
-          "w": 18,
-          "s": 18,
+          "n": 16,
+          "e": 16,
+          "w": 16,
+          "s": 16,
           "f": 8,
           "c": 5
-        }
-      },
-      {
-        "code": 26,
-        "phys": "@PHYS_TRANSPARENT_BLOCK",
-        "offset": 32,
-        "ref": "",
-        "faces": {
-          "n": null,
-          "e": 6,
-          "w": 6,
-          "s": null,
-          "f": 2,
-          "c": 1
         }
       },
       {
@@ -8411,10 +8627,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 26,
-          "e": 26,
-          "w": 26,
-          "s": 26,
+          "n": 24,
+          "e": 24,
+          "w": 24,
+          "s": 24,
           "f": 1,
           "c": null
         }
@@ -8425,10 +8641,10 @@
         "offset": 32,
         "ref": "",
         "faces": {
-          "n": 25,
-          "e": 25,
-          "w": 25,
-          "s": 25,
+          "n": 23,
+          "e": 23,
+          "w": 23,
+          "s": 23,
           "f": 6,
           "c": 4
         }
@@ -8439,10 +8655,10 @@
         "offset": 32,
         "ref": "",
         "faces": {
-          "n": 24,
-          "e": 24,
-          "w": 24,
-          "s": 24,
+          "n": 22,
+          "e": 22,
+          "w": 22,
+          "s": 22,
           "f": 6,
           "c": 4
         }
@@ -8453,10 +8669,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 8,
-          "e": 8,
-          "w": 8,
-          "s": 8,
+          "n": 6,
+          "e": 6,
+          "w": 6,
+          "s": 6,
           "f": 5,
           "c": 5
         }
@@ -8481,10 +8697,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 33,
-          "e": 33,
-          "w": 33,
-          "s": 33,
+          "n": 31,
+          "e": 31,
+          "w": 31,
+          "s": 31,
           "f": null,
           "c": 5
         }
@@ -8495,10 +8711,10 @@
         "offset": 0,
         "ref": "",
         "faces": {
-          "n": 34,
-          "e": 34,
-          "w": 34,
-          "s": 34,
+          "n": 32,
+          "e": 32,
+          "w": 32,
+          "s": 32,
           "f": null,
           "c": 5
         }
@@ -8509,10 +8725,10 @@
         "offset": 8,
         "ref": "",
         "faces": {
-          "n": 35,
-          "e": 35,
-          "w": 35,
-          "s": 35,
+          "n": 33,
+          "e": 33,
+          "w": 33,
+          "s": 33,
           "f": 8,
           "c": 5
         }
@@ -8523,10 +8739,10 @@
         "offset": 8,
         "ref": "",
         "faces": {
-          "n": 23,
-          "e": 23,
-          "w": 23,
-          "s": 23,
+          "n": 21,
+          "e": 21,
+          "w": 21,
+          "s": 21,
           "f": 6,
           "c": 4
         }
@@ -8537,18 +8753,18 @@
         "offset": 8,
         "ref": "",
         "faces": {
-          "n": 9,
-          "e": 9,
-          "w": 9,
-          "s": 9,
+          "n": 7,
+          "e": 7,
+          "w": 7,
+          "s": 7,
           "f": 3,
           "c": 4
         }
       }
     ],
     "textures": {
-      "flats": "assets/textures/b75720ab6b1ab0492f67802e05710043.png",
-      "walls": "assets/textures/9ea9e3a97d60f5457c7d4189623ffe2d.png",
+      "flats": "assets/textures/396214bbdad263a905b78d0e16451a6d.png",
+      "walls": "assets/textures/429eacc887e900405a1cb1a0368a7f9b.png",
       "sky": "assets/textures/a6adf0e1434abfa91ed8c917df8e90a8.png",
       "smooth": false,
       "stretch": false
@@ -8726,11 +8942,35 @@
       "animation": null
     },
     {
+      "x": 524,
+      "y": 1012,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 40,
+      "animation": null
+    },
+    {
+      "x": 561,
+      "y": 1009,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 42,
+      "animation": null
+    },
+    {
       "x": 672,
       "y": 992,
       "z": 0,
       "angle": 0,
       "blueprint": 1,
+      "animation": null
+    },
+    {
+      "x": 753,
+      "y": 992,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 42,
       "animation": null
     },
     {
@@ -8774,11 +9014,27 @@
       "animation": null
     },
     {
+      "x": 634,
+      "y": 1402,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 36,
+      "animation": null
+    },
+    {
       "x": 532,
       "y": 1516,
       "z": 0,
       "angle": 0,
       "blueprint": 3,
+      "animation": null
+    },
+    {
+      "x": 561,
+      "y": 1504,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 43,
       "animation": null
     },
     {
@@ -8806,12 +9062,36 @@
       "animation": null
     },
     {
+      "x": 648,
+      "y": 1672,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 39,
+      "animation": null
+    },
+    {
+      "x": 689,
+      "y": 1679,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 43,
+      "animation": null
+    },
+    {
       "x": 698,
       "y": 1696,
       "z": 0,
       "angle": 0,
       "blueprint": 8,
       "animation": "default"
+    },
+    {
+      "x": 672,
+      "y": 1760,
+      "z": -32,
+      "angle": 0,
+      "blueprint": 38,
+      "animation": null
     },
     {
       "x": 479,
@@ -8952,9 +9232,9 @@
     {
       "x": 736,
       "y": 3168,
-      "z": 0,
+      "z": -8,
       "angle": 0,
-      "blueprint": 27,
+      "blueprint": 34,
       "animation": null
     },
     {
@@ -8972,6 +9252,22 @@
       "angle": 0,
       "blueprint": 13,
       "animation": "default"
+    },
+    {
+      "x": 556,
+      "y": 3564,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 31,
+      "animation": null
+    },
+    {
+      "x": 647,
+      "y": 3577,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 35,
+      "animation": null
     },
     {
       "x": 672,
@@ -9004,6 +9300,22 @@
       "y": 13,
       "w": {
         "tileset": 33,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 8,
+      "y": 17,
+      "n": {
+        "tileset": 92,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 10,
+      "y": 17,
+      "n": {
+        "tileset": 91,
         "align": "@DECAL_ALIGN_CENTER"
       }
     },
@@ -9105,6 +9417,22 @@
       "e": {
         "tileset": 88,
         "align": "@DECAL_ALIGN_RIGHT"
+      }
+    },
+    {
+      "x": 11,
+      "y": 37,
+      "w": {
+        "tileset": 104,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 11,
+      "y": 40,
+      "w": {
+        "tileset": 105,
+        "align": "@DECAL_ALIGN_CENTER"
       }
     },
     {
@@ -9244,6 +9572,14 @@
       }
     },
     {
+      "x": 9,
+      "y": 58,
+      "n": {
+        "tileset": 73,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 10,
       "y": 58,
       "w": {
@@ -9367,14 +9703,15 @@
       "x": 9,
       "y": 50,
       "tags": [
-        "lookat s"
+        "lookat s",
+        "locator mi_finish_1"
       ]
     },
     {
       "x": 9,
       "y": 52,
       "tags": [
-        "locator mi_finish"
+        "locator mi_finish_2"
       ]
     }
   ],
@@ -9387,5 +9724,5 @@
       "v": 0.5
     }
   ],
-  "preview": "assets/textures/2b0bc80cb52e255d703caccef2038efe.jpg"
+  "preview": "assets/textures/4314a31f07541f6cf397f9e368d817d2.jpg"
 }

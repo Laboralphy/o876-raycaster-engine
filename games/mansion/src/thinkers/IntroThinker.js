@@ -8,7 +8,6 @@ import CinemaScope from "../filters/CinemaScope";
 import Splash from "../filters/Splash";
 import CanvasHelper from "libs/canvas-helper";
 import AbstractFilter from "libs/filters/AbstractFilter";
-const STORY = STRINGS.PLOT_SUMMARY;
 
 class IntroThinker extends Thinker {
     constructor() {
@@ -17,9 +16,12 @@ class IntroThinker extends Thinker {
         this._easing = new Easing();
         this.transitions = {
             "s_init": [
-                [1, "s_run"]
+                [1, "s_run_linear"]
             ],
-            "s_run": [
+            "s_run_linear": [
+                ["t_finish", "s_run_deccel_init", "s_run_deccel"]
+            ],
+            "s_run_deccel": [
                 ["t_finish", "s_fade_out", "s_wait_fade_out"]
             ],
             "s_wait_fade_out": [
@@ -65,14 +67,9 @@ class IntroThinker extends Thinker {
                     "s0-ritual-forest.jpg",
                     "ng-01.jpg",
                     "ng-02.jpg",
-                    "ng-07.jpg",
-                    "ng-10.jpg"
+                    "ng-07.jpg"
                 ],
                 "loops": 3
-            },
-            {
-                "type": "text",
-                "text": "vill_desert" 
             },
             {
                 "type": "text",
@@ -149,29 +146,45 @@ class IntroThinker extends Thinker {
         const g = this.context.game;
         g.screen._enablePointerlock = false;
         const locStart = g.getLocator('mi_start').position;
-        const locFinish = g.getLocator('mi_finish').position;
+        const locFinish = g.getLocator('mi_finish_1').position;
         this
             ._easing
             .reset()
             .from(locStart.y)
             .to(locFinish.y)
             .steps(70000)
-            .use(Easing.SMOOTHSTEP);
+            .use(Easing.LINEAR);
         this.elapsedTime = 0;
         this._fadeOut = new FadeOut({duration: 1000});
         this._storyFilter = null;
         this.composeStory().then(s => {
             this._storyFilter = new Link(s);
-            //this.engine.filters.link(this._storyFilter);
             this.engine.delayCommand(() => this.displayStory(), 3000 - this.elapsedTime);
         });
         this._cinemascope = new CinemaScope(15);
         this.engine.filters.link(this._cinemascope);
     }
 
-    s_run() {
-        const y = this._easing.compute(this.elapsedTime).y;
-        this.entity.position.y = y;
+    s_run_linear() {
+        this.entity.position.y = this._easing.compute(this.elapsedTime).y;
+    }
+
+    s_run_deccel_init() {
+        const g = this.context.game;
+        const locStart = g.player.position;
+        const locFinish = g.getLocator('mi_finish_2').position;
+        this.elapsedTime = 0;
+        this
+            ._easing
+            .reset()
+            .from(locStart.y)
+            .to(locFinish.y)
+            .steps(2300)
+            .use(Easing.SQUARE_DECCEL);
+    }
+
+    s_run_deccel() {
+        this.s_run_linear();
     }
 
     s_fade_out() {

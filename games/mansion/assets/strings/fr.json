@@ -36,44 +36,35 @@
   "GAME_SUB_TITLE": "Tout un village mystérieusement vidé de ses habitants... Mystère ! Allons piquer tout ce qu'il reste !",
   "MAIN_MENU_OPTION_START": "Démarrer",
   "PLOT_STRUCT": {
-    "folklore": [
-      "En vous intéressant à cette région boisée",
-      "et à son étrange folklore local,",
-      "vous ne vous doutiez pas atterrir dans",
-      "un patelin aussi isolé et arriéré."
-    ],
     "arrival": [
-      "Vos pas vous mènent à un village",
-      "de sinistre réputation, ",
+      "La piste vous mène à un village isolé",
+      "de sinistre réputation,",
       "perdu au coeur de la forêt."
     ],
     "dread_lair": [
-      "Jadis... un repaire de fanatiques,",
-      "peuplé de dégénérés superstitieux,",
-      "adeptes de magie noire, de sorcellerie..."
+      "Jadis peuplé de dégénérés superstitieux,",
+      "adeptes de de magie noire et de sorcellerie..."
     ],
     "dark_rituals": [
-      "On y trouve des indices sur la pratique",
+      "Des indices de pratiques occultes",
       "de rituels grotesques et blasphématoires,",
-      "et autres messes noires."
-    ],
-    "sacrifices": [
-      "Il ne parait pas si étrange de penser que",
-      "des personnes disparues dans la région",
-      "se soient retrouvées piégées dans ce village."
-    ],
-    "vill_desert": [
-      "Mais désormais le village est désert."
+      "sont éparpillé dans la région."
     ],
     "ppl_gone": [
+      "Mais désormais le village est désert.",
       "Toute la communauté s'est volatilisée."
     ],
     "something_happened": [
       "Quelque chose s'est produit ici,",
-      "qui a fait fuir ces fanatiques."
+      "qui a fait fuir ces fanatiques.",
+      "Le mystère de leur disparition reste entier."
+    ],
+    "what_they_left": [
+      "Ce qui vous intéresse, cependant, doit",
+      "toujours être dans le village."
     ],
     "lost_relics": [
-      "Et ces maudits sorciers ont abandonné",
+      "Ces maudits sorciers ont dû abandonner",
       "un tas de reliques, de grimoires anciens",
       "et de tableaux de grande valeur..."
     ],

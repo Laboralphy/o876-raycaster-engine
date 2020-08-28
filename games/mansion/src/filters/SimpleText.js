@@ -8,8 +8,8 @@ import Easing from "libs/easing";
 
 const FONT_SIZE = 12;
 const FONT_ALPHA_TIME = 10;
-const TIME_AT_0_LENGTH = 12;
-const TIME_PER_CHAR = 3;
+const TIME_AT_0_LENGTH = 10;
+const TIME_PER_CHAR = 2;
 /*
 - qq prob de tags
 - la function text avait besoin du canvas
