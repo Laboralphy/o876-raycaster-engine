@@ -261,6 +261,90 @@
       "width": 64,
       "height": 64,
       "animations": []
+    },
+    {
+      "id": 79,
+      "src": "assets/textures/3399c336fc67aff9946aa8b5fcd2a1f9.png",
+      "width": 32,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 80,
+      "src": "assets/textures/048a22c71c3335ba4e587862208dae99.png",
+      "width": 32,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 81,
+      "src": "assets/textures/1877b2edba7b1d4450061640699ebd4e.png",
+      "width": 32,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 82,
+      "src": "assets/textures/18fa6df6e6a86d2fdf7bacb267e681d3.png",
+      "width": 32,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 83,
+      "src": "assets/textures/fc7a7afa09d316b75954117884cf16ed.png",
+      "width": 32,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 84,
+      "src": "assets/textures/702bdc6721b4d2e5ed28565c81928761.png",
+      "width": 24,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 85,
+      "src": "assets/textures/230b09d4a0076d6d6212bbd8921c2ee3.png",
+      "width": 24,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 86,
+      "src": "assets/textures/2d1bce7b846bde9f9cd9809ae01ccaa1.png",
+      "width": 21,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 87,
+      "src": "assets/textures/080024c1fd2e0a795d3df1a6669bad34.png",
+      "width": 27,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 88,
+      "src": "assets/textures/7304a36e125b41f9f4a24790c4347057.png",
+      "width": 22,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 89,
+      "src": "assets/textures/ed7ab3cc90903aaa244dbe0316386171.png",
+      "width": 23,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 90,
+      "src": "assets/textures/503d13996e84f3df8f7de030f2175302.png",
+      "width": 27,
+      "height": 96,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -463,6 +547,102 @@
     {
       "id": 22,
       "tileset": 73,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 23,
+      "tileset": 79,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 24,
+      "tileset": 80,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 25,
+      "tileset": 81,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 26,
+      "tileset": 82,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 27,
+      "tileset": 83,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 28,
+      "tileset": 84,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 29,
+      "tileset": 85,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 30,
+      "tileset": 86,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 31,
+      "tileset": 87,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 32,
+      "tileset": 88,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 33,
+      "tileset": 89,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
+    },
+    {
+      "id": 34,
+      "tileset": 90,
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "",
@@ -3408,6 +3588,30 @@
       "animation": null
     },
     {
+      "x": 563,
+      "y": 397,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 34,
+      "animation": null
+    },
+    {
+      "x": 652,
+      "y": 396,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 28,
+      "animation": null
+    },
+    {
+      "x": 652,
+      "y": 416,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 29,
+      "animation": null
+    },
+    {
       "x": 672,
       "y": 394,
       "z": 0,
@@ -3416,12 +3620,52 @@
       "animation": "default"
     },
     {
+      "x": 672,
+      "y": 416,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 31,
+      "animation": null
+    },
+    {
+      "x": 693,
+      "y": 395,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 33,
+      "animation": null
+    },
+    {
+      "x": 781,
+      "y": 397,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 11,
+      "animation": null
+    },
+    {
       "x": 800,
       "y": 394,
       "z": 0,
       "angle": 0,
       "blueprint": 7,
       "animation": "default"
+    },
+    {
+      "x": 819,
+      "y": 397,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 11,
+      "animation": null
+    },
+    {
+      "x": 819,
+      "y": 416,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 11,
+      "animation": null
     },
     {
       "x": 1484,
@@ -3486,6 +3730,14 @@
       "angle": 0,
       "blueprint": 7,
       "animation": "default"
+    },
+    {
+      "x": 565,
+      "y": 693,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 32,
+      "animation": null
     },
     {
       "x": 672,
@@ -3882,11 +4134,35 @@
       }
     },
     {
+      "x": 10,
+      "y": 5,
+      "w": {
+        "tileset": 82,
+        "align": "@DECAL_ALIGN_RIGHT"
+      },
+      "s": {
+        "tileset": 82,
+        "align": "@DECAL_ALIGN_LEFT"
+      }
+    },
+    {
       "x": 11,
       "y": 5,
       "w": {
         "tileset": 63,
         "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 12,
+      "y": 5,
+      "s": {
+        "tileset": 81,
+        "align": "@DECAL_ALIGN_RIGHT"
+      },
+      "e": {
+        "tileset": 81,
+        "align": "@DECAL_ALIGN_LEFT"
       }
     },
     {
@@ -4144,5 +4420,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/a74af13b3b546f17bc6bcc3127b5f9fb.jpg"
+  "preview": "assets/textures/4b52c216eae5d77c393d94802b4b7906.jpg"
 }
