@@ -13547,7 +13547,7 @@
   "flags": {
     "smooth": false,
     "stretch": false,
-    "export": false
+    "export": true
   },
   "time": {
     "interval": 40
@@ -13565,9 +13565,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 11,
-    "y": 26,
-    "angle": 1.5,
+    "x": 18,
+    "y": 8,
+    "angle": 0,
     "thinker": ""
   },
   "preview": "ea6db1a7dd587786547bf6f29fe00a44.jpg"

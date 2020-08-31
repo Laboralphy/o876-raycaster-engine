@@ -215,8 +215,8 @@ class GhostThinker extends MoverThinker {
         // décider de la marche à suivre
         // un spectre va toujours se déplacer en ligne droite, ou bien rester immobile
         // - déterminer le point d'apparition et le point de destination
-
-        const {x, y} = this.entity.position;
+        const entity = this.entity;
+        const {x, y} = entity.position;
         this.setLocation(x, y);
         this.updateVisibilityData();
         this._nOpacity = 0;

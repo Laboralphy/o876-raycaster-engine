@@ -108,17 +108,21 @@ class Sprite {
      * @param iAnim {number} index of the new current animation
      */
     setCurrentAnimation(ref, iAnim = undefined) {
-        const ca = this._currentAnim;
-        const bSameRef = ca.ref === ref;
-        if (iAnim === undefined) {
-            if (bSameRef) {
-                return;
+        if (ref in this._animations) {
+            const ca = this._currentAnim;
+            const bSameRef = ca.ref === ref;
+            if (iAnim === undefined) {
+                if (bSameRef) {
+                    return;
+                }
+                iAnim = Math.min(ca.dir, this._animations[ref].length);
             }
-            iAnim = Math.min(ca.dir, this._animations[ref].length);
+            ca.ref = ref;
+            this._animation = this._animations[ref][iAnim];
+            this._animation.index = 0;
+        } else {
+            throw new Error('this animation does not exists : ' + ref);
         }
-        ca.ref = ref;
-        this._animation = this._animations[ref][iAnim];
-        this._animation.index = 0;
     }
 
     getCurrentAnimation() {

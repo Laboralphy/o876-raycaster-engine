@@ -26,6 +26,11 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+    s_init() {
+        super.s_init();
+        this.entity.sprite.setCurrentAnimation('walk');
+    }
+
     /**
      * The state of "doing nothing"
      * The ghost is pulsating
