@@ -167,13 +167,13 @@ class Grid {
      */
 	cell(x, y, v) {
 		if (v === undefined) {
-			if (y >= 0 && y >= 0 && y < this._height && x < this._width) {
+			if (y >= 0 && y >= 0 && y < this._height && x < this._width) {
 				return this._cells[y][x];
 			} else {
 				return null;
 			}
 		} else {
-			if (y >= 0 && y >= 0 && y < this._height && x < this._width) {
+			if (y >= 0 && y >= 0 && y < this._height && x < this._width) {
 				this._cells[y][x] = v;
 			}
 			return this;
