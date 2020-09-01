@@ -63,6 +63,7 @@ class Collider extends SectorRegistry {
 	 */
 	getCollidingDummies(oDummy) {
 		let a = [];
+		oDummy.lastCollidingDummies = a;
 		let oSector = this.sector(oDummy.position.sub(this._origin));
 		if (!oSector) {
 			return a;
@@ -76,11 +77,10 @@ class Collider extends SectorRegistry {
 		let ix, iy;
 		for (iy = yMin; iy <= yMax; ++iy) {
 			for (ix = xMin; ix <= xMax; ++ix) {
-				a = a.concat(
-					this
-						.sector(ix, iy)
-						.objects
-						.filter(oTest => Collider._entitiesAreHitting(oDummy, oTest))
+				a.push(...this
+					.sector(ix, iy)
+					.objects
+					.filter(oTest => Collider._entitiesAreHitting(oDummy, oTest))
 				);
 			}
 		}
@@ -126,19 +126,6 @@ class Collider extends SectorRegistry {
 			);
         });
     }
-
-    /**
-	 * computes a a collection of forces applied to a dummy subject, returns true if one or more hitter is detected
-     * @param oDummy {Dummy}
-     * @returns {boolean}
-     */
-    computeDummyCollisions(oDummy) {
-		// 1 - for each colliding dummies
-		const aHitters = this.getCollidingDummies(oDummy);
-		this.computeCollidingForces(oDummy, aHitters);
-		return !!aHitters;
-	}
-
 }
 
 export default Collider;

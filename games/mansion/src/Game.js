@@ -36,6 +36,7 @@ class Game extends GameAbstract {
         this.engine.events.on('update', () => this.engineUpdateHandler());
         this.engine.events.on('entity.destroyed', ({entity}) => this.engineEntityDestroyedHandler(entity));
         this.engine.events.on('option.changed', ({key, value}) => this.engineOptionChanged(key, value));
+        this.initGlobalTagHandlers();
         this.log('initialize thinkers');
         this.engine.useThinkers(THINKERS, {game: this});
         this.initScreenHandler();
@@ -158,7 +159,7 @@ class Game extends GameAbstract {
 
     triggerEntityEvent(entity, sEvent, ...args) {
         const oEvents = entity.data.events;
-        if (sEvent in oEvents) {
+        if ((typeof oEvents === 'object') && (sEvent in oEvents)) {
             this.runScript(oEvents[sEvent], entity, ...args);
         }
     }
@@ -510,6 +511,7 @@ class Game extends GameAbstract {
             attack: null,
             damaged: null
         }
+        console.log('spawned', oGhost);
         return oGhost;
     }
 
@@ -590,6 +592,32 @@ class Game extends GameAbstract {
         return aTags;
     }
 
+    initGlobalTagHandlers() {
+        /**
+         * ee = event _events
+         * @type {EventEmitter|module:events.internal|EventEmitter|number|ASTElementHandlers}
+         */
+        this.logGroup('initialize global tag handlers')
+        const oScriptActions = Scripts.tag;
+        const ee = this.engine.events;
+        const actions = ['push', 'enter', 'exit'];
+        for (let s in oScriptActions) {
+            const script = oScriptActions[s];
+            actions.forEach(a => {
+                // "a" vaut 'push', 'enter', 'exit'
+                if (a in script) {
+                    this.log('script', s, a);
+                    ee.on('tag.' + s + '.' + a,({entity, x, y, parameters, remove}) => {
+                        if (entity === this.player) {
+                            script[a](this, remove, x, y, ...parameters)
+                        }
+                    });
+                }
+            });
+        }
+        this.logGroupEnd();
+    }
+
     /**
      * Processes tag initial behavior.
      * Some tags may trigger initial behavior right after level loading.
@@ -604,8 +632,7 @@ class Game extends GameAbstract {
      * when 'tag.item.push' is triggered, the script "item" is loaded and the function "item.push()" is called.
      */
     initTagHandlers() {
-        const oScriptActions = Scripts.tag;
-        this.logGroup('tag handlers')
+        this.logGroup('initialize level tag handlers')
         this.log('calling init on each tag scripts');
         const aDeleted = [];
         this.getTags().forEach(({id, tag, x, y}) => {
@@ -622,27 +649,6 @@ class Game extends GameAbstract {
         aDeleted.forEach(({x, y, id}) => {
             this.engine.tagManager.grid.removeTag(x, y, id);
         });
-        /**
-         * ee = event _events
-         * @type {EventEmitter|module:events.internal|EventEmitter|number|ASTElementHandlers}
-         */
-        const ee = this.engine.events;
-
-        const actions = ['push', 'enter', 'exit'];
-        for (let s in oScriptActions) {
-            const script = oScriptActions[s];
-            actions.forEach(a => {
-                // "a" vaut 'push', 'enter', 'exit'
-                if (a in script) {
-                    this.log('script', s, a);
-                    ee.on('tag.' + s + '.' + a,({entity, x, y, parameters, remove}) => {
-                        if (entity === this.player) {
-                            script[a](this, remove, x, y, ...parameters)
-                        }
-                    });
-                }
-            });
-        }
         this.logGroupEnd();
     }
 

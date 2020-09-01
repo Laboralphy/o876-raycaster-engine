@@ -101,6 +101,12 @@ class Sprite {
         }
     }
 
+    /**
+     * Return the reference of the first defined animation
+     */
+    getFirstAnimation() {
+        return Object.keys(this._animations).shift();
+    }
 
     /**
      * Defines the current animation
@@ -135,8 +141,11 @@ class Sprite {
     setDirection(nDirection) {
         const ca = this._currentAnim;
         const caRef = ca.ref;
-        if (!(caRef in this._animations)) {
+        if (!caRef) {
+            // no animation defined
             return;
+        }
+        if (!(caRef in this._animations)) {
             throw new Error('this reference : "' + caRef + '" is not in current animation');
         }
         // caRef is the last animation type set

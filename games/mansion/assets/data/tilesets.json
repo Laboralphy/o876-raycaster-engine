@@ -1,121 +1,32 @@
 [
-  {
-    "id": "g_angry_girl",
-    "src": "assets/sprites/g-angry-girl.png",
-    "width": 192,
-    "height": 192,
-    "animations": [
-      {
-        "id": "death",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO",
-        "iterations": 4
-      },
-      {
-        "id": "walk",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 200,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "rush",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 120,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "attack",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO"
-      }
-    ]
-  },
-  {
-    "id": "g_banshee",
-    "src": "assets/sprites/g-banshee.png",
-    "width": 192,
-    "height": 192,
-    "animations": [
-      {
-        "id": "death",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO",
-        "iterations": 4
-      },
-      {
-        "id": "walk",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 200,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "rush",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 120,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "attack",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO"
-      }
-    ]
-  },
-  {
-    "id": "g_bashed_boy",
-    "src": "assets/sprites/g-bashed-boy.png",
-    "width": 192,
-    "height": 192,
-    "animations": [
-      {
-        "id": "death",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO",
-        "iterations": 4
-      },
-      {
-        "id": "walk",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 200,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "rush",
-        "start": [0, 0, 0, 0, 0, 0, 0, 0],
-        "length": 5,
-        "duration": 120,
-        "loop": "@LOOP_YOYO"
-      },
-      {
-        "id": "attack",
-        "start": [4, 4, 4, 4, 4, 4, 4, 4],
-        "length": 5,
-        "duration": 80,
-        "loop": "@LOOP_YOYO"
-      }
-    ]
-  },
-  {
-    "id": "w_cowled_skull",
-    "src": "assets/sprites/w_cowled_skull.png",
-    "width": 109,
-    "height": 192,
-    "animations": []
-  }
+  { "id": "g_angry_girl", "src": "assets/sprites/g_angry_girl.png", "width": 192,"height": 192,"animations":[{"id": "death","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO","iterations": 4},{"id": "walk","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 200,"loop": "@LOOP_YOYO"},{"id": "rush","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 120,"loop": "@LOOP_YOYO"},{"id": "attack","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO"}]},
+  { "id": "g_banshee", "src": "assets/sprites/g_banshee.png", "width": 192,"height": 192,"animations":[{"id": "death","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO","iterations": 4},{"id": "walk","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 200,"loop": "@LOOP_YOYO"},{"id": "rush","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 120,"loop": "@LOOP_YOYO"},{"id": "attack","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO"}]},
+  { "id": "g_bashed_boy", "src": "assets/sprites/g_bashed_boy.png", "width": 192,"height": 192,"animations":[{"id": "death","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO","iterations": 4},{"id": "walk","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 200,"loop": "@LOOP_YOYO"},{"id": "rush","start": [0, 0, 0, 0, 0, 0, 0, 0],"length": 5,"duration": 120,"loop": "@LOOP_YOYO"},{"id": "attack","start": [4, 4, 4, 4, 4, 4, 4, 4],"length": 5,"duration": 80,"loop": "@LOOP_YOYO"}]},
 
+  { "id": "w_cowled_skull", "src": "assets/sprites/w_cowled_skull.png", "width": 109,"height": 192,"animations": []},
+
+  { "id": "o_flame",
+    "src": "assets/sprites/o_flame.png",
+    "width": 62,
+    "height": 96,
+    "animations": [
+      {
+        "id": "burn",
+        "start": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        "length": 17,
+        "duration": 80,
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
+      }
+    ]
+  }
 ]

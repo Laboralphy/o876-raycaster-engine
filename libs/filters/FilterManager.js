@@ -1,4 +1,4 @@
-import AbstractFilter from "libs/filters/AbstractFilter";
+import AbstractFilter from "../../libs/filters/AbstractFilter";
 
 class FilterManager {
 

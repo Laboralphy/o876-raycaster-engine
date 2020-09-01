@@ -9,6 +9,7 @@ import ForceField from "../force-field/ForceField";
 
 class Dummy {
 	constructor() {
+	    this._entity = 0;
 		this._position = new Vector();
 		this._dead = false; // les mobile noté "dead" doivent être retiré du jeu
 		this._radius = 0;
@@ -18,7 +19,16 @@ class Dummy {
 		};
 		this.colliderSector = null;
 		this.forceField = new ForceField();
+		this.lastCollidingDummies = [];
 	}
+
+	set entity(value) {
+	    this._entity = value;
+    }
+
+    get entity() {
+	    return this._entity;
+    }
 
 	get tangibility() {
 	    return this._tangibility;

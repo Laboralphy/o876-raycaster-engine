@@ -378,56 +378,66 @@ class Engine {
      * @param nTime {number} number of milliseconds you want to advance simulation
      */
     _update(nTime) {
-        const tp = this._TIME_INTERVAL;
-        this._time += nTime;
-        const tm = this._timeMod + nTime;
-        const nTimes = Math.min(10, tm / tp | 0);
-        this._timeMod = tm % tp;
-        let bRender = false;
-        this._filters.process(this._time);
-        for (let i = 0; i < nTimes; ++i) {
-            // logic doom loop here
-            this._scheduler.schedule(this._time);
-            this._doorProcess();
-            // entity management
-            //this._camera.think(this); // camera is now in the entity list
-            this._horde.process(this);
-            this
-                ._horde
-                .getDeadEntities()
-                .forEach(e => this.destroyEntity(e));
-            // special effect management
-            this._tm.hordeProcess(this);
-            bRender = true;
-            this._events.emit('update');
-        }
-        if (bRender) {
-            this._render();
+        try {
+            const tp = this._TIME_INTERVAL;
+            this._time += nTime;
+            const tm = this._timeMod + nTime;
+            const nTimes = Math.min(10, tm / tp | 0);
+            this._timeMod = tm % tp;
+            let bRender = false;
+            this._filters.process(this._time);
+            for (let i = 0; i < nTimes; ++i) {
+                // logic doom loop here
+                this._scheduler.schedule(this._time);
+                this._doorProcess();
+                // entity management
+                //this._camera.think(this); // camera is now in the entity list
+                this._horde.process(this);
+                this
+                    ._horde
+                    .getDeadEntities()
+                    .forEach(e => this.destroyEntity(e));
+                // special effect management
+                this._tm.hordeProcess(this);
+                bRender = true;
+                this._events.emit('update');
+            }
+            if (bRender) {
+                this._render();
+            }
+        } catch (e) {
+            console.error(e);
+            this.stopDoomLoop();
         }
     }
 
     _render() {
-        /**
-         * The raycaster instance
-         * @type {Renderer}
-         */
-        const rend = this._rc;
-        // recompute all texture/sprite animation with a time-delta of 40ms
-        rend.computeAnimations(this._TIME_INTERVAL);
-        // create a new scene for these parameters
-        const camera = this._camera;
-        if (camera) {
-            const loc = camera.position;
-            // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
-            rend.render(loc.x, loc.y, loc.angle, loc.z);
-            this._events.emit('render');
-            this._filters.render(rend.renderCanvas);
-            // display the raycaster internal canvas on the physical DOM canvas
-            // requestAnimationFrame is called here to v-synchronize and have a neat animation
-            requestAnimationFrame(() => {
-                rend.flip(this._renderContext);
-                this._events.emit('flip');
-            });
+        try {
+            /**
+             * The raycaster instance
+             * @type {Renderer}
+             */
+            const rend = this._rc;
+            // recompute all texture/sprite animation with a time-delta of 40ms
+            rend.computeAnimations(this._TIME_INTERVAL);
+            // create a new scene for these parameters
+            const camera = this._camera;
+            if (camera) {
+                const loc = camera.position;
+                // render the scene, the scene will be rendered on the internal canvas of the raycaster renderer
+                rend.render(loc.x, loc.y, loc.angle, loc.z);
+                this._events.emit('render');
+                this._filters.render(rend.renderCanvas);
+                // display the raycaster internal canvas on the physical DOM canvas
+                // requestAnimationFrame is called here to v-synchronize and have a neat animation
+                requestAnimationFrame(() => {
+                    rend.flip(this._renderContext);
+                    this._events.emit('flip');
+                });
+            }
+        } catch (e) {
+            console.error(e);
+            this.stopDoomLoop();
         }
     }
 

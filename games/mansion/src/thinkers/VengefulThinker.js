@@ -14,7 +14,7 @@ class VengefulThinker extends GhostThinker {
 
             // on brule
             "s_burn": [
-                ["t_burn_anim_over", "s_despawn"]
+                ["t_burn_anim_over", "s_spawn_flame", "s_despawn"]
             ]
         };
     }
@@ -47,8 +47,13 @@ class VengefulThinker extends GhostThinker {
         this.entity.sprite.setCurrentAnimation('death');
     }
 
+    s_spawn_flame() {
+        const p = this.entity.position;
+        this.engine.createEntity("o_flame", p);
+    }
+
     s_burn() {
-        //this.pulse();
+        this.pulse();
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -63,6 +68,9 @@ class VengefulThinker extends GhostThinker {
         return this.entity.sprite.getCurrentAnimation().frozen;
     }
 
+    t_collision_target() {
+        this.entity.collider()
+    }
 
     /**
      * returns true if target is in melee attack range
