@@ -1,6 +1,6 @@
 import MarkerRegistry from "../marker-registry/MarkerRegistry";
 import Bresenham from "../bresenham";
-import Grid from "../grid/Grid";
+import Grid from "@laboralphy/grid";
 import Geometry from "../geometry";
 import {linear} from "../interpolator";
 import LightSource from "./LightSource";
@@ -43,8 +43,8 @@ class LightMap {
      * @param h {number} number of cells (y axis)
      */
     setSize(w, h) {
-        this._grid.setWidth(w);
-        this._grid.setHeight(h);
+        this._grid.width = w;
+        this._grid.height = h;
         this._grid.iterate((x, y, n) => []);
     }
 
@@ -142,8 +142,8 @@ class LightMap {
         const r0 = m.r0;
         const r1 = m.r1;
         const g = this._grid;
-        const xMax = g.getWidth();
-        const yMax = g.getHeight();
+        const xMax = g.width;
+        const yMax = g.height;
         Bresenham.line(x0, y0, x1, y1, (x, y, n) => {
             if (x >= 0 && y >= 0 && x < xMax && y < yMax) {
                 if (cc.isMarked(x, y)) {

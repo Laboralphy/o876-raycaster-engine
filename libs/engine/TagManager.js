@@ -18,8 +18,8 @@ class TagManager {
 
 
     setMapSize(n) {
-        this._tg.setWidth(n);
-        this._tg.setHeight(n);
+        this._tg.width = n;
+        this._tg.height = n;
     }
 
     _checkEntityContext(entity) {

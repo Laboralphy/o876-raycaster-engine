@@ -47,6 +47,7 @@
     "webpack-cli": "^3.3.0"
   },
   "dependencies": {
+    "@laboralphy/grid": "^1.0.0",
     "@laboralphy/ws-service": "^0.2.0",
     "archiver": "^3.0.0",
     "body-parser": "^1.19.0",

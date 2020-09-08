@@ -3,8 +3,8 @@ const TagGrid = require('../libs/tag-grid').default;
 describe('#tags-grid', function() {
     it('should work 1', function() {
         const tg = new TagGrid();
-        tg.setWidth(10);
-        tg.setHeight(10);
+        tg.width = (10);
+        tg.height = (10);
         let id = tg.addTag(0, 0, 'the first tags');
         expect(id).toBe(1);
         expect(tg.cell(0, 0)).toEqual(new Set([1]));
@@ -12,8 +12,8 @@ describe('#tags-grid', function() {
 
     it('should work 2', function() {
         const tg = new TagGrid();
-        tg.setWidth(10);
-        tg.setHeight(10);
+        tg.width = (10);
+        tg.height = (10);
         let id1 = tg.addTag(4, 0, 'the first tags');
         let id2 = tg.addTag(4, 0, 'the second tags');
         expect(id1).toBe(1);
@@ -28,8 +28,8 @@ describe('#tags-grid', function() {
 
     it('should visit', function() {
         const tg = new TagGrid();
-        tg.setWidth(10);
-        tg.setHeight(10);
+        tg.width = (10);
+        tg.height = (10);
         tg.addTag(0, 0, '111');
         tg.addTag(0, 0, '222'); // 111 222
 
@@ -53,8 +53,8 @@ describe('#tags-grid', function() {
 
     it('should build a tag list', function() {
         const tg = new TagGrid();
-        tg.setWidth(10);
-        tg.setHeight(10);
+        tg.width = (10);
+        tg.height = (10);
         tg.addTag(0, 0, 't111');
         tg.addTag(0, 0, 't222 "cy z"'); // 111 222
         tg.addTag(1, 0, 't222'); //     222

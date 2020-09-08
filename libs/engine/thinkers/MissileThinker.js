@@ -13,18 +13,18 @@ class MissileThinker extends TangibleThinker {
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
         this.defineTransistions({
-            "s_move": {
-                "t_hitSomething": "s_hit"
-            },
-            "s_hit": {
-                1: "s_explode"
-            },
-            "s_explode": {
-                "t_explosionFinished": "s_dead"
-            },
-            "s_dead": {
-                1: "s_idle"
-            }
+            "s_move": [
+                ["t_hitSomething", "s_hit"]
+            ],
+            "s_hit": [
+                [1,  "s_explode"]
+            ],
+            "s_explode": [
+                ["t_explosionFinished", "s_dead"]
+            ],
+            "s_dead": [
+                [1, "s_idle"]
+            ]
         });
     }
 

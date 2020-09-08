@@ -12,11 +12,9 @@ class Horde {
     }
 
     setMapSize(w) {
-        this
-            ._sectors
-            .grid
-            .setWidth(w)
-            .setHeight(w);
+        const g = this._sectors.grid;
+        g.width = w;
+        g.height = w;
     }
 
     setSectorSize(n) {
@@ -156,7 +154,7 @@ class Horde {
      */
     getEntitiesAt(xSector, ySector) {
         const g = this._sectors;
-        const nSize = g.grid.getWidth();
+        const nSize = g.grid.width;
         if (xSector > 0 && ySector > 0 && xSector < nSize && ySector < nSize) {
             return g.sector(xSector, ySector).objects;
         } else {

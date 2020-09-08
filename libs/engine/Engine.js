@@ -1201,8 +1201,8 @@ class Engine {
         // sync with tag grid
         const ps = this.cellSize;
         this.horde.setSectorSize(ps);
-        this._collider.grid.setWidth(nMapSize * ps / this._collider.getCellWidth());
-        this._collider.grid.setHeight(nMapSize * ps / this._collider.getCellHeight());
+        this._collider.grid.width = nMapSize * ps / this._collider.getCellWidth();
+        this._collider.grid.height = nMapSize * ps / this._collider.getCellHeight();
 
         // static objects
         data.objects.forEach(o => {

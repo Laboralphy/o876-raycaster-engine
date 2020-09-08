@@ -4,7 +4,7 @@
  * it helps process entiteis among others witin a limited region of 2d space
  */
 
-import Grid from '../grid/Grid';
+import Grid from '@laboralphy/grid';
 import Sector from './Sector';
 
 class SectorRegistry {

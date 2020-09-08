@@ -72,8 +72,8 @@ class Collider extends SectorRegistry {
 		let y = oSector.y;
 		let xMin = Math.max(0, x - 1);
 		let yMin = Math.max(0, y - 1);
-		let xMax = Math.min(this._grid.getWidth() - 1, x + 1);
-		let yMax = Math.min(this._grid.getHeight() - 1, y + 1);
+		let xMax = Math.min(this._grid.width - 1, x + 1);
+		let yMax = Math.min(this._grid.height - 1, y + 1);
 		let ix, iy;
 		for (iy = yMin; iy <= yMax; ++iy) {
 			for (ix = xMin; ix <= xMax; ++ix) {

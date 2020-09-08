@@ -11,8 +11,9 @@ class StaticTangibleThinker extends MoverThinker {
         super();
         this._dummy = new Dummy();
         this.defineTransistions({
-            "s_standing": {}
-        })
+            "s_standing": []
+        });
+        this.automaton.state = "s_standing";
     }
 
     syncDummy() {

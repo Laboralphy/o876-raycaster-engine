@@ -5,7 +5,7 @@
  * you can "visit" each cell of the grid, the tag list of the cell you are currently on, will change, and you will be warned when so.
  */
 
-import Grid from "../grid";
+import Grid from "@laboralphy/grid";
 import Painting from "../painting";
 import {quoteSplit} from "../quote-split";
 
@@ -117,7 +117,7 @@ class TagGrid extends Grid {
             return false;
         }
         const formerTags = this.cell(xFormer, yFormer) || new Set();
-        const laterTags = this.cell(xLater, yLater) || new Set();
+        const laterTags = this.cell(xLater, yLater) || new Set();
         // in formerTags, not in laterTags
         const xOld = new Set([...formerTags].filter(x => !laterTags.has(x)));
         const xNew = new Set([...laterTags].filter(x => !formerTags.has(x)));

@@ -10,7 +10,7 @@ class StaticThinker extends Thinker {
         super();
         //this._dummy = new Dummy();
         this.defineTransistions({
-            "s_standing": {}
+            "s_standing": []
         });
     }
 }
