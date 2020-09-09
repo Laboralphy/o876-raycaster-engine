@@ -1,5 +1,5 @@
-const Collider = require('../libs/collider/Collider').default;
-const Dummy = require('../libs/collider/Dummy').default;
+const Collider = require('../libs/smasher/Smasher').default;
+const Dummy = require('../libs/smasher/Dummy').default;
 const Vector = require('../libs/geometry/Vector').default;
 
 

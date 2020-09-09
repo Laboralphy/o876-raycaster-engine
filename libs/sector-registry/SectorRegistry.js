@@ -43,6 +43,12 @@ class SectorRegistry {
         return this._grid;
     }
 
+    sectorFromVector(v) {
+        const x = v.x / this._cellWidth | 0;
+        const y = v.y / this._cellHeight | 0;
+        return this.sector(x, y);
+    }
+
     /**
      * Return the sector corresponding to the given coordinates
      * if the parameters are number, the real sector indices are used (0, 1, 2...)
@@ -51,9 +57,9 @@ class SectorRegistry {
      * @param y {number|undefined} position y
      * @return {*}
      */
-    sector(x, y = undefined) {
+    sector(x, y) {
         if (y === undefined) {
-            return this._grid.cell(x.x / this._cellWidth | 0, x.y / this._cellHeight | 0);
+            throw new Error('x and y are mandatory to access a smasher sector');
         } else {
             return this._grid.cell(x, y);
         }

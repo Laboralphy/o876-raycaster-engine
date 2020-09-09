@@ -1,5 +1,6 @@
 import Position from "./Position";
 import Vector from "../geometry/Vector";
+import Dummy from "libs/smasher/Dummy";
 
 
 let LAST_ID = 0;
@@ -26,9 +27,13 @@ class Entity {
         this._dead = false;
         this._lightsource = null;
         this._sector = null; // this is a logical sector, for tag and door management purpose (not collision)
+        this._dummy = new Dummy();
         this.data = {}; // user data
     }
 
+    get dummy() {
+        return this._dummy;
+    }
 
     get sector() {
         return this._sector;

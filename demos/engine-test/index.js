@@ -322,7 +322,6 @@ async function main() {
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
-
     // retrieves the camera thinker. it's a DevKbdThinker
     // which is a thinker of keyboard control, for controlling the camera
     // we want to customize keyboard event

@@ -12,9 +12,6 @@ class Thinker {
         this._engine = null;
         this._automaton = new Automaton();
         this._automaton.instance = this;
-        // this.defineTransistions({
-        //     "idle": []
-        // });
     }
 
     get context() {

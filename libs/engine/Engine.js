@@ -22,11 +22,11 @@ import {jsonValidate} from '../json-validate';
 import SCHEMA_RCE_100 from '../schemas/rce-100.json';
 
 import Events from "events";
-import Collider from "../collider/Collider";
 import TagManager from "./TagManager";
 import FilterManager from "../filters/FilterManager";
 import MarkerRegistry from "../marker-registry";
 import Position from "./Position";
+import Smasher from "libs/smasher/Smasher";
 
 
 class Engine {
@@ -50,9 +50,10 @@ class Engine {
         this._thinkers = {};
         this._thinkerContext = {};
         this.useThinkers(thinkers);
-        this._collider = new Collider(); // this collider is freely used by certain thinkers
-        this._collider.setCellWidth(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
-        this._collider.setCellHeight(CONSTS.METRIC_COLLIDER_SECTOR_SIZE);
+
+        this._smasher = new Smasher();
+        this._smasher.setCellWidth(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
+        this._smasher.setCellHeight(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
 
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
@@ -82,6 +83,10 @@ class Engine {
      */
     get events() {
         return this._events;
+    }
+
+    get smasher() {
+        return this._smasher;
     }
 
     /**
@@ -391,8 +396,9 @@ class Engine {
                 this._scheduler.schedule(this._time);
                 this._doorProcess();
                 // entity management
-                //this._camera.think(this); // camera is now in the entity list
+                //this._camera.think(this); // camera is now in the entity list : indx 0
                 this._horde.process(this);
+                this._smasher.process();
                 this
                     ._horde
                     .getDeadEntities()
@@ -984,6 +990,7 @@ class Engine {
                 e.lightsource.remove();
             }
             this._rc.disposeSprite(e.sprite);
+            this._smasher.unregisterDummy(e.dummy);
             this._horde.unlinkEntity(e);
             this.events.emit('entity.destroyed', {entity: e});
         }
@@ -1005,6 +1012,15 @@ class Engine {
             outerRadius,
             intensity
         );
+    }
+
+    syncEntityDummy(entity) {
+        const dummy = entity.dummy;
+        const position = entity.position;
+        const smasher = this._smasher;
+        dummy.radius = entity.size;
+        dummy.position.set(position.x, position.y);
+        smasher.updateDummy(dummy);
     }
 
 
@@ -1201,8 +1217,8 @@ class Engine {
         // sync with tag grid
         const ps = this.cellSize;
         this.horde.setSectorSize(ps);
-        this._collider.grid.width = nMapSize * ps / this._collider.getCellWidth();
-        this._collider.grid.height = nMapSize * ps / this._collider.getCellHeight();
+        this._smasher.grid.width = nMapSize * ps / this._smasher.getCellWidth();
+        this._smasher.grid.height = nMapSize * ps / this._smasher.getCellHeight();
 
         // static objects
         data.objects.forEach(o => {
@@ -1222,7 +1238,6 @@ class Engine {
             z: z // camera altitude (1 is the default object)
         });
         this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
-
 
         const FACES = 'wsenfc';
 

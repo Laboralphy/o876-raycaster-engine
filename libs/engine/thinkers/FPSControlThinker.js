@@ -13,7 +13,6 @@ class FPSControlThinker extends TangibleThinker {
 
     constructor() {
         super();
-        this.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
         this._easing = new Easing();
         this._easing.setFunction(Easing.LINEAR);
         this._easing.setStepCount(ANGLE_INT_MAX_TIME);
@@ -274,6 +273,11 @@ class FPSControlThinker extends TangibleThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+
+    s_init() {
+        super.s_init();
+        this.entity.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
+    }
 
     s_move() {
         this.computeSpeedVector();

@@ -8,7 +8,6 @@ import Thinker from "./Thinker";
 class StaticThinker extends Thinker {
     constructor() {
         super();
-        //this._dummy = new Dummy();
         this.defineTransistions({
             "s_standing": []
         });

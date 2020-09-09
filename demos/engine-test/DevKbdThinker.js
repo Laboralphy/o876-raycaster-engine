@@ -11,7 +11,7 @@ class DevKbdThinker extends TangibleThinker {
 
     constructor() {
         super();
-        this.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
+//        this.entity.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
         this._easing = new Easing();
         this._easing.setFunction(Easing.LINEAR);
         this._easing.setStepCount(ANGLE_INT_MAX_TIME);
@@ -22,7 +22,6 @@ class DevKbdThinker extends TangibleThinker {
             right: false,
             left: false
         };
-
         this._lastTime = 0;
     }
 
@@ -98,7 +97,7 @@ class DevKbdThinker extends TangibleThinker {
         const k = this._keys;
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
-        const oEntLoc = this.entity.position;
+        const oEntLoc = entity.position;
 
         const forw = (k.up !== false ? 'f' : '') + (k.down !== false ? 'b' : '');
         switch (forw) {

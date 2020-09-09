@@ -1,4 +1,3 @@
-import Dummy from "../../collider/Dummy";
 import MoverThinker from "./MoverThinker";
 
 
@@ -7,39 +6,36 @@ import MoverThinker from "./MoverThinker";
  * the collider and force field instances allows this thinker to properly react after any collision
  */
 class TangibleThinker extends MoverThinker {
+
     constructor() {
         super();
-        this._dummy = new Dummy();
-    }
-
-    get dummy() {
-        return this._dummy;
-    }
-
-    syncDummy() {
-        // synchronizing dummy position
-        const engine = this.engine;
-        const entity = this.entity;
-        const dummy = this.dummy;
-        const position = entity.position;
-        const collider = engine._collider;
-        dummy.radius = entity.size;
-        dummy.position.set(position.x, position.y);
-        collider.updateDummy(dummy);
-        const f = collider.getCollidingForce(dummy);
-        this.slide(f);
-        dummy.position.set(position.x, position.y);
+        this.transitions = {
+            "s_init": [[1, "s_move"]],
+            "s_move": []
+        };
+        this.automaton.state = "s_init";
     }
 
     processForces() {
         // synchronizing dummy position
-        this.syncDummy();
+        const engine = this.engine;
+        const entity = this.entity;
+        const dummy = entity.dummy;
+        engine.syncEntityDummy(entity);
+        const f = engine.smasher.getSmashingForce(dummy);
+        this.slide(f);
+        dummy.position.set(entity.position.x, entity.position.y);
     }
 
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+
+    s_init() {
+        this.engine.smasher.registerDummy(this.entity.dummy);
+        this.processForces();
+    }
 
     s_move() {
         super.s_move();

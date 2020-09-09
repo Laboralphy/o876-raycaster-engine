@@ -18,11 +18,12 @@ class ForceField {
      * adds a force in the field collection
      * @param v {Vector} force
      * @param f {number} dim factor. this factor is use when the force is reduced
-     * @param extraData {*} extra custom data (identifier etc...) not used in any computation
      * @returns {*} a structure
      */
-    addForce(v, f, extraData = {}) {
-        let fNew = Object.assign({}, {v, f}, extraData);
+    addForce(v, f) {
+        let fNew = {
+            v, f
+        };
         this._forces.push(fNew);
         return fNew;
     }

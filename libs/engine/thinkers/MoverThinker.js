@@ -11,7 +11,6 @@ class MoverThinker extends Thinker {
         super();
         this._speed = new Vector(); // real speed vector that controls the entity movement
         this._bHasChangedMovement = true;
-        this._bNewSector = false;
         this._bCrashWall = false;
         this._cwc = null;
         this._xSector = -1;

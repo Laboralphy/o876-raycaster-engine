@@ -26,6 +26,7 @@ class MissileThinker extends TangibleThinker {
                 [1, "s_idle"]
             ]
         });
+        this.automaton.state = "s_move";
     }
 
     get victims() {
@@ -39,7 +40,7 @@ class MissileThinker extends TangibleThinker {
         // prepare data
         const oOwnerLocation = owner.position;
         const missile = this.entity;
-        const dummy = this.dummy;
+        const dummy = missile.dummy;
         const engine = this.engine;
 
         // define tangibility
@@ -48,9 +49,6 @@ class MissileThinker extends TangibleThinker {
 
         // synchronize position
         missile.position.set(oOwnerLocation);
-
-        // updateDummy missile on the collider
-        engine._collider.updateDummy(dummy);
 
         // set proper speed vector
         const {dx, dy} = Geometry.polar2rect(oOwnerLocation.angle, speed);
@@ -64,11 +62,11 @@ class MissileThinker extends TangibleThinker {
      * @returns {Dummy[]}
      */
     getCollidingDummies() {
-        const aDummies = this.engine._collider.getCollidingDummies(this._dummy);
-        if (aDummies.length > 0) {
+        const aDummies = this.engine.smasher._getSmashingDummies(this.entity.dummy);
+        if (!!aDummies && aDummies.length > 0) {
             // expel owner from colliding dummies list
             const owner = this._owner;
-            const ownerDummy = owner.thinker.dummy;
+            const ownerDummy = owner.dummy;
             const nOwnerIndex = aDummies.indexOf(ownerDummy);
             if (nOwnerIndex >= 0) {
                 aDummies.splice(nOwnerIndex, 1);
@@ -97,7 +95,8 @@ class MissileThinker extends TangibleThinker {
      */
     t_hitSomething() {
         const bHitWall = !!this._cwc.wcf.c;
-        const bHitThing = this.getCollidingDummies().length > 0;
+        const aHitters = this.getCollidingDummies();
+        const bHitThing = !!aHitters && aHitters.length > 0;
         return bHitThing || bHitWall;
     }
 

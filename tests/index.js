@@ -5,7 +5,7 @@ require('./AnimationTest');
 require('./SchedulerTest');
 require('./DoorContextTest');
 require('./LocationTest');
-require('./ColliderTest');
+//require('./ColliderTest');
 require('./GridTest');
 require('./LightSourcesTest');
 require('./LightSourcesTest');
