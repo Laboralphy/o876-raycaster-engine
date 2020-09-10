@@ -10,14 +10,9 @@ class StaticTangibleThinker extends TangibleThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     processForces() {
-        // synchronizing dummy position
-        const engine = this.engine;
-        const entity = this.entity;
-        engine.syncEntityDummy(entity);
     }
 
     s_move() {
-        this.processForces();
     }
 }
 

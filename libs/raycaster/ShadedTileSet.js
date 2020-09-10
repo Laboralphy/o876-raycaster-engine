@@ -80,7 +80,7 @@ class ShadedTileSet {
     }
 
     /**
-	 * This function will keep updateDummy of the original unmodified tileset
+	 * This function will keep updateEntity of the original unmodified tileset
 	 * the shading computations will not alter this original image, so the computation may be rerun with
 	 * other visual setting, fog pigment etc...
      * @param oImage {Image|HTMLCanvasElement}

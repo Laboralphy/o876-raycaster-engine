@@ -122,7 +122,7 @@ class GameAbstract {
         engine.useThinkers(this._options.thinkers);
         engine.setRenderingCanvas(surface);         // configure the engine, so it uses our canvas
         engine.events.on('level.loading', ({phase, progress}) => this.progressFunction(phase, progress));
-        this._engine = engine;                      // keeping updateDummy of the engine instance
+        this._engine = engine;                      // keeping updateEntity of the engine instance
         return this;
     }
 

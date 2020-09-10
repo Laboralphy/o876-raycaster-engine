@@ -115,6 +115,7 @@ class Sprite {
      */
     setCurrentAnimation(ref, iAnim = undefined) {
         if (ref in this._animations) {
+            console.log(ref, iAnim)
             const ca = this._currentAnim;
             const bSameRef = ca.ref === ref;
             if (iAnim === undefined) {

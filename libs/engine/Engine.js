@@ -54,6 +54,9 @@ class Engine {
         this._smasher = new Smasher();
         this._smasher.setCellWidth(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
         this._smasher.setCellHeight(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
+        this._smasher.events.on('entity.dummy.update', ({entity}) => {
+            this._syncEntityDummy(entity);
+        });
 
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
@@ -971,7 +974,7 @@ class Engine {
 
         // dynamic light
         if (!!bp.lightsource) {
-            this.linkEntityLightsource(
+            this.linkEntityLightSource(
                 entity,
                 parseFloat(bp.lightsource.v),
                 parseFloat(bp.lightsource.r0),
@@ -990,7 +993,7 @@ class Engine {
                 e.lightsource.remove();
             }
             this._rc.disposeSprite(e.sprite);
-            this._smasher.unregisterDummy(e.dummy);
+            this._smasher.unregisterDummy(e);
             this._horde.unlinkEntity(e);
             this.events.emit('entity.destroyed', {entity: e});
         }
@@ -1003,7 +1006,7 @@ class Engine {
      * @param innerRadius {number} light source inner radius
      * @param outerRadius {number} light source outer radius
      */
-    linkEntityLightsource(entity, intensity, innerRadius, outerRadius) {
+    linkEntityLightSource(entity, intensity, innerRadius, outerRadius) {
         const position = entity.position;
         entity.lightsource = this.createLightSource(
             position.x,
@@ -1014,13 +1017,16 @@ class Engine {
         );
     }
 
-    syncEntityDummy(entity) {
+    /**
+     * synchronize dummy position and size with its entity
+     * @param entity {Entity}
+     * @private
+     */
+    _syncEntityDummy(entity) {
         const dummy = entity.dummy;
         const position = entity.position;
-        const smasher = this._smasher;
         dummy.radius = entity.size;
         dummy.position.set(position.x, position.y);
-        smasher.updateDummy(dummy);
     }
 
 

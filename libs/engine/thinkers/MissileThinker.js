@@ -13,6 +13,9 @@ class MissileThinker extends TangibleThinker {
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
         this.defineTransistions({
+            "s_init": [
+                [1, "s_move"]
+            ],
             "s_move": [
                 ["t_hitSomething", "s_hit"]
             ],
@@ -26,11 +29,7 @@ class MissileThinker extends TangibleThinker {
                 [1, "s_idle"]
             ]
         });
-        this.automaton.state = "s_move";
-    }
-
-    get victims() {
-        return this._victims;
+        this.automaton.state = "s_init";
     }
 
     fire(owner, speed) {
@@ -41,7 +40,6 @@ class MissileThinker extends TangibleThinker {
         const oOwnerLocation = owner.position;
         const missile = this.entity;
         const dummy = missile.dummy;
-        const engine = this.engine;
 
         // define tangibility
         dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_MISSILE;
@@ -53,6 +51,7 @@ class MissileThinker extends TangibleThinker {
         // set proper speed vector
         const {dx, dy} = Geometry.polar2rect(oOwnerLocation.angle, speed);
         this.setSpeed(dx, dy);
+        this.engine.horde.updateLookingAngle(missile, this.engine.camera);
     }
 
 
@@ -61,18 +60,16 @@ class MissileThinker extends TangibleThinker {
      * does not include owner
      * @returns {Dummy[]}
      */
-    getCollidingDummies() {
-        const aDummies = this.engine.smasher._getSmashingDummies(this.entity.dummy);
-        if (!!aDummies && aDummies.length > 0) {
+    getCollidingEntities() {
+        const aEntities = this.entity.dummy.smashers;
+        if (!!aEntities && aEntities.length > 0) {
             // expel owner from colliding dummies list
-            const owner = this._owner;
-            const ownerDummy = owner.dummy;
-            const nOwnerIndex = aDummies.indexOf(ownerDummy);
+            const nOwnerIndex = aEntities.indexOf(this._owner);
             if (nOwnerIndex >= 0) {
-                aDummies.splice(nOwnerIndex, 1);
+                aEntities.splice(nOwnerIndex, 1);
             }
         }
-        return aDummies;
+        return aEntities;
     }
 
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
@@ -95,7 +92,7 @@ class MissileThinker extends TangibleThinker {
      */
     t_hitSomething() {
         const bHitWall = !!this._cwc.wcf.c;
-        const aHitters = this.getCollidingDummies();
+        const aHitters = this.getCollidingEntities();
         const bHitThing = !!aHitters && aHitters.length > 0;
         return bHitThing || bHitWall;
     }

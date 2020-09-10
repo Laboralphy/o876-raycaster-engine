@@ -13,10 +13,9 @@ class ForceField {
      * ajoute une force
      * @param v {Vector} vecteur de force
      * @param f {number} facteur d'atténuation
-     * @param extraData {*} données sup'
      */
-    force(v, f, extraData) {
-        let fNew = {v, f, ...extraData};
+    force(v, f) {
+        let fNew = {v, f};
         this._forces.push(fNew);
         return fNew;
     }
@@ -41,7 +40,7 @@ class ForceField {
      * Réduit l'effet des forces appliquées au mobile
      */
     reduceForces() {
-        this._forces = this._forces.filter(f => f.v.scale(f.f).normalize() < 0.01);
+        this._forces = this._forces.filter(f => f.v.scale(f.f).length() < 0.01);
     }
 }
 

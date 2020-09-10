@@ -19,7 +19,25 @@ class Dummy {
             hitmask: 1
         };
         this.colliderSector = null;
+        this._smashers = [];
         this.forceField = new ForceField();
+        this._force = new Vector();
+    }
+
+    setSmashers(a) {
+        this._smashers.splice(0, this._smashers.length, ...a);
+    }
+
+    clearSmashers() {
+        this._smashers.splice(0, this._smashers.length);
+    }
+
+    get smashers() {
+        return this._smashers;
+    }
+
+    get force() {
+        return this._force;
     }
 
     get mass() {

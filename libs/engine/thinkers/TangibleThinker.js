@@ -21,8 +21,7 @@ class TangibleThinker extends MoverThinker {
         const engine = this.engine;
         const entity = this.entity;
         const dummy = entity.dummy;
-        engine.syncEntityDummy(entity);
-        const f = engine.smasher.getSmashingForce(dummy);
+        const f = dummy.force;
         this.slide(f);
         dummy.position.set(entity.position.x, entity.position.y);
     }
@@ -33,7 +32,7 @@ class TangibleThinker extends MoverThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
     s_init() {
-        this.engine.smasher.registerDummy(this.entity.dummy);
+        this.engine.smasher.registerEntity(this.entity);
         this.processForces();
     }
 

@@ -63,9 +63,9 @@ describe('#collider', function() {
                 m3.radius = 10;
                 m3.position = new Vector(110, 102);
 
-                collider.updateDummy(m1);
-                collider.updateDummy(m2);
-                collider.updateDummy(m3);
+                collider.updateEntity(m1);
+                collider.updateEntity(m2);
+                collider.updateEntity(m3);
 
                 collider.computeCollidingForces(m3, [m1, m2]);
 
