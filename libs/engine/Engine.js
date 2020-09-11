@@ -54,8 +54,12 @@ class Engine {
         this._smasher = new Smasher();
         this._smasher.setCellWidth(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
         this._smasher.setCellHeight(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
+
         this._smasher.events.on('entity.dummy.update', ({entity}) => {
             this._syncEntityDummy(entity);
+        });
+        this._smasher.events.on('entity.smashed', ({entity, smashers}) => {
+            this._smashEntity(entity);
         });
 
         this._TIME_INTERVAL = 40;
@@ -970,7 +974,9 @@ class Engine {
         entity.thinker = this.createThinkerInstance(bp.thinker);
         entity.sprite = sprite;
         entity.size = bp.size;
-        entity.data = bp.data;
+        entity.data = {
+            ...bp.data
+        };
 
         // dynamic light
         if (!!bp.lightsource) {
@@ -1027,6 +1033,16 @@ class Engine {
         const position = entity.position;
         dummy.radius = entity.size;
         dummy.position.set(position.x, position.y);
+    }
+
+    /**
+     * What to do when an entity is smashed by one or more other entities
+     * @param oEntity {Entity}
+     * @param aSmashers {Entity[]}
+     * @private
+     */
+    _smashEntity(oEntity, aSmashers) {
+        this.events.emit('entity.smashed', {entity: oEntity, smashers: aSmashers});
     }
 
 

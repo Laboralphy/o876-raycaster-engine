@@ -127,6 +127,7 @@ class Smasher extends SectorRegistry {
         // compute a new set of forces to be applied to the dummy
         const aHitters = this._getSmashingEntities(oEntity);
         if (!!aHitters && aHitters.length > 0) {
+            this.events.emit('entity.smashed', {entity: oEntity, smashers: aHitters})
             this._computeSmashingForces(oEntity, aHitters);
             oDummy.setSmashers(aHitters)
         } else {

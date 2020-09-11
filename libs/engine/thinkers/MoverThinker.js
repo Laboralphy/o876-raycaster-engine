@@ -1,4 +1,4 @@
-import {computeWallCollisions} from "../../wall-collider";
+import {computeWallCollisions} from "libs/wall-collider";
 import Thinker from "./Thinker";
 import Vector from "../../geometry/Vector";
 
@@ -73,27 +73,13 @@ class MoverThinker extends Thinker {
      * no collision is computed
      * @param x {number}
      * @param y {number}
-     * @param angle {number}
+     * @param angle {number?}
      */
-    setLocation(x, y, angle = null) {
+    setLocation(x, y, angle) {
         const entity = this.entity;
-        const position = entity.position;
-        const engine = this.engine;
-        const rc = engine.raycaster;
-        const ps = rc.options.metrics.spacing;
-        const xSector1 = this._xSector;
-        const ySector1 = this._ySector;
-        const xSector2 = x / ps | 0;
-        const ySector2 = y / ps | 0;
-        position.x = x;
-        position.y = y;
-        if (angle !== null) {
+        const position = entity.position.set(x, y);
+        if (angle !== undefined) {
             position.angle = angle;
-        }
-        if (xSector1 !== xSector2 || ySector1 !== ySector2) {
-            this._xSector = xSector2;
-            this._ySector = ySector2;
-            this._bNewSector = true;
         }
     }
 

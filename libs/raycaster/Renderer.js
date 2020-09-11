@@ -82,7 +82,6 @@ class Renderer {
         this._scanAimedCell = null;
         this._firstFloor = true; // if false then this instance is second story
         this._filters = [];
-        this._bCheckFilters = false;
         this._events = new Events();
     }
 
@@ -364,7 +363,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     setWallTextures(oImage) {
         let width = this._options.metrics.spacing;
         let height = this._options.metrics.height;
-        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         this._walls = this.buildTileSet(
             oImage,
             width,
@@ -379,7 +377,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     setFlatTextures(oImage) {
         let width = this._options.metrics.spacing;
-        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         this._flats = this.buildTileSet(
             oImage,
             width,
@@ -407,6 +404,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param bNoShading {boolean} does not apply shading
      */
     buildTileSet(oImage, width, height, bNoShading) {
+        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         const sw = new ShadedTileSet();
         sw.shading = !bNoShading;
         sw.setShadingLayerCount(this._options.shading.shades);

@@ -35,7 +35,6 @@ class PingMonitor {
 		let canvas = document.createElement('canvas');
 		canvas.width = width;
 		canvas.height = height;
-		canvas.setAttribute('style', 'image-rendering: optimizeSpeed');
 		let ctx = canvas.getContext('2d');
 		ctx.font = '10px monospace';
 		this._canvas = canvas;

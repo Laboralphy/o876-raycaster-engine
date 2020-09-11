@@ -13,11 +13,14 @@ class CanvasHelper {
 		let c = document.createElement('canvas');
 		c.width = width;
 		c.height = height;
+		c.getContext('2d').imageSmoothingQuality = 'low';
 		CanvasHelper.setImageSmoothing(c, bDefaultImageSmoothing);
 		return c;
 	}
 
 	static setDefaultImageSmoothing(b) {
+		console.info('set default image smoothing to', b);
+		console.trace()
         bDefaultImageSmoothing = b;
 	}
 
@@ -95,6 +98,7 @@ class CanvasHelper {
 			b = CanvasHelper.getImageSmoothing(oCanvas);
 		}
 		let c = CanvasHelper.createCanvas(w, h);
+		CanvasHelper.setImageSmoothing(c, b);
 		c.getContext('2d').drawImage(oCanvas, 0, 0);
 		return c;
 	}

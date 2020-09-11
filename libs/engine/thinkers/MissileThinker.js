@@ -14,7 +14,10 @@ class MissileThinker extends TangibleThinker {
         this._victims = []; // list of entities that have been hit
         this.defineTransistions({
             "s_init": [
-                [1, "s_move"]
+                [1, "s_firing"]
+            ],
+            "s_firing": [
+                ["t_outofowner", "s_solid", "s_move"]
             ],
             "s_move": [
                 ["t_hitSomething", "s_hit"]
@@ -43,7 +46,7 @@ class MissileThinker extends TangibleThinker {
 
         // define tangibility
         dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_MISSILE;
-        dummy.tangibility.hitmask = CONSTS.COLLISION_CHANNEL_CREATURE;
+        dummy.tangibility.hitmask = 0;
 
         // synchronize position
         missile.position.set(oOwnerLocation);
@@ -51,7 +54,6 @@ class MissileThinker extends TangibleThinker {
         // set proper speed vector
         const {dx, dy} = Geometry.polar2rect(oOwnerLocation.angle, speed);
         this.setSpeed(dx, dy);
-        this.engine.horde.updateLookingAngle(missile, this.engine.camera);
     }
 
 
@@ -76,6 +78,14 @@ class MissileThinker extends TangibleThinker {
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
 
+    s_firing() {
+        this.s_move();
+    }
+
+    s_solid() {
+        this.entity.dummy.tangibility.hitmask = CONSTS.COLLISION_CHANNEL_CREATURE;
+    }
+
     s_dead() {
         this.entity.dead = true;
     }
@@ -85,6 +95,15 @@ class MissileThinker extends TangibleThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+
+    t_outofowner() {
+        // calculer la distance entre owner et missile
+        const m = this.entity;
+        const o = this._owner;
+        const mpos = m.position;
+        const opos = o.position;
+        return Geometry.distance(mpos.x, mpos.y, opos.x, opos.y) > (o.size + m.size);
+    }
 
     /**
      * returns true if this entity hits something (wall or other entity)

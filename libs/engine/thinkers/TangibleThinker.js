@@ -18,7 +18,6 @@ class TangibleThinker extends MoverThinker {
 
     processForces() {
         // synchronizing dummy position
-        const engine = this.engine;
         const entity = this.entity;
         const dummy = entity.dummy;
         const f = dummy.force;
