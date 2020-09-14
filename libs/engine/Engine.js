@@ -1042,7 +1042,7 @@ class Engine {
      * @private
      */
     _smashEntity(oEntity, aSmashers) {
-        this.events.emit('entity.smashed', {entity: oEntity, smashers: aSmashers});
+        this.events.emit('entity.hit', {entity: oEntity, hits: aSmashers});
     }
 
 
@@ -1178,6 +1178,8 @@ class Engine {
                 smooth: !!data.level.textures.smooth
             }
         };
+
+        CanvasHelper.setDefaultImageSmoothing(data.level.textures.smooth);
 
         if ('shading' in data) {
             oRCOptions.shading = data.shading;

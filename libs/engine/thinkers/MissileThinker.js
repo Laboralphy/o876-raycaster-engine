@@ -78,14 +78,19 @@ class MissileThinker extends TangibleThinker {
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
 
+    // the missile is firing,
+    // has just spawned be still colliding with owner
     s_firing() {
         this.s_move();
     }
 
+    // the missile is not colliding with owner :
+    // the missile becomes solid and will hit any other entity.
     s_solid() {
         this.entity.dummy.tangibility.hitmask = CONSTS.COLLISION_CHANNEL_CREATURE;
     }
 
+    // The missile has hit something
     s_dead() {
         this.entity.dead = true;
     }
@@ -96,6 +101,7 @@ class MissileThinker extends TangibleThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
+    // true if missile is not colliding owner
     t_outofowner() {
         // calculer la distance entre owner et missile
         const m = this.entity;

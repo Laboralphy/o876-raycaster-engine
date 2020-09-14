@@ -5,6 +5,7 @@ export default {
 
     getPlayerAttributeHP: state => state.player.attributes.hp,
     getPlayerAttributeHPMax: state => state.player.attributes.hpMax,
+    isPlayerDead: state => state.player.attributes.hp <= 0,
 
     getCameraEnergy: state => state.camera.energy.value,
     getCameraEnergyMax: state => state.camera.energy.maximum,

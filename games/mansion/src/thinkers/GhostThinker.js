@@ -110,6 +110,25 @@ class GhostThinker extends MoverThinker {
         this.entity.position.angle = this.vectorToTarget().angle();
     }
 
+    moveTowardTarget() {
+        this.lookAtTarget();
+        const ms = this.entity.data.speed;
+        const a = this.entity.position.angle;
+        this.setSpeed(
+            ms * Math.cos(a),
+            ms * Math.sin(a)
+        );
+    }
+
+    moveAwayFromTarget() {
+        this.lookAtTarget();
+        const ms = CONSTS.REBUKE_STRENGTH;
+        const a = this.entity.position.angle;
+        this.setSpeed(
+            -ms * Math.cos(a),
+            -ms * Math.sin(a)
+        );
+    }
     /**
      * get the distance beetwen target and ghost
      */
@@ -120,13 +139,15 @@ class GhostThinker extends MoverThinker {
     moveForward() {
         this.pulse();
         this.updateVisibilityData();
-        const ms = this.entity.data.speed;
-        const a = this.entity.position.angle;
-        this.setSpeed(
-            ms * Math.cos(a),
-            ms * Math.sin(a)
-        );
         this.s_move();
+    }
+
+    rebuke() {
+        this.pulse();
+        let m = this.entity;
+        m.inertia.set(0, 0);
+        this.slide(this._speed);
+        this._speed.scale(0.9);
     }
 
     setTimeOut(n) {
@@ -251,6 +272,10 @@ class GhostThinker extends MoverThinker {
 
     s_time_1000() {
         this.setTimeOut(1000);
+    }
+
+    s_time_750() {
+        this.setTimeOut(750);
     }
 
     s_time_500() {

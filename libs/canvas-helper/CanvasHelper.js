@@ -20,7 +20,6 @@ class CanvasHelper {
 
 	static setDefaultImageSmoothing(b) {
 		console.info('set default image smoothing to', b);
-		console.trace()
         bDefaultImageSmoothing = b;
 	}
 

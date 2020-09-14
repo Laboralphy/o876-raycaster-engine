@@ -28,3 +28,7 @@ export const PHOTO_SCORE_UNCOMMON = 100; // photo optionnelle sur le trajet de l
 export const PHOTO_SCORE_RARE = 200; // photo cachée difficile à trouver
 export const PHOTO_SCORE_LEGENDARY = 1000; // photo légendaire
 
+export const TANGIBILITY_GHOST = 4;
+export const TANGIBILITY_PLAYER = 1;
+
+export const REBUKE_STRENGTH = 6;

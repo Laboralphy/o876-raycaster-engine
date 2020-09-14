@@ -5,7 +5,7 @@
     "tileset": "g_angry_girl",
     "scale": 3,
     "thinker": "ChaserThinker",
-    "size": 16,
+    "size": 24,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
       "type": "v",
@@ -21,7 +21,7 @@
     "tileset": "g_banshee",
     "scale": 3,
     "thinker": "ChaserThinker",
-    "size": 16,
+    "size": 24,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
       "type": "v",
@@ -37,7 +37,7 @@
     "tileset": "g_bashed_boy",
     "scale": 3,
     "thinker": "ChaserThinker",
-    "size": 16,
+    "size": 24,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
       "type": "v",
@@ -53,7 +53,7 @@
     "tileset": "w_cowled_skull",
     "scale": 3,
     "thinker": "WraithThinker",
-    "size": 16,
+    "size": 24,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
       "type": "w"

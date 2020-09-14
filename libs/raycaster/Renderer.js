@@ -404,7 +404,6 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @param bNoShading {boolean} does not apply shading
      */
     buildTileSet(oImage, width, height, bNoShading) {
-        CanvasHelper.setDefaultImageSmoothing(this._options.textures.smooth);
         const sw = new ShadedTileSet();
         sw.shading = !bNoShading;
         sw.setShadingLayerCount(this._options.shading.shades);

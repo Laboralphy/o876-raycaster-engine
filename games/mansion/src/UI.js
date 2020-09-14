@@ -94,6 +94,14 @@ class UI extends StoreAbstract {
             shutter: false
         });
     }
+
+    showFirstPage() {
+        this.commit(UI_MUTATIONS.SHOW_FIRST_PAGE, {value: true});
+    }
+
+    hideFirstPage() {
+        this.commit(UI_MUTATIONS.SHOW_FIRST_PAGE, {value: false});
+    }
 }
 
 export default UI;

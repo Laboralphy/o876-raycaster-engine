@@ -136,8 +136,24 @@ class Logic extends StoreAbstract {
         entity.data.vitality -= nDamage;
         if (entity.data.vitality <= 0) {
             entity.thinker.kill();
+        } else {
+            entity.thinker.wound(false);
         }
         return nDamage;
+    }
+
+    damagePlayer(ghost) {
+        const nPower = ghost.data.power;
+        const nDamage = nPower;
+        this.commit(MUTATIONS.MODIFY_PLAYER_HP, {value: -nDamage});
+
+        if (this.prop('isPlayerDead')) {
+
+        }
+    }
+
+    isPlayerDead() {
+        this.prop('isPlayerDead');
     }
 
     /**

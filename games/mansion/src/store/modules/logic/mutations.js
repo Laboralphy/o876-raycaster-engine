@@ -55,6 +55,12 @@ export default {
         state.player.attributes.hpMax = Math.max(1, value);
     },
 
+    [TYPES.MODIFY_PLAYER_HP]: function(state, {value}) {
+        const attr = state.player.attributes;
+        const nHP = attr.hp + value;
+        attr.hp = Math.min(attr.hpMax, Math.max(0, nHP));
+    },
+
     /**
      * Increase camera charged energy
      * @param state

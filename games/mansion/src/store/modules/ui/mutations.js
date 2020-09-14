@@ -78,5 +78,9 @@ export default {
         p.content = content;
         p.description.splice(0, p.description.length, ...description);
         p.value = value;
+    },
+
+    [TYPES.SHOW_FIRST_PAGE]: function(state, {value}) {
+        state.mainmenu.visible = value;
     }
 }

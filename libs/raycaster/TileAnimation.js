@@ -9,6 +9,7 @@ class TileAnimation {
         this._duration = 100;   // duration of a frame
         this._loop = 0;         // loop type 0: none; 1: forward; 2: yoyo; 3: random
         this._iterations = Infinity;    // number of iterations "Infinity" means : animate forever
+        this._baseIterations = Infinity;    // number of iterations "Infinity" means : animate forever
         this._base = 0;         // a base index in the tileset
 
         // inner props
@@ -21,6 +22,8 @@ class TileAnimation {
     reset() {
         this._index = 0;
         this._time = 0;
+        this._iterations = this._baseIterations;
+        this._frozen = false;
     }
 
     get base() {
@@ -84,6 +87,7 @@ class TileAnimation {
     }
 
     set iterations(value) {
+        this._baseIterations = value;
         this._iterations = value;
     }
 

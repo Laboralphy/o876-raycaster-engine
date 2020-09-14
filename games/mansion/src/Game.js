@@ -49,7 +49,9 @@ class Game extends GameAbstract {
         this.engine.filters.link(this._haloBlack);
         this._ghostScream = new GhostScreamer();
         this.engine.filters.link(this._ghostScream);
-        this.loadLevel('mans-intro');
+        //this.loadLevel('mans-intro');
+        //this.ui.showFirstPage();
+        this.loadLevel('mans-cabin');
     }
 
 //
@@ -487,6 +489,19 @@ class Game extends GameAbstract {
         return this.engine.camera;
     }
 
+    /**
+     * A ghost is attacking player
+     * applying wound
+     */
+    commitGhostAttack(oGhost, oTarget) {
+        if (oTarget === this.player) {
+            console.log('commit ghost attack')
+            // get ghost power
+            this.logic.damagePlayer(oGhost);
+            this.player.thinker.ghostThreat(oGhost);
+        }
+    }
+
 //  _                _                   _        _   _
 // | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
 // | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
@@ -511,7 +526,6 @@ class Game extends GameAbstract {
             attack: null,
             damaged: null
         }
-        console.log('spawned', oGhost);
         return oGhost;
     }
 
