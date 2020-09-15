@@ -9,8 +9,10 @@ import Scripts from './scripts';
 import FadeIn  from "libs/engine/filters/FadeIn";
 import Flash from "libs/engine/filters/Flash";
 import Halo  from "libs/engine/filters/Halo";
+import Timed from "libs/engine/filters/Timed";
 import CameraObscura from "./filters/CameraObscura";
 import GhostScreamer from "./filters/GhostScreamer";
+import RedHaze from "./filters/RedHaze";
 import Position  from "libs/engine/Position";
 import Index from "libs/geometry";
 import ObjectExtender from "libs/object-helper/Extender";
@@ -481,6 +483,10 @@ class Game extends GameAbstract {
         this.engine.camera.thinker.frozen = false;
     }
 
+    /**
+     * returns true if player commands are frozen (keys + mouse)
+     * @return {boolean}
+     */
     isPlayerFrozen() {
         return this.engine.camera.thinker.frozen;
     }
@@ -491,14 +497,26 @@ class Game extends GameAbstract {
 
     /**
      * A ghost is attacking player
-     * applying wound
+     * applying wound on player
+     * applying visual effect
      */
     commitGhostAttack(oGhost, oTarget) {
         if (oTarget === this.player) {
             console.log('commit ghost attack')
             // get ghost power
             this.logic.damagePlayer(oGhost);
-            this.player.thinker.ghostThreat(oGhost);
+            const oThinker = this.player.thinker;
+            oThinker.ghostThreat(oGhost);
+            // filtre visuel
+            const oFilter = new Timed({
+                child: new RedHaze(),
+                duration: 750
+            });
+            this.engine.filters.link(oFilter);
+            if (this.logic.isPlayerDead()) {
+                oThinker.kill();
+                this.freezePlayer();
+            }
         }
     }
 

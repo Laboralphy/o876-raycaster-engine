@@ -24,7 +24,8 @@ class Halo extends AbstractFilter {
         const context = canvas.getContext('2d');
         const w2 = canvas.width >> 1;
         const h2 = canvas.height >> 1;
-        const grad = context.createRadialGradient(w2, h2, h2, w2, h2, Math.sqrt(w2 * w2 + h2 * h2) | 0);
+        const radius = Math.sqrt(w2 * w2 + h2 * h2) | 0;
+        const grad = context.createRadialGradient(w2, h2, h2, w2, h2, radius);
         grad.addColorStop(0, 'transparent');
         grad.addColorStop(1, color);
         return grad;
@@ -32,6 +33,10 @@ class Halo extends AbstractFilter {
 
     process(time) {
         super.process(time);
+    }
+
+    clearGradient() {
+        this._gradient = null;
     }
 
     render(canvas) {

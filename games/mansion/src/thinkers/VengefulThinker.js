@@ -8,8 +8,8 @@ class VengefulThinker extends GhostThinker {
         this.transitions = {
             // recherche joueur cible
             "s_idle": [
-                // player dead: plus rien a faire
-                ["t_player_dead", "s_job_done"],
+                // player dead: plus rien a faire,
+                ["t_target_dead", "s_despawn"],
                 // trouver : commencer la chasse
                 ["t_target_found", "s_look_at_target", "s_time_250", "s_start_walk_anim", "s_chase"],
                 // attendre 1 seconde puis refaire une recherche
@@ -24,7 +24,7 @@ class VengefulThinker extends GhostThinker {
             // marcher mais verifier qu'on a toujours le joueur en vue
             "s_chase": [
                 // cible touchée
-                ["t_hit_player", "s_attack_player", "s_anim_then_idle"],
+                ["t_hit_target", "s_attack_target", "s_time_750", "s_time_out_then_idle"],
                 // temps écoulé , choisir une autre action
                 ["t_time_out", "s_idle"]
             ],
@@ -70,6 +70,10 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+
+    /**
+     * Etat initialisation
+     */
     s_init() {
         super.s_init();
         this.engine.smasher.registerEntity(this.entity);
@@ -78,10 +82,16 @@ class VengefulThinker extends GhostThinker {
         this.entity.sprite.setCurrentAnimation('walk');
     }
 
+    /**
+     * Etat : démarrer animation marche
+     */
     s_start_walk_anim() {
         this.entity.sprite.setCurrentAnimation('walk');
     }
 
+    /**
+     * Etat : se tourner vers la cible
+     */
     s_look_at_target() {
         // rechercher la cible
         this.lookAtTarget();
@@ -105,18 +115,18 @@ class VengefulThinker extends GhostThinker {
     }
 
     /**
-     * the ghost is wounded : wait for 500ms
+     * the ghost is wounded : set angle to go away from player
      */
     s_wounded_light() {
-        this.moveAwayFromTarget();
+        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH);
     }
 
     /**
      * the ghost is wounded critically
-     * it is rebuked
+     * it is rebuked : go away from player
      */
     s_wounded_critical() {
-        this.moveAwayFromTarget();
+        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * 2);
     }
 
     /**
@@ -126,10 +136,16 @@ class VengefulThinker extends GhostThinker {
         this.rebuke()
     }
 
+    /**
+     * attente fin de timer avant passe en idle
+     */
     s_time_out_then_idle() {
         this.pulse();
     }
 
+    /**
+     * attente fin d'animation avant passe en idle
+     */
     s_anim_then_idle() {
         this.pulse();
     }
@@ -152,8 +168,7 @@ class VengefulThinker extends GhostThinker {
     /**
      * the ghost plays an attack animation
      */
-    s_attack_player() {
-        console.log('s_attack_player')
+    s_attack_target() {
         this.entity.sprite.setCurrentAnimation('attack');
         this.entity.sprite.getCurrentAnimation().reset();
         // wound player
@@ -175,23 +190,22 @@ class VengefulThinker extends GhostThinker {
     /**
      * The ghost has it player
      */
-    t_hit_player() {
+    t_hit_target() {
         const s = this.entity.dummy.smashers;
         return s.length > 0 && s.includes(this.target);
     }
 
-    t_player_dead() {
-        this.context.game.logic.isPlayerDead();
+    t_target_dead() {
+        return this.context.game.logic.isPlayerDead();
     }
 
     t_target_found() {
-        return this.isEntityVisible(this.target);
+        return this.isEntityVisible(this.target) && !this.t_target_dead();
     }
 
     t_target_not_found() {
         return !this.t_target_found();
     }
 }
-
 
 export default VengefulThinker;

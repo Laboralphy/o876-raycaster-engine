@@ -1516,7 +1516,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
                         fy64 = fyCeil / ps | 0;
                         fx64 = fxCeil / ps | 0;
                         oXBlockCeil = oXMap.getSurface(fx64, fy64, 5);
-                        lmCorr = oXMap.getLightMap(fx, fy, ps);
+                        lmCorr = oXMap.getLightMap(fxCeil, fyCeil, ps);
                         yOfsCeilCorr = Math.max(0, yOfs - lmCorr);
                         if (oXBlockCeil.imageData32) {
                             oXBlockImage = oXBlockCeil.imageData32;

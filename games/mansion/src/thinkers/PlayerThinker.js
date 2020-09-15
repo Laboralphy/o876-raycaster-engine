@@ -9,6 +9,13 @@ class PlayerThinker extends FPSControlThinker {
         this.setupCommands({
             use: [' ', 'Mouse0'],
         });
+        this.transitions = {
+            ...this.transitions,
+            "s_dying": [
+                ["t_on_floor", "s_dead"]
+            ]
+        };
+
     }
 
 
@@ -40,7 +47,6 @@ class PlayerThinker extends FPSControlThinker {
      * Tourner l'angle de vue vers le fantome
      */
     ghostThreat(oGhost) {
-        console.log('ghostthrat')
         const fAngle = this.computeAngleToMobile(oGhost);
         this.forceAngle(fAngle);
     }
@@ -55,7 +61,6 @@ class PlayerThinker extends FPSControlThinker {
     }
 
     forceAngle(fTarget) {
-        console.log('force angle')
         const m = this.entity;
         let fMe = m.position.angle;
         while (fTarget < 0) {
@@ -97,6 +102,35 @@ class PlayerThinker extends FPSControlThinker {
     think() {
         this.processAngle();
         super.think();
+    }
+
+    kill() {
+        this.automaton.state = "s_dying";
+        this._nDeathZSpeed = 0;
+    }
+
+    /**
+     * Returns true if the player point of view is at floor level = dead
+     * @return boolean
+     */
+    isHeightAtFloorLevel() {
+        return this.entity.position.z > 1.75;
+    }
+
+    s_death() {
+    }
+
+    s_dying() {
+        if (this.isHeightAtFloorLevel()) {
+            this._nDeathZSpeed = 0;
+        } else {
+            this._nDeathZSpeed += 0.01;
+            this.entity.position.z += this._nDeathZSpeed;
+        }
+    }
+
+    t_on_floor() {
+        return this.isHeightAtFloorLevel();
     }
 }
 

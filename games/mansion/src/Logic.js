@@ -146,14 +146,10 @@ class Logic extends StoreAbstract {
         const nPower = ghost.data.power;
         const nDamage = nPower;
         this.commit(MUTATIONS.MODIFY_PLAYER_HP, {value: -nDamage});
-
-        if (this.prop('isPlayerDead')) {
-
-        }
     }
 
     isPlayerDead() {
-        this.prop('isPlayerDead');
+        return this.prop('isPlayerDead');
     }
 
     /**

@@ -224,7 +224,7 @@ class Rainbow {
 
     /**
      * Makes a color CSS string out of an {r, g, b, a} structure
-     * @param xData {r, g, b, a}
+     * @param xData {{r, g, b, a}}
      * @return {string}
      */
     static rgba(xData) {

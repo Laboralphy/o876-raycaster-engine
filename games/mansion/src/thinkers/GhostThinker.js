@@ -120,9 +120,8 @@ class GhostThinker extends MoverThinker {
         );
     }
 
-    moveAwayFromTarget() {
+    moveAwayFromTarget(ms) {
         this.lookAtTarget();
-        const ms = CONSTS.REBUKE_STRENGTH;
         const a = this.entity.position.angle;
         this.setSpeed(
             -ms * Math.cos(a),
@@ -257,6 +256,7 @@ class GhostThinker extends MoverThinker {
      * The ghost is vanishing
      */
     s_despawn() {
+        console.log('DESPAWN')
         --this._nOpacity;
         this.setOpacityFlags();
     }
