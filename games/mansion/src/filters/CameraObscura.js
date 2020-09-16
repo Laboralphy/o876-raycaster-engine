@@ -8,6 +8,7 @@ import Easing from "libs/easing";
 import Rainbow from "libs/rainbow";
 import CanvasHelper from "libs/canvas-helper";
 import Reactor from "libs/object-helper/Reactor";
+import {approachValue} from "libs/approach-value";
 
 const SCREEN_W = 195; // screen width
 const SCREEN_H = 204; // screen height
@@ -38,9 +39,8 @@ const CIRCLE_NORMAL_ALPHA = 0.75;
 class CameraObscura extends AbstractFilter {
     constructor() {
         super();
-        CanvasHelper
-            .loadCanvas('assets/camera/visor.png')
-            .then(c => this._visor = c);
+        this._visor = null;
+        this._lamp = null;
         this._nState = 0; // 0 = hidden; 10; start raising; 11 = raising; 20 = raised; 30 = start falling; 31; falling
         this._easing = new Easing();
         this._rainbow = new Rainbow();
@@ -50,6 +50,16 @@ class CameraObscura extends AbstractFilter {
         this._oBlurCvs = CanvasHelper.createCanvas(BLUR_W, BLUR_H);
         CanvasHelper.setImageSmoothing(this._oBlurCvs, true);
         this._oBlurCtx = this._oBlurCvs.getContext('2d');
+        this._oLampState = {
+            x: 0,
+            y: 0,
+            alpha: 0,
+            value: 0,
+            aim: {
+                alpha: 0,
+                value: 0,
+            }
+        };
 
         // HUD
         this._oEnergyData = {
@@ -65,6 +75,17 @@ class CameraObscura extends AbstractFilter {
 
         this._nPulseTime = 0;
         this._fAlpha = CIRCLE_NORMAL_ALPHA;
+    }
+
+    /**
+     * @param visor {ShadedTileSet}
+     * @param lamp {ShadedTileSet}
+     */
+    assignAssets({visor, lamp}) {
+        this._visor = visor;
+        this._lamp = lamp;
+        this._oLampState.x = (visor.tileWidth - lamp.tileWidth) >> 1;
+        this._oLampState.y = visor.tileHeight - lamp.tileHeight;
     }
 
     get forcePulse() {
@@ -87,6 +108,15 @@ class CameraObscura extends AbstractFilter {
 
     get energy() {
         return this._oEnergyData;
+    }
+
+    set lampIntensity(value) {
+        this._oLampState.aim.value = value;
+        this._oLampState.aim.alpha = value > 0 ? 1 : 0;
+    }
+
+    get lampIntensity() {
+        return this._oLampState.value;
     }
 
     processing(nStateAfter) {
@@ -117,6 +147,11 @@ class CameraObscura extends AbstractFilter {
         } else {
             this._fAlpha = CIRCLE_NORMAL_ALPHA;
         }
+
+        // LAMP INDICATOR
+        const oLS = this._oLampState;
+        oLS.value = approachValue(oLS.value, oLS.aim.value, 1);
+        oLS.alpha = approachValue(oLS.alpha, oLS.aim.alpha, 0.1);
     }
 
     isVisible() {
@@ -175,13 +210,29 @@ class CameraObscura extends AbstractFilter {
         ctx.closePath();
     }
 
+    drawLamp(ctx, dyCameraVisor, bMini = false) {
+        if (!this._oLampState) {
+            return;
+        }
+        if (bMini) {
+
+        } else {
+            const {x, y} = this._oLampState;
+            const tsLamp = this._lamp;
+            const h = tsLamp.tileHeight;
+            const w = tsLamp.tileWidth;
+            tsLamp.drawTile(ctx,0,h * this._oLampState.value, w, h, x, y + dyCameraVisor, w, h);
+        }
+    }
+
     render(canvas) {
         const state = this._nState;
+        const ctx = canvas.getContext('2d');
         if (state === STATE_HIDDEN) {
+            this.drawLamp(ctx, 0, true);
             return;
         }
         const y = this.y;
-        const ctx = canvas.getContext('2d');
 
 
         // 1 copy screen surface inside visor
@@ -209,7 +260,12 @@ class CameraObscura extends AbstractFilter {
         CanvasHelper.setImageSmoothing(canvas, false);
 
         // 4 display camera
-        ctx.drawImage(this._visor, 0, y * canvas.height);
+        const dyCameraVisor = y * canvas.height | 0;
+        const tsVisor = this._visor;
+        ctx.drawImage(tsVisor.getImage(), 0, dyCameraVisor);
+
+        // 4.5 draw lamp
+        this.drawLamp(ctx, dyCameraVisor);
 
         // 5 display circles
         if (this._oManagedEnergyData.getLog().length) {

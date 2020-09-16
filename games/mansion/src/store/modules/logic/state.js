@@ -22,7 +22,12 @@ export default {
         lastShotTime: 0,
         sensor: {
             supernatural: false,
+            lamp: 0
         }
+    },
+
+    supernatural: {
+        beacons: []
     },
 
     data: {

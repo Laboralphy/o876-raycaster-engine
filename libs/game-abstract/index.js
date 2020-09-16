@@ -156,10 +156,15 @@ class GameAbstract {
     }
 
     init() {
-        this.log('init game')
+        this.log('init game');
         this.initScreen();
         this.initEngine();
         this.initListeners();
+    }
+
+    initAsync() {
+        this.log('async init game');
+        return Promise.resolve();
     }
 
     config(options) {
@@ -259,6 +264,7 @@ class GameAbstract {
         this.log('starting game engine');
         this._runCalled = true;
         this.init();
+        await this.initAsync();
         if (this._options.autoload) {
             const aLevels = await fetchJSON(this._options.fetchLevelListAction);
             const aExpLevels = aLevels.filter(level => level.exported);

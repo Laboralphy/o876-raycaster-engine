@@ -793,7 +793,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      * @return {boolean}
      */
 	isCellVisible(x, y) {
-        return this._scanCells.isMarked(x, y);
+        return !!this._scanCells && this._scanCells.isMarked(x, y);
     }
 
     /**

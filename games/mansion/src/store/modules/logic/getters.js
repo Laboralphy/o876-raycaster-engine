@@ -13,5 +13,7 @@ export default {
     getCameraCaptureRadius: state => state.camera.captureRadius,
     getCameraWidth: state => state.camera.width,
     getCameraPower: state => state.camera.power,
-    isCameraAimingSupernatural: state => state.camera.sensor.supernatural
+    isCameraAimingSupernatural: state => state.camera.sensor.supernatural,
+    getCameraSensorLamp: state => state.camera.sensor.lamp,
+    getSupernaturalBeacons: state => state.supernatural.beacons
 };

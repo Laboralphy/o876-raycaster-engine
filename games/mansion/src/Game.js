@@ -22,6 +22,7 @@ import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import DataBuilder from "./DataBuilder";
+import Geometry from "libs/geometry";
 
 class Game extends GameAbstract {
     init() {
@@ -51,9 +52,22 @@ class Game extends GameAbstract {
         this.engine.filters.link(this._haloBlack);
         this._ghostScream = new GhostScreamer();
         this.engine.filters.link(this._ghostScream);
+    }
+
+    async initAsync() {
         //this.loadLevel('mans-intro');
         //this.ui.showFirstPage();
-        this.loadLevel('mans-cabin');
+        await super.initAsync();
+        await this.loadLevel('mans-cabin');
+    }
+
+
+    async loadLevel(sLevel, extra) {
+        await super.loadLevel(sLevel, extra);
+        this._cameraFilter.assignAssets({
+            visor: this.engine.getTileSet('u_visor'),
+            lamp: this.engine.getTileSet('u_lamp')
+        });
     }
 
 //
@@ -128,6 +142,7 @@ class Game extends GameAbstract {
             this.logic.updateCameraEnergy(this._activeGhosts, this.isAimingCellSupernatural());
             this.syncCameraStore();
         }
+        this.computeSupernaturalCloseness();
     }
 
     /**
@@ -221,9 +236,12 @@ class Game extends GameAbstract {
      * sync camera energy property with store
      */
     syncCameraStore() {
-        this._cameraFilter.energy.current = this.logic.prop('getCameraEnergy');
-        this._cameraFilter.energy.max = this.logic.prop('getCameraEnergyMax');
-        this._cameraFilter.energy.forcePulse = this.logic.prop('isCameraAimingSupernatural');
+        const cf = this._cameraFilter;
+        const e = cf.energy;
+        e.current = this.logic.prop('getCameraEnergy');
+        e.max = this.logic.prop('getCameraEnergyMax');
+        e.forcePulse = this.logic.prop('isCameraAimingSupernatural');
+        cf.lampIntensity = this.logic.prop('getCameraSensorLamp');
     }
 
     /**
@@ -258,6 +276,42 @@ class Game extends GameAbstract {
 
     isAimingCellSupernatural() {
         return this.getAimedCellPhotoTags() !== null;
+    }
+
+    /**
+     * Renvoie la valeur de prochitude d'un évènement surnaturel
+     * return {number}
+     */
+    computeSupernaturalCloseness() {
+        if (!this.player.thinker.hasChangedSector()) {
+           // return;
+        }
+        // déterminer les évènement surnaturel et leur distance
+        // réduire la liste à 3 éléments max
+        const xPlayer = this.player.position.x;
+        const yPlayer = this.player.position.y;
+        const ps = this.engine.raycaster.options.metrics.spacing;
+        const beacon = this
+            .logic
+            .prop('getSupernaturalBeacons')
+            .map(({x, y, ref}) => {
+                const distance = Geometry.distance(xPlayer, yPlayer, x * ps + (ps >> 1), y * ps + (ps >> 1));
+                const bCellVisible = this.engine.raycaster.isCellVisible(x, y);
+                return {x, y, ref, distance, visible: bCellVisible};
+            })
+            .filter(b => b.distance < CONSTS.PLAYER_SENSE_DISTANCE)
+            .sort((a, b) => a.distance - b.distance)
+            .shift();
+        if (!beacon) {
+            this.logic.updateCameraLamp(0);
+            return;
+        }
+        let fDistance = (CONSTS.PLAYER_SENSE_DISTANCE - beacon.distance) / CONSTS.PLAYER_SENSE_DISTANCE;
+        if (!beacon.visible) {
+            fDistance /= 2;
+        }
+        console.log(beacon.distance, fDistance, Math.round(15 * fDistance))
+        this.logic.updateCameraLamp(Math.round(15 * fDistance));
     }
 
     /**

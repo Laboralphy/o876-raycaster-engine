@@ -862,6 +862,14 @@ class Engine {
         return tileset;
     }
 
+    getTileSet(ref) {
+        if (ref in this._tilesets) {
+            return this._tilesets[ref];
+        } else {
+            return null;
+        }
+    }
+
     /**
      * Creates a blueprint, using an image which is loaded asynchronously, thus the promise.
      * @param resref {string} new blueprint reference
@@ -881,7 +889,7 @@ class Engine {
         const tileset = await this.loadTileSet(bpDef.tileset, src, tileWidth, tileHeight, bNoShading);
         const bp = new Blueprint();
         bp.tileset = tileset;
-        if ('thinker' in bpDef) {
+        if (('thinker' in bpDef) && !!bpDef.thinker) {
             bp.thinker = bpDef.thinker; // state object : should not be instanciate yet
         } else {
             bp.thinker = "Thinker";
@@ -1369,6 +1377,11 @@ class Engine {
             }
         };
 
+        /**
+         * used to prevent progressbar from being stuck
+         * @param t {number}
+         * @return {Promise<unknown>}
+         */
         const miniPause = t => new Promise(resolve => {
             setTimeout(() => resolve(), t);
         });

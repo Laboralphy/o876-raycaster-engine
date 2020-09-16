@@ -3712,7 +3712,9 @@
       {
         "block": 14,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "sense m0_cyan_sigil"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -5106,7 +5108,9 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "sense m0_bloody_hands"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -7277,7 +7281,9 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "sense m0_fire_place"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -13565,9 +13571,9 @@
     "brightness": 0
   },
   "startpoint": {
-    "x": 18,
-    "y": 8,
-    "angle": 0,
+    "x": 11,
+    "y": 26,
+    "angle": 1.5,
     "thinker": ""
   },
   "preview": "9599a0623d3ece902ee5b48adcc170bd.jpg"

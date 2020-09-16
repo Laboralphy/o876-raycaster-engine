@@ -4247,13 +4247,20 @@
     }
   ],
   "camera": {
-    "x": 18,
-    "y": 8,
+    "x": 11,
+    "y": 26,
     "z": 1,
-    "angle": 0,
+    "angle": 4.71238898038469,
     "thinker": ""
   },
   "tags": [
+    {
+      "x": 17,
+      "y": 4,
+      "tags": [
+        "sense m0_cyan_sigil"
+      ]
+    },
     {
       "x": 18,
       "y": 4,
@@ -4315,6 +4322,13 @@
       ]
     },
     {
+      "x": 6,
+      "y": 8,
+      "tags": [
+        "sense m0_bloody_hands"
+      ]
+    },
+    {
       "x": 9,
       "y": 8,
       "tags": [
@@ -4344,6 +4358,13 @@
       "tags": [
         "locator m0_bloody_deadend",
         "locator wraith_skull_face"
+      ]
+    },
+    {
+      "x": 14,
+      "y": 14,
+      "tags": [
+        "sense m0_fire_place"
       ]
     },
     {

@@ -28,5 +28,19 @@
         "iterations": 1
       }
     ]
+  },
+  {
+    "id": "u_visor",
+    "src": "assets/camera/visor.png",
+    "width": "400",
+    "height": "250",
+    "animations": []
+  },
+  {
+    "id": "u_lamp",
+    "src": "assets/camera/lamp.png",
+    "width": "98",
+    "height": "48",
+    "animations": []
   }
 ]

@@ -67,5 +67,21 @@
     "thinker": "AnimThinker",
     "size": 0,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+  },
+  {
+    "id": "u_visor",
+    "ref": "u_visor",
+    "tileset": "u_visor",
+    "scale": 1,
+    "size": 0,
+    "fx": ["@FX_LIGHT_SOURCE"]
+  },
+  {
+    "id": "u_lamp",
+    "ref": "u_lamp",
+    "tileset": "u_lamp",
+    "scale": 1,
+    "size": 0,
+    "fx": ["@FX_LIGHT_SOURCE"]
   }
 ]

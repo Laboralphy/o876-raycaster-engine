@@ -7,7 +7,7 @@ class PlayerThinker extends FPSControlThinker {
         super();
         this._easingForcedAngle = null;
         this.setupCommands({
-            use: [' ', 'Mouse0'],
+            use: [' ', 'Mouse0']
         });
         this.transitions = {
             ...this.transitions,

@@ -30,6 +30,17 @@ class MoverThinker extends Thinker {
         return b;
     }
 
+    hasChangedSector() {
+        const xSector = this.entity.sector.x;
+        const ySector = this.entity.sector.y;
+        const bChanged = this._xSector !== xSector || this._ySector !== ySector;
+        if (bChanged) {
+            this._xSector = xSector;
+            this._ySector = ySector;
+        }
+        return bChanged;
+    }
+
     /**
      * the entity movement has changed
      */
