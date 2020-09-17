@@ -23,6 +23,7 @@ import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import DataBuilder from "./DataBuilder";
 import Geometry from "libs/geometry";
+import SenseMap from "./SenseMap";
 
 class Game extends GameAbstract {
     init() {
@@ -52,11 +53,10 @@ class Game extends GameAbstract {
         this.engine.filters.link(this._haloBlack);
         this._ghostScream = new GhostScreamer();
         this.engine.filters.link(this._ghostScream);
+        this._senseMap = new SenseMap();
     }
 
     async initAsync() {
-        //this.loadLevel('mans-intro');
-        //this.ui.showFirstPage();
         await super.initAsync();
         await this.loadLevel('mans-cabin');
     }
@@ -205,7 +205,7 @@ class Game extends GameAbstract {
         if (typeof script === 'object' && 'main' in script && typeof script.main === 'function') {
             return script.main(this, ...params);
         }
-        throw new Error('Unable to run script : "' + sName + '". No published function.');
+        // throw new ReferenceError('Unable to run script : "' + sName + '". No published function.');
     }
 
 //            _                 _          _                  _   _               _
@@ -216,7 +216,10 @@ class Game extends GameAbstract {
 
     enterLevel() {
         super.enterLevel();
+        this._senseMap.init(this.engine.raycaster.getMapSize());
         this.initTagHandlers();
+        this._senseMap.computeMap();
+        console.log(this._senseMap)
         this.engine.filters.link(new FadeIn({duration: 600}));
     }
 
@@ -284,34 +287,15 @@ class Game extends GameAbstract {
      */
     computeSupernaturalCloseness() {
         if (!this.player.thinker.hasChangedSector()) {
-           // return;
+           return;
         }
         // déterminer les évènement surnaturel et leur distance
         // réduire la liste à 3 éléments max
-        const xPlayer = this.player.position.x;
-        const yPlayer = this.player.position.y;
-        const ps = this.engine.raycaster.options.metrics.spacing;
-        const beacon = this
-            .logic
-            .prop('getSupernaturalBeacons')
-            .map(({x, y, ref}) => {
-                const distance = Geometry.distance(xPlayer, yPlayer, x * ps + (ps >> 1), y * ps + (ps >> 1));
-                const bCellVisible = this.engine.raycaster.isCellVisible(x, y);
-                return {x, y, ref, distance, visible: bCellVisible};
-            })
-            .filter(b => b.distance < CONSTS.PLAYER_SENSE_DISTANCE)
-            .sort((a, b) => a.distance - b.distance)
-            .shift();
-        if (!beacon) {
-            this.logic.updateCameraLamp(0);
-            return;
-        }
-        let fDistance = (CONSTS.PLAYER_SENSE_DISTANCE - beacon.distance) / CONSTS.PLAYER_SENSE_DISTANCE;
-        if (!beacon.visible) {
-            fDistance /= 2;
-        }
-        console.log(beacon.distance, fDistance, Math.round(15 * fDistance))
-        this.logic.updateCameraLamp(Math.round(15 * fDistance));
+        const xPlayer = this.player.sector.x;
+        const yPlayer = this.player.sector.y;
+        const fLight = this._senseMap.getSenseAt(xPlayer, yPlayer);
+        console.log(fLight);
+        this.logic.updateCameraLamp(Math.round(15 * fLight));
     }
 
     /**
@@ -730,6 +714,7 @@ class Game extends GameAbstract {
                 }, x, y, ...parameters);
             } catch (e) {
                 // this tag has no init "script"
+                console.error(e);
             }
         });
         aDeleted.forEach(({x, y, id}) => {

@@ -25,11 +25,6 @@ export default {
             lamp: 0
         }
     },
-
-    supernatural: {
-        beacons: []
-    },
-
     data: {
         items: [],
         itemTypes: ['all', 'quest', 'book']

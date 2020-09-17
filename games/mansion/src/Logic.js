@@ -178,10 +178,6 @@ class Logic extends StoreAbstract {
         this.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
         this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: false});
     }
-
-    addSupernaturalBeacon(ref, x, y) {
-        this.commit(LOGIC_MUTATIONS.ADD_SUPERNATURAL_BEACON, {ref, x, y});
-    }
 }
 
 export default Logic;

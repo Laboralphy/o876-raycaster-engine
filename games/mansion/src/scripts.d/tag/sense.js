@@ -10,6 +10,6 @@ import Position from "libs/engine/Position";
  * @param angle
  */
 export function init(game, remove, x, y, ref, angle = 0) {
-    game.logic.addSupernaturalBeacon(ref, x, y);
+    game._senseMap.addSense(ref, x, y);
     remove();
 }

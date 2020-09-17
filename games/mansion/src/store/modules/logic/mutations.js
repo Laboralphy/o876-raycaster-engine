@@ -103,9 +103,5 @@ export default {
 
     [TYPES.SET_CAMERA_LAMP]: function(state, {value}) {
         state.camera.sensor.lamp = value;
-    },
-
-    [TYPES.ADD_SUPERNATURAL_BEACON]: function(state, {x, y, ref}) {
-        state.supernatural.beacons.push({x, y, ref});
     }
 }
