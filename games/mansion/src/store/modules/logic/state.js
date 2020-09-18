@@ -8,7 +8,6 @@ export default {
             hpMax: 100
         }
     },
-
     camera: {
         energy: {
             value: 0,
