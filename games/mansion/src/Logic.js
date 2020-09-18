@@ -98,9 +98,24 @@ class Logic extends StoreAbstract {
      * @return {{value, precision, distance}} ghost value from 0 (no value) to 1 (maximum possible value)
      */
     getGhostScore(entity) {
+        if (!entity.data.visibility) {
+            return {
+                entity,
+                value: 0,
+                precision: 0,
+                distance: Infinity,
+                proximity: 0
+            };
+        }
         const {visible, size, offset, distance} = entity.data.visibility;
         if (!visible) {
-            return 0;
+            return {
+                entity,
+                value: 0,
+                precision: 0,
+                distance: Infinity,
+                proximity: 0
+            };
         }
         // the radius is a factor of CAMERA_CIRCLE_SIZE
         const rcCam = this._rcCam;
@@ -116,13 +131,15 @@ class Logic extends StoreAbstract {
         // si tout le fantome est dans le cercle de capture : 1 sinon entre 0 et 1
         const fFactor = bAllInside ? 1 : nInnerEnergy / (radius * 2);
         const fPrecision = Logic._linear_0_1(Math.abs(wCamera - xGhost), radius, 0);
-        const fDistance = distance < CONSTS.CAMERA_OPTIMAL_DISTANCE
+        const fProximity = distance < CONSTS.CAMERA_OPTIMAL_DISTANCE
             ? 1
             : Logic._linear_0_1(distance, CONSTS.CAMERA_MAXIMAL_DISTANCE, CONSTS.CAMERA_OPTIMAL_DISTANCE);
         return {
-            value: fFactor * fPrecision * fDistance,
+            entity,
+            value: fFactor * fPrecision * fProximity,
             precision: fPrecision,
-            distance
+            distance,
+            proximity: fProximity
         };
     }
 
@@ -154,13 +171,12 @@ class Logic extends StoreAbstract {
 
     /**
      * Change camera energy indicator to match the store value
-     * @param aGhosts {Entity[]} ghost that are actually being aimed by the camera
+     * @param aGhosts {[]} ghost that are actually being aimed by the camera
      * @param bSupernatural {boolean} true : la camaera est en train de viser un phenomène surnaturel
      */
     updateCameraEnergy(aGhosts, bSupernatural) {
         const nEnergy = aGhosts.reduce((prev, curr) => {
-            const oScore = this.getGhostScore(curr);
-            return prev + oScore.value;
+            return prev + curr.value;
         }, 0);
         if (nEnergy > 0) {
             this.commit(LOGIC_MUTATIONS.INC_ENERGY, {amount: nEnergy});
@@ -168,10 +184,6 @@ class Logic extends StoreAbstract {
             this.commit(LOGIC_MUTATIONS.DEC_ENERGY);
         }
         this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: bSupernatural});
-    }
-
-    updateCameraLamp(n) {
-        this.commit(LOGIC_MUTATIONS.SET_CAMERA_LAMP, {value: n});
     }
 
     shutdownCameraIndicators() {

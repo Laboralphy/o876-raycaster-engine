@@ -43,7 +43,6 @@ class Engine {
         this._materials = null;
         this._time = 0;
         this._interval = null;
-        this._lightsources = null;
         this._refs = null;
 
         // instanciate at construct
@@ -1225,7 +1224,6 @@ class Engine {
         }
 
         this._materials = {};
-        this._lightsources = [];
         if (data.level.legend) {
             const mh = new MapHelper();
             mh.build(rc, data.level);

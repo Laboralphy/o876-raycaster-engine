@@ -6,7 +6,7 @@ describe('#light-sources', function() {
         it('should instanciate', function () {
             const lm = new LightMap();
             lm.setSize(40, 35);
-            expect(lm._grid.getWidth()).toBe(40);
+            expect(lm._grid.width).toBe(40);
         });
     });
     describe('light blocking', function () {
@@ -78,6 +78,22 @@ describe('#light-sources', function() {
             expect(lm._grid.cell(10, 12).length).toBe(1);
             expect(lm._grid.cell(10, 12)[0]).toEqual({v: 0, i: true, s: 0, id: 10});
             expect(lm._sources.length).toBe(1);
+        });
+    });
+
+
+    describe('testing grid sizes', function() {
+        it('simple example', function() {
+            const lm = new LightMap();
+            lm.setSize(60, 30);
+            expect(lm._grid.width).toBe(10);
+            const s1 = lm.addSource(2, 1, 10, 20, 1);
+            lm.traceAllSources();
+            expect(s1.metrics.x).toBe(2);
+            expect(s1.metrics.y).toBe(1);
+            expect(s1.metrics.r0).toBe(10);
+            expect(s1.metrics.r1).toBe(20);
+            expect(s1.metrics.v).toBe(1);
         });
     });
 });

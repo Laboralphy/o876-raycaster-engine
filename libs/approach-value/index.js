@@ -7,6 +7,6 @@ export function approachValue(fGoal, fCurrent, fStep) {
     } else if (fCurrent < fGoal) {
         return fCurrent + fStep;
     } else if (fCurrent > fGoal) {
-        return fCurrent + fStep;
+        return fCurrent - fStep;
     }
 }

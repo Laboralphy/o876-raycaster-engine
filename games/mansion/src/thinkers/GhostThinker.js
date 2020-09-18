@@ -256,7 +256,6 @@ class GhostThinker extends MoverThinker {
      * The ghost is vanishing
      */
     s_despawn() {
-        console.log('DESPAWN')
         --this._nOpacity;
         this.setOpacityFlags();
     }

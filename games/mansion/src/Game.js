@@ -1,28 +1,24 @@
 import * as CONSTS from './consts';
 import * as LOGIC_MUTATIONS from './store/modules/logic/mutation-types';
-import * as UI_ACTIONS from './store/modules/ui/action-types';
 import GameAbstract from 'libs/game-abstract';
-import {quoteSplit}  from "libs/quote-split";
+import {quoteSplit} from "libs/quote-split";
 import UI from './UI';
 import Logic from './Logic';
 import Scripts from './scripts';
-import FadeIn  from "libs/engine/filters/FadeIn";
+import FadeIn from "libs/engine/filters/FadeIn";
 import Flash from "libs/engine/filters/Flash";
-import Halo  from "libs/engine/filters/Halo";
+import Halo from "libs/engine/filters/Halo";
 import Timed from "libs/engine/filters/Timed";
 import CameraObscura from "./filters/CameraObscura";
 import GhostScreamer from "./filters/GhostScreamer";
 import RedHaze from "./filters/RedHaze";
-import Position  from "libs/engine/Position";
+import Position from "libs/engine/Position";
 import Index from "libs/geometry";
 import ObjectExtender from "libs/object-helper/Extender";
-import * as Interpolator from "libs/interpolator";
 
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
-import DataBuilder from "./DataBuilder";
-import Geometry from "libs/geometry";
 import SenseMap from "./SenseMap";
 
 class Game extends GameAbstract {
@@ -54,6 +50,7 @@ class Game extends GameAbstract {
         this._ghostScream = new GhostScreamer();
         this.engine.filters.link(this._ghostScream);
         this._senseMap = new SenseMap();
+        this._capturableEntities = null;
     }
 
     async initAsync() {
@@ -137,9 +134,10 @@ class Game extends GameAbstract {
      * Synchronisation des données de l'engine avec le store
      */
     engineUpdateHandler() {
+        this.computeCapturableEntities();
         // checks for camera energy
         if (this.isCameraRaised()) {
-            this.logic.updateCameraEnergy(this._activeGhosts, this.isAimingCellSupernatural());
+            this.logic.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
             this.syncCameraStore();
         }
         this.computeSupernaturalCloseness();
@@ -219,7 +217,6 @@ class Game extends GameAbstract {
         this._senseMap.init(this.engine.raycaster.getMapSize());
         this.initTagHandlers();
         this._senseMap.computeMap();
-        console.log(this._senseMap)
         this.engine.filters.link(new FadeIn({duration: 600}));
     }
 
@@ -244,7 +241,7 @@ class Game extends GameAbstract {
         e.current = this.logic.prop('getCameraEnergy');
         e.max = this.logic.prop('getCameraEnergyMax');
         e.forcePulse = this.logic.prop('isCameraAimingSupernatural');
-        cf.lampIntensity = this.logic.prop('getCameraSensorLamp');
+        //cf.lampIntensity = this.logic.prop('getCameraSensorLamp');
     }
 
     /**
@@ -286,16 +283,21 @@ class Game extends GameAbstract {
      * return {number}
      */
     computeSupernaturalCloseness() {
-        if (!this.player.thinker.hasChangedSector()) {
-           return;
-        }
         // déterminer les évènement surnaturel et leur distance
         // réduire la liste à 3 éléments max
         const xPlayer = this.player.sector.x;
         const yPlayer = this.player.sector.y;
-        const fLight = this._senseMap.getSenseAt(xPlayer, yPlayer);
-        console.log(fLight);
-        this.logic.updateCameraLamp(Math.round(15 * fLight));
+        const fLightSM = this._senseMap.getSenseAt(xPlayer, yPlayer);
+        // déterminer la présence de spectres
+        let fLightCE = 0;
+        if (this.capturableEntities.length > 0) {
+            const e = this
+                .capturableEntities
+                .sort((a, b) => b.value - a.value);
+            const {precision, proximity} = e[0];
+            fLightCE = (proximity + precision) / 2;
+        }
+        this._cameraFilter.lampIntensity = Math.max(fLightSM, fLightCE);
     }
 
     /**
@@ -364,6 +366,19 @@ class Game extends GameAbstract {
     }
 
     /**
+     * dresse la liste des entité capturable (fantome et spectre)
+     */
+    computeCapturableEntities() {
+        this._computeCapturableEntities = this
+            ._activeGhosts
+            .map(entity => this.logic.getGhostScore(entity));
+    }
+
+    get capturableEntities() {
+        return this._computeCapturableEntities;
+    }
+
+    /**
      * Parcoure la liste des entity dans le champ de vision.
      * Effectue un traitement spécifique à chaque type d'entité
      * Pour chaque entité :
@@ -372,7 +387,6 @@ class Game extends GameAbstract {
      * 3) déclencher l'évènement de capture
      */
     processCapturedEntities() {
-
         // checks if ghost or wraith are in visibility
         const aGhostDetails = {
             value: 0,
@@ -383,26 +397,26 @@ class Game extends GameAbstract {
             shutter: false,
             damage: 0,
         };
-        this._activeGhosts.forEach(g => {
-            const oScore = this.logic.getGhostScore(g);
-            if (oScore.value > 0) {
-                switch (g.data.type) {
+        this
+            .capturableEntities
+            .filter(({value}) => value > 0)
+            .forEach(({entity, value, precision, distance}) => {
+                switch (entity.data.type) {
                     case 'w':
-                        this._ghostScream.addGhost(g);
-                        this.wraithShot(g, oScore.value);
+                        this._ghostScream.addGhost(entity);
+                        this.wraithShot(entity, value);
                         break;
 
                     case 'v':
-                        this._ghostScream.addGhost(g);
-                        aGhostDetails.damage += this.ghostShot(g, oScore.value);
-                        aGhostDetails.value += Math.round(g.data.score * oScore.value);
-                        aGhostDetails.distance = Math.min(aGhostDetails.distance, oScore.distance);
-                        aGhostDetails.angle = Math.min(aGhostDetails.angle, oScore.precision);
+                        this._ghostScream.addGhost(entity);
+                        aGhostDetails.damage += this.ghostShot(entity, value);
+                        aGhostDetails.value += Math.round(entity.data.score * value);
+                        aGhostDetails.distance = Math.min(aGhostDetails.distance, distance);
+                        aGhostDetails.angle = Math.min(aGhostDetails.angle, precision);
                         ++aGhostDetails.targets;
                         break;
                 }
-            }
-        });
+            });
         if (aGhostDetails.targets > 0) {
             this.ui.displayPhotoDetailScore(aGhostDetails);
         }
@@ -540,7 +554,6 @@ class Game extends GameAbstract {
      */
     commitGhostAttack(oGhost, oTarget) {
         if (oTarget === this.player) {
-            console.log('commit ghost attack')
             // get ghost power
             this.logic.damagePlayer(oGhost);
             const oThinker = this.player.thinker;
@@ -729,6 +742,16 @@ class Game extends GameAbstract {
         } else {
             throw new Error('invalid locator reference : "' + sRef + '"');
         }
+    }
+
+    /**
+     * Remove a "sense" tag.
+     * Sense tags are use to light on camera filament.
+     * When a mystery is solved, the corresponding supernatural sense tag is no longer needed and is removed
+     * @param sRef {string}
+     */
+    removeSenseTag(sRef) {
+        this._senseMap.removeSense(sRef);
     }
 }
 

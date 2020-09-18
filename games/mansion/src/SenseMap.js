@@ -1,5 +1,6 @@
 import LightMap from "libs/light-sources/LightMap";
 import Grid from "@laboralphy/grid";
+import * as CONSTS from './consts';
 
 class SenseMap {
     constructor() {
@@ -15,7 +16,7 @@ class SenseMap {
      */
     init(nSize) {
         this._lightMap = new LightMap();
-        this._lightMap.setSize(nSize, nSize);
+        this._lightMap.setSize(nSize << 1, nSize << 1);
         this._lightSources = {};
         this._grid = new Grid();
         this._size = nSize;
@@ -30,8 +31,7 @@ class SenseMap {
         if (ref in this._lightSources) {
             throw new Error('reference ' + ref + ' is already used in sens light map');
         }
-        console.log('add sense', ref, x, y)
-        this._lightSources[ref] = this._lightMap.addSource(x, y, 3, 6, 1);
+        this._lightSources[ref] = this._lightMap.addSource(x, y, 1, CONSTS.PLAYER_SENSE_DISTANCE, 1);
     }
 
     /**
@@ -52,13 +52,12 @@ class SenseMap {
         this._grid.height = this._size;
         this._lightMap.traceAllSources();
         this._lightMap.filter((x, y, n) => {
-            console.log('compute sens map', x, y, 'value', n);
             this._grid.cell(x, y, n);
         });
     }
 
     getSenseAt(x, y) {
-        return this._grid.cell(x, y);
+        return this._grid.cell(x >> 1, y >> 1) || 0;
     }
 }
 

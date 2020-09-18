@@ -102,6 +102,6 @@ export default {
     },
 
     [TYPES.SET_CAMERA_LAMP]: function(state, {value}) {
-        state.camera.sensor.lamp = value;
+        state.camera.sensor.lamp.intensity.aim = value;
     }
 }

@@ -53,11 +53,13 @@ class CameraObscura extends AbstractFilter {
         this._oLampState = {
             x: 0,
             y: 0,
-            alpha: 0,
-            value: 0,
-            aim: {
-                alpha: 0,
-                value: 0,
+            intensity: {
+                aim: 0,
+                value: 0
+            },
+            alpha: {
+                aim: 0,
+                value: 0
             }
         };
 
@@ -111,12 +113,12 @@ class CameraObscura extends AbstractFilter {
     }
 
     set lampIntensity(value) {
-        this._oLampState.aim.value = value;
-        this._oLampState.aim.alpha = value > 0 ? 1 : 0;
+        this._oLampState.intensity.aim = value;
+        this._oLampState.alpha.aim = value > 0 ? 1 : 0;
     }
 
     get lampIntensity() {
-        return this._oLampState.value;
+        return this._oLampState.intensity.value;
     }
 
     processing(nStateAfter) {
@@ -150,8 +152,8 @@ class CameraObscura extends AbstractFilter {
 
         // LAMP INDICATOR
         const oLS = this._oLampState;
-        oLS.value = approachValue(oLS.value, oLS.aim.value, 1);
-        oLS.alpha = approachValue(oLS.alpha, oLS.aim.alpha, 0.1);
+        oLS.intensity.value = approachValue(oLS.intensity.aim, oLS.intensity.value, 0.05);
+        oLS.alpha.value = approachValue(oLS.alpha.aim, oLS.alpha.value, 0.05);
     }
 
     isVisible() {
@@ -211,17 +213,21 @@ class CameraObscura extends AbstractFilter {
     }
 
     drawLamp(ctx, dyCameraVisor, bMini = false) {
+        const tsLamp = this._lamp;
+        const {x, y} = this._oLampState;
+        const h = tsLamp.tileHeight;
+        const w = tsLamp.tileWidth;
         if (!this._oLampState) {
             return;
         }
+        const yInt = Math.round(15 * this.lampIntensity);
         if (bMini) {
-
+            ctx.save();
+            ctx.globalAlpha = this._oLampState.alpha.value;
+            tsLamp.drawTile(ctx,0,h * yInt, w, h, x, y + dyCameraVisor, w, h);
+            ctx.restore();
         } else {
-            const {x, y} = this._oLampState;
-            const tsLamp = this._lamp;
-            const h = tsLamp.tileHeight;
-            const w = tsLamp.tileWidth;
-            tsLamp.drawTile(ctx,0,h * this._oLampState.value, w, h, x, y + dyCameraVisor, w, h);
+            tsLamp.drawTile(ctx,0,h * yInt, w, h, x, y + dyCameraVisor, w, h);
         }
     }
 
