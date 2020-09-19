@@ -26,7 +26,7 @@ class PlayerThinker extends FPSControlThinker {
      */
     useBlock(x, y) {
         if (!this.entity.data.camera) {
-            // push blocks only if camera is dropped
+            // push blocks only if visor is dropped
             this.engine.pushCell(this.entity, x, y);
         }
     }
@@ -95,7 +95,9 @@ class PlayerThinker extends FPSControlThinker {
 
     computeAngleSpeed(nTime) {
         if (!this._easingForcedAngle) {
-            super.computeAngleSpeed(nTime);
+            return super.computeAngleSpeed(nTime);
+        } else {
+            return 0;
         }
     }
 

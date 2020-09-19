@@ -5,7 +5,7 @@
  * Typically an HTML Element (usually a canvas) is designed to lock the mouse pointer.
  * While mouse pointer is locked, it remains invisible. If the user move the mouse, events describing
  * mouse movements are triggered at high frequency. This is ideal for FPS game where the mouse is used
- * to control the player's point of vue (camera angle).
+ * to control the player's point of vue (visor angle).
  *
  * @author Raphaël Marandet
  * @email raphael.marandet(at)gmail(dot)com

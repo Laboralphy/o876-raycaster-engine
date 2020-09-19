@@ -20,7 +20,7 @@ import Events from 'events';
 
 /**
  * comparison between two items of buffer.
- * compares the [9] (distance between camera and column)
+ * compares the [9] (distance between visor and column)
  * before the [5] (destination position x on screen)
  * @param a {array}
  * @param b {array}
@@ -64,8 +64,8 @@ class Renderer {
         this._cellCodes = []; // this is an array of array of sides
         this._lightMap = new LightMap();
 
-        this._bgOffset = 0; // oofset between camera and background position
-        this._bgCameraOffset = 0; // oofset between camera and background position
+        this._bgOffset = 0; // oofset between visor and background position
+        this._bgCameraOffset = 0; // oofset between visor and background position
 
         this._animations = [];
         this._storey = null;     // instance of another renderer for the first floor
@@ -608,12 +608,12 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         const fov = Math.atan2(w >> 1, focal);
         return {         // raycasting scene
             camera: {
-                x: xCamera,             // camera position
+                x: xCamera,             // visor position
                 y: yCamera,             // ...
                 focal,
                 fov,
-                direction: fDirection,              // camera direction angle
-                height: fHeight              // camera view height
+                direction: fDirection,              // visor direction angle
+                height: fHeight              // visor view height
             },
             resume: {           // resume context
                 b: false,       // next castRay must resume !
@@ -727,15 +727,15 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
         let nSpacing = METRICS.spacing;
         let fAngleLeft = fDirection - fViewAngle;       // angle value at the leftmost screen column
         let fAngleRight = fDirection + fViewAngle;      // angle value at the rightmost screen column
-        let wx1 = Math.cos(fAngleLeft);             // w1 = (wx1, wy1) is a normalized position around camera for the leftmost point
+        let wx1 = Math.cos(fAngleLeft);             // w1 = (wx1, wy1) is a normalized position around visor for the leftmost point
         let wy1 = Math.sin(fAngleLeft);
-        let wx2 = Math.cos(fAngleRight);            // w2 = (wx2, wy2) is a normalized position around camera for the rightmost point
+        let wx2 = Math.cos(fAngleRight);            // w2 = (wx2, wy2) is a normalized position around visor for the rightmost point
         let wy2 = Math.sin(fAngleRight);
         let dx = (wx2 - wx1) / xScreenSize;               // dx, dy help to determine all points between w1 and w2
         let dy = (wy2 - wy1) / xScreenSize;
         let fBx = wx1;                              // starting point for the raycasting process
         let fBy = wy1;                              // (fBx, fBy) is meant to be modified by (dx, dy)
-        let xCam8 = xCamera / nSpacing | 0;         // cell where the camera is.
+        let xCam8 = xCamera / nSpacing | 0;         // cell where the visor is.
         let yCam8 = yCamera / nSpacing | 0;
         let i;
         let zbuffer = [];
@@ -1931,9 +1931,9 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
             const yscr = SCREEN.width;
             const xscr2 = xscr >> 1;                // screen half width
             const yscr2 = yscr >> 1;                // screen half height
-            const z = Geometry.distance(xspr, yspr, xcam, ycam);     // distance between camera and sprite
+            const z = Geometry.distance(xspr, yspr, xcam, ycam);     // distance between visor and sprite
             const x = Math.sin(fAlpha) * z;         // sprite x position
-            const f = Math.cos(fAlpha) * z;         // projected distance on camera direction axis
+            const f = Math.cos(fAlpha) * z;         // projected distance on visor direction axis
             const focal = SCREEN.focal;
             const factor = focal / f;               // projection factor
             const xp = x * factor;                  // projection of x

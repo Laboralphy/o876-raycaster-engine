@@ -132,7 +132,7 @@ class CameraObscura extends AbstractFilter {
 
     process() {
         switch (this._nState) {
-            case STATE_RAISING: // camera is raising
+            case STATE_RAISING: // visor is raising
                 this.processing(STATE_VISIBLE);
                 break;
 
@@ -265,7 +265,7 @@ class CameraObscura extends AbstractFilter {
 
         CanvasHelper.setImageSmoothing(canvas, false);
 
-        // 4 display camera
+        // 4 display visor
         const dyCameraVisor = y * canvas.height | 0;
         const tsVisor = this._visor;
         ctx.drawImage(tsVisor.getImage(), 0, dyCameraVisor);

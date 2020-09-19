@@ -59,106 +59,6 @@ class Logic extends StoreAbstract {
         return this.prop('getQuestItems').indexOf(ref) >= 0;
     }
 
-    /**
-     * tech : updates camera width, so the ghost score may be correctly computed.
-     * @param value
-     */
-    updateCameraWidth(value) {
-        this.commit(MUTATIONS.SET_CAMERA_WIDTH, {value});
-    }
-
-    /**
-     * Keep a value between 0 and 1
-     * @param value {number} input
-     * @return {number} output
-     * @private
-     * @static
-     */
-    static _min_0_max_1(value) {
-        return Math.max(0, Math.min(1, value));
-    }
-
-    /**
-     *
-     * @param value {number} input
-     * @param val0 {number} value when output is 0
-     * @param val1 {number} value when output is 1
-     * @return {number} output
-     * @private
-     * @static
-     */
-    static _linear_0_1(value, val0, val1) {
-        return Logic._min_0_max_1(Interpolator.linear(value, val0, 0, val1, 1));
-    }
-
-    /**
-     * Gets how much energy a ghost worth
-     * and how many points the ghost photo will score
-     * @param entity {Entity}
-     * @return {{value, precision, distance}} ghost value from 0 (no value) to 1 (maximum possible value)
-     */
-    getGhostScore(entity) {
-        if (!entity.data.visibility) {
-            return {
-                entity,
-                value: 0,
-                precision: 0,
-                distance: Infinity,
-                proximity: 0
-            };
-        }
-        const {visible, size, offset, distance} = entity.data.visibility;
-        if (!visible) {
-            return {
-                entity,
-                value: 0,
-                precision: 0,
-                distance: Infinity,
-                proximity: 0
-            };
-        }
-        // the radius is a factor of CAMERA_CIRCLE_SIZE
-        const rcCam = this._rcCam;
-        const wCamera = this.prop('getCameraWidth') >> 1;
-        const xGhost = offset + (size / 2);
-        const radius = wCamera * this.prop('getCameraCaptureRadius') * CONSTS.CAMERA_CIRCLE_SIZE;
-        rcCam.setRange(wCamera - radius, wCamera + radius);
-        const nInnerEnergy = rcCam.getCenterRelic(offset, offset + size);
-        const nOuterEnergy = rcCam.getLeftRelic(offset, offset + size) + rcCam.getRightRelic(offset, offset + size);
-
-        // quelle proportion d'energy à l'intérieur ?
-        const bAllInside = nInnerEnergy > 0 && nOuterEnergy === 0;
-        // si tout le fantome est dans le cercle de capture : 1 sinon entre 0 et 1
-        const fFactor = bAllInside ? 1 : nInnerEnergy / (radius * 2);
-        const fPrecision = Logic._linear_0_1(Math.abs(wCamera - xGhost), radius, 0);
-        const fProximity = distance < CONSTS.CAMERA_OPTIMAL_DISTANCE
-            ? 1
-            : Logic._linear_0_1(distance, CONSTS.CAMERA_MAXIMAL_DISTANCE, CONSTS.CAMERA_OPTIMAL_DISTANCE);
-        return {
-            entity,
-            value: fFactor * fPrecision * fProximity,
-            precision: fPrecision,
-            distance,
-            proximity: fProximity
-        };
-    }
-
-    damageGhost(entity, amount) {
-        const nDamage = Math.ceil(
-            amount
-            * this.prop('getCameraEnergy')
-            * this.prop('getCameraPower')
-            / 100
-        );
-        entity.data.vitality -= nDamage;
-        if (entity.data.vitality <= 0) {
-            entity.thinker.kill();
-        } else {
-            entity.thinker.wound(false);
-        }
-        return nDamage;
-    }
-
     damagePlayer(ghost) {
         const nPower = ghost.data.power;
         const nDamage = nPower;
@@ -169,27 +69,6 @@ class Logic extends StoreAbstract {
         return this.prop('isPlayerDead');
     }
 
-    /**
-     * Change camera energy indicator to match the store value
-     * @param aGhosts {[]} ghost that are actually being aimed by the camera
-     * @param bSupernatural {boolean} true : la camaera est en train de viser un phenomène surnaturel
-     */
-    updateCameraEnergy(aGhosts, bSupernatural) {
-        const nEnergy = aGhosts.reduce((prev, curr) => {
-            return prev + curr.value;
-        }, 0);
-        if (nEnergy > 0) {
-            this.commit(LOGIC_MUTATIONS.INC_ENERGY, {amount: nEnergy});
-        } else {
-            this.commit(LOGIC_MUTATIONS.DEC_ENERGY);
-        }
-        this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: bSupernatural});
-    }
-
-    shutdownCameraIndicators() {
-        this.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
-        this.commit(LOGIC_MUTATIONS.AIMING_SUPERNATURAL, {value: false});
-    }
 }
 
 export default Logic;

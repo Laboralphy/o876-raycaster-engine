@@ -5,7 +5,7 @@ export const DELAY_BETWEEN_PHOTO_AND_POPUP = 1000;
 export const FLASH_DURATION = 333;
 
 export const PLAYER_FULL_SPEED = 6; // player walking speed
-export const PLAYER_CAMERA_SPEED = 3; // player wlaking speed in camera mode
+export const PLAYER_CAMERA_SPEED = 3; // player wlaking speed in visor mode
 
 export const CAMERA_RETRIGGER_DELAY = 1000; // minimum number of milliseconds between two shots
 export const CAMERA_EXAMINATION_RANGE = 512; // maximum distance a photo may be taken for examination purpose

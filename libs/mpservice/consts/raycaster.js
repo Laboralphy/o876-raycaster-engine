@@ -14,7 +14,7 @@ const RC_CONST = {
 
 	fx_none: 0,                // no effect
 	fx_light_add: 1,            // sprite is drawn with ADD filter (good for ghosts or some explosion)
-	fx_light_source: 2,			// le sprite ne devien pas plus sombre lorsqu'il s'éloigne de la camera
+	fx_light_source: 2,			// le sprite ne devien pas plus sombre lorsqu'il s'éloigne de la visor
 	fx_alpha_75: 1 << 2,        // sprite opaque à 75% (transparent à 25%)
 	fx_alpha_50: 2 << 2,        // sprite opaque à 50%
 	fx_alpha_25: 3 << 2,        // sprite presque invisible (opquae à 25%)

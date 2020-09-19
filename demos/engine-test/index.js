@@ -272,10 +272,10 @@ function getLevel() {
         "decals": [],
         "camera": {
             "thinker": "DevKbdThinker", // the control thinker
-            x: 9, // camera coordinates (x-axis)
-            y: 18, // camera coordinates (y-axis)
+            x: 9, // visor coordinates (x-axis)
+            y: 18, // visor coordinates (y-axis)
             angle: -1 * Math.PI / 2, // looking angle
-            z: 1 // camera altitude (1 is the default object)
+            z: 1 // visor altitude (1 is the default object)
         },
         "tags": [],
         "lightsources": [
@@ -322,8 +322,8 @@ async function main() {
     await engine.buildLevel(getLevel(), (phase, progress) => {
         console.log(phase, progress);
     });
-    // retrieves the camera thinker. it's a DevKbdThinker
-    // which is a thinker of keyboard control, for controlling the camera
+    // retrieves the visor thinker. it's a DevKbdThinker
+    // which is a thinker of keyboard control, for controlling the visor
     // we want to customize keyboard event
     const ct = engine.camera.thinker;
 

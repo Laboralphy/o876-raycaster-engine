@@ -402,7 +402,7 @@ class Engine {
                 this._scheduler.schedule(this._time);
                 this._doorProcess();
                 // entity management
-                //this._camera.think(this); // camera is now in the entity list : indx 0
+                //this._camera.think(this); // visor is now in the entity list : indx 0
                 this._horde.process(this);
                 this._smasher.process();
                 this
@@ -1259,13 +1259,13 @@ class Engine {
             entity.visible = true;
         });
 
-        // CAMERA : sets initial camera position, and orientation
+        // CAMERA : sets initial visor position, and orientation
         const {x, y, z, angle} = data.camera;
         this.camera.position.set({
-            x: x * ps + (ps >> 1), // camera coordinates (x-axis)
-            y: y * ps + (ps >> 1), // camera coordinates (y-axis)
+            x: x * ps + (ps >> 1), // visor coordinates (x-axis)
+            y: y * ps + (ps >> 1), // visor coordinates (y-axis)
             angle, // looking angle
-            z: z // camera altitude (1 is the default object)
+            z: z // visor altitude (1 is the default object)
         });
         this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
 

@@ -62,7 +62,7 @@ class Horde {
 
 
     /**
-     * This will change the animation according to the angle between entity.position.angle and camera.position.angle
+     * This will change the animation according to the angle between entity.position.angle and visor.position.angle
      */
     updateLookingAngle(entity, camera) {
         if (entity === camera) {
@@ -119,7 +119,7 @@ class Horde {
                     bChangeLoc = true;
                 }
             }
-            // si le sprite a changé de position ou si c'est la camera
+            // si le sprite a changé de position ou si c'est la visor
             // mettre a jou les autre donnée de position
             // (lumière, secteur)
             if (bChangeLoc || !bHasSprite) {

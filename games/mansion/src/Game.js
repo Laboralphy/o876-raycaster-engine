@@ -1,9 +1,9 @@
 import * as CONSTS from './consts';
-import * as LOGIC_MUTATIONS from './store/modules/logic/mutation-types';
 import GameAbstract from 'libs/game-abstract';
 import {quoteSplit} from "libs/quote-split";
 import UI from './UI';
 import Logic from './Logic';
+import Visor from './Visor';
 import Scripts from './scripts';
 import FadeIn from "libs/engine/filters/FadeIn";
 import Flash from "libs/engine/filters/Flash";
@@ -30,6 +30,7 @@ class Game extends GameAbstract {
         this.log('initialize game logic and state')
         this._logic = new Logic(this._ui.store);
         this._album = new Album(this._ui.store);
+        this._visor = new Visor(this._ui.store);
         this.log('load state data');
         this.logic.loadData();
         this.log('initialize event handlers');
@@ -87,6 +88,10 @@ class Game extends GameAbstract {
         return this._album;
     }
 
+    get visor() {
+        return this._visor;
+    }
+
 //
 //                        _       _             __
 //  _   _ ___  ___ _ __  (_)_ __ | |_ ___ _ __ / _| __ _  ___ ___
@@ -135,9 +140,9 @@ class Game extends GameAbstract {
      */
     engineUpdateHandler() {
         this.computeCapturableEntities();
-        // checks for camera energy
+        // checks for visor energy
         if (this.isCameraRaised()) {
-            this.logic.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
+            this.visor.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
             this.syncCameraStore();
         }
         this.computeSupernaturalCloseness();
@@ -170,7 +175,7 @@ class Game extends GameAbstract {
     engineOptionChanged(key, value) {
         switch (key) {
             case 'screen.width':
-                this.logic.updateCameraWidth(value);
+                this.visor.updateCameraWidth(value);
         }
     }
 
@@ -233,15 +238,15 @@ class Game extends GameAbstract {
 // |_|            |___/
 
     /**
-     * sync camera energy property with store
+     * sync visor energy property with store
      */
     syncCameraStore() {
         const cf = this._cameraFilter;
         const e = cf.energy;
-        e.current = this.logic.prop('getCameraEnergy');
-        e.max = this.logic.prop('getCameraEnergyMax');
-        e.forcePulse = this.logic.prop('isCameraAimingSupernatural');
-        //cf.lampIntensity = this.logic.prop('getCameraSensorLamp');
+        e.current = this.visor.energy;
+        e.max = this.visor.energyMax;
+        e.forcePulse = this.visor.aimingSupernatural;
+        //cf.lampIntensity = this.visor.prop('getCameraSensorLamp');
     }
 
     /**
@@ -337,7 +342,7 @@ class Game extends GameAbstract {
      * shoot a photo
      */
     triggerCamera() {
-        const nLastTime = this.logic.prop('getCameraLastShotTime');
+        const nLastTime = this.visor.lastShotTime;
         const nThisTime = this.engine.getTime();
         if ((nThisTime - nLastTime) < CONSTS.CAMERA_RETRIGGER_DELAY) {
             // trop peu de temps depuis la dernière photo
@@ -356,13 +361,13 @@ class Game extends GameAbstract {
 
         this.processCapturedEntities();
 
-        this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+        this.visor.depleteEnergy();
         // pour tous les fantomes present dans la ligne de mire
         // appliquer un filter ghostshot
         // calculer les dégats
         // lancer des script pour les spectres
         this.execAimedCellPhotoScript();
-        this.logic.commit(LOGIC_MUTATIONS.SHOOT, {time: nThisTime});
+        this.visor.shoot(nThisTime);
     }
 
     /**
@@ -371,7 +376,7 @@ class Game extends GameAbstract {
     computeCapturableEntities() {
         this._computeCapturableEntities = this
             ._activeGhosts
-            .map(entity => this.logic.getGhostScore(entity));
+            .map(entity => this.visor.getGhostScore(entity));
     }
 
     get capturableEntities() {
@@ -388,9 +393,9 @@ class Game extends GameAbstract {
      */
     processCapturedEntities() {
         // checks if ghost or wraith are in visibility
-        const aGhostDetails = {
+        const oGhostDetails = {
             value: 0,
-            energy: this.logic.prop('getCameraEnergy'),
+            energy: this.visor.energy,
             distance: Infinity,
             angle: Infinity,
             targets: 0,
@@ -409,16 +414,16 @@ class Game extends GameAbstract {
 
                     case 'v':
                         this._ghostScream.addGhost(entity);
-                        aGhostDetails.damage += this.ghostShot(entity, value);
-                        aGhostDetails.value += Math.round(entity.data.score * value);
-                        aGhostDetails.distance = Math.min(aGhostDetails.distance, distance);
-                        aGhostDetails.angle = Math.min(aGhostDetails.angle, precision);
-                        ++aGhostDetails.targets;
+                        oGhostDetails.damage += this.ghostShot(entity, value);
+                        oGhostDetails.value += Math.round(entity.data.score * value);
+                        oGhostDetails.distance = Math.min(oGhostDetails.distance, distance);
+                        oGhostDetails.angle = Math.min(oGhostDetails.angle, precision);
+                        ++oGhostDetails.targets;
                         break;
                 }
             });
-        if (aGhostDetails.targets > 0) {
-            this.ui.displayPhotoDetailScore(aGhostDetails);
+        if (oGhostDetails.targets > 0) {
+            this.ui.displayPhotoDetailScore(oGhostDetails);
         }
     }
 
@@ -432,15 +437,20 @@ class Game extends GameAbstract {
     }
 
     ghostShot(entity, fScore) {
-        const nDamage = this.logic.damageGhost(entity, fScore);
+        // initial damage based on visor accuracy
+        const nDamage = this.visor.damageGhost(entity, fScore);
+        // modified damage based on player attributes
+        // ...
         if (nDamage > 0) {
             this.triggerEntityEvent(entity, 'damaged', nDamage);
+        } else if (isNaN(nDamage)) {
+            throw new RangeError('damage calculation error')
         }
         return nDamage;
     }
 
     /**
-     * switch form game/camera mode
+     * switch form game/visor mode
      */
     toggleCamera() {
         if (this.isCameraRaised()) {
@@ -451,11 +461,11 @@ class Game extends GameAbstract {
     }
 
     /**
-     * show camera interface and go to camera navigation mode
+     * show visor interface and go to visor navigation mode
      */
     raiseCamera() {
         if (this.isCameraRaisable()) {
-            this.logic.commit(LOGIC_MUTATIONS.DEPLETE_ENERGY);
+            this.visor.depleteEnergy();
             const oCamera = this.engine.camera;
             oCamera.data.camera = true;
             oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_CAMERA_SPEED);
@@ -465,19 +475,19 @@ class Game extends GameAbstract {
     }
 
     /**
-     * hide camera interface and go back to game navigation mode
+     * hide visor interface and go back to game navigation mode
      */
     dropCamera() {
         const oCamera = this.engine.camera;
         oCamera.data.camera = false;
         oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
         this._cameraFilter.hide();
-        this.logic.shutdownCameraIndicators();
+        this.visor.shutdownCameraIndicators();
         this.syncCameraStore();
     }
 
     /**
-     * returns true if the camera is currently raised
+     * returns true if the visor is currently raised
      * @returns {boolean}
      */
     isCameraRaised() {
@@ -485,7 +495,7 @@ class Game extends GameAbstract {
     }
 
     /**
-     * return true if the camera can be raised at the present moment
+     * return true if the visor can be raised at the present moment
      * @returns {boolean}
      */
     isCameraRaisable() {
@@ -746,7 +756,7 @@ class Game extends GameAbstract {
 
     /**
      * Remove a "sense" tag.
-     * Sense tags are use to light on camera filament.
+     * Sense tags are use to light on visor filament.
      * When a mystery is solved, the corresponding supernatural sense tag is no longer needed and is removed
      * @param sRef {string}
      */

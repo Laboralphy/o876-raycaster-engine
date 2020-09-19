@@ -160,9 +160,6 @@ class FPSControlThinker extends TangibleThinker {
         const rc = engine.raycaster;
         const ps = rc.options.metrics.spacing;
         const oEntLoc = this.entity.position;
-        const PI = Math.PI;
-        const PI2 = Math.PI / 2;
-        const PI4 = Math.PI / 4;
 
         if (k.turnright.state !== false) {
             oEntLoc.angle += this.computeAngleSpeed(t - k.turnright.state);
@@ -267,8 +264,6 @@ class FPSControlThinker extends TangibleThinker {
     useBlock(x, y) {
         this.engine.pushCell(this.entity, x, y);
     }
-
-
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////

@@ -13,9 +13,9 @@ class GameAbstract {
         this._screen = null;
         this._engine = null;
         this._options = {
-            // activate the FPS mode and use the pointerlock system to control the camera with the mouse.
+            // activate the FPS mode and use the pointerlock system to control the visor with the mouse.
             // when the user click on the game screen, the mouse button is hidden and the mouse takes control
-            // of the camera rotation.
+            // of the visor rotation.
             pointerlock: true,
 
             // If the navigator window is resized the game surface will also auto-resize to get the maximum
@@ -28,11 +28,11 @@ class GameAbstract {
             // the DOM overlay element where the user interface can be displayed
             overlay: document.querySelector('div.game div.overlay'),
 
-            // the mouse sensitivity, lower this value to slow down camera rotation when the mouse is moved
+            // the mouse sensitivity, lower this value to slow down visor rotation when the mouse is moved
             // this is only useful if "pointerlock" is also true
             mouseSensitivity: 0.01,
 
-            // The camera thinker.
+            // The visor thinker.
             cameraThinker: 'FPSControlThinker',
 
             // declared thinker

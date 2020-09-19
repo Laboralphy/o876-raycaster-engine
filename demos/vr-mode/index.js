@@ -96,10 +96,10 @@ const LEVEL = {
     },
     "camera": {
         "thinker": "FPSControlThinker", // the control thinker
-        x: 2, // camera coordinates (x-axis)
-        y: 1, // camera coordinates (y-axis)
+        x: 2, // visor coordinates (x-axis)
+        y: 1, // visor coordinates (y-axis)
         angle: Math.PI / 2, // looking angle
-        z: 1 // camera altitude (1 is the default object)
+        z: 1 // visor altitude (1 is the default object)
     },
     "objects": [
         // there is no object

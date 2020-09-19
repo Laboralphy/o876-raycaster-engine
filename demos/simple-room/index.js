@@ -2,7 +2,7 @@ import RCE from "../../libs";
 const Engine = RCE.Engine;
 
 /**
- * This program is one of the simplest example we can give to build a level, and control a camera view inside
+ * This program is one of the simplest example we can give to build a level, and control a visor view inside
  */
 
 const LEVEL = {
@@ -58,10 +58,10 @@ const LEVEL = {
     },
     "camera": {
         "thinker": "FPSControlThinker", // the control thinker
-        x: 5, // camera coordinates (x-axis)
-        y: 6, // camera coordinates (y-axis)
+        x: 5, // visor coordinates (x-axis)
+        y: 6, // visor coordinates (y-axis)
         angle: -Math.PI / 2 - 0.4, // looking angle
-        z: 1 // camera altitude (1 is the default object)
+        z: 1 // visor altitude (1 is the default object)
     },
     "objects": [
         // there is no object
