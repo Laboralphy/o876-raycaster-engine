@@ -9,6 +9,8 @@ import Grid from "@laboralphy/grid";
 import Painting from "../painting";
 import {quoteSplit} from "../quote-split";
 
+const SERIAL_VERSION = 1;
+
 class TagGrid extends Grid {
 
     constructor() {
@@ -19,6 +21,39 @@ class TagGrid extends Grid {
         this._tagFactory = {};
         this._tagFactoryInv = {};
         this._id = 0;
+    }
+
+    get state() {
+        const oState = {
+            version: SERIAL_VERSION,
+            id: this._id,
+            tagFactory: Object.assign({}, this._tagFactory),
+            tagFactoryInv: Object.assign({}, this._tagFactoryInv),
+            cells: [],
+            width: this.width,
+            height: this.height
+        };
+
+        this.iterate((x, y, value) => {
+            oState.cells.push({x, y, tags: [...value]});
+        });
+
+        return oState;
+    }
+
+    set state(oState) {
+        if (oState.version !== SERIAL_VERSION) {
+            throw new Error('bad serialization version - class TagGrid - expected v' + SERIAL_VERSION + ' - got v' + oState.version);
+        }
+        this.width = oState.width;
+        this.height = oState.height;
+        oState.cells.forEach(({x, y, tags}) => {
+            const aSet = this.cell(x, y);
+            tags.forEach(x => aSet.add(x));
+        });
+        this._id = oState.id;
+        this._tagFactory = Object.assign({}, oState.tagFactory);
+        this._tagFactoryInv = Object.assign({}, oState.tagFactoryInv);
     }
 
     /**
@@ -113,7 +148,7 @@ class TagGrid extends Grid {
      * @param yLater {number} later position (y axis)
      */
     visit(xFormer, yFormer, xLater, yLater) {
-        if (xFormer === xLater && yFormer === yLater) {
+        if (xFormer === xLater && yFormer === yLater) {
             return false;
         }
         const formerTags = this.cell(xFormer, yFormer) || new Set();

@@ -117,4 +117,36 @@ describe('#DoorContext', function() {
         expect(dc.getPhase()).not.toBe(2); // now in phase 3 or 4
     });
 
+
+    it ('should serialize', function() {
+        const dc = new DoorContext({
+            sdur: 10,
+            mdur: 20,
+            ddur: 0,
+            ofsmax: 64
+        });
+        dc.data.phys = 5;
+        dc.data.x = 15;
+        dc.data.y = 20;
+        expect(dc.getPhase()).toBe(0);
+        dc.process();
+        expect(dc._time).toBe(0);
+        expect(dc.getPhase()).toBe(1);
+        dc.process();
+        expect(dc._time).toBe(1);
+        dc.process();
+        expect(dc._time).toBe(2);
+        dc.process();
+        expect(dc._time).toBe(3);
+        dc.process();
+        expect(dc._time).toBe(4);
+        expect(dc.getPhase()).toBe(1);
+        const oState1 = dc.state;
+        const dc2 = new DoorContext({});
+        dc2.state = oState1;
+        const oState2 = dc2.state;
+        expect(oState1).toEqual(oState2);
+        expect(dc2._time).toBe(4);
+        expect(dc2._phase).toBe(1);
+    })
 });

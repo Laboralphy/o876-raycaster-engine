@@ -1,17 +1,11 @@
 import * as MUTATIONS from './store/modules/logic/mutation-types';
 import * as ACTIONS from './store/modules/logic/action-types';
 import StoreAbstract from "./StoreAbstract";
-import * as Interpolator from "libs/interpolator";
-import * as CONSTS from "./consts";
-import Geometry from "libs/geometry";
-import RangeCollider from "libs/range-collider";
-import * as LOGIC_MUTATIONS from "./store/modules/logic/mutation-types";
 
 class Logic extends StoreAbstract {
     constructor(store) {
         super('logic');
         this.store = store;
-        this._rcCam = new RangeCollider();
     }
 
     /**

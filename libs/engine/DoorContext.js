@@ -2,12 +2,23 @@ import Easing from "../easing";
 import EventEmitter from "events";
 import * as CONSTS from "./consts";
 
+const SERIAL_VERSION = 1;
+
+
 /**
  * A door context is created whenever a door is opened, and is about to automaticaly close
  */
 class DoorContext {
 
-
+    /**
+     *
+     * @param sdur {number} duration of the sliding phase
+     * @param mdur {number} duration of the maintaining phase
+     * @param ddur {number} duration of the delay before the door opens
+     * @param ofsmax {number} maximum value of offset
+     * @param sfunc {string} name of opening function
+     * @param cfunc {string} name of closing function
+     */
     constructor({sdur = 0, mdur = 0, ddur = 0, ofsmax = 0, sfunc = Easing.SMOOTHSTEP, cfunc = ''}) {
         this._phase = 0;        // current phase
         this._time = 0;         // elapsed time
@@ -16,14 +27,56 @@ class DoorContext {
         this._delayDuration = ddur;    // duration before door actually opens
         this._offset = 0;       // offset transmitted to door
         this._offsetMax = ofsmax;
-        this._easing = new Easing();
-        this._easing.setFunction(sfunc);
+        this._sfunc = sfunc; // fonction ouverture
         this._cfunc = cfunc !== '' ? cfunc : sfunc;
-        this.events = new EventEmitter();
+        this._easing = new Easing();
+        this._easing.setFunction(this._sfunc);
+        this._events = new EventEmitter();
+        this._data = {};
+    }
 
-        // public properties
-        // for information only (not used in this class)
-        this.data = {};
+    get data() {
+        return this._data;
+    }
+
+    get events() {
+        return this._events;
+    }
+
+    get state() {
+        return {
+            version: SERIAL_VERSION,
+            phase: this._phase,
+            time: this._time,
+            slidingDuration: this._slidingDuration,
+            maintainDuration: this._maintainDuration,
+            delayDuration: this._delayDuration,
+            offset: this._offset,
+            offsetMax: this._offsetMax,
+            sfunc: this._sfunc,
+            cfunc: this._cfunc,
+            easingx: this._easing.x,
+            data: Object.assign({}, this._data)
+        };
+    }
+
+    set state(oState) {
+        if (oState.version !== SERIAL_VERSION) {
+            throw new Error('Bad serialization version - class DoorContext - expected v' + SERIAL_VERSION + ' - got v' + oState.version);
+        }
+        this._data = Object.assign({}, oState.data);
+        this._phase = oState.phase;
+        this._slidingDuration = oState.slidingDuration;
+        this._maintainDuration = oState.maintainDuration;
+        this._delayDuration = oState.delayDuration;
+        this._offset = oState.offset;
+        this._offsetMax = oState.offsetMax;
+        this._sfunc = oState.sfunc;
+        this._cfunc = oState.cfunc;
+        this._easing.setFunction(this._sfunc);
+        this.initPhase(this._phase);
+        this._time = oState.time;
+        this._easing.compute(oState.easingx);
     }
 
     reset() {
@@ -57,7 +110,7 @@ class DoorContext {
     }
 
     isClosed() {
-        return this._phase === CONSTS.DOOR_PHASE_CLOSE || this._phase === CONSTS.DOOR_PHASE_DONE;
+        return this._phase === CONSTS.DOOR_PHASE_CLOSED || this._phase === CONSTS.DOOR_PHASE_DONE;
     }
 
     isDone() {
@@ -88,7 +141,7 @@ class DoorContext {
         switch (phase) {
 
             // the door is in its initial state
-            case CONSTS.DOOR_PHASE_CLOSE:
+            case CONSTS.DOOR_PHASE_CLOSED:
                 this._time = 0;
                 break;
 
@@ -139,7 +192,7 @@ class DoorContext {
         switch (this._phase) {
 
             // the door is about to open
-            case CONSTS.DOOR_PHASE_CLOSE:
+            case CONSTS.DOOR_PHASE_CLOSED:
                 if (++this._time >= this._delayDuration) {
                     this.initPhase(CONSTS.DOOR_PHASE_OPENING);
                 }

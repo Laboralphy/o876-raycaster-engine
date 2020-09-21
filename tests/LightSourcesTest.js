@@ -86,7 +86,7 @@ describe('#light-sources', function() {
         it('simple example', function() {
             const lm = new LightMap();
             lm.setSize(60, 30);
-            expect(lm._grid.width).toBe(10);
+            expect(lm._grid.width).toBe(60);
             const s1 = lm.addSource(2, 1, 10, 20, 1);
             lm.traceAllSources();
             expect(s1.metrics.x).toBe(2);

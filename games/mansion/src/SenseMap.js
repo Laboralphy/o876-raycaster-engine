@@ -8,6 +8,7 @@ class SenseMap {
         this._lightSources = null;
         this._grid = null;
         this._size = 0;
+        this._removed = new Set();
     }
 
     /**
@@ -36,14 +37,15 @@ class SenseMap {
 
     /**
      * Supprime une source
-     * @param x
-     * @param y
+     * @param ref {string}
      */
     removeSense(ref) {
         const lsFound = this._lightSources[ref];
         if (lsFound) {
             this._lightMap.removeSource(lsFound);
             this.computeMap();
+            delete this._lightSources[ref];
+            this._removed.add(ref);
         }
     }
 
@@ -58,6 +60,16 @@ class SenseMap {
 
     getSenseAt(x, y) {
         return this._grid.cell(x >> 1, y >> 1) || 0;
+    }
+
+    get state() {
+        return {
+            removed: [...this._removed]
+        }
+    }
+
+    set state(value) {
+        value.forEach(v => this.removeSense(v));
     }
 }
 

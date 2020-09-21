@@ -374,13 +374,13 @@ class Game extends GameAbstract {
      * dresse la liste des entité capturable (fantome et spectre)
      */
     computeCapturableEntities() {
-        this._computeCapturableEntities = this
+        this._capturableEntities = this
             ._activeGhosts
             .map(entity => this.visor.getGhostScore(entity));
     }
 
     get capturableEntities() {
-        return this._computeCapturableEntities;
+        return this._capturableEntities;
     }
 
     /**

@@ -579,8 +579,8 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
     /**
      * Returns the index of the tile that is shown on the given cell surface.
      * This index is used to retrieve the portion of texture to be drawn
-     * @param code {number} code of the cell
-     * @param nSide {number} side of the surface
+     * @param code {number} code of the cell
+     * @param nSide {number} side of the surface
      * @returns {*}
      */
     getSurfaceTileIndex(code, nSide) {

@@ -9,6 +9,20 @@ class DoorManager {
         this._doors = [];
     }
 
+    get state() {
+        return this._doors.map(d => s.state);
+    }
+
+    set state(value) {
+        const doors = [];
+        value.forEach(v => {
+            const dc = new DoorContext({});
+            dc.state = v;
+            doors.push(dc);
+        });
+        this._doors = doors;
+    }
+
     /**
      * Get the door context related to a position.
      * If a door context is not present, returns undefined
