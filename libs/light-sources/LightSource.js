@@ -20,6 +20,27 @@ class LightSource {
         this._deadPixels = new MarkerRegistry(); // pixels that have not been recently lit
         this._invalid = true;
     }
+    
+    get state() {
+        return {
+            id: this._id,
+            x: this._metrics.x,
+            y: this._metrics.y,
+            r0: this._metrics.r0,
+            r1: this._metrics.r1,
+            v: this._metrics.v
+        };
+    }
+
+    set state({id, x, y, r0, r1, v}) {
+        this._id = id;
+        this._metrics.x = x;
+        this._metrics.y = y;
+        this._metrics.r0 = r0;
+        this._metrics.r1 = r1;
+        this._metrics.v = v;
+        LAST_ID = Math.max(LAST_ID, id);
+    }
 
     invalidate() {
         this._invalid = true;

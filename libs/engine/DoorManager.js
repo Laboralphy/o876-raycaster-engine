@@ -10,7 +10,7 @@ class DoorManager {
     }
 
     get state() {
-        return this._doors.map(d => s.state);
+        return this._doors.map(d => d.state);
     }
 
     set state(value) {

@@ -55,7 +55,7 @@ class DoorContext {
             offsetMax: this._offsetMax,
             sfunc: this._sfunc,
             cfunc: this._cfunc,
-            easingx: this._easing.x,
+            x: this._easing.x,
             data: Object.assign({}, this._data)
         };
     }
@@ -76,7 +76,7 @@ class DoorContext {
         this._easing.setFunction(this._sfunc);
         this.initPhase(this._phase);
         this._time = oState.time;
-        this._easing.compute(oState.easingx);
+        this._easing.compute(oState.x);
     }
 
     reset() {

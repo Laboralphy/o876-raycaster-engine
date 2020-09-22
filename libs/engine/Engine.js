@@ -31,19 +31,21 @@ import Smasher from "libs/smasher/Smasher";
 
 class Engine {
     constructor() {
-        // to be instanciate for each level
-        this._rc = null;
+        // state
         this._dm = null;
         this._locks = null;
-        this._scheduler = null;
+        this._time = 0;
+
+        // defined by level loading
+        this._rc = null;
         this._horde = null;
         this._camera = null;
         this._tilesets = null;
         this._blueprints = null;
         this._materials = null;
-        this._time = 0;
         this._interval = null;
         this._refs = null;
+        this._scheduler = null;
 
         // instanciate at construct
         this._thinkers = {};
@@ -58,9 +60,10 @@ class Engine {
             this._syncEntityDummy(entity);
         });
         this._smasher.events.on('entity.smashed', ({entity, smashers}) => {
-            this._smashEntity(entity);
+            this._smashEntity(entity, smashers);
         });
 
+        // init
         this._TIME_INTERVAL = 40;
         this._timeMod = 0;
         this._renderContext = null;
@@ -137,8 +140,6 @@ class Engine {
         }
         this.events.emit('option.changed', {key, value});
     }
-
-
 
     get horde() {
         return this._horde;

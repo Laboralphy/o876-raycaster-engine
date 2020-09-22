@@ -18,7 +18,6 @@ class LightMap {
         this._grid = new Grid();
         this._sources = [];
         this._invalid = true;
-        this._lastId = 0;
     }
 
     invalidate() {
@@ -35,6 +34,10 @@ class LightMap {
 
     clearInvalidFlag() {
         this._invalid = false;
+    }
+
+    clearSources() {
+        this._sources.forEach(source => this.removeSource(source));
     }
 
     /**

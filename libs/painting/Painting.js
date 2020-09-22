@@ -11,7 +11,7 @@ class Painting {
      * is of the same "color" as the starting pixel at xStaert, yStart.
      * @param xStart {number} starting position (x axis)
      * @param yStart {number} starting position (y axis)
-     * @param pTest {function(x, y)} the testing function, receive x y as the current pixel position, must return true of false
+     * @param pTest {function(x : number, y : number)} the testing function, receive x y as the current pixel position, must return true of false
      * @param aResult
      * @return {Array}
      */

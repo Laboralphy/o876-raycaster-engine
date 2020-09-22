@@ -5,6 +5,10 @@ import Extender from "../object-helper/Extender";
 import * as ENGINE_CONSTS from '../engine/consts';
 import CanvasHelper from "../canvas-helper";
 
+const SERIAL_VERSION = 1;
+
+
+
 class GameAbstract {
 
     constructor() {
@@ -61,7 +65,144 @@ class GameAbstract {
 
         };
         this._runCalled = false;
+        this._mutations = {
+            decalRotations: [],
+            decalDeletions: []
+        }
     }
+
+    get state() {
+        const engine = this.engine;
+        return {
+            version: SERIAL_VERSION,
+            dm: engine._dm.state,
+            time: engine._time,
+            locks: engine._locks.state,
+            decals: this.decalState,
+            tags: engine.tagManager.grid.state
+        };
+    }
+
+    set state(value) {
+        const engine = this.engine;
+        if (value.version !== SERIAL_VERSION) {
+            throw new Error('bad state version - class GameAbstract - need v' + SERIAL_VERSION + ' - got v' + value.version);
+        }
+        engine._dm.state = value.dm;
+        engine._time = value.time;
+        engine._locks.state = value.locks;
+        engine.tagManager.grid.state = value.tags;
+        this.decalState = value.decals;
+    }
+
+//  __  __                                  _   _                _                   _        _   _
+// |  \/  | __ _ _ __   __ _  __ _  ___  __| | | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
+// | |\/| |/ _` | '_ \ / _` |/ _` |/ _ \/ _` | | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
+// | |  | | (_| | | | | (_| | (_| |  __/ (_| | | |  __/\ V /  __/ | | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
+// |_|  |_|\__,_|_| |_|\__,_|\__, |\___|\__,_| |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
+//                           |___/
+
+//      _                _                                  _   _
+//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//                                    |_|
+
+    get decalState() {
+        return {
+            rotations: this._mutations.decalRotations,
+            deletions: this._mutations.decalDeletions
+        };
+    }
+
+    set decalState(value) {
+        this._mutations = {
+            decalRotations: [],
+            decalDeletions: []
+        };
+        value.rotations.forEach(({x, y, d}) => {
+            for (let i = 0; i < Math.abs(d); ++i) {
+                this.rotateDecals(x, y, d > 0);
+            }
+        });
+        value.deletions.forEach(({x, y}) => {
+            this.removeDecals(x, y);
+        });
+    }
+
+    /**
+     * Removing a decal : register this operation to keep track of what is modified in order to replay all mutations
+     * when we restore a save file.
+     * @param x {number} block being un-decalized
+     * @param y {number}
+     */
+    _registerDecalDeletion(x, y) {
+        const lms = this._mutations;
+        if (!lms.decalDeletions.find(dr => dr.x !== x && dr.y !== y)) {
+            lms.decalDeletions.push({x, y});
+        }
+    }
+
+    /**
+     * registers a decal rotation operation
+     * @param x {number} coordinates of block being re-decalized
+     * @param y {number}
+     * @param bClockWise {boolean} true = clockwise
+     * @private
+     */
+    _registerDecalRotation(x, y, bClockWise) {
+        const nClockWise = bClockWise ? 1 : -1;
+        const lms = this._mutations;
+        const dr = lms.decalRotations.find(dr => dr.x === x && dr.y === y);
+        if (dr) {
+            dr.d += nClockWise;
+            if (dr.d >= 4) {
+                dr.d = dr.d % 4;
+            }
+            if (dr.d <= -4) {
+                dr.d = -(-dr.d % 4)
+            }
+        } else {
+            lms.decalRotations.push({x, y, d: nClockWise});
+        }
+    }
+
+    /**
+     * Remove all decals from a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     */
+    removeDecals(x, y) {
+        this._registerDecalDeletion(x, y);
+        const csm = this.engine.raycaster._csm;
+        for (let i = 0; i < 4; ++i) {
+            csm.removeDecal(x, y, i);
+        }
+    }
+
+    /**
+     * Rotates all decals on a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     * @param bClockWise {boolean} true = clock wise ; false = counter clock wise (default)
+     */
+    rotateDecals(x, y, bClockWise) {
+        this._registerDecalRotation(x, y, bClockWise);
+        const csm = this.engine.raycaster._csm;
+        csm.rotateWallSurfaces(x, y, bClockWise);
+    }
+
+
+
+
+//  _                                             _   _
+// | |    ___   __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+// | |   / _ \ / _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | |__| (_) | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+// |_____\___/ \__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//             |___/        |_|
+
 
     log(...args) {
         if (this._debug) {
@@ -81,6 +222,11 @@ class GameAbstract {
             console.groupEnd(this._logGroups.pop());
         }
     }
+
+
+
+
+
 
     get screen() {
         return this._screen;

@@ -13,9 +13,9 @@ class CellSurfaceManager {
         this._lightMap = null;
         this._width = 0;
         this._height = 0;
-        this._wBlock = 0;
-        this._hBlock = 0;
     }
+
+
 
     /**
      * Defines the meta map size
@@ -169,16 +169,6 @@ class CellSurfaceManager {
         a.forEach((m, i) => {
             mxy[i].tileset = m;
         });
-    }
-
-    /**
-     * defines the size of a block
-     * @param w
-     * @param h
-     */
-    setBlockSize(w, h) {
-        this._hBlock = h;
-        this._wBlock = w;
     }
 
     /**

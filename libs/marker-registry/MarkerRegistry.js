@@ -6,6 +6,14 @@ class MarkerRegistry {
         this._s = new Set();
     }
 
+    get state() {
+        return [...this._s];
+    }
+
+    set state(value) {
+        this._s = new Set(value);
+    }
+
     /**
      * Marks this position
      * @param x {number}

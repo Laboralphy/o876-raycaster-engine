@@ -13,7 +13,7 @@ class TagManager {
     }
 
     addTag(x, y, tag) {
-        this._tg.addTag(x, y, tag);
+        return this._tg.addTag(x, y, tag);
     }
 
 

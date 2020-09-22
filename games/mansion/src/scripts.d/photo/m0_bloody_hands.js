@@ -16,7 +16,7 @@ export function main(game, remove, x, y) {
     }
     if (game.engine.isDoorClosed(x, y)) {
         game.runScript('action.resolveClueUnlockSecret', 'm0_bloody_deadend', CONSTS.PHOTO_SCORE_COMMON);
-        game.removeSenseTag('m0_bloody_hands');
+        game.removeSense('m0_bloody_hands');
         remove();   // supprimer le tag, qui ne doit servir qu'une fois.
     }
 }

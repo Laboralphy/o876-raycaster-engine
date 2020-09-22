@@ -21,6 +21,8 @@ import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import SenseMap from "./SenseMap";
 
+const SERIAL_VERSION = 1;
+
 class Game extends GameAbstract {
     init() {
         this._debug = true;
@@ -67,6 +69,7 @@ class Game extends GameAbstract {
             lamp: this.engine.getTileSet('u_lamp')
         });
     }
+
 
 //
 //  _           _                                    _   _
@@ -608,62 +611,12 @@ class Game extends GameAbstract {
         return oGhost;
     }
 
-
-
-
-
-//      _                _                                  _   _
-//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
-//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
-// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
-//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
-//                                    |_|
-
-
-    /**
-     * Remove all decals from a block
-     * @param x {number} block cell coordinate (x axis)
-     * @param y {number} block cell coordinate (y axis)
-     */
-    removeDecals(x, y) {
-        const csm = this.engine.raycaster._csm;
-        for (let i = 0; i < 4; ++i) {
-            csm.removeDecal(x, y, i);
-        }
-    }
-
-    /**
-     * Rotates all decals on a block
-     * @param x {number} block cell coordinate (x axis)
-     * @param y {number} block cell coordinate (y axis)
-     * @param bClockWise {boolean} true = clock wise ; false = counter clock wise (default)
-     */
-    rotateDecals(x, y, bClockWise) {
-        const csm = this.engine.raycaster._csm;
-        csm.rotateWallSurfaces(x, y, bClockWise);
-    }
-
-
-
-
 //  _                                           _   _
 // | |_ __ _  __ _    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
 // | __/ _` |/ _` |  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
 // | || (_| | (_| | | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
 //  \__\__,_|\__, |  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 //           |___/        |_|
-
-    /**
-     * Adds a tag on a cell
-     * @param x {number} cell coordinate (x axis)
-     * @param y {number} cell coordinate (y axis)
-     * @param sTag {string} complete tag (one string)
-     * @return {number} tag identifier (for modification)
-     */
-    addTag(x, y, sTag) {
-        return this.engine._tm._tg.addTag(x, y, sTag);
-    }
-
     /**
      * Returns a list of all tags present on the maps, the returns list contains items with these properties :
      * {
@@ -746,6 +699,11 @@ class Game extends GameAbstract {
         this.logGroupEnd();
     }
 
+    /**
+     * Retrieves a locator by its reference
+     * @param sRef {string}
+     * @return {*}
+     */
     getLocator(sRef) {
         if (sRef in this._locators) {
             return this._locators[sRef];
@@ -755,12 +713,11 @@ class Game extends GameAbstract {
     }
 
     /**
-     * Remove a "sense" tag.
-     * Sense tags are use to light on visor filament.
-     * When a mystery is solved, the corresponding supernatural sense tag is no longer needed and is removed
+     * Somes places make the camera filament glowing, this occurs when a supernatural event is about to occurs.
+     * When a mystery is solved, the corresponding supernatural spot is no longer needed and is removed with this function
      * @param sRef {string}
      */
-    removeSenseTag(sRef) {
+    removeSense(sRef) {
         this._senseMap.removeSense(sRef);
     }
 }

@@ -113,13 +113,19 @@ class TagGrid extends Grid {
 
     /**
      * remove a specified tag in the cell
-     * @param x
-     * @param y
-     * @param id
+     * @param x {number} coordinate of cell (x-axis), which may contain the tag
+     * @param y {number} coordinate of cell (y-axis), which may contain the tag
+     * @param id {number} tag identifier within the cell
+     * @return {boolean} true = a tag has been delete (given id was found); false = no tag with given id has been found, nothing deleted
      */
     removeTag(x, y, id) {
         const tags = this.cell(x, y);
-        tags.delete(id);
+        if (tags.has(id)) {
+            tags.delete(id);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -129,15 +135,7 @@ class TagGrid extends Grid {
      * @param id
      */
     removeTagRegion(x, y, id) {
-        Painting.paint(x, y, (xCell, yCell) => {
-            const tags = this.cell(xCell, yCell);
-            if (tags.has(id)) {
-                tags.delete(id);
-                return true;
-            } else {
-                return false;
-            }
-        });
+        Painting.paint(x, y, (xCell, yCell) => this.removeTag(xCell, yCell, id));
     }
 
     /**
