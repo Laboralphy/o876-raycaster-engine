@@ -11,3 +11,5 @@ export const SET_ACTIVE_TYPE = 'SET_ACTIVE_TYPE';
 
 // change a photo type, use to store photos into archive.
 export const SET_PHOTO_TYPE = 'SET_PHOTO_TYPE';
+
+export const SET_STATE_CONTENT = 'SET_STATE_CONTENT';

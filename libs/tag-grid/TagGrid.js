@@ -27,8 +27,7 @@ class TagGrid extends Grid {
         const oState = {
             version: SERIAL_VERSION,
             id: this._id,
-            tagFactory: Object.assign({}, this._tagFactory),
-            tagFactoryInv: Object.assign({}, this._tagFactoryInv),
+            factory: Object.assign({}, this._tagFactory),
             cells: [],
             width: this.width,
             height: this.height
@@ -52,8 +51,11 @@ class TagGrid extends Grid {
             tags.forEach(x => aSet.add(x));
         });
         this._id = oState.id;
-        this._tagFactory = Object.assign({}, oState.tagFactory);
-        this._tagFactoryInv = Object.assign({}, oState.tagFactoryInv);
+        this._tagFactory = Object.assign({}, oState.factory);
+        this._tagFactoryInv = {};
+        for (let s in oState.factory) {
+            this._tagFactoryInv[oState.factory[s].toString()] = s;
+        }
     }
 
     /**

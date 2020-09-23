@@ -54,7 +54,119 @@ class Game extends GameAbstract {
         this.engine.filters.link(this._ghostScream);
         this._senseMap = new SenseMap();
         this._capturableEntities = null;
+        this._mutations = {
+            decals: []
+        }
     }
+
+
+    get state() {
+        const engine = this.engine;
+        const oState = {
+            version: SERIAL_VERSION,
+            dm: engine._dm.state,
+            time: engine._time,
+            locks: engine._locks.state,
+            decals: this._mutations.decals.slice(0),
+            tags: engine.tagManager.grid.state,
+            logic: this.logic.prop('getStateContent'),
+            album: this.album.prop('getStateContent'),
+        };
+        return JSON.stringify(oState,
+            function (key, value) {
+                return value === Infinity  ? "Infinity" : value;
+            }
+        );
+    }
+
+    set state(value) {
+        const oState = JSON.parse(value,
+            function (key, value) {
+                return value === "Infinity"  ? Infinity : value;
+            }
+        );
+        const engine = this.engine;
+        if (oState.version !== SERIAL_VERSION) {
+            throw new Error('bad state version - class GameAbstract - need v' + SERIAL_VERSION + ' - got v' + oState.version);
+        }
+        engine._dm.state = oState.dm;
+        engine._time = oState.time;
+        engine._locks.state = oState.locks;
+        engine.tagManager.grid.state = oState.tags;
+        this._mutations.decals = [];
+        oState.decals.forEach(data => {
+            switch (data.op) {
+                case 'del':
+                    this.removeDecals(data.x, data.y, data.sides);
+                    break;
+
+                case 'rot':
+                    this.rotateDecals(data.x, data.y, data.cw);
+                    break;
+
+                case 'app':
+                    this.applyDecal(data.x, data.y, data.side, data.ref);
+                    break;
+            }
+        });
+        this.logic.commit('SET_STATE_CONTENT', {content: oState.logic});
+        this.album.commit('SET_STATE_CONTENT', {content: oState.album});
+    }
+
+//      _                _                                  _   _
+//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
+//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
+// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
+//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
+//                                    |_|
+
+    /**
+     * Remove all decals from a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     * @param nSides {number} bit mask of affected sides
+     */
+    removeDecals(x, y, nSides = 0xF) {
+        this._mutations.decals.push({op: 'del', x, y, sides: nSides});
+        const csm = this.engine.raycaster._csm;
+        for (let i = 0; i < 4; ++i) {
+            if ((nSides & (1 << i)) !== 0) {
+                csm.removeDecal(x, y, i);
+            }
+        }
+    }
+
+    /**
+     * Rotates all decals on a block
+     * @param x {number} block cell coordinate (x axis)
+     * @param y {number} block cell coordinate (y axis)
+     * @param bClockWise {boolean} true = clock wise ; false = counter clock wise (default)
+     */
+    rotateDecals(x, y, bClockWise) {
+        this._mutations.decals.push({op: 'rot', x, y, cw: bClockWise});
+        const csm = this.engine.raycaster._csm;
+        csm.rotateWallSurfaces(x, y, bClockWise);
+    }
+
+    /**
+     * Applies a decal on a surface
+     * @param x
+     * @param y
+     * @param nSides
+     * @param sRef
+     */
+    applyDecal(x, y, nSides, sRef) {
+        this._mutations.decals.push({op: 'app', x, y, sides: nSides, ref: sRef});
+        const oDecal = this.engine.getTileSet(sRef);
+        const csm = this.engine.raycaster._csm;
+        for (let i = 0; i < 4; ++i) {
+            if ((nSides & (1 << i)) !== 0) {
+                csm.setDecal(x, y, i, oDecal.getImage());
+            }
+        }
+    }
+
+
 
     async initAsync() {
         await super.initAsync();
@@ -63,6 +175,7 @@ class Game extends GameAbstract {
 
 
     async loadLevel(sLevel, extra) {
+        this._mutations.decals = [];
         await super.loadLevel(sLevel, extra);
         this._cameraFilter.assignAssets({
             visor: this.engine.getTileSet('u_visor'),

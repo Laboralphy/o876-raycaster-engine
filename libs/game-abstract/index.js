@@ -65,134 +65,7 @@ class GameAbstract {
 
         };
         this._runCalled = false;
-        this._mutations = {
-            decalRotations: [],
-            decalDeletions: []
-        }
     }
-
-    get state() {
-        const engine = this.engine;
-        return {
-            version: SERIAL_VERSION,
-            dm: engine._dm.state,
-            time: engine._time,
-            locks: engine._locks.state,
-            decals: this.decalState,
-            tags: engine.tagManager.grid.state
-        };
-    }
-
-    set state(value) {
-        const engine = this.engine;
-        if (value.version !== SERIAL_VERSION) {
-            throw new Error('bad state version - class GameAbstract - need v' + SERIAL_VERSION + ' - got v' + value.version);
-        }
-        engine._dm.state = value.dm;
-        engine._time = value.time;
-        engine._locks.state = value.locks;
-        engine.tagManager.grid.state = value.tags;
-        this.decalState = value.decals;
-    }
-
-//  __  __                                  _   _                _                   _        _   _
-// |  \/  | __ _ _ __   __ _  __ _  ___  __| | | | _____   _____| |  _ __ ___  _   _| |_ __ _| |_(_) ___  _ __  ___
-// | |\/| |/ _` | '_ \ / _` |/ _` |/ _ \/ _` | | |/ _ \ \ / / _ \ | | '_ ` _ \| | | | __/ _` | __| |/ _ \| '_ \/ __|
-// | |  | | (_| | | | | (_| | (_| |  __/ (_| | | |  __/\ V /  __/ | | | | | | | |_| | || (_| | |_| | (_) | | | \__ \
-// |_|  |_|\__,_|_| |_|\__,_|\__, |\___|\__,_| |_|\___| \_/ \___|_| |_| |_| |_|\__,_|\__\__,_|\__|_|\___/|_| |_|___/
-//                           |___/
-
-//      _                _                                  _   _
-//   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
-//  / _` |/ _ \/ __/ _` | / __|  / _ \| '_ \ / _ \ '__/ _` | __| |/ _ \| '_ \/ __|
-// | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
-//  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
-//                                    |_|
-
-    get decalState() {
-        return {
-            rotations: this._mutations.decalRotations,
-            deletions: this._mutations.decalDeletions
-        };
-    }
-
-    set decalState(value) {
-        this._mutations = {
-            decalRotations: [],
-            decalDeletions: []
-        };
-        value.rotations.forEach(({x, y, d}) => {
-            for (let i = 0; i < Math.abs(d); ++i) {
-                this.rotateDecals(x, y, d > 0);
-            }
-        });
-        value.deletions.forEach(({x, y}) => {
-            this.removeDecals(x, y);
-        });
-    }
-
-    /**
-     * Removing a decal : register this operation to keep track of what is modified in order to replay all mutations
-     * when we restore a save file.
-     * @param x {number} block being un-decalized
-     * @param y {number}
-     */
-    _registerDecalDeletion(x, y) {
-        const lms = this._mutations;
-        if (!lms.decalDeletions.find(dr => dr.x !== x && dr.y !== y)) {
-            lms.decalDeletions.push({x, y});
-        }
-    }
-
-    /**
-     * registers a decal rotation operation
-     * @param x {number} coordinates of block being re-decalized
-     * @param y {number}
-     * @param bClockWise {boolean} true = clockwise
-     * @private
-     */
-    _registerDecalRotation(x, y, bClockWise) {
-        const nClockWise = bClockWise ? 1 : -1;
-        const lms = this._mutations;
-        const dr = lms.decalRotations.find(dr => dr.x === x && dr.y === y);
-        if (dr) {
-            dr.d += nClockWise;
-            if (dr.d >= 4) {
-                dr.d = dr.d % 4;
-            }
-            if (dr.d <= -4) {
-                dr.d = -(-dr.d % 4)
-            }
-        } else {
-            lms.decalRotations.push({x, y, d: nClockWise});
-        }
-    }
-
-    /**
-     * Remove all decals from a block
-     * @param x {number} block cell coordinate (x axis)
-     * @param y {number} block cell coordinate (y axis)
-     */
-    removeDecals(x, y) {
-        this._registerDecalDeletion(x, y);
-        const csm = this.engine.raycaster._csm;
-        for (let i = 0; i < 4; ++i) {
-            csm.removeDecal(x, y, i);
-        }
-    }
-
-    /**
-     * Rotates all decals on a block
-     * @param x {number} block cell coordinate (x axis)
-     * @param y {number} block cell coordinate (y axis)
-     * @param bClockWise {boolean} true = clock wise ; false = counter clock wise (default)
-     */
-    rotateDecals(x, y, bClockWise) {
-        this._registerDecalRotation(x, y, bClockWise);
-        const csm = this.engine.raycaster._csm;
-        csm.rotateWallSurfaces(x, y, bClockWise);
-    }
-
 
 
 
@@ -227,6 +100,12 @@ class GameAbstract {
 
 
 
+//             _   _
+//   __ _  ___| |_| |_ ___ _ __ ___
+//  / _` |/ _ \ __| __/ _ \ '__/ __|
+// | (_| |  __/ |_| ||  __/ |  \__ \
+//  \__, |\___|\__|\__\___|_|  |___/
+//  |___/
 
     get screen() {
         return this._screen;
@@ -239,6 +118,15 @@ class GameAbstract {
     get options() {
         return this._options;
     }
+
+
+
+
+//  _       _ _   _       _ _           _
+// (_)_ __ (_) |_(_) __ _| (_)___  __ _| |_ ___  _ __ ___
+// | | '_ \| | __| |/ _` | | / __|/ _` | __/ _ \| '__/ __|
+// | | | | | | |_| | (_| | | \__ \ (_| | || (_) | |  \__ \
+// |_|_| |_|_|\__|_|\__,_|_|_|___/\__,_|\__\___/|_|  |___/
 
     /**
      * Should be called once !
@@ -260,6 +148,10 @@ class GameAbstract {
         return this;
     }
 
+    /**
+     * engine initialisation
+     * @return {GameAbstract}
+     */
     initEngine() {
         this.log('init engine')
         const surface = this._screen.surface;       // getting the surface a.k.a the rendering canvas
@@ -272,14 +164,9 @@ class GameAbstract {
         return this;
     }
 
-    keyUpHandler(key) {
-        this.invokeCameraThinkerFunction('keyUp', key);
-    }
-
-    keyDownHandler(key) {
-        this.invokeCameraThinkerFunction('keyDown', key);
-    }
-
+    /**
+     * handler initialisation
+     */
     initListeners() {
         this.log('install event listeners')
         window.addEventListener('keydown', event => {
@@ -313,11 +200,28 @@ class GameAbstract {
         return Promise.resolve();
     }
 
+
     config(options) {
         if (this._runCalled) {
             throw new Error('you must config() BEFORE run(), not after.')
         }
         Extender.objectExtends(this._options, options, true);
+    }
+
+
+//  _                                     _     _                     _ _
+// | | _____ _   _    _____   _____ _ __ | |_  | |__   __ _ _ __   __| | | ___ _ __ ___
+// | |/ / _ \ | | |  / _ \ \ / / _ \ '_ \| __| | '_ \ / _` | '_ \ / _` | |/ _ \ '__/ __|
+// |   <  __/ |_| | |  __/\ V /  __/ | | | |_  | | | | (_| | | | | (_| | |  __/ |  \__ \
+// |_|\_\___|\__, |  \___| \_/ \___|_| |_|\__| |_| |_|\__,_|_| |_|\__,_|_|\___|_|  |___/
+//           |___/
+
+    keyUpHandler(key) {
+        this.invokeCameraThinkerFunction('keyUp', key);
+    }
+
+    keyDownHandler(key) {
+        this.invokeCameraThinkerFunction('keyDown', key);
     }
 
     invokeCameraThinkerFunction(sFunction, ...args) {

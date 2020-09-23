@@ -123,7 +123,7 @@ class CellSurfaceManager {
      * retrieves data corresponding to the surface of the cell with matching coordinate
      * @param x {number} cell coordinates
      * @param y {number} cell coordinates
-     * @param nSide {number} wall index (0 - 5)
+     * @param nSide {number} wall index (0 - 5) 0 = west 1; = south 2; = east 3; = north;
      * @returns {*}
      */
     getSurface(x, y, nSide) {

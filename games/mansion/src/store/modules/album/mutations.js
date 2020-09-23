@@ -25,5 +25,11 @@ export default {
         if (state.photoTypes.includes(type)) {
             oPhoto.type = type;
         }
+    },
+
+    [TYPES.SET_STATE_CONTENT]: function(state, {content}) {
+        for (let i in content) {
+            state[i] = content[i];
+        }
     }
 }

@@ -60,4 +60,10 @@ export default {
         const nHP = attr.hp + value;
         attr.hp = Math.min(attr.hpMax, Math.max(0, nHP));
     },
+
+    [TYPES.SET_STATE_CONTENT]: function(state, {content}) {
+        for (let i in content) {
+            state[i] = content[i];
+        }
+    }
 }

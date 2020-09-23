@@ -10,7 +10,13 @@ class DoorManager {
     }
 
     get state() {
-        return this._doors.map(d => d.state);
+        return this._doors.map(d => {
+            const oState = d.state;
+            if ('child' in d.data) {
+                oState.data.child = this._doors.indexOf(d.data.child);
+            }
+            return oState;
+        });
     }
 
     set state(value) {
@@ -20,6 +26,14 @@ class DoorManager {
             dc.state = v;
             doors.push(dc);
         });
+        doors.forEach(d => {
+            if ('child' in d.data) {
+                d.data.child = doors[d.data.child];
+                if (d.data.child === undefined) {
+                    throw new Error('while restoring door manager state : child door context not found');
+                }
+            }
+        })
         this._doors = doors;
     }
 
