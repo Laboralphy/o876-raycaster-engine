@@ -55,7 +55,6 @@ export default {
     getTileHeight: state => state.metrics.tileHeight,
     getTileWidth: state => state.metrics.tileWidth,
     getBlocks: state => state.blocks.sort((b1, b2) => b1.phys - b2.phys),
-    getStartpoint: state => state.startpoint,
     getGrid: state => state.grid,
     getGridSize: state => state.grid.length,
     getLevel: state => state,
@@ -65,5 +64,8 @@ export default {
     getFlagStretch: state => state.flags.stretch,
     getFlagExport: state => state.flags.export,
     getLevelStorageUsage: state => JSON.stringify(state).length,
-    getCameraThinker: state => state.startpoint.thinker
+    getCameraThinker: state => state.actor.thinker,
+    getActorStartpointId: state => parseInt(state.actor.startpoint),
+    getStartpointCount: state => state.startpoints.length,
+    getStartpoints: state => state.startpoints
 }

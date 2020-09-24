@@ -13570,11 +13570,16 @@
     },
     "brightness": 0
   },
-  "startpoint": {
-    "x": 11,
-    "y": 25,
-    "angle": 1.5,
+  "actor": {
+    "startpoint": 0,
     "thinker": ""
   },
-  "preview": "9599a0623d3ece902ee5b48adcc170bd.jpg"
+  "startpoints": [
+    {
+      "x": 11,
+      "y": 25,
+      "angle": 1.5
+    }
+  ],
+  "preview": "a843bbfe00fd3673276263a06c806074.jpg"
 }

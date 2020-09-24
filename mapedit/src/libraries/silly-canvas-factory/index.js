@@ -135,7 +135,7 @@ class SillyCanvasFactory {
         });
     }
 
-    drawStartPoint(canvas, angle) {
+    drawStartPoint(canvas, angle, selected) {
         const ctx = canvas.getContext('2d');
         const w = this._width;
         const h = this._height;
@@ -149,16 +149,16 @@ class SillyCanvasFactory {
         ctx.rotate(angle * Math.PI);
         ctx.translate(-w2, -h2);
         ctx.beginPath();
-        ctx.strokeStyle = '#FFF';
+        ctx.strokeStyle = selected ? '#FFF' : '#BBB';
         ctx.arc(w2, h2, w2 - pad - pad,  0, Math.PI * 2);
         ctx.stroke();
         ctx.closePath();
         ctx.beginPath();
-        ctx.strokeStyle = '#06F';
+        ctx.strokeStyle = selected ? '#06F' : '#333';
         ctx.arc(w2, h2, w2 - pad,  0, Math.PI * 2);
         ctx.stroke();
         ctx.closePath();
-        ctx.strokeStyle = '#F00';
+        ctx.strokeStyle = selected ? '#F00' : '#555';
         ctx.beginPath();
         ctx.moveTo(pad, h2);
         ctx.lineTo(w - pad, h2);
@@ -183,7 +183,7 @@ class SillyCanvasFactory {
             this.drawMark(canvas, mark);
             this.drawThings(canvas, things);
             if ('startpoint' in misc) {
-                this.drawStartPoint(canvas, misc.startpoint.angle);
+                this.drawStartPoint(canvas, misc.startpoint.angle, misc.startpoint.selected);
             }
             return this._canvases[sKey] = canvas;
         }

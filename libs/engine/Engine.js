@@ -69,6 +69,7 @@ class Engine {
         this._renderContext = null;
         this._filters = new FilterManager();
         this._events = new Events();
+        this._startpoints = [];
 
         this._config = {
             fetchLevelAction: CONSTS.FETCH_LEVEL_URL,
@@ -1122,7 +1123,7 @@ class Engine {
     /**
      * Builds a level with the specified content
      * @param data {*} level definition
-     * @param extra {null|{blueprints: [], tilesets: []}} common blueprints and tilesets definition
+     * @param extra {null|{startpoint: number, blueprints: [], tilesets: []}} common blueprints and tilesets definition
      * @return {Promise<void>}
      */
     async buildLevel(data, extra = null) {
@@ -1286,7 +1287,14 @@ class Engine {
         });
 
         // CAMERA : sets initial visor position, and orientation
-        const {x, y, z, angle} = data.camera;
+        // is there a valid start point
+        const bValidStartpoint = (extra !== null) &&        // extra must be defined
+            ('startpoint' in extra) &&                      // extra must have startpoint property
+            (extra.startpoint >= 0) &&                      // startpoint property must be
+            (extra.startpoint < data.startpoints.length);   // within the startpoints array range
+        const {x, y, z, angle} = bValidStartpoint
+            ? data.startpoints[extra.startpoint]
+            : data.camera;
         this.camera.position.set({
             x: x * ps + (ps >> 1), // visor coordinates (x-axis)
             y: y * ps + (ps >> 1), // visor coordinates (y-axis)
@@ -1294,6 +1302,7 @@ class Engine {
             z: z // visor altitude (1 is the default object)
         });
         this.camera.thinker = this.createThinkerInstance(data.camera.thinker || this._config.cameraThinker);
+        this._startpoints = data.startpoints;
 
         const FACES = 'wsenfc';
 
@@ -1472,12 +1481,13 @@ class Engine {
     /**
      * Loads a level
      * @param sName {string}
-     * @param extra {{tilesets: [], blueprints: []}} extra json data to be loaded as tilesets and blueprints
+     * @param extra {{startpoint : number, tilesets: [], blueprints: []}} extra json data to be loaded as tilesets and blueprints
      * @return {Promise<void>}
      */
     async loadLevel(sName, extra= {}) {
         const xts = 'tilesets' in extra ? extra.tilesets : [];
         const xbp = 'blueprints' in extra ? extra.blueprints : [];
+        const sp = 'startpoint' in extra ? extra.startpoint : -1;
         const fts = [
             ...await this.fetchData('tilesets'),
             ...xts
@@ -1487,7 +1497,7 @@ class Engine {
             ...xbp
         ];
         const data = await this.fetchLevel(sName);
-        return this.buildLevel(data, {tilesets: fts, blueprints: fbp});
+        return this.buildLevel(data, {startpoint: sp, tilesets: fts, blueprints: fbp});
     }
 
 }

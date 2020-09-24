@@ -41307,11 +41307,16 @@
     },
     "brightness": 0
   },
-  "startpoint": {
-    "x": 9,
-    "y": 0,
-    "angle": 0.5,
+  "actor": {
+    "startpoint": 0,
     "thinker": "IntroThinker"
   },
+  "startpoints": [
+    {
+      "x": 9,
+      "y": 0,
+      "angle": 0.5
+    }
+  ],
   "preview": "6ae3b140dcbb7b57be9b7b73609f6306.jpg"
 }

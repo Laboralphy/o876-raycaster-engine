@@ -2712,11 +2712,14 @@
     },
     "brightness": 0
   },
-  "startpoint": {
-    "x": 1,
-    "y": 10,
-    "angle": 1.75,
+  "actor": {
+    "startpoint": 0,
     "thinker": ""
   },
+  "startpoints": [{
+    "x": 1,
+    "y": 10,
+    "angle": 1.75
+  }],
   "preview": "07cb27a8a0cca35a4aa9ddac8d96a51a.jpg"
 }

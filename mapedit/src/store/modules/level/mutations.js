@@ -446,14 +446,35 @@ export default {
         }
     },
 
-    [MUTATION.SET_STARTING_POINT]: (state, {x, y, angle}) => {
-        state.startpoint.x = x;
-        state.startpoint.y = y;
-        state.startpoint.angle = angle;
+    [MUTATION.SET_STARTING_POINT]: (state, {id, x, y, angle}) => {
+        state.startpoints[id].x = x;
+        state.startpoints[id].y = y;
+        state.startpoints[id].z = 1;
+        state.startpoints[id].angle = angle;
+    },
+
+    [MUTATION.ADD_STARTING_POINT]: state => {
+        state.startpoints.push({
+            x: -1,
+            y: -1,
+            z: 1,
+            angle: 0
+        });
+    },
+
+    [MUTATION.REMOVE_STARTING_POINT]: (state, {id}) => {
+        state.startpoints.splice(id, 1);
+        if (state.actor.startpoint >= state.startpoints.length) {
+            state.actor.startpoint = state.startpoints.length - 1;
+        }
+    },
+
+    [MUTATION.SET_ACTOR_STARTING_POINT]: (state, {id}) => {
+        state.actor.startpoint = parseInt(id);
     },
 
     [MUTATION.SET_CAMERA_THINKER]: (state, {value}) => {
-        state.startpoint.thinker = value;
+        state.actor.thinker = value;
     },
 
     [MUTATION.SHIFT_GRID]: (state, {direction}) => {

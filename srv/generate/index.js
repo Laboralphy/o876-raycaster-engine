@@ -441,12 +441,15 @@ function generateObjectsAndDecals(input) {
 
 function generateCamera(input) {
     // recherche de la "marque"
+    const spID = input.actor.startpoint;
+    const sThinker = input.actor.thinker;
+    const startpoint = input.startpoints[spID]
     return {
-        x: input.startpoint.x,
-        y: input.startpoint.y,
+        x: startpoint.x,
+        y: startpoint.y,
         z: 1,
-        angle: input.startpoint.angle * Math.PI,
-        thinker: input.startpoint.thinker
+        angle: startpoint.angle * Math.PI,
+        thinker: sThinker
     };
 }
 
@@ -492,6 +495,15 @@ function generateLightsources(input) {
     return aLightsources;
 }
 
+function generateStartpoints(input) {
+    return input.startpoints.map(sp => ({
+        x: sp.x,
+        y: sp.y,
+        z: 1,
+        angle: sp.angle * Math.PI
+    }));
+}
+
 async function generate(input, imageAppender) {
     if (!imageAppender) {
         throw new Error('need image appender');
@@ -504,6 +516,7 @@ async function generate(input, imageAppender) {
         level: await generateLevel(input),
         shading: generateShading(input),
         ...generateObjectsAndDecals(input),
+        startpoints: generateStartpoints(input),
         camera: generateCamera(input),
         tags: generateTags(input),
         lightsources: generateLightsources(input),

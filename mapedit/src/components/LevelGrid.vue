@@ -255,7 +255,8 @@
                 'getGridSize',
                 'getGrid',
                 'getBlocks',
-                'getStartpoint',
+                'getStartpoints',
+                'getActorStartpointId',
                 'getLevel',
                 'getFlagExport'
             ]),
@@ -657,11 +658,18 @@
                     };
                 });
 
-                const startpoint = this.getStartpoint;
+                const startpoints = this.getStartpoints;
                 const misc = {};
 
-                if (x === startpoint.x && y === startpoint.y) {
-                    misc.startpoint = startpoint;
+                const nStartPointHereId = startpoints.findIndex(sp => x === sp.x && y === sp.y);
+                if (nStartPointHereId >= 0) {
+                    const bStartPointHereSelected = nStartPointHereId === this.getActorStartpointId;
+                    const oStartPointHere = startpoints[nStartPointHereId];
+                    misc.startpoint = {
+                      ...oStartPointHere,
+                      selected: bStartPointHereSelected
+                    };
+
                 }
                 const oTagCanvas = SCF.getCanvas(cell.tags, cell.mark, aThings, misc);
                 if (!!oTagCanvas) {

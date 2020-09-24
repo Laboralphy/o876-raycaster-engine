@@ -30,45 +30,32 @@
         <hr />
         <h3>Startpoint</h3>
         <p>Select a single cell on the map, then click on one of the directionnal button below, to define the starting point.</p>
+        <p>Multiple starting points are supported. Select the starting point you wish to modify :</p>
         <div>
             <table>
-                <tbody>
-                    <tr>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(1.25)"><ArrowTopLeftThickIcon decorative></ArrowTopLeftThickIcon></MyButton>
-                        </td>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(1.5)"><ArrowUpThickIcon decorative></ArrowUpThickIcon></MyButton>
-                        </td>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(1.75)"><ArrowTopRightThickIcon decorative></ArrowTopRightThickIcon></MyButton>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(1)"><ArrowLeftThickIcon decorative></ArrowLeftThickIcon></MyButton>
-                        </td>
-                        <td>
-
-                        </td>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(0)"><ArrowRightThickIcon decorative></ArrowRightThickIcon></MyButton>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(0.75)"><ArrowBottomLeftThickIcon decorative></ArrowBottomLeftThickIcon></MyButton>
-                        </td>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(0.5)"><ArrowDownThickIcon decorative></ArrowDownThickIcon></MyButton>
-                        </td>
-                        <td>
-                            <MyButton @click="() => placeStartPoint(0.25)"><ArrowBottomRightThickIcon decorative></ArrowBottomRightThickIcon></MyButton>
-                        </td>
-                    </tr>
-                </tbody>
+              <tbody>
+                <tr>
+                  <td>
+                    <DirectionalPad @select="({direction}) => directionalPadSelected(direction)"></DirectionalPad>
+                  </td>
+                  <td>
+                    <label>#
+                      <input
+                          class="small-numbers"
+                          v-model="currentStartPoint"
+                          type="number"
+                          min="0"
+                          :max="getStartpointCount - 1"
+                          step="1"
+                      />
+                    </label>
+                    <p>Number of startpoints : <b>{{ getStartpointCount }}</b></p>
+                    <MyButton title="Add a new startpoint" @click="createStartPoint">Create start point</MyButton>
+                    <MyButton title="Remove the currently selected startpoint" @click="removeCurrentStartPoint">Remove start point</MyButton>
+                  </td>
+                </tr>
+              </tbody>
             </table>
-
         </div>
     </Window>
 </template>
@@ -88,14 +75,7 @@
     import TriangleIcon from "vue-material-design-icons/Triangle.vue";
     import CloseCircleIcon from "vue-material-design-icons/CloseCircle.vue";
 
-    import ArrowTopLeftThickIcon from "vue-material-design-icons/ArrowTopLeftThick.vue";
-    import ArrowUpThickIcon from "vue-material-design-icons/ArrowUpThick.vue";
-    import ArrowTopRightThickIcon from "vue-material-design-icons/ArrowTopRightThick.vue";
-    import ArrowLeftThickIcon from "vue-material-design-icons/ArrowLeftThick.vue";
-    import ArrowRightThickIcon from "vue-material-design-icons/ArrowRightThick.vue";
-    import ArrowBottomLeftThickIcon from "vue-material-design-icons/ArrowBottomLeftThick.vue";
-    import ArrowDownThickIcon from "vue-material-design-icons/ArrowDownThick.vue";
-    import ArrowBottomRightThickIcon from "vue-material-design-icons/ArrowBottomRightThick.vue";
+    import DirectionalPad from "./DirectionalPad.vue";
 
     const {mapGetters: levelGetters, mapActions: levelActions} = createNamespacedHelpers('level');
     const {mapGetters: editorGetters, mapMutations: editorMutations} = createNamespacedHelpers('editor');
@@ -105,15 +85,7 @@
     export default {
         name: "MarkerManager",
         components: {
-            ArrowBottomRightThickIcon,
-            ArrowDownThickIcon,
-            ArrowBottomLeftThickIcon,
-            ArrowRightThickIcon,
-            ArrowLeftThickIcon,
-            ArrowTopRightThickIcon,
-            ArrowUpThickIcon,
-            ArrowTopLeftThickIcon,
-
+            DirectionalPad,
             CloseCircleIcon,
             MyButton,
             TriangleIcon, HexagonIcon, CircleIcon, RhombusIcon, SquareIcon, Window},
@@ -131,19 +103,46 @@
             ]),
 
             ...levelGetters([
-                'getStartpoint'
-            ])
+                'getStartpoint',
+                'getStartpointCount',
+                'getActorStartpointId',
+            ]),
+
+            currentStartPoint: {
+              get() {
+                return this.getActorStartpointId
+              },
+              set(value) {
+                this.somethingHasChanged({value: true});
+                this.setCurrentStartpoint({id: value});
+              }
+            }
         },
 
         methods: {
             ...levelActions({
                 setCellMark: LEVEL_ACTIONS.SET_CELL_MARK,
-                setStartpoint: LEVEL_ACTIONS.SET_STARTING_POINT
+                setStartpoint: LEVEL_ACTIONS.SET_STARTING_POINT,
+                setCurrentStartpoint: LEVEL_ACTIONS.SET_ACTOR_STARTING_POINT,
+                addStartPoint: LEVEL_ACTIONS.ADD_STARTING_POINT,
+                removeActorStartPoint: LEVEL_ACTIONS.REMOVE_ACTOR_STARTING_POINT
             }),
 
             ...editorMutations({
                 somethingHasChanged: EDITOR_MUTATIONS.SOMETHING_HAS_CHANGED
             }),
+
+            createStartPoint: function() {
+              this.addStartPoint();
+              this.somethingHasChanged({value: true});
+            },
+
+            removeCurrentStartPoint: function() {
+              if (this.getStartpointCount > 1) {
+                this.removeActorStartPoint();
+                this.somethingHasChanged({value: true});
+              }
+            },
 
             setShape: async function(nShape) {
                 if (this.isLevelGridRegionSelected) {
@@ -181,11 +180,49 @@
                     await Promise.all(proms);
                     this.somethingHasChanged({value: true});
                 }
+            },
+
+            directionalPadSelected: function(direction) {
+              switch (direction) {
+                case 'top-left':
+                  this.placeStartPoint(1.25);
+                  break;
+
+                case 'top':
+                  this.placeStartPoint(1.5);
+                  break;
+
+                case 'top-right':
+                  this.placeStartPoint(1.75);
+                  break;
+
+                case 'right':
+                  this.placeStartPoint(0);
+                  break;
+
+                case 'bottom-right':
+                  this.placeStartPoint(0.25);
+                  break;
+
+                case 'bottom':
+                  this.placeStartPoint(0.5);
+                  break;
+
+                case 'bottom-left':
+                  this.placeStartPoint(0.75);
+                  break;
+
+                case 'left':
+                  this.placeStartPoint(1);
+                  break;
+              }
             }
         }
     }
 </script>
 
 <style scoped>
-
+input.small-numbers {
+  width: 6em;
+}
 </style>

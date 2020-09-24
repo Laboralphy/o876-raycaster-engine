@@ -315,8 +315,25 @@ export default {
         commit(MUTATION.REPLACE_BLOCK_OFFSET, {from, to});
     },
 
-    [ACTION.SET_STARTING_POINT]: ({commit}, {x, y, angle}) => {
-        commit(MUTATION.SET_STARTING_POINT, {x, y, angle});
+    [ACTION.ADD_STARTING_POINT]: ({commit}) => {
+        commit(MUTATION.ADD_STARTING_POINT);
+    },
+
+    [ACTION.SET_STARTING_POINT]: ({commit, getters}, {x, y, angle}) => {
+        const id = getters.getActorStartpointId;
+        commit(MUTATION.SET_STARTING_POINT, {id, x, y, angle});
+    },
+
+    [ACTION.SET_ACTOR_STARTING_POINT]: ({commit, getters}, {id}) => {
+        if (id >= getters.getStartpointCount) {
+            throw new Error('cannot set actor startpoint : given startpoint id is undefined');
+        }
+        commit(MUTATION.SET_ACTOR_STARTING_POINT, {id});
+    },
+
+    [ACTION.REMOVE_ACTOR_STARTING_POINT]: ({commit, getters}) => {
+        const id = getters.getActorStartpointId;
+        commit(MUTATION.REMOVE_STARTING_POINT, {id});
     },
 
     [ACTION.SHIFT_GRID]: ({commit}, {direction}) => {

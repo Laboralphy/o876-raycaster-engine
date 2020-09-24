@@ -31,11 +31,15 @@ export default {
         },
         brightness: 0
     },
-    startpoint: {
+    actor: {
+        thinker: '',
+        startpoint: 0,
+    },
+    startpoints: [{
         x: -1,
         y: -1,
-        angle: 0,
-        thinker: ''
-    },
+        z: 1,
+        angle: 0
+    }],
     preview: ''
 };

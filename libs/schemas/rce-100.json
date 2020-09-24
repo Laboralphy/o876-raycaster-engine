@@ -680,6 +680,35 @@
         ]
       }
     },
+    "startpoints": {
+      "type": "array",
+      "description": "List of all possible start points",
+      "items": {
+        "type": "object",
+        "description": "The startpoint properties. Location, angle etc...",
+        "properties": {
+          "x": {
+            "type": "number"
+          },
+          "y": {
+            "type": "number"
+          },
+          "z": {
+            "type": "number"
+          },
+          "angle": {
+            "type": "number"
+          }
+        },
+        "additionalProperties" : false,
+        "required": [
+          "x",
+          "y",
+          "z",
+          "angle"
+        ]
+      }
+    },
     "camera": {
       "type": "object",
       "description": "The camera properties. Location, angle etc...",
@@ -723,6 +752,7 @@
     "decals",
     "lightsources",
     "tags",
+    "startpoints",
     "camera"
   ]
 }

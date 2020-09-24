@@ -4246,6 +4246,14 @@
       }
     }
   ],
+  "startpoints": [
+    {
+      "x": 11,
+      "y": 25,
+      "z": 1,
+      "angle": 4.71238898038469
+    }
+  ],
   "camera": {
     "x": 11,
     "y": 25,
@@ -4441,5 +4449,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/eaf175e27126e907d368d7e1da463070.jpg"
+  "preview": "assets/textures/52699e2821ceffcfc4f43e452606300a.jpg"
 }
