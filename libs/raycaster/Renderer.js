@@ -1791,7 +1791,7 @@ __      _____  _ __| | __| |   __| | ___ / _(_)_ __ (_) |_(_) ___  _ __
      */
     screenshot(width = null, height = null, sType = 'image/png') {
         width = width || this._renderCanvas.width;
-        height = height || this._renderCanvas.height;
+        height = height || this._renderCanvas.height;
         const oCanvas = CanvasHelper.createCanvas(width, height);
         const oContext = oCanvas.getContext('2d');
         oContext.drawImage(

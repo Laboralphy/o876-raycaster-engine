@@ -261,6 +261,7 @@ class Engine {
         dc1.data.x = x;
         dc1.data.y = y;
         dc1.data.phys = nPhysCode;
+        dc1.data.secret = true;
         dc1.events.on('check', event => {
             this._checkDoorClosability(event);
         });
@@ -282,6 +283,7 @@ class Engine {
                 dc2.data.x = xc;
                 dc2.data.y = yc;
                 dc2.data.phys = phys;
+                dc2.data.secret = true;
                 dc2.events.on('check', event => {
                     const parentEvent = {context: dc1, cancel: false};
                     this._checkDoorClosability(parentEvent);
@@ -361,6 +363,7 @@ class Engine {
             ofsmax: nOffsetMax,
             sfunc: Easing.SMOOTHSTEP
         });
+        dc.data.autoclose = bAutoclose;
         dc.data.x = x;
         dc.data.y = y;
         dc.data.phys = nPhysCode;
@@ -456,9 +459,11 @@ class Engine {
 
     screenshot(x, y, angle, z) {
         const rc = this._rc;
+        const oSaveCanvas = CanvasHelper.cloneCanvas(rc.renderCanvas);
         rc.render(x, y, angle, z);
         const oCanvas = CanvasHelper.createCanvas(this._renderCanvas.width, this._renderCanvas.height);
         rc.flip(oCanvas.getContext('2d'));
+        rc._renderContext.drawImage(oSaveCanvas, 0, 0);
         return oCanvas;
     }
 
@@ -566,6 +571,25 @@ class Engine {
     }
 
     /**
+     * Retreive a secretdoor next to another secret door whose coordinates are given
+     * @param x
+     * @param y
+     * @return {null}
+     * @private
+     */
+    _getSecretNeighborDoorContext(x, y) {
+        let oChild = null;
+        const dm = this._dm;
+        this._forEachNeighbor(x, y, (xc, yc, phys) => {
+            const dcTest = dm.getDoorContext(xc, yc);
+            if (!!dcTest && dcTest.data.secret) {
+                oChild = dcTest;
+            }
+        }, CONSTS.CELL_NEIGHBOR_SIDE);
+        return oChild;
+    }
+
+    /**
      * Opens a door at a specified position. The cell at x, y must have a PHYS_DOOR_*, PHYS_CURT_* or PHYS_SECRET_BLOCK physical code
      * @param x {number} position of cell x
      * @param y {number} position of cell y
@@ -582,8 +606,9 @@ class Engine {
             const dc = this._buildDoorContext(x, y, bAutoclose);
             if (!!dc) {
                 this.events.emit('door.open', {x, y, context: dc});
-                if (!!dc.data.child) {
-                    dc.data.child.events.once('closing', () => this.events.emit('door.closing', {x, y}));
+                const oChild = this._getSecretNeighborDoorContext(x, y);
+                if (!!oChild) {
+                    oChild.events.once('closing', () => this.events.emit('door.closing', {x, y}));
                 } else {
                     dc.events.once('closing', () => this.events.emit('door.closing', {x, y}));
                 }
@@ -618,7 +643,7 @@ class Engine {
     closeDoor(x, y) {
         const dc = this._dm.getDoorContext(x, y);
         if (dc) {
-            const child = dc.data.child;
+            const child = this._getSecretNeighborDoorContext(x, y);
             if (!!child) {
                 child.events.once('close', () => dc.close());
                 child.close();

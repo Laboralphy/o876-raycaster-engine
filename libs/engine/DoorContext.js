@@ -43,58 +43,10 @@ class DoorContext {
         return this._events;
     }
 
-    get state() {
-        return {
-            version: SERIAL_VERSION,
-            phase: this._phase,
-            time: this._time,
-            slidingDuration: this._slidingDuration,
-            maintainDuration: this._maintainDuration,
-            delayDuration: this._delayDuration,
-            offset: this._offset,
-            offsetMax: this._offsetMax,
-            sfunc: this._sfunc,
-            cfunc: this._cfunc,
-            x: this._easing.x,
-            data: Object.assign({}, this._data)
-        };
-    }
-
-    set state(oState) {
-        if (oState.version !== SERIAL_VERSION) {
-            throw new Error('Bad serialization version - class DoorContext - expected v' + SERIAL_VERSION + ' - got v' + oState.version);
-        }
-        this._data = Object.assign({}, oState.data);
-        this._phase = oState.phase;
-        this._slidingDuration = oState.slidingDuration;
-        this._maintainDuration = oState.maintainDuration;
-        this._delayDuration = oState.delayDuration;
-        this._offset = oState.offset;
-        this._offsetMax = oState.offsetMax;
-        this._sfunc = oState.sfunc;
-        this._cfunc = oState.cfunc;
-        this._easing.setFunction(this._sfunc);
-        this.initPhase(this._phase);
-        this._time = oState.time;
-        this._easing.compute(oState.x);
-    }
-
     reset() {
         this._phase = 0;
         this._time = 0;
         this._offset = 0;
-    }
-
-    setState({phase, time}) {
-        this._time = time;
-        this.initPhase(phase);
-    }
-
-    getState() {
-        return {
-            phase: this._phase,
-            time: this._time
-        };
     }
 
     getPhase() {
@@ -155,6 +107,7 @@ class DoorContext {
 
             // the door is currently opening
             case CONSTS.DOOR_PHASE_OPEN:
+                this._offset = this._offsetMax;
                 this._time = this._maintainDuration;
                 this.events.emit('open');
                 break;
@@ -185,6 +138,21 @@ class DoorContext {
                 this.events.emit('close');
                 break;
         }
+    }
+
+    setState({phase, time}) {
+        for (let i = 0; i <= phase; ++i) {
+            this.initPhase(i);
+        }
+        this._time = time;
+        this._easing.compute(time);
+    }
+
+    getState() {
+        return {
+            phase: this._phase,
+            time: this._time
+        };
     }
 
     process() {

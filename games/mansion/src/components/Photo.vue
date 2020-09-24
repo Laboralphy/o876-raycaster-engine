@@ -70,6 +70,6 @@
     }
 
     figure.photo img.gray {
-        filter: grayscale(100%);
+        filter: grayscale(30%) contrast(70%) sepia(70%);
     }
 </style>

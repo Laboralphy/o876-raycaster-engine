@@ -69,7 +69,7 @@ class SenseMap {
     }
 
     set state(value) {
-        value.forEach(v => this.removeSense(v));
+        value.removed.forEach(v => this.removeSense(v));
     }
 }
 

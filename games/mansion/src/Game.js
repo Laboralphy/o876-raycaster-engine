@@ -20,6 +20,7 @@ import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import SenseMap from "./SenseMap";
+import Serializer from "./Serializer";
 
 const SERIAL_VERSION = 1;
 
@@ -55,62 +56,18 @@ class Game extends GameAbstract {
         this._senseMap = new SenseMap();
         this._capturableEntities = null;
         this._mutations = {
-            decals: []
+            decals: [],
+            level: ''
         }
     }
 
 
     get state() {
-        const engine = this.engine;
-        const oState = {
-            version: SERIAL_VERSION,
-            dm: engine._dm.state,
-            time: engine._time,
-            locks: engine._locks.state,
-            decals: this._mutations.decals.slice(0),
-            tags: engine.tagManager.grid.state,
-            logic: this.logic.prop('getStateContent'),
-            album: this.album.prop('getStateContent'),
-        };
-        return JSON.stringify(oState,
-            function (key, value) {
-                return value === Infinity  ? "Infinity" : value;
-            }
-        );
+        return Serializer.saveState(this);
     }
 
     set state(value) {
-        const oState = JSON.parse(value,
-            function (key, value) {
-                return value === "Infinity"  ? Infinity : value;
-            }
-        );
-        const engine = this.engine;
-        if (oState.version !== SERIAL_VERSION) {
-            throw new Error('bad state version - class GameAbstract - need v' + SERIAL_VERSION + ' - got v' + oState.version);
-        }
-        engine._dm.state = oState.dm;
-        engine._time = oState.time;
-        engine._locks.state = oState.locks;
-        engine.tagManager.grid.state = oState.tags;
-        this._mutations.decals = [];
-        oState.decals.forEach(data => {
-            switch (data.op) {
-                case 'del':
-                    this.removeDecals(data.x, data.y, data.sides);
-                    break;
-
-                case 'rot':
-                    this.rotateDecals(data.x, data.y, data.cw);
-                    break;
-
-                case 'app':
-                    this.applyDecal(data.x, data.y, data.side, data.ref);
-                    break;
-            }
-        });
-        this.logic.commit('SET_STATE_CONTENT', {content: oState.logic});
-        this.album.commit('SET_STATE_CONTENT', {content: oState.album});
+        Serializer.restoreState(this, value);
     }
 
 //      _                _                                  _   _
@@ -167,15 +124,15 @@ class Game extends GameAbstract {
     }
 
 
-
     async initAsync() {
         await super.initAsync();
         await this.loadLevel('mans-cabin');
     }
 
 
-    async loadLevel(sLevel, extra) {
+    async loadLevel(sLevel, extra = {}) {
         this._mutations.decals = [];
+        this._mutations.level = sLevel;
         await super.loadLevel(sLevel, extra);
         this._cameraFilter.assignAssets({
             visor: this.engine.getTileSet('u_visor'),

@@ -8,7 +8,7 @@
                 v-for="photo in getPhotos"
                 :key="photo.id"
                 :content="photo.content"
-                :caption="STRINGS.PHOTOS[photo.ref].title"
+                :caption="(photo.ref in STRINGS.PHOTOS) ? STRINGS.PHOTOS[photo.ref].title : '[' + photo.ref + ']'"
                 :gray="getActiveType === 'archive'"
                 @click="photoClicked(photo.id)"
             ></Photo>

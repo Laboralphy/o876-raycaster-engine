@@ -20,7 +20,7 @@ export async function main(game, ref, score = 0) {
     const p1 = game.storePhoto(
         CONSTS.PHOTO_TYPE_CLUE, // type de photo
         score,                  // score de la photo
-        ref,               // information supplémentaire (titre, description)
+        ref,                    // information supplémentaire (titre, description)
         pos                     // position d'ou doit etre prise la photo
     );
     await game.runScript('action.photoMogrify', p0, p1);
