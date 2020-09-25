@@ -125,6 +125,19 @@ class Serializer {
         // g.logic.commit('SET_STATE_CONTENT', {content: oState.logic});
         // g.album.commit('SET_STATE_CONTENT', {content: oState.album});
     }
+
+    static restoreAlbumLogicState(g, oState) {
+        g.logic.commit('SET_STATE_CONTENT', {content: oState.logic});
+        g.album.commit('SET_STATE_CONTENT', {content: oState.album});
+    }
+
+    static saveAlbumLogicState(g) {
+        return {
+            logic: g.logic.prop('getStateContent'),
+            album: g.album.prop('getStateContent')
+        };
+    }
+
     //
     // static saveState(g) {
     //     const engine = g.engine;

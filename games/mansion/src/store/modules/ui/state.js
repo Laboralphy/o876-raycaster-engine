@@ -38,6 +38,6 @@ export default {
     },
 
     mainmenu: {
-        visible: false,
+        visible: true,
     }
 };

@@ -22,8 +22,6 @@ import Album from "./Album";
 import SenseMap from "./SenseMap";
 import Serializer from "./Serializer";
 
-const SERIAL_VERSION = 1;
-
 class Game extends GameAbstract {
     init() {
         this._debug = true;
@@ -63,12 +61,31 @@ class Game extends GameAbstract {
 
 
     get state() {
-        return Serializer.saveState(this);
+        //return Serializer.saveState(this);
+        return 0;
     }
 
     set state(value) {
-        Serializer.restoreState(this, value);
+        //Serializer.restoreState(this, value);
     }
+
+
+    async initAsync() {
+        await super.initAsync();
+        //await this.loadLevel('mans-cabin');
+    }
+
+
+    async loadLevel(sLevel, extra = {}) {
+        this._mutations.decals = [];
+        this._mutations.level = sLevel;
+        await super.loadLevel(sLevel, extra);
+        this._cameraFilter.assignAssets({
+            visor: this.engine.getTileSet('u_visor'),
+            lamp: this.engine.getTileSet('u_lamp')
+        });
+    }
+
 
 //      _                _                                  _   _
 //   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
@@ -123,22 +140,6 @@ class Game extends GameAbstract {
         }
     }
 
-
-    async initAsync() {
-        await super.initAsync();
-        await this.loadLevel('mans-cabin');
-    }
-
-
-    async loadLevel(sLevel, extra = {}) {
-        this._mutations.decals = [];
-        this._mutations.level = sLevel;
-        await super.loadLevel(sLevel, extra);
-        this._cameraFilter.assignAssets({
-            visor: this.engine.getTileSet('u_visor'),
-            lamp: this.engine.getTileSet('u_lamp')
-        });
-    }
 
 
 //

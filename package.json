@@ -55,7 +55,6 @@
     "esm": "^3.2.25",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
-    "howler": "^2.2.0",
     "jsonschema": "^1.2.6",
     "mkdirp": "^0.5.1",
     "passport": "^0.4.1",

@@ -35,6 +35,9 @@
   "GAME_TITLE": "Patelin Chelou",
   "GAME_SUB_TITLE": "Tout un village mystérieusement vidé de ses habitants... Mystère ! Allons piquer tout ce qu'il reste !",
   "MAIN_MENU_OPTION_START": "Démarrer",
+  "MAIN_MENU_PLOT_SUMMARY": [
+    "ok"
+  ],
   "PLOT_STRUCT": {
     "arrival": [
       "La piste vous mène à un village isolé",
@@ -101,6 +104,67 @@
     }
 
   },
+
+  "GAME_STORY": {
+    "commands": {
+      "next": "Suivant",
+      "prev": "Précédent"
+    },
+    "title": "Le village de Montfauxy.",
+    "intro": [
+      "Le client s'interresse beaucoup à ce village perdu, dont les habitants ont mystérieusement disparus.",
+      "On m'a donné quatre objectifs :"
+    ],
+    "objectives": [
+      {
+        "caption": "Explorer le village et confirmer son abandon.",
+        "remark": "Je suppose que je n'ai qu'à me promener et visiter les baraques.",
+        "hint": "Utiliser les touches Z.Q.S.D pour vous déplacer, la souris permet de contrôler votre point de vue"
+      },
+      {
+        "caption": "Photographier et dresser l'inventaire les tableaux.",
+        "remark": "Un artiste local aurait produit des peintures dont le client cherche à faire collection.",
+        "hint": "Appuyer sur le bouton droit de la souris pour viser avec l'appareil photo, appuyer sur le bouton gauche de la souris pour prendre une photo"
+      },
+      {
+        "caption": "Retrouver des grimoires de sorcellerie du culte.",
+        "remark": "Ces ouvrages sont très rares et précieux. Et ça paye bien."
+      },
+      {
+        "caption": "Prendre des photos de tout indice susceptible d'éclaircir le mystère de la disparition des villageois disparus.",
+        "remark": "J'ouvrirai l'œil. Mais ce n'est clairement pas ma priorité."
+      }
+    ]
+  },
+
+  "PEOPLE_NAMES": [
+    "Aubernessis",
+    "Bragneys",
+    "Courtoire",
+    "Dangelle",
+    "Esbache",
+    "Fresnil",
+    "Grifond",
+    "Halano",
+    "Istrud",
+    "Jablone",
+    "Kourth",
+    "Lauverne",
+    "Malertus",
+    "Nouvix",
+    "Ouzentin",
+    "Pryves",
+    "Quin",
+    "Rimogny",
+    "Sola",
+    "Taves",
+    "Ubazan",
+    "Vijonsac",
+    "Westre",
+    "Xerolle",
+    "Yvrest",
+    "Zillesty"
+  ],
 
   "PHOTOS": {
     "m0_fire_place": {
