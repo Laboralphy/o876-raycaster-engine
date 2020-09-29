@@ -11,60 +11,18 @@
         </ul>
       </div>
     </section>
-    <section v-if="phase >= 1">
-      <div class="letter ui-menu-window ui-size-60-90">
-        <GameStoryPar
-          :caption="STRINGS.GAME_STORY.title"
-          :big="true"
-        ></GameStoryPar>
-        <GameStoryPar
-          v-for="(s, i) in STRINGS.GAME_STORY.intro"
-          :key="'game-story-intro-' + i"
-          :caption="s"
-        ></GameStoryPar>
-        <hr/>
-        <GameStoryPar
-            :caption="phase + '/4 : ' + getCurrentStoryPart.caption"
-            :remark="getCurrentStoryPart.remark || ''"
-            :hint="getCurrentStoryPart.hint || ''"
-        ></GameStoryPar>
-        <div class="photo">
-          <img :src="'assets/uigfx/intro/' + splashes[phase - 1]"/>
-        </div>
-        <hr/>
-        <div style="position: absolute; bottom: 2em; right: 2em">
-          <button class="game-story-command" @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
-          <button class="game-story-command" @click="++phase">{{ STRINGS.GAME_STORY.commands.next }}</button>
-        </div>
-      </div>
-    </section>
+    <GameStory v-else></GameStory>
   </section>
 </template>
 <script>
+import UIMixin from './mixins/ui';
 import STRINGS from './mixins/strings';
-import GameStoryPar from "./GameStoryPar.vue";
+import GameStory from "./GameStory.vue";
 
 export default {
   name: "MainMenu",
-  components: {GameStoryPar},
-  mixins: [STRINGS],
-  data: function() {
-    return {
-      phase: 0,
-      splashes: [
-          'intro-village.jpg',
-          'intro-paintings.jpg',
-          'intro-books.jpg',
-          'intro-cult.jpg'
-      ]
-    }
-  },
-  computed: {
-    getCurrentStoryPart: function() {
-      return this.STRINGS.GAME_STORY.objectives[this.phase - 1];
-    }
-  }
-
+  components: {GameStory},
+  mixins: [STRINGS, UIMixin],
 }
 </script>
 
@@ -90,7 +48,7 @@ ul.options {
   list-style-type: none;
 }
 
-ul.options button, button.game-story-command {
+ul.options button {
   font-size: 1.2em;
   font-family: "KingthingsTrypewriter2", Courier, monospace;
 }

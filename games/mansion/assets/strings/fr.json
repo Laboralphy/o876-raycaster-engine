@@ -111,28 +111,44 @@
       "prev": "Précédent"
     },
     "title": "Le village de Montfauxy.",
-    "intro": [
-      "Le client s'interresse beaucoup à ce village perdu, dont les habitants ont mystérieusement disparus.",
-      "On m'a donné quatre objectifs :"
-    ],
-    "objectives": [
+    "pages": [
       {
-        "caption": "Explorer le village et confirmer son abandon.",
-        "remark": "Je suppose que je n'ai qu'à me promener et visiter les baraques.",
+        "caption": "Le client s'intéresse beaucoup à ce village très spécial à plus d'un titre.",
+        "text": [
+          "Tous les habitants ont disparu mystérieusement.",
+          "Rumeur : Fanatiques et sorcières ont occupé le village, pratiquant rituels macabres et messes noires.",
+          "Réputation détestable. Peu osent approcher cet endroit.",
+          "Se rendre sur place et entamer enquête."
+        ]
+      },
+      {
+        "caption": "Objectif 1 : Exploration du Village",
+        "text": [
+          "Reste-t-il des villageois ? Est-il vraiment désert ?"
+        ],
         "hint": "Utiliser les touches Z.Q.S.D pour vous déplacer, la souris permet de contrôler votre point de vue"
       },
       {
-        "caption": "Photographier et dresser l'inventaire les tableaux.",
-        "remark": "Un artiste local aurait produit des peintures dont le client cherche à faire collection.",
+        "caption": "Objectif 2 : Photographier les tableaux.",
+        "text": [
+          "Un artiste local aurait produit des peintures.",
+          "Prendre une photo de chaque tableau trouvé.",
+          "Le client veut la plus grande collection de photos possible."
+        ],
         "hint": "Appuyer sur le bouton droit de la souris pour viser avec l'appareil photo, appuyer sur le bouton gauche de la souris pour prendre une photo"
       },
       {
-        "caption": "Retrouver des grimoires de sorcellerie du culte.",
-        "remark": "Ces ouvrages sont très rares et précieux. Et ça paye bien."
+        "caption": "Objectif 3 : Retrouver des grimoires de sorcellerie.",
+        "text": [
+          "Des ouvrages rares et précieux.",
+          "Le client conseille de ne lire ces anciens grimoires."
+        ]
       },
       {
-        "caption": "Prendre des photos de tout indice susceptible d'éclaircir le mystère de la disparition des villageois disparus.",
-        "remark": "J'ouvrirai l'œil. Mais ce n'est clairement pas ma priorité."
+        "caption": "Objectif 4 : Enquêter sur la disparition.",
+        "text": [
+          "Glaner des indices sur le mystère des villageois disparus."
+        ]
       }
     ]
   },

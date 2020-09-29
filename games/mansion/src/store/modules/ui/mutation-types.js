@@ -42,3 +42,5 @@ export const SET_PHOTO_DETAILS = 'SET_PHOTO_DETAILS';
 
 
 export const SHOW_FIRST_PAGE = 'SHOW_FIRST_PAGE';
+
+export const SET_MAIN_MENU_PHASE = 'SET_MAIN_MENU_PHASE';

@@ -39,5 +39,6 @@ export default {
 
     mainmenu: {
         visible: true,
+        phase: 0
     }
 };

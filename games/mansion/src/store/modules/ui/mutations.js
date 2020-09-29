@@ -82,5 +82,9 @@ export default {
 
     [TYPES.SHOW_FIRST_PAGE]: function(state, {value}) {
         state.mainmenu.visible = value;
+    },
+
+    [TYPES.SET_MAIN_MENU_PHASE]: function(state, {value}) {
+        state.mainmenu.phase = value;
     }
 }
