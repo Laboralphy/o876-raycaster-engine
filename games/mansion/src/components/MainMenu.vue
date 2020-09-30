@@ -11,6 +11,26 @@
         </ul>
       </div>
     </section>
+    <section v-else-if="phase === 1">
+      <div class="controls ui-menu-window ui-size-50-75">
+        <h1>{{ STRINGS.HOWTO.title }}</h1>
+        <table>
+          <tbody>
+            <HowTo
+                v-for="(s, i) in STRINGS.HOWTO.actions"
+                :desc="s.desc"
+                :note="s.note || ''"
+                :image="howToImages[i]"
+                :key="'howto-' + i"
+            ></HowTo>
+          </tbody>
+        </table>
+        <div class="commands">
+          <button @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
+          <button @click="++phase">{{ STRINGS.GAME_STORY.commands.next }}</button>
+        </div>
+      </div>
+    </section>
     <GameStory v-else></GameStory>
   </section>
 </template>
@@ -18,11 +38,22 @@
 import UIMixin from './mixins/ui';
 import STRINGS from './mixins/strings';
 import GameStory from "./GameStory.vue";
+import HowTo from "./HowTo.vue";
 
 export default {
   name: "MainMenu",
-  components: {GameStory},
+  components: {HowTo, GameStory},
   mixins: [STRINGS, UIMixin],
+  data: function() {
+    return {
+      howToImages: [
+        'assets/uigfx/input/kbd_zqsd_mouse.png',
+        'assets/uigfx/input/kbd_esc.png',
+        'assets/uigfx/input/mlb_layout.png',
+        'assets/uigfx/input/mrb_layout.png'
+      ]
+    };
+  }
 }
 </script>
 
@@ -40,7 +71,7 @@ div.game-sub-title {
   font-size: 1em;
   font-family: "KingthingsTrypewriter2", Courier, monospace;
   font-weight: normal;
-  color: rgba(220, 220, 220);
+  color: rgb(220, 220, 220);
   text-align: left;
 }
 
@@ -89,6 +120,25 @@ ul.options button {
 div.photo img {
   margin: auto;
   border: solid 0.2em black;
+}
+
+.controls img {
+  display: inline-block;
+}
+
+div.controls .type-control {
+  padding: 1em;
+  text-align: right;
+}
+
+div.controls {
+  font-family: "KingthingsTrypewriter2", Courier, monospace;
+}
+
+div.controls .note {
+  font-style: italic;
+  font-size: 0.8em;
+  color: #999;
 }
 
 </style>

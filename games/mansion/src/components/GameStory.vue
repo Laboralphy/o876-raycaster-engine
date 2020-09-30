@@ -7,7 +7,6 @@
           :caption="getCurrentStoryPart.caption"
           :text="getCurrentStoryPart.text"
           :remark="getCurrentStoryPart.remark || ''"
-          :hint="getCurrentStoryPart.hint || ''"
       ></GameStoryPar>
       <div v-if="getCurrentStoryPhoto !== ''" class="photo">
         <img :src="'assets/uigfx/intro/' + getCurrentStoryPhoto"/>
@@ -28,6 +27,7 @@ import UIMixin from './mixins/ui';
 
 import GameStoryPar from "./GameStoryPar.vue";
 
+const PHASE_OFFSET = 2;
 
 export default {
   name: "GameStory",
@@ -46,10 +46,10 @@ export default {
   },
   computed: {
     getCurrentStoryPart: function() {
-      return this.STRINGS.GAME_STORY.pages[this.phase - 1];
+      return this.STRINGS.GAME_STORY.pages[this.phase - PHASE_OFFSET];
     },
     getCurrentStoryPhoto: function() {
-      return this.splashes[this.phase - 1];
+      return this.splashes[this.phase - PHASE_OFFSET];
     }
   }
 }

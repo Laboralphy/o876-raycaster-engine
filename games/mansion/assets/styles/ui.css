@@ -57,3 +57,10 @@ div.ui-size-50-50 {
     left: 25%;
 }
 
+div.ui-size-50-75 {
+    width: 50%;
+    height: 75%;
+    top: 12.5%;
+    left: 25%;
+}
+

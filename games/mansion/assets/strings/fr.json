@@ -105,6 +105,27 @@
 
   },
 
+  "HOWTO": {
+    "title": "Contrôles",
+    "actions": [
+      {
+        "desc": "Contrôler le point de vue du personnage.",
+        "note": "Cliquer sur l'écran de jeu pour prendre le contrôle"
+      },
+      {
+        "desc": "Ouvrir l'écran d'inventaire/album.",
+        "note": "Cliquer en dehors de l'interface pour reprendre le jeu"
+      },
+      {
+        "desc": "Saisir un objet. Ouvrir ou déverrouiller les portes. Prendre une photo.",
+        "note": "Prendre une photo n'est possible qu'en mode photo"
+      },
+      {
+        "desc": "Activer/désactiver le mode photo."
+      }
+    ]
+  },
+
   "GAME_STORY": {
     "commands": {
       "next": "Suivant",
@@ -113,41 +134,40 @@
     "title": "Le village de Montfauxy.",
     "pages": [
       {
-        "caption": "Le client s'intéresse beaucoup à ce village très spécial à plus d'un titre.",
+        "caption": "Le client s'intéresse beaucoup à ce village très spécial.",
         "text": [
-          "Tous les habitants ont disparu mystérieusement.",
-          "Rumeur : Fanatiques et sorcières ont occupé le village, pratiquant rituels macabres et messes noires.",
-          "Réputation détestable. Peu osent approcher cet endroit.",
-          "Se rendre sur place et entamer enquête."
+          "Occupé jadis par une communauté de dégénérés fanatiques et de sorciers, pratiquant rituels macabres et messes noires.",
+          "Tous les habitants ont disparu mystérieusement. Le village est maintenant désert.",
+          "Réputation détestable. Personne n'ose approcher cet endroit.",
+          "Se rendre sur place et mener l'enquête."
         ]
       },
       {
         "caption": "Objectif 1 : Exploration du Village",
         "text": [
-          "Reste-t-il des villageois ? Est-il vraiment désert ?"
-        ],
-        "hint": "Utiliser les touches Z.Q.S.D pour vous déplacer, la souris permet de contrôler votre point de vue"
+          "Reste-t-il des villageois ? Est-il vraiment désert ?",
+          "Prendre des photos du coin quand l'occasion se présente."
+        ]
       },
       {
         "caption": "Objectif 2 : Photographier les tableaux.",
         "text": [
           "Un artiste local aurait produit des peintures.",
-          "Prendre une photo de chaque tableau trouvé.",
-          "Le client veut la plus grande collection de photos possible."
-        ],
-        "hint": "Appuyer sur le bouton droit de la souris pour viser avec l'appareil photo, appuyer sur le bouton gauche de la souris pour prendre une photo"
+          "Prendre une photo de chaque tableau trouvé (le client en voudra un maximum)."
+        ]
       },
       {
         "caption": "Objectif 3 : Retrouver des grimoires de sorcellerie.",
         "text": [
           "Des ouvrages rares et précieux.",
-          "Le client conseille de ne lire ces anciens grimoires."
+          "Le client conseille de ne pas les lire."
         ]
       },
       {
         "caption": "Objectif 4 : Enquêter sur la disparition.",
         "text": [
-          "Glaner des indices sur le mystère des villageois disparus."
+          "Glaner des indices sur le mystère des villageois disparus.",
+          "Photographier tout élément inhabituel dans le village."
         ]
       }
     ]

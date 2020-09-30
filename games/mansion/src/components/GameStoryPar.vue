@@ -10,7 +10,6 @@
       </li>
     </ul>
     <div class="remark" v-if="remark !== ''">{{ remark }}</div>
-    <div class="hint" v-if="hint !== ''">{{ hint }}</div>
   </div>
 </template>
 
@@ -30,12 +29,7 @@ export default {
       type: String,
       required: false,
       default: ''
-    },
-    hint: {
-      type: String,
-      required: false,
-      default: ''
-    },
+    }
   }
 }
 </script>
