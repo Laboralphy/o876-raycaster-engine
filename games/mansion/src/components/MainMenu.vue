@@ -12,23 +12,39 @@
       </div>
     </section>
     <section v-else-if="phase === 1">
-      <div class="controls ui-menu-window ui-size-50-75">
-        <h1>{{ STRINGS.HOWTO.title }}</h1>
-        <table>
-          <tbody>
-            <HowTo
-                v-for="(s, i) in STRINGS.HOWTO.actions"
-                :desc="s.desc"
-                :note="s.note || ''"
-                :image="howToImages[i]"
-                :key="'howto-' + i"
-            ></HowTo>
-          </tbody>
-        </table>
-        <div class="commands">
-          <button @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
-          <button @click="++phase">{{ STRINGS.GAME_STORY.commands.next }}</button>
-        </div>
+      <div class="ui-menu-window ui-size-50-75 rounded">
+        <GenericBox
+            footer="4em"
+            header="6em"
+        >
+          <template v-slot:header>
+            <div class="container">
+              <h1>{{ STRINGS.HOWTO.title }}</h1>
+              <hr/>
+            </div>
+          </template>
+          <section class="content">
+            <table>
+              <tbody>
+              <HowTo
+                  v-for="(s, i) in STRINGS.HOWTO.actions"
+                  :desc="s.desc"
+                  :note="s.note || ''"
+                  :image="howToImages[i]"
+                  :key="'howto-' + i"
+              ></HowTo>
+              </tbody>
+            </table>
+          </section>
+          <template v-slot:footer>
+            <div class="container">
+              <hr/>
+              <div class="commands">
+                <button @click="++phase">{{ STRINGS.GAME_STORY.commands.tostory }}</button>
+              </div>
+            </div>
+          </template>
+        </GenericBox>
       </div>
     </section>
     <GameStory v-else></GameStory>
@@ -39,10 +55,11 @@ import UIMixin from './mixins/ui';
 import STRINGS from './mixins/strings';
 import GameStory from "./GameStory.vue";
 import HowTo from "./HowTo.vue";
+import GenericBox from "./GenericBox.vue";
 
 export default {
   name: "MainMenu",
-  components: {HowTo, GameStory},
+  components: {HowTo, GameStory, GenericBox},
   mixins: [STRINGS, UIMixin],
   data: function() {
     return {
@@ -126,19 +143,14 @@ div.photo img {
   display: inline-block;
 }
 
-div.controls .type-control {
+div.controls {
+  font-family: "KingthingsTrypewriter2", Courier, monospace;
   padding: 1em;
   text-align: right;
 }
 
-div.controls {
+div.commands button {
+  font-size: 1.2em;
   font-family: "KingthingsTrypewriter2", Courier, monospace;
 }
-
-div.controls .note {
-  font-style: italic;
-  font-size: 0.8em;
-  color: #999;
-}
-
 </style>

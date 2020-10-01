@@ -128,6 +128,7 @@
 
   "GAME_STORY": {
     "commands": {
+      "tostory": "Notes et objectifs",
       "next": "Suivant",
       "prev": "Précédent"
     },
@@ -136,30 +137,30 @@
       {
         "caption": "Le client s'intéresse beaucoup à ce village très spécial.",
         "text": [
-          "Occupé jadis par une communauté de dégénérés fanatiques et de sorciers, pratiquant rituels macabres et messes noires.",
+          "Occupé jadis par une communauté de fanatiques dégénérés et de sorciers.",
           "Tous les habitants ont disparu mystérieusement. Le village est maintenant désert.",
-          "Réputation détestable. Personne n'ose approcher cet endroit.",
-          "Se rendre sur place et mener l'enquête."
+          "Réputation détestable : On rapporte des pratiques de rituels macabres et de messes noires.",
+          "Personne n'ose approcher cet endroit. Se rendre sur place et mener l'enquête."
         ]
       },
       {
         "caption": "Objectif 1 : Exploration du Village",
         "text": [
           "Reste-t-il des villageois ? Est-il vraiment désert ?",
-          "Prendre des photos du coin quand l'occasion se présente."
+          "Fouiller l'intégralité du village. C'est un boulot où la curiosité paye bien."
         ]
       },
       {
         "caption": "Objectif 2 : Photographier les tableaux.",
         "text": [
-          "Un artiste local aurait produit des peintures.",
-          "Prendre une photo de chaque tableau trouvé (le client en voudra un maximum)."
+          "Un artiste local aurait produit et accroché des peintures dans tout le village.",
+          "Prendre une photo de chaque tableau trouvé. La prime augmente pour chaque tableau photographié"
         ]
       },
       {
         "caption": "Objectif 3 : Retrouver des grimoires de sorcellerie.",
         "text": [
-          "Des ouvrages rares et précieux.",
+          "Des ouvrages rares et précieux. Gros bonus par livre récupéré.",
           "Le client conseille de ne pas les lire."
         ]
       },
@@ -167,7 +168,7 @@
         "caption": "Objectif 4 : Enquêter sur la disparition.",
         "text": [
           "Glaner des indices sur le mystère des villageois disparus.",
-          "Photographier tout élément inhabituel dans le village."
+          "Photographier tout élément inhabituel dans le village permettra de rapporter une prime."
         ]
       }
     ]

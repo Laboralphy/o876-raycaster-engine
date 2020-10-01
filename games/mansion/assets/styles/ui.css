@@ -50,6 +50,13 @@ div.ui-size-60-90 {
     left: 20%;
 }
 
+div.ui-size-50-90 {
+    width: 50%;
+    height: 90%;
+    top: 5%;
+    left: 25%;
+}
+
 div.ui-size-50-50 {
     width: 50%;
     height: 50%;

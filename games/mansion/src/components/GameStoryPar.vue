@@ -38,7 +38,6 @@ export default {
 
 ul.text > li {
   font-family: "KleponScone", sans-serif;
-  color: black;
   font-size: 1.4em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -46,7 +45,6 @@ ul.text > li {
 
 .caption {
   font-family: "KleponScone", sans-serif;
-  color: black;
   font-size: 1.4em;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -56,16 +54,6 @@ ul.text > li {
   font-family: "KleponScone", sans-serif;
   color: #444444;
   font-size: 1.2em;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  margin-left: 2em;
-}
-
-.hint {
-  font-family: "Courier New", Courier, monospace;
-  color: darkblue;
-  font-size: 0.7em;
-  font-style: italic;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
   margin-left: 2em;
