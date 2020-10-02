@@ -37,12 +37,6 @@
         mixins: [STRINGS],
         components: {TitleAndCo, Photo, PhotoTypes},
 
-        data: function() {
-            return {
-                details: false
-            };
-        },
-
         computed: {
             ...albumMapGetters([
                 'getPhotos',

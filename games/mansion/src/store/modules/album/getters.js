@@ -3,6 +3,5 @@ export default {
     getActiveType: state => state.activeType,
     getPhotoTypes: state => state.photoTypes,
     getAllPhotos: state => state.photos,
-
     getStateContent: state => state
 };

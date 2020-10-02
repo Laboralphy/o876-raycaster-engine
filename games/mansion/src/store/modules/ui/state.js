@@ -38,7 +38,7 @@ export default {
     },
 
     mainmenu: {
-        visible: true,
+        visible: false,
         phase: 0
     }
 };
