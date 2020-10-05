@@ -28,5 +28,6 @@ export default {
     getPhotoDetailsValue: state => state.photodetails.value,
     getPhotoDetailsTitle: state => state.photodetails.title,
 
-    getMainMenuPhase: state => state.mainmenu.phase
+    getMainMenuPhase: state => state.mainmenu.phase,
+    getStoryData: state => state.mainmenu.story
 };

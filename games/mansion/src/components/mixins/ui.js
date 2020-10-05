@@ -8,7 +8,8 @@ const {mapGetters: uiGetters, mapMutations: uiMutations} = createNamespacedHelpe
 export default {
     computed: {
         ...uiGetters([
-            'getMainMenuPhase'
+            'getMainMenuPhase',
+            'getStoryData'
         ]),
         phase: {
             get: function() {

@@ -39,6 +39,16 @@ export default {
 
     mainmenu: {
         visible: true,
-        phase: 0
+        phase: 0,
+        story: {
+            startingPhase: 2,
+            splashes: [
+                '',
+                'intro-village.jpg',
+                'intro-paintings.jpg',
+                'intro-books.jpg',
+                'intro-cult.jpg'
+            ]
+        }
     }
 };

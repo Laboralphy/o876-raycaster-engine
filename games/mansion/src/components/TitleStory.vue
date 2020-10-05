@@ -45,29 +45,19 @@ import UIMixin from './mixins/ui';
 import SmallListAndCaption from "./SmallListAndCaption.vue";
 import GenericBox from "./GenericBox.vue";
 
-const PHASE_OFFSET = 2;
-
 export default {
   name: "TitleStory",
   components: {GenericBox, SmallListAndCaption},
   mixins: [STRINGS, UIMixin],
-  data: function() {
-    return {
-      splashes: [
-        '',
-        'intro-village.jpg',
-        'intro-paintings.jpg',
-        'intro-books.jpg',
-        'intro-cult.jpg'
-      ]
-    }
-  },
   computed: {
+    getLocalPhase: function() {
+      return this.phase - this.getStoryData.startingPhase;
+    },
     getCurrentStoryPart: function() {
-      return this.STRINGS.GAME_STORY.pages[this.phase - PHASE_OFFSET];
+      return this.STRINGS.GAME_STORY.pages[this.getLocalPhase];
     },
     getCurrentStoryPhoto: function() {
-      return this.splashes[this.phase - PHASE_OFFSET];
+      return this.getStoryData.splashes[this.getLocalPhase];
     }
   }
 }
