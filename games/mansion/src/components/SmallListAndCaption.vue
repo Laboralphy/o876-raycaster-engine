@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: "GameStoryPar",
+  name: "SmallListAndCaption",
   props: {
     text: {
       type: Array,

@@ -13,11 +13,11 @@
         </template>
         <section class="content">
           <div class="container">
-            <GameStoryPar
+            <SmallListAndCaption
                 :caption="getCurrentStoryPart.caption"
                 :text="getCurrentStoryPart.text"
                 :remark="getCurrentStoryPart.remark || ''"
-            ></GameStoryPar>
+            ></SmallListAndCaption>
           </div>
           <div v-if="getCurrentStoryPhoto !== ''" class="photo">
             <img :src="'assets/uigfx/intro/' + getCurrentStoryPhoto"/>
@@ -42,14 +42,14 @@
 import STRINGS from './mixins/strings';
 import UIMixin from './mixins/ui';
 
-import GameStoryPar from "./GameStoryPar.vue";
+import SmallListAndCaption from "./SmallListAndCaption.vue";
 import GenericBox from "./GenericBox.vue";
 
 const PHASE_OFFSET = 2;
 
 export default {
-  name: "GameStory",
-  components: {GenericBox, GameStoryPar},
+  name: "TitleStory",
+  components: {GenericBox, SmallListAndCaption},
   mixins: [STRINGS, UIMixin],
   data: function() {
     return {

@@ -167,7 +167,7 @@ export default {
     }
   },
 
-  mounted: function () {
+  mounted: function ()
     this.value.tileWidth = this.getTileWidth;
     this.value.tileHeight = this.getTileHeight;
     this.value.cameraThinker = this.getCameraThinker;

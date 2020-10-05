@@ -72,7 +72,7 @@ class Game extends GameAbstract {
 
     async initAsync() {
         await super.initAsync();
-        await this.loadLevel('mans-cabin');
+        //await this.loadLevel('mans-cabin');
     }
 
 
