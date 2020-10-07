@@ -28,7 +28,7 @@
             <hr/>
             <div class="commands">
               <button @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
-              <button @click="++phase">{{ STRINGS.GAME_STORY.commands.next }}</button>
+              <button @click="incPhase">{{ STRINGS.GAME_STORY.commands.next }}</button>
             </div>
           </div>
         </template>
@@ -58,6 +58,14 @@ export default {
     },
     getCurrentStoryPhoto: function() {
       return this.getStoryData.splashes[this.getLocalPhase];
+    }
+  },
+  methods: {
+    incPhase: function() {
+      if (++this.phase >= 7) {
+        // lancer le jeu
+        this.$emit('startgame');
+      }
     }
   }
 }

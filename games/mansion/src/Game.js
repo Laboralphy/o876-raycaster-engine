@@ -72,7 +72,14 @@ class Game extends GameAbstract {
 
     async initAsync() {
         await super.initAsync();
-        //await this.loadLevel('mans-cabin');
+        this.ui.store.watch(
+            state => state.ui.mainmenu.phase,
+            (newValue, oldValue) => {
+                if (newValue === 7) {
+                    this.loadLevel('mans-cabin');
+                }
+            }
+        )
     }
 
 

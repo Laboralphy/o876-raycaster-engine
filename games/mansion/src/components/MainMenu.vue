@@ -2,7 +2,7 @@
   <section>
     <TitleMain v-if="phase === 0"></TitleMain>
     <TitleControls v-else-if="phase === 1"></TitleControls>
-    <TitleStory v-else></TitleStory>
+    <TitleStory v-else-if="phase > 1 && phase < 7"></TitleStory>
   </section>
 </template>
 <script>

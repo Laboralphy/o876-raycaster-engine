@@ -17,6 +17,10 @@ class UI extends StoreAbstract {
         this.store = this._vue.$store;
     }
 
+    get vm() {
+        return this._vue;
+    }
+
     createApplication(sWhere) {
         return new Vue({
             el: sWhere,
