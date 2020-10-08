@@ -57,6 +57,14 @@ class Game extends GameAbstract {
             decals: [],
             level: ''
         }
+        this.ui.store.watch(
+            state => state.ui.mainmenu.phase,
+            (newValue, oldValue) => {
+                if (oldValue <= 6 && newValue > 6) {
+                    this.loadLevel(CONSTS.FIRST_LEVEL);
+                }
+            }
+        )
     }
 
 
@@ -72,14 +80,6 @@ class Game extends GameAbstract {
 
     async initAsync() {
         await super.initAsync();
-        this.ui.store.watch(
-            state => state.ui.mainmenu.phase,
-            (newValue, oldValue) => {
-                if (newValue === 7) {
-                    this.loadLevel('mans-cabin');
-                }
-            }
-        )
     }
 
 
@@ -146,7 +146,6 @@ class Game extends GameAbstract {
             }
         }
     }
-
 
 
 //
@@ -266,8 +265,6 @@ class Game extends GameAbstract {
             this.runScript(oEvents[sEvent], entity, ...args);
         }
     }
-
-
 
 
 //                _       _
@@ -596,10 +593,10 @@ class Game extends GameAbstract {
         const oScreenShot = this.engine.screenshot(pos.x, pos.y, pos.angle, pos.z);
         const photo = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
         const ctx = photo.getContext('2d');
-        const sw =  oScreenShot.width;
-        const sh =  oScreenShot.height;
-        const dw =  photo.width;
-        const dh =  photo.height;
+        const sw = oScreenShot.width;
+        const sh = oScreenShot.height;
+        const dw = photo.width;
+        const dh = photo.height;
         const dx = 0;
         const dy = 0;
         const sx = (sw - dw) >> 1;
@@ -731,7 +728,7 @@ class Game extends GameAbstract {
                 // "a" vaut 'push', 'enter', 'exit'
                 if (a in script) {
                     this.log('script', s, a);
-                    ee.on('tag.' + s + '.' + a,({entity, x, y, parameters, remove}) => {
+                    ee.on('tag.' + s + '.' + a, ({entity, x, y, parameters, remove}) => {
                         if (entity === this.player) {
                             script[a](this, remove, x, y, ...parameters)
                         }

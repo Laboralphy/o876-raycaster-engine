@@ -33,3 +33,5 @@ export const TANGIBILITY_GHOST = 4;
 export const TANGIBILITY_PLAYER = 1;
 
 export const REBUKE_STRENGTH = 6;
+
+export const FIRST_LEVEL = 'mans-cabin';
