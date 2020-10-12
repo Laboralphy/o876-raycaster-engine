@@ -8,11 +8,11 @@
 <script>
 import UIMixin from './mixins/ui';
 import STRINGS from './mixins/strings';
-import TitleStory from "./TitleStory.vue";
+import TitleStory from "./intro/TitleStory.vue";
 import HowTo from "./HowTo.vue";
 import GenericBox from "./GenericBox.vue";
-import TitleMain from "./TitleMain.vue";
-import TitleControls from "./TitleControls.vue";
+import TitleMain from "./intro/TitleMain.vue";
+import TitleControls from "./intro/TitleControls.vue";
 
 export default {
   name: "MainMenu",
@@ -23,9 +23,4 @@ export default {
 
 <style scoped>
 
-
-div.commands button {
-  font-size: 1.2em;
-  font-family: "KingthingsTrypewriter2", Courier, monospace;
-}
 </style>

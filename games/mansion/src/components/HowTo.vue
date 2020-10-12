@@ -5,7 +5,7 @@
         <img :src="image" />
       </div>
     </td>
-    <td class="description">
+    <td class="description typewriter">
       <div>{{ desc }}</div>
       <div v-if="note !== ''" class="note">{{ note }}</div>
     </td>
@@ -42,10 +42,6 @@ export default {
 
 .type-control div img {
   display: inline-block;
-}
-
-.description {
-  font-family: "KingthingsTrypewriter2", Courier, monospace;
 }
 
 .description .note {

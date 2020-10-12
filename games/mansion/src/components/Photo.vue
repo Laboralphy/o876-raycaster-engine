@@ -1,5 +1,5 @@
 <template>
-    <figure :class="'photo' + (big ? ' big' : '')" @click="$emit('click')">
+    <figure :class="'photo typewriter' + (big ? ' big' : '')" @click="$emit('click')">
         <img :class="gray ? 'gray' : 'color'" :src="content" alt="photo"/>
         <figcaption :title="caption">{{ caption }}</figcaption>
     </figure>
@@ -60,7 +60,6 @@
     }
 
     figure.photo > figcaption {
-        font-family: "KingthingsTrypewriter2", monospace;
         font-size: 0.8em;
         color: black;
         height: 1.15em;

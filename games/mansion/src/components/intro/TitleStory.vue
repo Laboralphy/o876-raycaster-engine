@@ -24,7 +24,7 @@
           </div>
         </section>
         <template v-slot:footer>
-          <div class="container">
+          <div class="container typewriter">
             <hr/>
             <div class="commands">
               <button @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
@@ -39,11 +39,11 @@
 </template>
 
 <script>
-import STRINGS from './mixins/strings';
-import UIMixin from './mixins/ui';
+import STRINGS from '../mixins/strings';
+import UIMixin from '../mixins/ui';
 
-import SmallListAndCaption from "./SmallListAndCaption.vue";
-import GenericBox from "./GenericBox.vue";
+import SmallListAndCaption from "../SmallListAndCaption.vue";
+import GenericBox from "../GenericBox.vue";
 
 export default {
   name: "TitleStory",
@@ -99,7 +99,6 @@ div.photo img {
 
 div.commands button {
   font-size: 1em;
-  font-family: "KingthingsTrypewriter2", Courier, monospace;
 }
 
 div.container {

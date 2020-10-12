@@ -1,10 +1,24 @@
+
+
+/*** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES ***/
+/*** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES ***/
+/*** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES *** FONT FAMILIES ***/
+
 /*
 regular height for inline blocks, containing text or other readable things (small icons, gauge aligned with texts)
 */
-
 .ui {
     font-family: "Lucida Console", Monaco, monospace;
 }
+
+.typewriter {
+    font-family: "KingthingsTrypewriter2", Courier, monospace;
+}
+
+.manuscript {
+    font-family: "DailyLife", Arial, sans-serif;
+}
+
 
 .ui.regular-height {
     height: 1.2em;
@@ -24,7 +38,6 @@ regular height for inline blocks, containing text or other readable things (smal
 }
 
 .ui-window-title {
-    font-family: "KingthingsTrypewriter2", Courier, monospace;
     font-weight: bold;
     font-size: 1.2em;
     color: black;
@@ -42,6 +55,11 @@ div.ui-panel-window {
 div.ui-menu-window {
     position: absolute;
 }
+
+
+/*** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES ***/
+/*** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES ***/
+/*** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES ***/
 
 div.ui-size-60-90 {
     width: 60%;
@@ -70,4 +88,3 @@ div.ui-size-50-75 {
     top: 12.5%;
     left: 25%;
 }
-

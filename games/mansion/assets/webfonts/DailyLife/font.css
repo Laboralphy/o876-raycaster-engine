@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'DailyLife';
+    src: url('DailyLife.eot');
+    src: url('DailyLife.eot') format('embedded-opentype'),
+         url('DailyLife.woff2') format('woff2'),
+         url('DailyLife.woff') format('woff'),
+         url('DailyLife.ttf') format('truetype'),
+         url('DailyLife.svg#DailyLife') format('svg');
+}

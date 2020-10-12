@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-menu-window ui-size-50-75 rounded">
+  <div class="ui-menu-window ui-size-50-75 rounded typewriter">
     <GenericBox
         footer="4em"
         header="6em"
@@ -36,10 +36,10 @@
 </template>
 
 <script>
-import STRINGS from './mixins/strings';
-import ui from './mixins/ui';
-import GenericBox from "./GenericBox.vue";
-import HowTo from "./HowTo.vue";
+import STRINGS from '../mixins/strings';
+import ui from '../mixins/ui';
+import GenericBox from "../GenericBox.vue";
+import HowTo from "../HowTo.vue";
 export default {
   name: "TitleControls",
   components: {HowTo, GenericBox},
@@ -61,7 +61,6 @@ export default {
 
 div.commands button {
   font-size: 1.2em;
-  font-family: "KingthingsTrypewriter2", Courier, monospace;
 }
 
 </style>

@@ -3,7 +3,7 @@
         <tbody>
             <tr>
                 <th class="title">
-                    <div class="ui-window-title">{{ title }}</div>
+                    <div class="ui-window-title typewriter">{{ title }}</div>
                 </th>
                 <td class="co">
                     <slot></slot>

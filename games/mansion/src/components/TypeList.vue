@@ -1,5 +1,5 @@
 <template>
-  <ul class="tab-list">
+  <ul class="tab-list typewriter">
     <li
         v-for="t in types"
         :key="t.ref"
@@ -32,20 +32,22 @@ export default {
 </script>
 
 <style scoped>
+
 ul.tab-list {
   margin: 0;
 }
+
 ul.tab-list > li {
   display: inline-block;
   background-color: #8b4513;
   border: solid thin #251205;
   border-radius: 0.25em;
   color: #b58868;
-  font-family: "KingthingsTrypewriter2", Courier, monospace;
   font-size: 0.9em;
   padding: 0.125em 0.35em;
   margin: 0.1em;
 }
+
 ul.tab-list > li:hover {
   display: inline-block;
   background-color: #d76b1d;
@@ -63,4 +65,5 @@ ul.tab-list > li.selected:hover
   border: solid thin #5a3b26;
   cursor: default;
 }
+
 </style>

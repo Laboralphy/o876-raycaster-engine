@@ -1,5 +1,5 @@
 <template>
-    <div class="sidebar">
+    <div class="sidebar typewriter">
         <ul>
             <li><span @click="select('inv')">{{ STRINGS.MAIN_TAB_INV }}</span></li>
             <li><span @click="select('album')">{{ STRINGS.MAIN_TAB_ALBUM }}</span></li>
@@ -38,7 +38,6 @@
         top: 10%;
         left: 8%;
         text-align: right;
-        font-family: "KingthingsTrypewriter2", Courier, monospace;
         font-size: 0.8em;
     }
 

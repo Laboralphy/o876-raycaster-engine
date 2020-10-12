@@ -1,5 +1,5 @@
 <template>
-    <div class="ui-panel-window ui-size-60-90 album">
+    <div class="ui-panel-window ui-size-60-90 album typewriter">
         <TitleAndCo :title="STRINGS.MAIN_TAB_ALBUM">
             <PhotoTypes></PhotoTypes>
         </TitleAndCo>
@@ -83,7 +83,6 @@
     }
 
     div.no-photo {
-        font-family: "KingthingsTrypewriter2", Courier, monospace;
         font-size: 3em;
         color: rgba(0, 0, 0, 0.25);
         margin-top: 10%;
