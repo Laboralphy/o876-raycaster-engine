@@ -5,12 +5,12 @@
     </TitleAndCo>
     <div class="inv-container"> <!-- QUEST ITEMS -->
       <Item
-          v-for="item in getInventoryContent"
-          :key="item.id"
+          v-for="(item, i) in getInventoryContent"
+          :key="item.id + ':' + i"
           :id="item.id"
           :name="item.name"
           :icon="item.icon"
-          @click="({id}) => questItemClicked(id)"></Item>
+          @click="({id}) => inventoryItemClicked(id)"></Item>
     </div>
   </div>
 </template>
@@ -33,7 +33,7 @@ export default {
 
   computed: {
     ...logicMapGetters([
-        'getQuestItems',
+        'getInventoryItems',
         'getItemData'
     ]),
     ...uiMapGetters([
@@ -43,7 +43,7 @@ export default {
     getInventoryContent: function() {
       const sActiveType = this.getInventoryActiveTab;
       return this
-          .getQuestItems
+          .getInventoryItems
           .map(id => this.getItemDataById(id))
           .filter(item => sActiveType === 'all' || item.type === sActiveType);
     }
@@ -72,7 +72,7 @@ export default {
       }
     },
 
-    questItemClicked: function(id) {
+    inventoryItemClicked: function(id) {
       this.setPhotoDetails({
         ...this.getItemDataById(id),
         value: 0,

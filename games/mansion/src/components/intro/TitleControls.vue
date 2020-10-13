@@ -6,7 +6,7 @@
     >
       <template v-slot:header>
         <div class="container">
-          <h1>{{ STRINGS.HOWTO.title }}</h1>
+          <h1>{{ STRINGS.HOWTO_TITLE }}</h1>
           <hr/>
         </div>
       </template>
@@ -14,7 +14,7 @@
         <table>
           <tbody>
           <HowTo
-              v-for="(s, i) in STRINGS.HOWTO.actions"
+              v-for="(s, i) in STRINGS.HOWTO_ACTIONS"
               :desc="s.desc"
               :note="s.note || ''"
               :image="howToImages[i]"
@@ -27,7 +27,7 @@
         <div class="container">
           <hr/>
           <div class="commands">
-            <button @click="++phase">{{ STRINGS.GAME_STORY.commands.tostory }}</button>
+            <button class="typewriter" @click="++phase">{{ STRINGS.COMMAND_CAPTION_TODO }}</button>
           </div>
         </div>
       </template>

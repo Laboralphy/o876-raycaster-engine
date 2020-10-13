@@ -7,28 +7,29 @@
       >
         <template v-slot:header>
           <div class="container">
-            <h1>{{ STRINGS.GAME_STORY.title }}</h1>
+            <h1 class="manuscript">{{ STRINGS.INTRO_MAP_TITLE }}</h1>
             <hr/>
           </div>
         </template>
         <section class="content">
-          <div class="container">
-            <SmallListAndCaption
-                :caption="getCurrentStoryPart.caption"
-                :text="getCurrentStoryPart.text"
-                :remark="getCurrentStoryPart.remark || ''"
-            ></SmallListAndCaption>
+          <div class="photo">
+            <img src="assets/uigfx/intro/intro-map-2.jpg"/>
           </div>
-          <div v-if="getCurrentStoryPhoto !== ''" class="photo">
-            <img :src="'assets/uigfx/intro/' + getCurrentStoryPhoto"/>
+          <div class="container manuscript">
+            <ul>
+              <li
+                  v-for="(s, i) in STRINGS.INTRO_MAP_TASKS"
+                  :key="'intro-map-task-' + i"
+              >{{ s }}</li>
+            </ul>
           </div>
         </section>
         <template v-slot:footer>
           <div class="container typewriter">
             <hr/>
             <div class="commands">
-              <button @click="--phase">{{ STRINGS.GAME_STORY.commands.prev }}</button>
-              <button @click="incPhase">{{ STRINGS.GAME_STORY.commands.next }}</button>
+              <button class="typewriter" @click="--phase">{{ STRINGS.COMMAND_CAPTION_PREV }}</button>
+              <button class="typewriter" @click="++phase">{{ STRINGS.COMMAND_CAPTION_NEXT }}</button>
             </div>
           </div>
         </template>
@@ -42,40 +43,19 @@
 import STRINGS from '../mixins/strings';
 import UIMixin from '../mixins/ui';
 
-import SmallListAndCaption from "../SmallListAndCaption.vue";
 import GenericBox from "../GenericBox.vue";
 
 export default {
   name: "TitleStory",
-  components: {GenericBox, SmallListAndCaption},
-  mixins: [STRINGS, UIMixin],
-  computed: {
-    getLocalPhase: function() {
-      return this.phase - this.getStoryData.startingPhase;
-    },
-    getCurrentStoryPart: function() {
-      return this.STRINGS.GAME_STORY.pages[this.getLocalPhase];
-    },
-    getCurrentStoryPhoto: function() {
-      return this.getStoryData.splashes[this.getLocalPhase];
-    }
-  },
-  methods: {
-    incPhase: function() {
-      if (++this.phase >= 7) {
-        // lancer le jeu
-        this.$emit('startgame');
-      }
-    }
-  }
+  components: {GenericBox},
+  mixins: [STRINGS, UIMixin]
 }
 </script>
 
 <style scoped>
 
 section.game-story {
-  font-size: 0.8em;
-  font-family: "KleponScone", Courier, monospace;
+  font-size: 1.2em;
   font-weight: normal;
   color: rgb(52, 51, 50);
   text-align: left;
@@ -93,7 +73,7 @@ section.game-story h1 {
 div.photo img {
   margin: auto;
   border: solid 0.2em black;
-  width: 66%;
+  width: 80%;
   box-shadow: 0.25em 0.25em 0.5em rgba(0, 0, 0, 0.3);
 }
 

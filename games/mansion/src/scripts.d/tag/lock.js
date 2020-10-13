@@ -20,7 +20,7 @@ export function init(game, remove, x, y) {
  * @param key
  */
 export function push(game, remove, x, y, key) {
-    if (!!key && game.logic.hasQuestItem(key)) {
+    if (!!key && game.logic.hasInventoryItem(key)) {
         remove(); // removes tag
         game.ui.popup('DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key + '.name');
         game.removeDecals(x, y); // remove keyhole decal from door

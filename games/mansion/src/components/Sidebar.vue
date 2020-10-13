@@ -34,7 +34,6 @@
     div.sidebar {
         position: absolute;
         width: 13%;
-        height: 90%;
         top: 10%;
         left: 8%;
         text-align: right;

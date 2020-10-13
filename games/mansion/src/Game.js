@@ -60,7 +60,8 @@ class Game extends GameAbstract {
         this.ui.store.watch(
             state => state.ui.mainmenu.phase,
             (newValue, oldValue) => {
-                if (oldValue <= 6 && newValue > 6) {
+                const GAME_PHASE = 3;
+                if (oldValue < GAME_PHASE && newValue >= GAME_PHASE) {
                     this.loadLevel(CONSTS.FIRST_LEVEL);
                 }
             }

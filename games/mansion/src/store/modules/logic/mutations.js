@@ -6,8 +6,8 @@ export default {
      * @param state
      * @param ref {string} reference of the quest item
      */
-    [TYPES.ADD_QUEST_ITEM]: function(state, {ref}) {
-        const qi = state.player.inventory.questItems;
+    [TYPES.ADD_INVENTORY_ITEM]: function(state, {ref}) {
+        const qi = state.player.inventory;
         if (!qi.includes(ref)) {
             qi.push(ref);
         }
@@ -18,8 +18,8 @@ export default {
      * @param state
      * @param ref {string} reference of the quest item
      */
-    [TYPES.REMOVE_QUEST_ITEM]: function(state, {ref}) {
-        const qi = state.player.inventory.questItems;
+    [TYPES.REMOVE_INVENTORY_ITEM]: function(state, {ref}) {
+        const qi = state.player.inventory;
         const n = qi.indexOf(ref);
         if (n >= 0) {
             qi.splice(n, 1);

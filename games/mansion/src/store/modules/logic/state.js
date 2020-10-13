@@ -1,8 +1,6 @@
 export default {
     player: {
-        inventory: {
-            questItems: []
-        },
+        inventory: [],
         attributes: {
             hp: 40,
             hpMax: 100

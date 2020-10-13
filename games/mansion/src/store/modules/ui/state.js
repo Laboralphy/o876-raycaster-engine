@@ -38,17 +38,12 @@ export default {
     },
 
     mainmenu: {
-        visible: true,
         phase: 0,
-        story: {
-            startingPhase: 2,
-            splashes: [
-                '',
-                'intro-village.jpg',
-                'intro-paintings.jpg',
-                'intro-books.jpg',
-                'intro-cult.jpg'
-            ]
+        phases: {
+            main: 0,
+            controls: 1,
+            todo: 2,
+            game: 3
         }
     }
 };

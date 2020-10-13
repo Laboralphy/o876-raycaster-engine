@@ -1,0 +1,41 @@
+{
+  "PLOT_STRUCT": {
+    "arrival": [
+      "La piste vous mène à un village isolé",
+      "de sinistre réputation,",
+      "perdu au coeur de la forêt."
+    ],
+    "dread_lair": [
+      "Jadis peuplé de dégénérés superstitieux,",
+      "adeptes de de magie noire et de sorcellerie..."
+    ],
+    "dark_rituals": [
+      "Des indices de pratiques occultes",
+      "de rituels grotesques et blasphématoires,",
+      "sont éparpillé dans la région."
+    ],
+    "ppl_gone": [
+      "Mais désormais le village est désert.",
+      "Toute la communauté s'est volatilisée."
+    ],
+    "something_happened": [
+      "Quelque chose s'est produit ici,",
+      "qui a fait fuir ces fanatiques.",
+      "Le mystère de leur disparition reste entier."
+    ],
+    "what_they_left": [
+      "Ce qui vous intéresse, cependant, doit",
+      "toujours être dans le village."
+    ],
+    "lost_relics": [
+      "Ces maudits sorciers ont dû abandonner",
+      "un tas de reliques, de grimoires anciens",
+      "et de tableaux de grande valeur..."
+    ],
+    "phat_loot": [
+      "Il est temps pour vous d'aller explorer",
+      "le coin et de faire main basse sur tous",
+      "ces trésors."
+    ]
+  }
+}

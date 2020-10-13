@@ -5,7 +5,7 @@ export default {
     isHUDVisible: state => state.hud.visible,
     isUIFrameVisible: state => state.uiframe.visible,
     isUIFrameFullyVisible: state => state.uiframe.fullyVisible,
-    isMainMenuVisible: state => state.mainmenu.visible,
+    isMainMenuVisible: state => state.mainmenu.phase < state.mainmenu.phases.game,
 
     isShotVisible: state => state.shot.visible,
     isShotFatal: state => state.shot.targets > 0 && state.shot.shutter,
@@ -28,6 +28,5 @@ export default {
     getPhotoDetailsValue: state => state.photodetails.value,
     getPhotoDetailsTitle: state => state.photodetails.title,
 
-    getMainMenuPhase: state => state.mainmenu.phase,
-    getStoryData: state => state.mainmenu.story
+    getMainMenuPhase: state => state.mainmenu.phase
 };

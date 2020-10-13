@@ -2,10 +2,14 @@
   <section>
     <div class="ui-menu-window ui-size-50-50 typewriter">
       <div class="game-title">{{ STRINGS.GAME_TITLE }}</div>
-      <div class="game-sub-title">{{ STRINGS.GAME_SUB_TITLE }}</div>
+      <div
+          class="game-sub-title"
+          v-for="(s, i) in STRINGS.GAME_SUB_TITLE"
+          :key="'game-sub-title-' + i"
+      >{{ s }}</div>
       <ul class="options">
         <li>
-          <button @click="phase = 1">{{ STRINGS.MAIN_MENU_OPTION_START }}</button>
+          <button class="typewriter" @click="phase = 1">{{ STRINGS.COMMAND_CAPTION_START }}</button>
         </li>
       </ul>
     </div>

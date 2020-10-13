@@ -33,24 +33,24 @@ class Logic extends StoreAbstract {
      * Adds a quest items into player inventory
      * @param ref {string}
      */
-    addQuestItem(ref) {
-        this.commit(MUTATIONS.ADD_QUEST_ITEM, {ref});
+    addInventoryItem(ref) {
+        this.commit(MUTATIONS.ADD_INVENTORY_ITEM, {ref});
     }
 
     /**
      * Removes a quest items from player inventory
      * @param ref {string}
      */
-    removeQuestItem(ref) {
-        this.commit(MUTATIONS.REMOVE_QUEST_ITEM, {ref});
+    removeInventoryItem(ref) {
+        this.commit(MUTATIONS.REMOVE_INVENTORY_ITEM, {ref});
     }
 
     /**
      * Tests if player possess a defined quest items
      * @param ref {string}
      */
-    hasQuestItem(ref) {
-        return this.prop('getQuestItems').indexOf(ref) >= 0;
+    hasInventoryItem(ref) {
+        return this.prop('getInventoryItems').indexOf(ref) >= 0;
     }
 
     damagePlayer(ghost) {

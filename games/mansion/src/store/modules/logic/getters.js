@@ -1,5 +1,5 @@
 export default {
-    getQuestItems: state => state.player.inventory.questItems,
+    getInventoryItems: state => state.player.inventory,
     getItemData: state => state.data.items,
     getItemTypes: state => state.data.itemTypes,
 
