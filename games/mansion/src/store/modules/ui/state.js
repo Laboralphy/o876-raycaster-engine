@@ -41,9 +41,14 @@ export default {
         phase: 0,
         phases: {
             main: 0,
-            controls: 1,
-            todo: 2,
+            controls: 2,
+            todo: 1,
             game: 3
+        },
+        todo: {
+            innerPhase: 0,
+            splashIndex: 0,
+            splashTransition: 0   // 0: fade-in 1: fade-out
         }
     }
 };

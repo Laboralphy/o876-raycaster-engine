@@ -81,4 +81,8 @@ export default {
         commit(MUTATIONS.SET_UI_FRAME_VISIBLE, {value: true});
         setTimeout(() => commit(MUTATIONS.SET_UI_FULLY_VISIBLE, {value: true}), 16);
     }
+
+
+
+
 }

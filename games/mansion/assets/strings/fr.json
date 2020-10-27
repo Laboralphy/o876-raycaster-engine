@@ -62,10 +62,12 @@
   ],
   "INTRO_MAP_TITLE": "Trucs à faire",
   "INTRO_MAP_TASKS": [
-    "Se rendre au village abandonné.",
-    "Photographier tous les tableaux.",
-    "Récupérer tous les livres de sorcellerie.",
-    "Faire des profits."
+    "Liste des objectifs pour ce job...",
+    "1) Se rendre au village abandonné.",
+    "2) Visiter le village, vérifier qu'il est bien désert.",
+    "3) Photographier tous les tableaux.",
+    "4) Récupérer tous les livres de sorcellerie.",
+    "5) Elucider le mystère de la disparition des villageois."
   ],
 
   "ALBUM_TAB_EMPTY": "Cette section est vide.",

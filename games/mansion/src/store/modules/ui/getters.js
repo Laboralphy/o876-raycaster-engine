@@ -28,5 +28,10 @@ export default {
     getPhotoDetailsValue: state => state.photodetails.value,
     getPhotoDetailsTitle: state => state.photodetails.title,
 
-    getMainMenuPhase: state => state.mainmenu.phase
+    getMainMenuPhase: state => state.mainmenu.phase,
+    isMainMenuPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.main,
+    isControlsPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.controls,
+    isStoryPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.todo,
+    isGameDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.game
+
 };

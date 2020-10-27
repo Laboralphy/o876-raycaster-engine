@@ -9,7 +9,10 @@ export default {
     computed: {
         ...uiGetters([
             'getMainMenuPhase',
-            'getStoryData'
+            'getStoryData',
+            'isMainMenuPageDisplayed',
+            'isControlsPageDisplayed',
+            'isStoryPageDisplayed'
         ]),
         phase: {
             get: function() {

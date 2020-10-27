@@ -1,8 +1,8 @@
 <template>
   <section>
-    <TitleMain v-if="phase === 0"></TitleMain>
-    <TitleControls v-else-if="phase === 1"></TitleControls>
-    <TitleStory v-else-if="phase > 1 && phase < 7"></TitleStory>
+    <TitleMain v-if="isMainMenuPageDisplayed"></TitleMain>
+    <TitleControls v-else-if="isControlsPageDisplayed"></TitleControls>
+    <TitleStory v-else-if="isStoryPageDisplayed"></TitleStory>
   </section>
 </template>
 <script>

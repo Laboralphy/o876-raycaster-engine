@@ -86,5 +86,9 @@ export default {
 
     [TYPES.SET_MAIN_MENU_PHASE]: function(state, {value}) {
         state.mainmenu.phase = value;
+    },
+
+    [TYPES.SET_TODO_INNER_PHASE]: function(state, {value}) {
+        state.mainmenu.todo.innerPhase = value;
     }
 }
