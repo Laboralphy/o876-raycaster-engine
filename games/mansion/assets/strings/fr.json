@@ -34,7 +34,6 @@
   "COMMAND_CAPTION_NEXT": "Suivant",
   "COMMAND_CAPTION_PREV": "Précédent",
   "COMMAND_CAPTION_START": "Démarrer",
-  "COMMAND_CAPTION_TODO": "Trucs à faire",
 
   "GAME_TITLE": "Le patelin chelou",
   "GAME_SUB_TITLE": [
@@ -64,9 +63,9 @@
   "INTRO_MAP_TASKS": [
     "Liste des objectifs pour ce job...",
     "1) Se rendre au village abandonné.",
-    "2) Visiter le village, vérifier qu'il est bien désert.",
+    "2) Visiter le village, vérifier qu'il soit bien désert.",
     "3) Photographier tous les tableaux.",
-    "4) Récupérer tous les livres de sorcellerie.",
+    "4) Récupérer tous les livres rares et précieux.",
     "5) Elucider le mystère de la disparition des villageois."
   ],
 

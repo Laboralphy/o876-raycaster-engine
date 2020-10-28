@@ -104,13 +104,13 @@ export default {
 
     fadeIn: async function() {
       this.fadingPhase = this.PHASE_FADE_IN;
-      await this.pause(this.FADE_DURATION);
+      await this.pause(this.FADE_DURATION + 120);
       this.fadingPhase = this.PHASE_SHOWING;
     },
 
     fadeOut: async function() {
       this.fadingPhase = this.PHASE_FADE_OUT;
-      await this.pause(this.FADE_DURATION);
+      await this.pause(this.FADE_DURATION + 120);
     },
 
     /**

@@ -27,7 +27,7 @@
         <div class="container">
           <hr/>
           <div class="commands">
-            <button class="typewriter" @click="++phase">{{ STRINGS.COMMAND_CAPTION_TODO }}</button>
+            <button class="typewriter" @click="++phase">{{ STRINGS.COMMAND_CAPTION_START }}</button>
           </div>
         </div>
       </template>
@@ -40,11 +40,12 @@ import STRINGS from '../mixins/strings';
 import ui from '../mixins/ui';
 import GenericBox from "../GenericBox.vue";
 import HowTo from "../HowTo.vue";
+
 export default {
   name: "TitleControls",
   components: {HowTo, GenericBox},
   mixins: [STRINGS, ui],
-  data: function() {
+  data: function () {
     return {
       howToImages: [
         'assets/uigfx/input/kbd_zqsd_mouse.png',
