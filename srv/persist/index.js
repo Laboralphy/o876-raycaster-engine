@@ -60,21 +60,18 @@ async function loadLevel(sUser, sLevelName) {
  */
 async function listLevels(sUser) {
 	const vault = getUserVault(sUser);
-	const aList = await vault.ls('.', {
-		withFileTypes: true
-	});
+	const aList = await vault.ls('.');
 	const aOutput = [];
 	for (let i = 0, l = aList.length; i < l; ++i) {
 		const f = aList[i];
 		const name = f.name;
-		if (f.isDirectory()) {
+		if (f.dir) {
 			const filename = path.join(name, 'level.json');
 			try {
 				const st = await vault.stat(filename);
-				const date = Math.floor(st.mtimeMs / 1000);
 				aOutput.push({
 					"name": name,
-					"date": date
+					"date": st.dates.modified
 				});
 			} catch (e) {
 				if (e.code === 'ENOENT') {

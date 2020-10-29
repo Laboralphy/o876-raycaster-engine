@@ -103,10 +103,10 @@ class Vault {
         }
         const aDeleted = [];
         for (let i = 0, l = list.length; i < l; ++i) {
-            const sEntry = list[i];
+            const sEntry = list[i].name;
             const filename = path.join(foldername, sEntry);
             const st = await this.stat(filename);
-            if (st.isDirectory()) {
+            if (st.dir) {
                 // rmdir recursively
                 const aSubDeleted = await this.rmdir(filename, bRecursive);
                 aSubDeleted.forEach(d => aDeleted.push(d));

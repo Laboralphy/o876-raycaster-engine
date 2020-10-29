@@ -25,7 +25,7 @@ module.exports = class Service extends ServiceAbstract {
         app.get('/demos', async (req, res) => {
             // get a list of all example
             const aList = await promfs.ls(sExamplePath);
-            return res.json({list: aList});
+            return res.json({list: aList.map(d => d.name)});
         });
         app.use('/demo', express.static(sExamplePath));
     }

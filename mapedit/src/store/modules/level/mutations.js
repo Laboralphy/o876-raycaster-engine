@@ -482,7 +482,7 @@ export default {
         if (gl === 0) {
             return;
         }
-        moveStartpoint(state.startpoint, gl, gl, direction);
+        state.startpoints.forEach(sp => moveStartpoint(sp, gl, gl, direction));
         shiftArray(state.grid, direction);
     },
 
@@ -501,16 +501,15 @@ export default {
             }
             localGrid.push(row);
         }
-        if (state.startpoint.x >= x1
-            && state.startpoint.x <= x2
-            && state.startpoint.y >= y1
-            && state.startpoint.y <= y2
-        ) {
-            const localStartPoint = {x: state.startpoint.x - x1, y: state.startpoint.y - y1};
-            moveStartpoint(localStartPoint, x2 - x1 + 1, y2 - y1 + 1, direction);
-            state.startpoint.x = localStartPoint.x + x1;
-            state.startpoint.y = localStartPoint.y + y1;
-        }
+        state.startpoints.forEach(sp => {
+            const {x, y} = sp;
+            if (x >= x1 && x <= x2 && y >= y1 && y <= y2) {
+                const localStartPoint = {x: x - x1, y: y - y1};
+                moveStartpoint(localStartPoint, x2 - x1 + 1, y2 - y1 + 1, direction);
+                sp.x = localStartPoint.x + x1;
+                sp.y = localStartPoint.y + y1;
+            }
+        });
         shiftArray(localGrid, direction);
         // replacer la grille
         for (let y = 0; y < (y2 - y1 + 1); ++y) {
