@@ -1,4 +1,3 @@
-const fs = require('fs');
 const path = require('path');
 const JsonBlobz = require('../json-blobz');
 const Vault = require('./Vault');
@@ -48,7 +47,7 @@ async function loadLevel(sUser, sLevelName) {
 		for (let i = 0, l = hashes.length; i < l; ++i) {
 			const hash = hashes[i];
 			// load the file "hash" , put the content into "blob"
-			blobs[hash] = await vault.load(path.join(sTilePath, hash));
+			blobs[hash] = await vault.load(path.join(sTilePath, hash), true);
 		}
 		return blobs;
 	});

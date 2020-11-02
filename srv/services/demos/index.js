@@ -1,7 +1,6 @@
 const ServiceAbstract = require('@laboralphy/ws-service/abstract');
-const CONFIG = require('../../config');
 const {getProjectFQN} = require('../../get-project-fqn');
-const promfs = require('../../../libs/prom-fs');
+const promfs = require('../../prom-fs');
 
 /**
  * Ce service doit juste permettre au site web de fonctionner

@@ -10,7 +10,6 @@ const readDir = util.promisify(fs.readdir);
 const readFile = util.promisify(fs.readFile);
 const unlink = util.promisify(fs.unlink);
 
-let BASE_DIR = '.';
 const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
 
 let GAME_ROOT_DIR = CONFIG.getVariable('game_path');
@@ -26,10 +25,8 @@ const JSON_EXT = '.json';
 
 /**
  * Sets a new value for the base directory where the game project will be hosted
- * @param sDir {string}
  */
-function setBaseDirectory(sDir) {
-    BASE_DIR = sDir;
+function setBaseDirectory() {
     GAME_ROOT_DIR = CONFIG.getVariable('game_path');
     GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
     GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
@@ -158,13 +155,13 @@ async function unpublishLevel(name) {
  * @return {Promise<boolean>}
  */
 async function runTemplateItem(oItem) {
-    const sTarget = path.resolve(BASE_DIR, oItem.path);
+    const sTarget = path.resolve(oItem.path);
     const sTargetDir = path.dirname(sTarget);
     if (!await exists(sTarget)) {
         if (!await exists(sTargetDir)) {
             await mkdirp(sTargetDir);
         }
-        await copy(path.resolve(TEMPLATE_DIR, oItem.template), path.resolve(BASE_DIR, oItem.path));
+        await copy(path.resolve(TEMPLATE_DIR, oItem.template), path.resolve(oItem.path));
         return true;
     } else {
         return false;
@@ -173,11 +170,10 @@ async function runTemplateItem(oItem) {
 
 /**
  * run the entire process
- * @param sBaseDir {string} the base directory is the directory where everything will be created
  * @return {Promise<void>}
  */
-async function run(sBaseDir) {
-    setBaseDirectory(sBaseDir);
+async function run() {
+    setBaseDirectory();
     const PROJECT_TREE = [
 
         {

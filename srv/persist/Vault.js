@@ -1,5 +1,5 @@
 const path = require('path');
-const promfs = require('../../libs/prom-fs');
+const promfs = require('../prom-fs');
 
 const VAULT_PATH = '.';
 
@@ -64,12 +64,12 @@ class Vault {
      * @param filename {string}
      * @return {Promise<Buffer>}
      */
-    async load(filename) {
-        return promfs.read(this.fqn(filename));
+    async load(filename, bBinary = false) {
+        return promfs.read(this.fqn(filename), bBinary);
     }
 
     async loadJSON(filename) {
-        const buff = await this.load(filename);
+        const buff = await this.load(filename, false);
         return JSON.parse(buff.toString());
     }
 
@@ -82,8 +82,8 @@ class Vault {
         return promfs.stat(this.fqn(filename));
     }
 
-    async ls(path, options) {
-        return promfs.ls(this.fqn(path), options);
+    async ls(path) {
+        return promfs.ls(this.fqn(path));
     }
 
     async rm(filename) {

@@ -1,4 +1,4 @@
-const promfs = require('../../libs/prom-fs');
+const promfs = require('../prom-fs');
 const path = require('path');
 const crypto = require('crypto');
 
