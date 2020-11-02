@@ -1,4 +1,3 @@
-const CONFIG = require('./config');
 const path = require('path');
 
 /**
@@ -9,8 +8,7 @@ const path = require('path');
  */
 function getProjectFQN(...aPath) {
     try {
-        const O876_RC_ROOT_PATH = path.resolve(CONFIG.getVariable('base_path'));
-        return path.join(O876_RC_ROOT_PATH, ...aPath);
+        return path.resolve(...aPath);
     } catch (e) {
         console.error(aPath);
         throw new Error('resolving this path lead to an error. details of the incriminating path are just above.')

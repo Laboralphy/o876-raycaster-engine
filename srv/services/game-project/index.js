@@ -79,7 +79,7 @@ module.exports = class Service extends ServiceAbstract {
         });
 
         // will check the existance of the game directory and create it if necessery
-        pm.run(CONFIG.getVariable('base_path'));
+        pm.run();
     }
 };
 

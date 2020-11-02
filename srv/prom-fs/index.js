@@ -19,7 +19,12 @@ class PromFS {
      * @return {Promise}
      */
     static mkdir(sPath) {
-        return mkdir(sPath);
+        const r = mkdir(sPath);
+        if (r instanceof Promise) {
+            return r;
+        } else {
+            Promise.reject(new Error('mkdirp node module must return Promise, install a more recent version'));
+        }
     }
 
     /**
@@ -89,6 +94,26 @@ class PromFS {
         return write(sFile, data, typeof data === 'string' ? {
             encoding: 'utf8'
         } : null);
+    }
+
+    /**
+     * Copy one file content to another file, target and source file names must be specify.
+     * The destination folder must exists
+     * @param from {string} source file name
+     * @param to {string} target file name. File name must be specified, destination folder is not enough
+     * @return {Promise<any>}
+     */
+    static cp(from, to) {
+        return new Promise((resolve, reject) => {
+            const output = fs.createWriteStream(to);
+            output.on('close', function() {
+                resolve(true);
+            });
+            output.on('error', function(err) {
+                reject(err);
+            });
+            fs.createReadStream(from).pipe(output);
+        });
     }
 }
 

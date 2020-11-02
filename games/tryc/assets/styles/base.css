@@ -1,0 +1,15 @@
+/*
+Base style sheet
+*/
+
+/* black colored background with gray text */
+body {
+    color: #AAA;
+    background-color: black;
+}
+
+/* canvas and images are optimized for speed rendering, no smoothing */
+canvas, img {
+    display: block;
+    padding: 0;
+}

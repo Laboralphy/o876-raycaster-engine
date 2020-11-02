@@ -17,7 +17,6 @@ function main() {
     console.log(' ');
 
     console.group('paths');
-    console.log('base :', CONFIG.getVariable('base_path'));
     console.log('game :', CONFIG.getVariable('game_path'));
     console.log('vault :', CONFIG.getVariable('vault_path'));
     console.log('sessions :', CONFIG.getVariable('session_path'));

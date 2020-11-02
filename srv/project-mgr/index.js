@@ -1,14 +1,7 @@
-const util = require('util');
 const path = require('path');
-const fs = require('fs');
 const CONFIG = require('../config');
+const promfs = require('../prom-fs');
 
-// promisification
-const mkdirp = util.promisify(require('mkdirp'));
-const stat = util.promisify(fs.stat);
-const readDir = util.promisify(fs.readdir);
-const readFile = util.promisify(fs.readFile);
-const unlink = util.promisify(fs.unlink);
 
 const TEMPLATE_DIR = path.resolve(__dirname, 'templates');
 
@@ -26,7 +19,7 @@ const JSON_EXT = '.json';
 /**
  * Sets a new value for the base directory where the game project will be hosted
  */
-function setBaseDirectory() {
+function defineDirectories() {
     GAME_ROOT_DIR = CONFIG.getVariable('game_path');
     GAME_SRC_DIR = path.join(GAME_ROOT_DIR, 'src');
     GAME_ASSETS_DIR = path.join(GAME_ROOT_DIR, 'assets');
@@ -45,7 +38,7 @@ function setBaseDirectory() {
  */
 function exists(what) {
     return new Promise(resolve => {
-        stat(what)
+        promfs.stat(what)
             .then(() => resolve(true))
             .catch(err => resolve(false));
     });
@@ -59,16 +52,7 @@ function exists(what) {
  * @return {Promise<any>}
  */
 function copy(from, to) {
-    return new Promise((resolve, reject) => {
-        const output = fs.createWriteStream(to);
-        output.on('close', function() {
-            resolve(true);
-        });
-        output.on('error', function(err) {
-            reject(err);
-        });
-        fs.createReadStream(from).pipe(output);
-    });
+    return promfs.cp(from, to);
 }
 
 function _getLevelReferencedTextures(data) {
@@ -87,23 +71,25 @@ function _getLevelReferencedTextures(data) {
 
 async function getUnusedTextures() {
     const p = path.resolve(GAME_TEXTURES_DIR);
-    let aTextures = await readDir(p);
+    let aTextures = await promfs.ls(p);
     const aFiles = await getPublishedLevels();
     let aFoundTextures = [];
     for (let i = 0, l = aFiles.length; i < l; ++i) {
         const sFileName = path.resolve(GAME_LEVELS_DIR, aFiles[i].name + '.json');
-        const content = await readFile(sFileName);
+        const content = await promfs.read(sFileName);
         const data = JSON.parse(content.toString());
         const aLocalTextures = _getLevelReferencedTextures(data);
         aFoundTextures = aFoundTextures.concat(aLocalTextures);
     }
-    const aUnused = aTextures.filter(t => aFoundTextures.indexOf(t) < 0);
+    const aUnused = aTextures
+        .map(t => t.name)
+        .filter(t => aFoundTextures.indexOf(t) < 0);
     return aUnused.filter(t => ['.png', '.jpg'].includes(path.extname(t)));
 }
 
 async function removeUnusedTextures() {
     const aRemovees = await getUnusedTextures();
-    const aProms = aRemovees.map(t => unlink(path.resolve(GAME_TEXTURES_DIR, t)));
+    const aProms = aRemovees.map(t => promfs.rm(path.resolve(GAME_TEXTURES_DIR, t)));
     return Promise.all(aProms);
 }
 
@@ -115,21 +101,19 @@ async function removeUnusedTextures() {
  */
 async function getPublishedLevels() {
     const p = path.resolve(GAME_LEVELS_DIR);
-    const aFiles = await readDir(p, {
-        withFileTypes: true
-    });
+    const aFiles = await promfs.ls(p);
     const aLevels = [];
     for (let i = 0, l = aFiles.length; i < l; ++i) {
         const f = aFiles[i];
-        if (f.isFile() && f.name.endsWith(JSON_EXT)) {
+        if (!f.dir && f.name.endsWith(JSON_EXT)) {
             const sFileName = path.resolve(GAME_LEVELS_DIR, f.name);
-            const content = await readFile(sFileName);
+            const content = await promfs.read(sFileName);
             const data = JSON.parse(content);
             const name = path.basename(f.name, JSON_EXT);
             const exported = true;
             const preview = 'game/' + data.preview;
-            const st = await stat(sFileName);
-            const date = Math.floor(st.mtimeMs);
+            const st = await promfs.stat(sFileName);
+            const date = st.dates.modified;
             aLevels.push({
                 name, preview, exported, date
             });
@@ -141,7 +125,7 @@ async function getPublishedLevels() {
 async function unpublishLevel(name) {
     const sFileName = path.resolve(GAME_LEVELS_DIR, name + JSON_EXT);
     if (await exists(sFileName)) {
-        await unlink(sFileName);
+        await promfs.rm(sFileName);
         await removeUnusedTextures();
     } else {
         console.warn('unpublish', name, 'failed : file does not exist');
@@ -159,7 +143,7 @@ async function runTemplateItem(oItem) {
     const sTargetDir = path.dirname(sTarget);
     if (!await exists(sTarget)) {
         if (!await exists(sTargetDir)) {
-            await mkdirp(sTargetDir);
+            await promfs.mkdir(sTargetDir);
         }
         await copy(path.resolve(TEMPLATE_DIR, oItem.template), path.resolve(oItem.path));
         return true;
@@ -173,7 +157,7 @@ async function runTemplateItem(oItem) {
  * @return {Promise<void>}
  */
 async function run() {
-    setBaseDirectory();
+    defineDirectories();
     const PROJECT_TREE = [
 
         {
@@ -238,7 +222,8 @@ async function run() {
     ];
     let bCreated = false;
     for (let i = 0, l = PROJECT_TREE.length; i < l; ++i) {
-        bCreated |= await runTemplateItem(PROJECT_TREE[i]);
+        const bResult = await runTemplateItem(PROJECT_TREE[i]);
+        bCreated = bCreated || bResult;
     }
     if (bCreated) {
         console.log('project creation :', CONFIG.getVariable('game_path'));
@@ -249,5 +234,5 @@ module.exports = {
     run,
     getPublishedLevels,
     unpublishLevel,
-    setBaseDirectory
+    setBaseDirectory: defineDirectories
 };
