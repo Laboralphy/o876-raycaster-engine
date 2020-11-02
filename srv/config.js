@@ -9,6 +9,7 @@ const CONFIG = {
 
     // configurable by .env
     port: parseInt(process.env.SERVER_PORT || 8080), // server listening port
+    address: process.env.SERVER_ADDRESS,
     vault_path: process.env.VAULT_PATH || '.',    // the folder where all map editor levels are located
     game_path: process.env.GAME_PATH || '.',  // the game project folder
     base_path: process.cwd(), // the base path (where the script is run from)

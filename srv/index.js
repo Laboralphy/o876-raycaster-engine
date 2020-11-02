@@ -27,7 +27,7 @@ function main() {
     console.group('server');
     console.log('port :', CONFIG.getVariable('port'));
     console.log('context :', CONFIG.getVariable('local_dev') ? 'local development' : 'online');
-    console.log('server local url :', 'http://localhost:' + CONFIG.getVariable('port'));
+    console.log('server local url :', 'http://' + CONFIG.getVariable('address') + ':' + CONFIG.getVariable('port'));
     console.groupEnd('server');
 
     // micro-services
@@ -42,7 +42,7 @@ function main() {
     wss.service(new Examples());
     wss.service(new News());
 
-    wss.listen(CONFIG.getVariable('port'));
+    wss.listen(CONFIG.getVariable('port'), CONFIG.getVariable('address'));
     console.log('now listening...');
 }
 
