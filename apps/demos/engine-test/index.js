@@ -1,4 +1,4 @@
-import Engine from "../../libs/engine/Engine";
+import Engine from "libs/engine/Engine";
 import DevKbdThinker from "./DevKbdThinker";
 import DevKbdMobThinker from "./DevKbdMobThinker";
 import MagboltThinker from "./MagboltThinker";

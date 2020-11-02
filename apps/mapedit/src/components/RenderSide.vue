@@ -25,7 +25,7 @@
 
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
-    import {generate} from "../../../srv/generate";
+    import {generate} from "../../../../srv/generate";
 
     const {mapGetters: levelGetters} = createNamespacedHelpers('level');
     const {mapGetters: editorGetters} = createNamespacedHelpers('editor');

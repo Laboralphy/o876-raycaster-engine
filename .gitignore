@@ -6,8 +6,8 @@ node_modules
 
 # webpack output folder
 dist/
-mapedit/app/*
-website/app/*
+apps/mapedit/app/*
+apps/website/app/*
 
 # .env file
 .env

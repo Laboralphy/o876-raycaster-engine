@@ -1,9 +1,8 @@
-import RCE from "../../libs";
+import RCE from "libs/index";
 const Engine = RCE.Engine;
 
 /**
- * This program shows how to use static lightning.
- * In the map, some blocks are light-emitters.
+ * This program show how to trigger events by using tagged area
  */
 
 const LEVEL = {
@@ -25,33 +24,21 @@ const LEVEL = {
         "textures": {
             "flats": "textures/flats.png",
             "walls": "textures/walls.png",
-            "sky": "textures/sky-ls.png",
+            "sky": "",
             "smooth": false,
             "stretch": false
         },
         "map": [ // the map may be defined as an array of strings. each character is a code depicted in the "legend" section
-            "######################",
-            "#         ############",
-            "#         ############",
-            "w         ############",
-            "#          *+#########",
-            "#         ############",
-            "#         ############",
-            "#         ############",
-            "#  #      ############",
-            "w  #       *+#########",
-            "#  #      ############",
-            "#         ############",
-            "#         ############",
-            "#         ############",
-            "#                    #",
-            "w                    #",
-            "#           #   #    #",
-            "#                    #",
-            "#         #  *    #  #",
-            "#                    #",
-            "#                    #",
-            "######################",
+            "##########",
+            "#        #",
+            "##+##    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "#   #    #",
+            "##########",
         ],
         "legend": [{
             "code": ' ',
@@ -70,61 +57,47 @@ const LEVEL = {
                 "s": 0, // south wall
             }
         }, {
-            "code": 'w',
-            "phys": "@PHYS_INVISIBLE_BLOCK", // you cannot walk on this character,
-            "faces": {
-                "f": 0, // floor texture (taken from "flats" property)
-                "c": 1  // ceiling texture (taken from "flats" property)
-            }
-        }, {
             "code": '+',
-            "phys": "@PHYS_WALL", // you cannot walk on this character,
+            "phys": "@PHYS_DOOR_UP",
             "faces": {
                 "n": 1, // north wall
                 "e": 1, // east wall
                 "w": 1, // west wall
                 "s": 1, // south wall
-            }
-        }, {
-            "code": '*',
-            "phys": "@PHYS_NONE", // you cannot walk on this character,
-            "faces": {
-                "f": 0, // floor texture (taken from "flats" property)
-                "c": 2  // ceiling texture (taken from "flats" property)
+                "f": 0,
+                "c": 1
             }
         }]
     },
+    "tags": [
+        {
+            "x": 1,
+            "y": 5,
+            "tags": ["open_door 2 2"]
+        },
+        {
+            "x": 2,
+            "y": 5,
+            "tags": ["open_door 2 2"]
+        },
+        {
+            "x": 3,
+            "y": 5,
+            "tags": ["open_door 2 2"]
+        }
+    ],
     "camera": {
         "thinker": "FPSControlThinker", // the control thinker
-        x: 2, // visor coordinates (x-axis)
-        y: 1, // visor coordinates (y-axis)
-        angle: Math.PI / 2, // looking angle
-        z: 1 // visor altitude (1 is the default object)
+        "x": 2, // visor coordinates (x-axis)
+        "y": 6, // visor coordinates (y-axis)
+        "angle": -Math.PI / 2 - 0.4, // looking angle
+        "z": 1 // visor altitude (1 is the default object)
     },
     "objects": [
         // there is no object
     ],
     "decals": [],
-    "tags": [],
-    "lightsources": [{
-        x: 11 * 64 + 32,
-        y: 4 * 64 + 32,
-        r0: 256,
-        r1: 384,
-        v: 0.45
-    }, {
-        x: 11 * 64 + 32,
-        y: 9 * 64 + 32,
-        r0: 256,
-        r1: 384,
-        v: 0.45
-    }, {
-        x: 13 * 64 + 32,
-        y: 18 * 64 + 32,
-        r0: 256,
-        r1: 384,
-        v: 0.45
-    }]
+    "lightsources": []
 };
 
 // note that we use an "async" function, because we deal with promises when textures are loading
@@ -146,6 +119,14 @@ async function main() {
 
     // starts engine doomloop
     engine.startDoomLoop();
+
+    // this is what happens when we enter the tag zone "open_door"
+    // (we open the door)
+    engine.events.on('tag.open_door.enter', ({id, parameters, remove}) => {
+        // the tag has two parameters : the coordinates of the door we want to open
+        engine.openDoor(parameters[0] | 0, parameters[1] | 0, false);
+        remove();
+    });
 }
 
 window.addEventListener('load', main);

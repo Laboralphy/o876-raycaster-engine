@@ -24,10 +24,10 @@ module.exports = class Service extends ServiceAbstract {
     registerRoutes(application, express) {
         super.registerRoutes(application, express);
         application.get('/', (req, res) => {
-            res.sendFile(getProjectFQN('website', 'index.html'));
+            res.sendFile(getProjectFQN('apps/website', 'index.html'));
         });
-        application.use('/app', express.static(getProjectFQN('website', 'app')));
-        application.use('/assets', express.static(getProjectFQN('website', 'assets')));
+        application.use('/app', express.static(getProjectFQN('apps/website', 'app')));
+        application.use('/assets', express.static(getProjectFQN('apps/website', 'assets')));
 
         application.get('/online', (req, res) => {
             res.json({

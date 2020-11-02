@@ -1,4 +1,4 @@
-import RCE from "../../libs";
+import RCE from "libs/index";
 const Engine = RCE.Engine;
 
 /**
