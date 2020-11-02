@@ -3983,21 +3983,13 @@
       },
       {
         "block": 22,
-        "tags": [
-          "photo m0_bloody_hands"
-        ],
+        "tags": [],
         "mark": {
           "color": "yellow",
-          "shape": 1
+          "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 1,
-            "y": 2,
-            "id": 35
-          }
-        ]
+        "things": []
       },
       {
         "block": 22,
@@ -4320,43 +4312,43 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
-      },
-      {
-        "block": 18,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
-      },
-      {
-        "block": 18,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
-      },
-      {
-        "block": 18,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
         "things": [
           {
             "x": 2,
             "y": 0,
-            "id": 11
+            "id": 23
           }
         ]
+      },
+      {
+        "block": 18,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 18,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 18,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
       },
       {
         "block": 18,
@@ -4512,7 +4504,7 @@
         ]
       },
       {
-        "block": 18,
+        "block": 22,
         "tags": [],
         "mark": {
           "color": 0,
@@ -4745,8 +4737,8 @@
         "things": [
           {
             "x": 0,
-            "y": 1,
-            "id": 7
+            "y": 0,
+            "id": 29
           }
         ]
       },
@@ -4856,7 +4848,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 7
+          }
+        ]
       },
       {
         "block": 22,
@@ -4875,7 +4873,7 @@
         ]
       },
       {
-        "block": 18,
+        "block": 22,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5088,7 +5086,7 @@
       {
         "block": 22,
         "tags": [
-          "photo m0_skull_face"
+          "photo m0_bloody_hands"
         ],
         "mark": {
           "color": "yellow",
@@ -5099,12 +5097,17 @@
           {
             "x": 2,
             "y": 1,
-            "id": 17
+            "id": 35
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": 14
           }
         ]
       },
       {
-        "block": 36,
+        "block": 18,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5185,13 +5188,7 @@
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 0,
-            "y": 1,
-            "id": 14
-          }
-        ]
+        "things": []
       },
       {
         "block": 18,
@@ -5215,7 +5212,7 @@
         "things": []
       },
       {
-        "block": 18,
+        "block": 36,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -5227,16 +5224,24 @@
       },
       {
         "block": 22,
-        "tags": [],
+        "tags": [
+          "photo m0_skull_face"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 17
+          }
+        ]
       },
       {
-        "block": 18,
+        "block": 22,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5471,8 +5476,13 @@
         "things": [
           {
             "x": 0,
-            "y": 1,
-            "id": 7
+            "y": 0,
+            "id": 11
+          },
+          {
+            "x": 0,
+            "y": 2,
+            "id": 11
           }
         ]
       },
@@ -5585,7 +5595,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 1,
+            "id": 7
+          }
+        ]
       },
       {
         "block": 22,
@@ -5598,7 +5614,7 @@
         "things": []
       },
       {
-        "block": 18,
+        "block": 22,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5814,7 +5830,18 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 0,
+            "id": 25
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": 27
+          }
+        ]
       },
       {
         "block": 18,
@@ -5945,7 +5972,7 @@
         "things": []
       },
       {
-        "block": 18,
+        "block": 22,
         "tags": [],
         "mark": {
           "color": 0,
@@ -13611,5 +13638,5 @@
       "angle": 1.5
     }
   ],
-  "preview": "806f14b8fa9583cc01612c7ef6cd835f.jpg"
+  "preview": "611ea12bd6bfdf031230a5620ef81fc7.jpg"
 }
