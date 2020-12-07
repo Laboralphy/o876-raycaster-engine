@@ -31,19 +31,6 @@ export default {
         }
     },
 
-    [ACTIONS.FETCH_NEWS]: async function({commit, getters}) {
-        try {
-            const res = await fetch('/news');
-            if (res.status < 400) {
-                const blob = await res.blob();
-                const sText = await blob.text();
-                commit(MUTATIONS.SET_NEWS_CONTENT, {value: sText});
-            }
-        } catch (e) {
-            // no news, no need to do anything
-        }
-    },
-
     [ACTIONS.CREATE_USER]: async function({commit}, {username, password}) {
         const oResult = await fetchJSON('/user', {username, password});
         if (oResult.status !== 'done') {

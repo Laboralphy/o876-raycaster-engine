@@ -9,7 +9,6 @@ export default {
             checkUserAuth: MAIN_ACTIONS.CHECK_USER_AUTH,
             logOut: MAIN_ACTIONS.USER_LOG_OUT,
             checkOnline: MAIN_ACTIONS.CHECK_ONLINE_STATUS,
-            fetchNews: MAIN_ACTIONS.FETCH_NEWS,
             createUser: MAIN_ACTIONS.CREATE_USER
         })
     },
@@ -21,9 +20,7 @@ export default {
             'isOnline',
             'isOffline',
             'getFlagOnline',
-            'isUserAuthPending',
-            'areNewsLoaded',
-            'getNewsContent'
+            'isUserAuthPending'
         ])
     }
 }

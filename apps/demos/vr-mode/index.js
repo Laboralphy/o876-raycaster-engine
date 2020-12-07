@@ -94,12 +94,14 @@ const LEVEL = {
             }
         }]
     },
-    "camera": {
-        "thinker": "FPSControlThinker", // the control thinker
+    "startpoints": [{
         x: 2, // visor coordinates (x-axis)
         y: 1, // visor coordinates (y-axis)
         angle: Math.PI / 2, // looking angle
         z: 1 // visor altitude (1 is the default object)
+    }],
+    "camera": {
+        "thinker": "FPSControlThinker" // the control thinker
     },
     "objects": [
         // there is no object

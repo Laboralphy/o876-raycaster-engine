@@ -12,10 +12,6 @@
           <p>Click on <span class="button-text">Docs</span> for more information about it's features.</p>
         </div>
       </div>
-      <div class="row">
-        <div class="col lg-12" v-html="getNewsContent">
-        </div>
-      </div>
     </div>
     <div class="seamless" v-if="isOffline">
       <div class="row">
@@ -161,9 +157,6 @@ export default {
           if (newValue === 0) {
             // on est en localhost dev : il faut charger les niveaux
             this.fetchLevelData();
-          } else {
-            // on est online : charger les news
-            this.fetchNews();
           }
         }
       },

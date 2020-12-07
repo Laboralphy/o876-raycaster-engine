@@ -271,12 +271,14 @@ function getLevel() {
         ],
         "decals": [],
         "camera": {
-            "thinker": "DevKbdThinker", // the control thinker
+            "thinker": "DevKbdThinker" // the control thinker
+        },
+        "startpoints": [{
             x: 9, // visor coordinates (x-axis)
             y: 18, // visor coordinates (y-axis)
             angle: -1 * Math.PI / 2, // looking angle
             z: 1 // visor altitude (1 is the default object)
-        },
+        }],
         "tags": [],
         "lightsources": [
             {
@@ -319,9 +321,7 @@ async function main() {
     // defines which physical canvas to use
     engine.setRenderingCanvas(document.getElementById('screen'));
     // builds level, display progress on console
-    await engine.buildLevel(getLevel(), (phase, progress) => {
-        console.log(phase, progress);
-    });
+    await engine.buildLevel(getLevel(), { startpoint: 0 });
     // retrieves the visor thinker. it's a DevKbdThinker
     // which is a thinker of keyboard control, for controlling the visor
     // we want to customize keyboard event

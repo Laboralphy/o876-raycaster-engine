@@ -7,9 +7,5 @@ export default {
         pending: false,
         name: '',
         date: ''
-    },
-    news: {
-        content: '',
-        done: false
     }
 };

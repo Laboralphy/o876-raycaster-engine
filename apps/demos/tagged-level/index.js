@@ -86,12 +86,14 @@ const LEVEL = {
             "tags": ["open_door 2 2"]
         }
     ],
-    "camera": {
-        "thinker": "FPSControlThinker", // the control thinker
+    "startpoints": [{
         "x": 2, // visor coordinates (x-axis)
         "y": 6, // visor coordinates (y-axis)
         "angle": -Math.PI / 2 - 0.4, // looking angle
         "z": 1 // visor altitude (1 is the default object)
+    }],
+    "camera": {
+        "thinker": "FPSControlThinker" // the control thinker
     },
     "objects": [
         // there is no object

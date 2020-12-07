@@ -1,21 +1,21 @@
 const path = require('path');
 const {VueLoaderPlugin} = require('vue-loader');
 
-const rcmapeditConfig = {
+const websiteConfig = {
     mode: "development",
     resolve: {
         alias: {
-            libs: path.join(__dirname, '../../libs')
+            libs: path.join(__dirname, '/libs')
         }
     },
     entry: {
-        mapedit: path.join(__dirname, 'src/index.js'),
+        website: path.join(__dirname, 'apps/website/src/index.js'),
     },
     output: {
-        path: path.join(__dirname, 'app'),
+        path: path.join(__dirname, 'dist/website'),
         libraryTarget: 'umd',
         filename: '[name].js',
-        publicPath: './app/'
+        publicPath: './dist/website/'
     },
     devtool: 'source-map',
     module: {
@@ -43,4 +43,4 @@ const rcmapeditConfig = {
     target: 'web'
 };
 
-module.exports = rcmapeditConfig;
+module.exports = websiteConfig;

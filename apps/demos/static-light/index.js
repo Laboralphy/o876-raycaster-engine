@@ -95,12 +95,14 @@ const LEVEL = {
         }]
     },
     "camera": {
-        "thinker": "FPSControlThinker", // the control thinker
+        "thinker": "FPSControlThinker"
+    },
+    "startpoints": [{
         x: 2, // visor coordinates (x-axis)
         y: 1, // visor coordinates (y-axis)
         angle: Math.PI / 2, // looking angle
         z: 1 // visor altitude (1 is the default object)
-    },
+    }],
     "objects": [
         // there is no object
     ],
@@ -138,7 +140,7 @@ async function main() {
     // builds level.
     // buildLevel() is an ASYNCHRONOUS function, which return a promise
     // we use the "await" keywork to be sure the level is completly loaded before doing something else.
-    await engine.buildLevel(LEVEL);
+    await engine.buildLevel(LEVEL, { startpoint: 0 });
 
     // bindings keyboard events
     window.addEventListener('keydown', event => engine.camera.thinker.keyDown(event.key));

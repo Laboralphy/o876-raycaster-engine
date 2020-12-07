@@ -1128,7 +1128,9 @@ class Engine {
      */
     async buildLevel(data, extra = null) {
         // validation json
-
+        if (extra === null) {
+            extra = {startpoint: 0, blueprints: [], tilesets: []};
+        }
         jsonValidate(data, SCHEMA_RCE_100);
 
         this._refs = {};
@@ -1288,13 +1290,14 @@ class Engine {
 
         // CAMERA : sets initial visor position, and orientation
         // is there a valid start point
-        const bValidStartpoint = (extra !== null) &&        // extra must be defined
-            ('startpoint' in extra) &&                      // extra must have startpoint property
-            (extra.startpoint >= 0) &&                      // startpoint property must be
-            (extra.startpoint < data.startpoints.length);   // within the startpoints array range
-        const {x, y, z, angle} = bValidStartpoint
-            ? data.startpoints[extra.startpoint]
-            : data.camera;
+        const bExtraData = extra !== null;
+        const bStartPointDefined = bExtraData && ('startpoint' in extra);
+        const bStartPointValid = bExtraData && (extra.startpoint >= 0) && (extra.startpoint < data.startpoints.length)
+        const bValidStartpoint = bExtraData &&        // extra must be defined
+            bStartPointDefined &&                      // extra must have startpoint property
+            bStartPointValid;   // within the startpoints array range
+        const nInitialStartPoint = bValidStartpoint ? extra.startpoint : 0;
+        const {x, y, z, angle} = data.startpoints[extra.startpoint];
         this.camera.position.set({
             x: x * ps + (ps >> 1), // visor coordinates (x-axis)
             y: y * ps + (ps >> 1), // visor coordinates (y-axis)

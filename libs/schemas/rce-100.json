@@ -711,30 +711,15 @@
     },
     "camera": {
       "type": "object",
-      "description": "The camera properties. Location, angle etc...",
+      "description": "The camera properties. thinker...",
       "properties": {
         "thinker": {
           "type": "string"
-        },
-        "x": {
-          "type": "number"
-        },
-        "y": {
-          "type": "number"
-        },
-        "z": {
-          "type": "number"
-        },
-        "angle": {
-          "type": "number"
         }
       },
       "additionalProperties" : false,
       "required": [
-        "x",
-        "y",
-        "z",
-        "angle"
+        "thinker"
       ]
     },
     "preview": {
