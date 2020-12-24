@@ -1297,7 +1297,7 @@ class Engine {
             bStartPointDefined &&                      // extra must have startpoint property
             bStartPointValid;   // within the startpoints array range
         const nInitialStartPoint = bValidStartpoint ? extra.startpoint : 0;
-        const {x, y, z, angle} = data.startpoints[extra.startpoint];
+        const {x, y, z, angle} = data.startpoints[nInitialStartPoint];
         this.camera.position.set({
             x: x * ps + (ps >> 1), // visor coordinates (x-axis)
             y: y * ps + (ps >> 1), // visor coordinates (y-axis)

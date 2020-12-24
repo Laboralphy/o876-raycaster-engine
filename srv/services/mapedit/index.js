@@ -30,6 +30,9 @@ module.exports = class Service extends ServiceAbstract {
         const app = application;
         app.use(express.json({limit: '48mb'})); // for parsing application/json
         app.use('/mapedit', express.static(getProjectFQN('apps/mapedit')));
+
+        application.use('/mapedit/dist', express.static(getProjectFQN('dist')));
+
         persist.setVaultPath(CONFIG.getVariable('vault_path'));
 
         // list levels

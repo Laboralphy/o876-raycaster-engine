@@ -441,14 +441,8 @@ function generateObjectsAndDecals(input) {
 
 function generateCamera(input) {
     // recherche de la "marque"
-    const spID = input.actor.startpoint;
     const sThinker = input.actor.thinker;
-    const startpoint = input.startpoints[spID]
     return {
-        x: startpoint.x,
-        y: startpoint.y,
-        z: 1,
-        angle: startpoint.angle * Math.PI,
         thinker: sThinker
     };
 }

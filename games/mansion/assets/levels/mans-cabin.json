@@ -4342,10 +4342,6 @@
     }
   ],
   "camera": {
-    "x": 11,
-    "y": 25,
-    "z": 1,
-    "angle": 4.71238898038469,
     "thinker": ""
   },
   "tags": [
@@ -4542,5 +4538,5 @@
       "v": 0.66
     }
   ],
-  "preview": "assets/textures/169774abe3d18091a9424b0e9bb8638a.jpg"
+  "preview": "assets/textures/ab2d0eeb50db03a10888caf6bd2ee739.jpg"
 }
