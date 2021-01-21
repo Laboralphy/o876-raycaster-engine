@@ -91,7 +91,7 @@ class TagGrid extends Grid {
     getCellTags(x, y) {
         const aTagIds = this.cell(x, y);
         const aTags = [];
-        aTagIds.forEach(id => aTags.push({x, y, tag: this.getTagCommand(id)}));
+        aTagIds.forEach(id => aTags.push({id, x, y, tag: this.getTagCommand(id)}));
         return aTags;
     }
 

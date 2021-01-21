@@ -41,9 +41,9 @@ export default {
         phase: 0,
         phases: {
             main: 0,
-            controls: 2,
-            todo: 1,
-            game: 3
+            controls: 1,
+            todo: 3,
+            game: 2
         },
         todo: {
             innerPhase: 0,

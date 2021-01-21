@@ -22,6 +22,10 @@ export default {
 
     [TYPES.SET_PHOTO_TYPE]: function(state, {ref, type}) {
         const oPhoto = state.photos.find(p => p.ref === ref);
+        if (!oPhoto) {
+            // ignore mutation, if photo is not in album
+            return;
+        }
         if (state.photoTypes.includes(type)) {
             oPhoto.type = type;
         }

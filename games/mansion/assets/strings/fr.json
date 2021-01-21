@@ -1,7 +1,7 @@
 {
   "ITEM_ACQUIRED" : "Vous obtenez : %s.",
   "DOOR_LOCKED" : "Cette porte est verrouillée.",
-  "DOOR_UNLOCKED" : "Vous déverroullez la porte avec : %s.",
+  "DOOR_UNLOCKED" : "Vous déverrouillez la porte avec : %s.",
 
   "ATTR_HITPOINTS" : "Mental",
 
@@ -145,6 +145,13 @@
       "description": [
         "Cette photo est apparue après avoir photographié le sigil cyan qui verrouille une des portes de la cabane.",
         "La force qui maintient les sigils peut parfois s'affaiblir si on agit ailleurs dans la zone."
+      ]
+    },
+
+    "m0_cyan_sigil": {
+      "title": "Sigil de verrouillage",
+      "description": [
+        "Ce sceau est inscrit sur une porte pour l'empêcher de l'ouvrir."
       ]
     },
 

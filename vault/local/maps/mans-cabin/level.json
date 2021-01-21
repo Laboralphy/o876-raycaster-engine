@@ -3770,7 +3770,8 @@
         "tags": [
           "lock",
           "photo m0_cyan_sigil",
-          "archive m0_cyan_sigil"
+          "archive m0_book_glyphs",
+          "locator cyan_sigil"
         ],
         "mark": {
           "color": "cyan",
@@ -4117,7 +4118,7 @@
       {
         "block": 21,
         "tags": [
-          "locator red_sigil_0"
+          "locator red_sigil"
         ],
         "mark": {
           "color": 0,
@@ -5226,7 +5227,7 @@
       {
         "block": 18,
         "tags": [
-          "locator spawn_red_sigil_0_ghost"
+          "locator spawn_red_sigil_ghost"
         ],
         "mark": {
           "color": 0,
@@ -13606,9 +13607,10 @@
   },
   "startpoints": [
     {
-      "x": 11,
-      "y": 25,
-      "angle": 1.5
+      "x": 14,
+      "y": 4,
+      "angle": 0,
+      "z": 1
     }
   ],
   "preview": "53290f621219d03ea52239798919d703.jpg"

@@ -32,6 +32,6 @@ export default {
     isMainMenuPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.main,
     isControlsPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.controls,
     isStoryPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.todo,
-    isGameDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.game
+    isGameRunning: state => state.mainmenu.phase === state.mainmenu.phases.game
 
 };

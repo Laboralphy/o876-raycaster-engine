@@ -5,6 +5,14 @@
  */
 export function main(game, locator) {
     const pos = game.getLocator(locator).cell;
-    game.engine.lockDoor(pos.x, pos.y, false);
-    game.rotateDecals(pos.x, pos.y, true);
+    const { x, y } = pos;
+    game.engine.lockDoor(x, y, false);
+    game.rotateDecals(x, y, true);
+    // supprimer le tag de lock
+    game
+      .getTagsAt(x, y)
+      .filter(({ tag }) => tag[0] === 'lock')
+      .forEach(tag => {
+          tag.remove()
+      })
 }

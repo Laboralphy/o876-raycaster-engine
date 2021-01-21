@@ -58,11 +58,10 @@ class Game extends GameAbstract {
             level: ''
         }
         this.ui.store.watch(
-            state => state.ui.mainmenu.phase,
+            (state, getters) => getters['ui/isGameRunning'],
             (newValue, oldValue) => {
-                const GAME_PHASE = 3;
-                if (oldValue < GAME_PHASE && newValue >= GAME_PHASE) {
-                    this.loadLevel(CONSTS.FIRST_LEVEL);
+                if (newValue && !oldValue) {
+                  this.loadLevel(CONSTS.FIRST_LEVEL);
                 }
             }
         )
@@ -704,14 +703,28 @@ class Game extends GameAbstract {
     getTags() {
         const aTags = []; // output list
         const tg = this.engine._tm._tg; // get the tag grid
-        tg.iterate((x, y, cell) => { // iterates all cells of the tag grid
-            cell.forEach(t => aTags.push({
-                x, y,
-                tag: quoteSplit(tg.getTag(t)),
-                id: t
-            }));
+        tg.iterate((x, y) => { // iterates all cells of the tag grid
+            aTags.push(...this.getTagsAt(x, y));
         });
         return aTags;
+    }
+
+    getTagsAt(x, y) {
+      const tg = this.engine._tm._tg;
+      const cell = tg.cell(x, y);
+      const a = []
+      cell.forEach(t => {
+          a.push({
+          x, y,
+          tag: quoteSplit(tg.getTag(t)),
+          id: t,
+          remove: () => {
+              console.log('removing tag id', t, tg.getTag(t), 'at', x, y)
+              tg.removeTag(x, y, t)
+          }
+        })
+      });
+      return a;
     }
 
     initGlobalTagHandlers() {

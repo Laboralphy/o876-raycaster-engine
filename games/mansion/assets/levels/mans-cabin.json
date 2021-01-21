@@ -4303,10 +4303,10 @@
   ],
   "startpoints": [
     {
-      "x": 11,
-      "y": 25,
+      "x": 14,
+      "y": 4,
       "z": 1,
-      "angle": 4.71238898038469
+      "angle": 0
     }
   ],
   "camera": {
@@ -4333,7 +4333,8 @@
       "tags": [
         "lock",
         "photo m0_cyan_sigil",
-        "archive m0_cyan_sigil"
+        "archive m0_book_glyphs",
+        "locator cyan_sigil"
       ]
     },
     {
@@ -4356,7 +4357,7 @@
       "x": 16,
       "y": 5,
       "tags": [
-        "locator red_sigil_0"
+        "locator red_sigil"
       ]
     },
     {
@@ -4398,7 +4399,7 @@
       "x": 15,
       "y": 8,
       "tags": [
-        "locator spawn_red_sigil_0_ghost"
+        "locator spawn_red_sigil_ghost"
       ]
     },
     {
