@@ -87,13 +87,13 @@
       ]
     },
     "book_glyphs" : {
-      "name": "Grimoire des glyphes",
+      "name": "Les Glyphes d'interdiction",
       "description": [
-        "Une collection de glyphes avec la symbolique associés à chacun. C'est un travail manuscrit, probablement une compilation de plusieurs autres ouvrages.",
-        "Au vu des nombreuses ratures et corrections, et de la présence insolite de la rune ELBERETH, ce livre est certainement un ouvrage original composé par un érudit ayant beaucoup travaillé sur le sujet... et beaucoup joué à Nethack."
+        "Des glyphes d'interdiction sont tracés sur les portes pour que l'essence d'un esprit vengeur s'y concentre afin de condamner l'issue",
+        "Pour briser le glyphe et ouvrir la porte, il faut chasser l'esprit vengeur ou capturer son essence d'une manière ou d'une autre. Certains occultistes font appel à des rituels d'exorcisme. D'autres ont recours à des technologies modernes, comme des appareils photos...",
+        "Le glyphe peut déformer les clichés lorsqu'il est pris en photo. Les photos déformées peuvent faire apparaitre un indice sur la localisation de l'esprit vengeur qui alimente le glyphe d'interdiction."
       ]
     }
-
   },
 
   "PEOPLE_NAMES": [
