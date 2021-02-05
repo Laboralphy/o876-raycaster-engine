@@ -89,9 +89,9 @@
     "book_glyphs" : {
       "name": "Les Glyphes d'interdiction",
       "description": [
-        "Des glyphes d'interdiction sont tracés sur les portes pour que l'essence d'un esprit vengeur s'y concentre afin de condamner l'issue",
-        "Pour briser le glyphe et ouvrir la porte, il faut chasser l'esprit vengeur ou capturer son essence d'une manière ou d'une autre. Certains occultistes font appel à des rituels d'exorcisme. D'autres ont recours à des technologies modernes, comme des appareils photos...",
-        "Le glyphe peut déformer les clichés lorsqu'il est pris en photo. Les photos déformées peuvent faire apparaitre un indice sur la localisation de l'esprit vengeur qui alimente le glyphe d'interdiction."
+        "Une porte sur laquelle est tracé un glyphe d'interdiction, ne peut plus être ouverte.",
+        "Chaque glyphe est allimenté par l'essence d'un esprit vengeur situé a proximité de la porte condamnée. Un examen attentif du glyphe permet de localiser l'esprit qui condamne la porte.",
+        "La capture ou la révocation de l'esprit permet la dissipation du glyphe et l'ouverture de la porte."
       ]
     }
   },
