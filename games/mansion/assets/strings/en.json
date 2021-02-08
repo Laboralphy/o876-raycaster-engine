@@ -1,8 +1,8 @@
 {
-  "ITEM_ACQUIRED" : "You acquired : %s.",
+  "EVENT_ITEM_ACQUIRED": "You acquired : %s.",
 
-  "DOOR_LOCKED" : "This door is locked.",
-  "DOOR_UNLOCKED" : "You unlocked the door with : %s.",
+  "EVENT_DOOR_LOCKED": "This door is locked.",
+  "EVENT_DOOR_UNLOCKED": "You unlocked the door with : %s.",
 
   "ATTR_HITPOINTS" : "Sanity",
 
