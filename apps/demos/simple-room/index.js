@@ -1,5 +1,4 @@
-import RCE from "libs/index";
-const Engine = RCE.Engine;
+import Engine from "libs/engine/Engine";
 
 /**
  * This program is one of the simplest example we can give to build a level, and control a visor view inside
@@ -11,7 +10,6 @@ const LEVEL = {
     "tilesets": [],
         // there is no tilset in this example
         // we only have textures
-
 
     "blueprints": [],
         // there are no blueprint in this example, we don't have any sprites

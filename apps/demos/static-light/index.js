@@ -1,5 +1,4 @@
-import RCE from "libs/index";
-const Engine = RCE.Engine;
+import Engine from "libs/engine/Engine";
 
 /**
  * This program shows how to use static lightning.

@@ -1,8 +1,7 @@
 /**
  * This example shows how to include decals on walls at different positions.
  */
-import RCE from "libs/index";
-const Engine = RCE.Engine;
+import Engine from "libs/engine/Engine";
 
 const LEVEL = {
     "version": "RCE-100",

@@ -1,5 +1,4 @@
-import RCE from "libs/index";
-const Engine = RCE.Engine;
+import Engine from "libs/engine/Engine";
 
 /**
  * This program show how to trigger events by using tagged area

@@ -1,5 +1,4 @@
-import RCE from "libs/index";
-const Engine = RCE.Engine;
+import Engine from "libs/engine/Engine";
 
 /**
  * This program enables the VR mode which splits the screen in two halves, vertically, each half being slightly

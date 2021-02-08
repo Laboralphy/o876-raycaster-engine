@@ -1,5 +1,5 @@
 import UI from '../ui';
-import RC from '../index'
+import Engine from '../engine/Engine'
 import {fetchJSON} from "../fetch-json";
 import Extender from "../object-helper/Extender";
 import * as ENGINE_CONSTS from '../engine/consts';
@@ -155,7 +155,7 @@ class GameAbstract {
     initEngine() {
         this.log('init engine')
         const surface = this._screen.surface;       // getting the surface a.k.a the rendering canvas
-        const engine = new RC.Engine();             // create an engine instance
+        const engine = new Engine();             // create an engine instance
         engine._config.cameraThinker = this._options.cameraThinker;
         engine.useThinkers(this._options.thinkers);
         engine.setRenderingCanvas(surface);         // configure the engine, so it uses our canvas
