@@ -89,9 +89,9 @@
     "book_glyphs" : {
       "name": "Les Glyphes d'interdiction",
       "description": [
-        "Une porte sur laquelle est tracé un glyphe d'interdiction, ne peut plus être ouverte.",
-        "Chaque glyphe est allimenté par l'essence d'un esprit vengeur situé a proximité de la porte condamnée. Un examen attentif du glyphe permet de localiser l'esprit qui condamne la porte.",
-        "La capture ou la révocation de l'esprit permet la dissipation du glyphe et l'ouverture de la porte."
+        "Une porte sur laquelle est tracé un glyphe d'interdiction ne peut plus s'ouvrir.",
+        "Chaque glyphe est alimenté par l'essence d'un esprit vengeur situé a proximité de la porte condamnée. Cet esprit peut être localisé en examinant attentivement le glyphe.",
+        "La capture ou la révocation de l'esprit permet d'effacer le glyphe et d'ouvrir la porte."
       ]
     }
   },
