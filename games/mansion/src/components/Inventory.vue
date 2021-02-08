@@ -16,30 +16,18 @@
 </template>
 
 <script>
-import strings from "./mixins/strings";
+import strings from "../mixins/strings";
 import TitleAndCo from "./TitleAndCo.vue";
-import {createNamespacedHelpers} from 'vuex';
 import Item from "./Item.vue";
-import * as UI_MUTATIONS from "../store/modules/ui/mutation-types";
 import ItemTypes from "./ItemTypes.vue";
-
-const {mapGetters: logicMapGetters} = createNamespacedHelpers('logic');
-const {mapMutations: uiMapMutations, mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+import ui from "../mixins/ui";
 
 export default {
   name: "Inventory",
   components: {ItemTypes, Item, TitleAndCo},
-  mixins: [strings],
+  mixins: [strings, ui],
 
   computed: {
-    ...logicMapGetters([
-        'getInventoryItems',
-        'getItemData'
-    ]),
-    ...uiMapGetters([
-        'getInventoryActiveTab'
-    ]),
-
     getInventoryContent: function() {
       const sActiveType = this.getInventoryActiveTab;
       return this
@@ -50,10 +38,6 @@ export default {
   },
 
   methods: {
-    ...uiMapMutations({
-      setPhotoDetails: UI_MUTATIONS.SET_PHOTO_DETAILS
-    }),
-
     getItemDataById: function(id) {
       const oItemStrData = this.STRINGS.ITEMS[id];
       const oItemData = this.getItemData.find(item => item.id === id);

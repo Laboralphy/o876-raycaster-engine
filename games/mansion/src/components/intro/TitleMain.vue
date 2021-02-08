@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import STRINGS from '../mixins/strings';
-import ui from '../mixins/ui';
+import STRINGS from '../../mixins/strings';
+import ui from '../../mixins/ui';
 
 export default {
   name: "TitleMain",

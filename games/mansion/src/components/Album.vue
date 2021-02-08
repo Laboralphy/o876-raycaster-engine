@@ -20,39 +20,20 @@
 </template>
 
 <script>
-    import STRINGS from './mixins/strings';
-    import * as ALBUM_MUTATIONS from '../store/modules/album/mutation-types';
-    import * as UI_MUTATIONS from '../store/modules/ui/mutation-types';
-    import {createNamespacedHelpers} from 'vuex';
+    import STRINGS from '../mixins/strings';
 
     import Photo from "./Photo.vue";
     import PhotoTypes from "./PhotoTypes.vue";
     import TitleAndCo from "./TitleAndCo.vue";
-
-    const {mapGetters: albumMapGetters, mapMutations: albumMapMutations} = createNamespacedHelpers('album');
-    const {mapGetters: uiMapGetters, mapMutations: uiMapMutations} = createNamespacedHelpers('ui');
+    import ui from "../mixins/ui";
+    import album from "../mixins/album";
 
     export default {
         name: "Album",
-        mixins: [STRINGS],
+        mixins: [STRINGS, ui, album],
         components: {TitleAndCo, Photo, PhotoTypes},
 
-        computed: {
-            ...albumMapGetters([
-                'getPhotos',
-                'getActiveType'
-            ])
-        },
-
         methods: {
-            ...albumMapMutations({
-                setActiveType: ALBUM_MUTATIONS.SET_ACTIVE_TYPE
-            }),
-
-            ...uiMapMutations({
-                setPhotoDetails: UI_MUTATIONS.SET_PHOTO_DETAILS
-            }),
-
             photoClicked: function(id) {
                 const {ref, value, content} = this.getPhotos.find(p => p.id === id);
                 const oPhotoData = this.STRINGS.PHOTOS[ref];

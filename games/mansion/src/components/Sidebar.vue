@@ -9,20 +9,13 @@
 </template>
 
 <script>
-    import STRINGS from './mixins/strings';
-    import {createNamespacedHelpers} from 'vuex';
-    import * as MUTATIONS from '../store/modules/ui/mutation-types';
-
-
-    const {mapMutations: uiMapMutations} = createNamespacedHelpers('ui');
+    import STRINGS from '../mixins/strings';
+    import ui from "../mixins/ui";
 
     export default {
         name: "Sidebar",
-        mixins: [STRINGS],
+        mixins: [STRINGS, ui],
         methods: {
-            ...uiMapMutations({
-                setActiveTab: MUTATIONS.SET_MAIN_ACTIVE_TAB
-            }),
             select: function(tab) {
                 this.setActiveTab({value: tab});
             }

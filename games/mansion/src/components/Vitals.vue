@@ -9,22 +9,13 @@
 
 <script>
     import Gauge from "./Gauge.vue";
-    import {createNamespacedHelpers} from 'vuex';
-    import STRINGS from './mixins/strings';
-
-    const {mapGetters: logicMapGetters} = createNamespacedHelpers('logic');
+    import STRINGS from '../mixins/strings';
+    import ui from "../mixins/ui";
 
     export default {
         name: "Vitals",
         components: {Gauge},
-        mixins: [STRINGS],
-        computed: {
-            ...logicMapGetters([
-                'getPlayerAttributeHP',
-                'getPlayerAttributeHPMax'
-            ])
-        }
-
+        mixins: [STRINGS, ui]
     }
 </script>
 

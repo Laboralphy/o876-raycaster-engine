@@ -22,24 +22,15 @@
     import HUD from "./HUD.vue";
     import Popups from "./Popups.vue";
     import Vitals from "./Vitals.vue";
-    import {createNamespacedHelpers} from 'vuex';
     import Scores from "./Scores.vue";
     import UIFrame from "./UIFrame.vue";
     import MainMenu from "./MainMenu.vue";
-
-    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+    import ui from "../mixins/ui"
 
     export default {
         name: "Application",
         components: {MainMenu, UIFrame, Scores, Vitals, HUD, Popups},
-        computed: {
-            ...uiMapGetters([
-                'isHUDVisible',
-                'isShotVisible',
-                'isUIFrameVisible',
-                'isMainMenuVisible'
-            ])
-        }
+        mixins: [ui]
     }
 </script>
 

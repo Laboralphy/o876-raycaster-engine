@@ -6,23 +6,16 @@
 </template>
 
 <script>
-import STRINGS from './mixins/strings';
-import * as MUTATIONS from '../store/modules/ui/mutation-types';
-import {createNamespacedHelpers} from 'vuex';
+import STRINGS from '../mixins/strings';
 import TypeList from "./TypeList.vue";
-
-const {mapGetters: uiMapGetters, mapMutations: uiMapMutations} = createNamespacedHelpers('ui');
-const {mapGetters: logicMapGetters, mapMutations: logicMapMutations} = createNamespacedHelpers('logic');
+import ui from "../mixins/ui";
 
 export default {
   name: "ItemTypes",
   components: {TypeList},
-  mixins: [STRINGS],
+  mixins: [STRINGS, ui],
 
   computed: {
-    ...uiMapGetters([
-      'getInventoryActiveTab'
-    ]),
     getTypeList: function () {
       return [
         {
@@ -46,9 +39,6 @@ export default {
   },
 
   methods: {
-    ...uiMapMutations({
-      setActiveType: MUTATIONS.SET_ITEM_TYPE_ACTIVE_TYPE
-    }),
     selected: function (type) {
       this.setActiveType({value: type});
     }

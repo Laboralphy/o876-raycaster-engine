@@ -6,8 +6,8 @@
   </section>
 </template>
 <script>
-import UIMixin from './mixins/ui';
-import STRINGS from './mixins/strings';
+import UIMixin from '../mixins/ui';
+import STRINGS from '../mixins/strings';
 import TitleStory from "./intro/TitleStory.vue";
 import HowTo from "./HowTo.vue";
 import GenericBox from "./GenericBox.vue";

@@ -7,17 +7,14 @@
 </template>
 
 <script>
-import STRINGS from './mixins/strings';
-import * as MUTATIONS from '../store/modules/album/mutation-types';
-import {createNamespacedHelpers} from 'vuex';
+import STRINGS from '../mixins/strings';
 import TypeList from "./TypeList.vue";
-
-const {mapGetters: albumMapGetters, mapMutations: albumMapMutations} = createNamespacedHelpers('album');
+import album from "../mixins/album";
 
 export default {
   name: "PhotoTypes",
   components: {TypeList},
-  mixins: [STRINGS],
+  mixins: [STRINGS, album],
 
   props: {
     active: {
@@ -28,10 +25,6 @@ export default {
   },
 
   computed: {
-    ...albumMapGetters([
-      'getPhotoTypes',
-      'getActiveType'
-    ]),
     getTypeList: function () {
       return [
         {
@@ -63,9 +56,6 @@ export default {
   },
 
   methods: {
-    ...albumMapMutations({
-      setActiveType: MUTATIONS.SET_ACTIVE_TYPE
-    }),
     selected: function (type) {
       this.setActiveType({value: type});
     }

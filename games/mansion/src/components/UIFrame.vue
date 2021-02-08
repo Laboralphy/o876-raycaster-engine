@@ -15,29 +15,18 @@
 </template>
 
 <script>
-    import {createNamespacedHelpers} from 'vuex';
-
     import Album from "./Album.vue";
     import Sidebar from "./Sidebar.vue";
     import DivDummy from "./DivDummy.vue";
     import PhotoDetails from "./PhotoDetails.vue";
     import Inventory from "./Inventory.vue";
-
-    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+    import ui from "../mixins/ui";
 
     export default {
         name: "UIFrame",
         components: {Inventory, PhotoDetails, DivDummy, Sidebar, Album},
+        mixins: [ui],
         computed: {
-            ...uiMapGetters([
-                'getUIActiveTab',
-                'isUIFrameFullyVisible',
-                'isPhotoDetailsVisible',
-                'getPhotoDetailsTitle',
-                'getPhotoDetailsContent',
-                'getPhotoDetailsDescription',
-                'getPhotoDetailsValue'
-            ]),
             getComputedClass: function() {
                 const a = ['ui-frame'];
                 a.push(this.isUIFrameFullyVisible ? 'visible' : 'hidden');

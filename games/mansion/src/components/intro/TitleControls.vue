@@ -36,8 +36,8 @@
 </template>
 
 <script>
-import STRINGS from '../mixins/strings';
-import ui from '../mixins/ui';
+import STRINGS from '../../mixins/strings';
+import ui from '../../mixins/ui';
 import GenericBox from "../GenericBox.vue";
 import HowTo from "../HowTo.vue";
 

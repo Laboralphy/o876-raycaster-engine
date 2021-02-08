@@ -6,19 +6,13 @@
 
 <script>
 
-    import {createNamespacedHelpers} from 'vuex';
     import Popup from "./Popup.vue";
-
-    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+    import ui from "../mixins/ui";
 
     export default {
         name: "Popups",
         components: {Popup},
-        computed: {
-            ...uiMapGetters([
-                'getPopup'
-            ])
-        }
+        mixins: [ui]
     }
 
 </script>

@@ -14,28 +14,12 @@
 </template>
 
 <script>
-    import {createNamespacedHelpers} from 'vuex';
-    import STRINGS from './mixins/strings';
-
-    const {mapGetters: uiMapGetters} = createNamespacedHelpers('ui');
+    import STRINGS from '../mixins/strings';
+    import ui from "../mixins/ui";
 
     export default {
         name: "Scores",
-        mixins: [STRINGS],
-        computed: {
-            ...uiMapGetters([
-                'isShotVisible',
-                'getShotScore',
-                'isShotFatal',
-                'isShotZero',
-                'isShotCore',
-                'isShotClose',
-                'isShotDouble',
-                'isShotTriple',
-                'isShotMultiple',
-                'isShotDamaging'
-             ])
-        }
+        mixins: [STRINGS, ui]
     }
 </script>
 

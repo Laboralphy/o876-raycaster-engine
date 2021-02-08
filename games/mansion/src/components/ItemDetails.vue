@@ -10,19 +10,14 @@
 </template>
 
 <script>
-    import * as UI_MUTATIONS from '../store/modules/ui/mutation-types';
-    import {createNamespacedHelpers} from 'vuex';
-
     import TitleAndCo from "./TitleAndCo.vue";
     import Photo from "./Photo.vue";
-
-    const {mapMutations: uiMapMutations} = createNamespacedHelpers('ui');
-
-
+    import ui from "../mixins/ui";
 
     export default {
         name: "ItemDetails",
         components: {Photo, TitleAndCo},
+        mixins: [ui],
         props: {
             title: {
                 type: String,
@@ -54,10 +49,6 @@
         },
 
         methods: {
-            ...uiMapMutations({
-                setPhotoDetails: UI_MUTATIONS.SET_PHOTO_DETAILS
-            }),
-
             close: function() {
                 this.setPhotoDetails({visible: false});
             }
