@@ -147,6 +147,6 @@ describe('#DoorContext', function() {
         const oState2 = dc2.state;
         expect(oState1).toEqual(oState2);
         expect(dc2._time).toBe(4);
-        expect(dc2._phase).toBe(1);
+        expect(dc2.getPhase()).toBe(1);
     })
 });

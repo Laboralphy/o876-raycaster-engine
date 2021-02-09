@@ -1,3 +1,5 @@
+import Events from 'events';
+
 /**
  * Automaton
  *
@@ -29,6 +31,14 @@
  sm.transitions = {
     'state1': [
         ['test1', 'state2']
+    },
+ 'state2': {
+    }
+ };
+
+ sm.transitions = {
+    'state1': {
+        'test1': ['state2']
     },
     'state2': {
     }
@@ -62,6 +72,11 @@ class Automaton {
         this._instance = null;
         this._verbose = false;
         this._log = [];
+        this._events = new Events();
+    }
+
+    get events() {
+        return this._events;
     }
 
     /**
@@ -141,11 +156,24 @@ class Automaton {
      * @param value {*}
      */
     set instance(value) {
-        this._instance = value;
+      this._instance = value;
+      this._events.on('test', t => {
+          if (t.test in value) {
+            t.result = value[t.test]();
+          } else {
+              throw new Error('test-method "' + t.test + '" could not be found in instance');
+          }
+      });
+      this._events.on('state', s => {
+          if (s in value) {
+              value[s]();
+          }
+      });
     }
 
     log(...args) {
         if (this._verbose) {
+            this._events.emit('log', args);
             console.info(...args);
         }
     }
@@ -160,38 +188,35 @@ class Automaton {
      */
     _invokeTransition(test, state) {
         if (test == 0) {
-            this.log('test', test, false);
+            this.log('? test', test, false);
             return false;
         } else if (test == 1) {
-            this.log('test', test, true, 'new state', state);
+            this.log('? test', test, true, 'new state', state);
             this._state = state;
             return true;
         }
-        if (test in this._instance) {
-            if (this._instance[test]()) {
-                this.log('test', test, true, 'new state', state);
-                this._state = state;
-                return true;
-            } else {
-                this.log('test', test, false);
-            }
+        const oTest = {
+          test,
+          result: false
+        };
+        this._events.emit('test', oTest);
+        if (oTest.result) {
+            this.log('? test', test, true, 'new state', state);
+            this._state = state;
+            return true;
         } else {
-            throw new Error('this transition does not exists : "' + test + '"');
+            this.log('? test', test, false);
+            return false;
         }
-        return false;
     }
 
     _invokeState(s) {
-        if (s in this._instance) {
-            this.log('state', s);
-            this._instance[s]();
-        } else {
-            this.log('state', s, '(virtual)');
-        }
+        this.log('* state', s);
+        this._events.emit('state', s);
     }
 
     process() {
-        const state = this._state;
+        let state = this._state;
         if (Array.isArray(state)) {
             state.forEach(s => {
                 this._state = s;
@@ -201,17 +226,18 @@ class Automaton {
             this._invokeState(state);
         }
         // compute transition
+        state = this._state
         if (state in this._transitions) {
             const transitions = this._transitions[state];
             for (let i = 0, l = transitions.length; i < l; ++i) {
                 const transition = transitions[i];
-                if (transition.length < 2) {
-                    throw new Error('transition must have at least 2 items [test, state]');
-                }
-                const test = transition[0];
-                const states = transition.slice(1);
-                if (this._invokeTransition(test, states)) {
-                    break;
+                if (Array.isArray(transition) && transition.length > 1) {
+                    const test = transition[0];
+                    if (this._invokeTransition(test, transition.slice(1))) {
+                        break;
+                    }
+                } else {
+                    throw new Error('automaton: each transition line must be an array of 2+ elements');
                 }
             }
         }

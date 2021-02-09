@@ -12,7 +12,7 @@ describe('#automaton', function() {
                 ["1", "b"]
             ]
         };
-        a.instance = {
+        const oInst = {
             a() {
 
             },
@@ -23,6 +23,7 @@ describe('#automaton', function() {
                 return false;
             }
         }
+        a.instance = oInst;
         expect(a.state).toBe('a');
         a.process();
         expect(a.state).toEqual(['b']);

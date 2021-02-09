@@ -155,6 +155,14 @@ class DoorContext {
         };
     }
 
+    get state() {
+        return this.getState();
+    }
+
+    set state(value) {
+        this.setState(value);
+    }
+
     process() {
         const easing = this._easing;
         switch (this._phase) {

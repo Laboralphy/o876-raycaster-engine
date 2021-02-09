@@ -59,7 +59,7 @@ describe('#tags-grid', function() {
         tg.addTag(0, 0, 't222 "cy z"'); // 111 222
         tg.addTag(1, 0, 't222'); //     222
         tg.addTag(2, 0, 't333'); //         333
-        expect(tg.getCellTags(0, 0)).toEqual([{x: 0, y: 0, tag: ['t111']}, {x: 0, y: 0, tag: ['t222', 'cy z']}]);
+        expect(tg.getCellTags(0, 0)).toEqual([{id: 1, x: 0, y: 0, tag: ['t111']}, {id: 2, x: 0, y: 0, tag: ['t222', 'cy z']}]);
     });
 
     it('should properly get and set states', function() {
