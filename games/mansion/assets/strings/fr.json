@@ -187,6 +187,12 @@
         "Le lieu a la réputation d'être hanté ? Pas grave ! Profitez-en pour tirer le portrait de tout {u ectoplasme} que vous rencontrerez. Les photos pourront bien intérésser quelqu'un quand vous retournerez à la civilisation."
       ]
     },
+    "commands": {
+      "title": "Contrôlez-vous !",
+      "description": [
+        "Principales commandes : {br}{purple {b Clavier: Z.Q.S.D}} = Déplacement avant, gauche, arrière, droite.{br}{purple {b Souris: Bouton gauche}} = Activer/Ouvrir porte/Prendre photo.{br}{purple {b Souris: Bouton droit}} = Sortir/Ranger appareil photo.{br}{purple {b Touche: \"Echap.\"}} Ecran inventaire/Album/Notes."
+      ]
+    },
     "look_for_books": {
       "title": "A la recherche des grimoires anciens",
       "description": [

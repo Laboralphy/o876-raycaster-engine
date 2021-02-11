@@ -118,3 +118,10 @@ div.ui-size-50-75 {
     top: 12.5%;
     left: 25%;
 }
+
+div.ui-size-66-90 {
+    width: 66.666%;
+    height: 90%;
+    top: 5%;
+    left: 16.666%;
+}

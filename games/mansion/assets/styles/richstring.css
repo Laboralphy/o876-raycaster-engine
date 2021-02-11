@@ -101,3 +101,7 @@ span.tokenized-string.li {
     margin-left: 2em;
     line-height: 1.66em;
 }
+
+span.tokenized-string.br {
+    display: block;
+}

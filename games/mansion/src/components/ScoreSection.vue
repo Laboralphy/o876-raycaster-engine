@@ -1,5 +1,5 @@
 <template>
-  <div class="score-section"><div class="label">{{ STRINGS.ATTR_SCORE.toUpperCase() }} :</div><div class="value">{{ getScoreString }}</div></div>
+  <div class="typewriter score-section"><div class="label">{{ STRINGS.ATTR_SCORE.toUpperCase() }} :</div><div class="value">{{ getScoreString }}</div></div>
 </template>
 
 <script>
@@ -24,7 +24,6 @@ export default {
 
 <style scoped>
 .score-section {
-  font-family: "Courier New", Courier, monospace;
   font-weight: bolder;
   color: aquamarine;
   text-shadow: 0 0 0.2em mediumaquamarine, 0 0 1em black;

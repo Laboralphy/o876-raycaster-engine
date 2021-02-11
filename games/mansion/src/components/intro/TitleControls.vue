@@ -1,5 +1,5 @@
 <template>
-  <div class="ui-menu-window ui-size-50-75 rounded typewriter">
+  <div class="ui-menu-window ui-size-66-90 rounded typewriter">
     <GenericBox
         footer="4em"
         header="6em"

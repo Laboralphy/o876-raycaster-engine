@@ -1501,7 +1501,7 @@ class Engine {
         const xbp = 'blueprints' in extra ? extra.blueprints : [];
         const sp = 'startpoint' in extra ? extra.startpoint : -1;
         const afd = this._config.autofetchData;
-        console.log('autofetch data is', afd)
+        this.log('autofetch data is', afd)
         const fts = afd
             ? [
                 ...await this.fetchData('tilesets'),

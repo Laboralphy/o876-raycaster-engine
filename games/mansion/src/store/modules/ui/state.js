@@ -60,6 +60,11 @@ export default {
             read: false
         },
         {
+            ref: "commands",
+            type: "hint",
+            read: false
+        },
+        {
             ref: "how_to_hunt_ghosts",
             type: 'hint',
             read: false
