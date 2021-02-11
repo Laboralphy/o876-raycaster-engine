@@ -15,7 +15,8 @@ export default {
         visible: false,
         fullyVisible: false,
         activeTab: 'album',
-        activeInventoryTab: 'all'
+        activeInventoryTab: 'all',
+        activeNoteTab: 'journal'
     },
 
     shot: { // information sur le dernier tir
@@ -50,5 +51,28 @@ export default {
             splashIndex: 0,
             splashTransition: 0   // 0: fade-in 1: fade-out
         }
-    }
+    },
+
+    notes: [
+        {
+            ref: "story_so_far",
+            type: 'journal',
+            read: false
+        },
+        {
+            ref: "how_to_hunt_ghosts",
+            type: 'hint',
+            read: false
+        },
+        {
+            ref: "look_for_books",
+            type: 'hint',
+            read: false
+        },
+        {
+            ref: "look_for_paintings",
+            type: 'hint',
+            read: false
+        }
+    ]
 };

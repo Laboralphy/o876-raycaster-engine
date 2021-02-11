@@ -3,5 +3,6 @@ export default {
     getActiveType: state => state.activeType,
     getPhotoTypes: state => state.photoTypes,
     getAllPhotos: state => state.photos,
-    getStateContent: state => state
+    getStateContent: state => state,
+    getAlbumTotalScore: state => state.photos.reduce((prev, curr) => prev + curr.value,1)
 };

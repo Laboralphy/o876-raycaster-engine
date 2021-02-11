@@ -14,7 +14,7 @@ class Thinker {
         this._automaton.instance = this;
         this._automaton.events.on('test', t => {
             if (t.test in this) {
-              r.result = this[t.test]();
+              t.result = this[t.test]();
             } else {
               throw new Error('Thinker : no test-method named ' + t.test)
             }

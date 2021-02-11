@@ -7,7 +7,6 @@ export default {
         }
     },
     data: {
-        items: [],
-        itemTypes: ['all', 'quest', 'book']
+        items: []
     }
 };

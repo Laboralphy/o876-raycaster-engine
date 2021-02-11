@@ -13,7 +13,7 @@
                 @click="photoClicked(photo.id)"
             ></Photo>
         </div>
-        <div v-else class="no-photo">
+        <div v-else class="no-item-here">
             <span>{{ STRINGS.ALBUM_TAB_EMPTY }}</span>
         </div>
     </div>
@@ -61,15 +61,6 @@
         margin: 0;
         width: 98%;
         height: 90%;
-    }
-
-    div.no-photo {
-        font-size: 3em;
-        color: rgba(0, 0, 0, 0.25);
-        margin-top: 10%;
-        margin-left: 15%;
-        font-weight: bolder;
-        transform: rotate(-12deg);
     }
 
     div.photo-details {

@@ -1,0 +1,26 @@
+{
+  "g_angry_girl_0": {
+    "level": 0,
+    "speed": 1,
+    "vitality": 25,
+    "power": 2,
+    "score": 100,
+    "thinker": "ChaserThinker"
+  },
+  "g_banshee_0": {
+    "level": 0,
+    "speed": 1,
+    "vitality": 25,
+    "power": 2,
+    "score": 100,
+    "thinker": "ChaserThinker"
+  },
+  "g_bashed_boy_0": {
+    "level": 0,
+    "speed": 1,
+    "vitality": 25,
+    "power": 2,
+    "score": 100,
+    "thinker": "ChaserThinker"
+  }
+}

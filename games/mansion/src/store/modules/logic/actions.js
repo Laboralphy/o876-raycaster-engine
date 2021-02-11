@@ -1,10 +1,10 @@
 import * as ACTIONS from './action-types';
 import * as MUTATIONS from './mutation-types';
-import {fetchJSON} from "libs/fetch-json";
+import DATA from '../../../data';
 
 export default {
     [ACTIONS.LOAD_ITEMS]: async function({commit}) {
-        const items = await fetchJSON('assets/data/items.json');
+        const items = DATA.ITEMS;
         commit(MUTATIONS.DEFINE_ITEMS, {items});
     }
 }

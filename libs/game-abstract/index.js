@@ -156,7 +156,7 @@ class GameAbstract {
         this.log('init engine')
         const surface = this._screen.surface;       // getting the surface a.k.a the rendering canvas
         const engine = new Engine();             // create an engine instance
-        engine._config.cameraThinker = this._options.cameraThinker;
+        engine.config.cameraThinker = this._options.cameraThinker;
         engine.useThinkers(this._options.thinkers);
         engine.setRenderingCanvas(surface);         // configure the engine, so it uses our canvas
         engine.events.on('level.loading', ({phase, progress}) => this.progressFunction(phase, progress));

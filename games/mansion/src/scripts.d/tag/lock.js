@@ -1,5 +1,3 @@
-import * as CONSTS from '../../consts';
-
 /**
  * Initially locks a door tagged with "lock"
  * @param game {Game} game instance
@@ -22,7 +20,7 @@ export function init(game, remove, x, y) {
 export function push(game, remove, x, y, key) {
     if (!!key && game.logic.hasInventoryItem(key)) {
         remove(); // removes tag
-        game.ui.popup('DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key + '.name');
+        game.ui.popup('EVENT_DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key + '.name');
         game.removeDecals(x, y); // remove keyhole decal from door
         game.engine.lockDoor(x, y, false); // unlock door
     } else {

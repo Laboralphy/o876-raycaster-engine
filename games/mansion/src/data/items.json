@@ -3,12 +3,14 @@
     "id": "key_cabin",
     "type": "key",
     "icon": "key-crude",
-    "thumbnail": "key-chrome"
+    "thumbnail": "key-chrome",
+    "value": 0
   },
   {
     "id": "book_glyphs",
     "type": "book",
     "icon": "grimoir",
-    "thumbnail": "note-sigils"
+    "thumbnail": "note-sigils",
+    "value": 100
   }
 ]

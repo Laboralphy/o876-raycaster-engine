@@ -27,6 +27,7 @@ export const PHOTO_TYPE_ART = 'art';
 export const PHOTO_SCORE_COMMON = 50; // photo nécessaire à l'avancée de l'intrigue
 export const PHOTO_SCORE_UNCOMMON = 100; // photo optionnelle sur le trajet de l'intrigue
 export const PHOTO_SCORE_RARE = 200; // photo cachée difficile à trouver
+export const PHOTO_SCORE_EPIC = 500; // photo épique
 export const PHOTO_SCORE_LEGENDARY = 1000; // photo légendaire
 
 export const TANGIBILITY_GHOST = 4;

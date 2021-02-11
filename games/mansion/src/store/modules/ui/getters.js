@@ -32,6 +32,8 @@ export default {
     isMainMenuPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.main,
     isControlsPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.controls,
     isStoryPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.todo,
-    isGameRunning: state => state.mainmenu.phase === state.mainmenu.phases.game
+    isGameRunning: state => state.mainmenu.phase === state.mainmenu.phases.game,
 
+    getNotes: state => state.notes.filter(n => n.type === state.uiframe.activeNoteTab),
+    getNoteActiveTab: state => state.uiframe.activeNoteTab
 };

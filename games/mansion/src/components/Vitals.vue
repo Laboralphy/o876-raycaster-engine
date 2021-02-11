@@ -11,11 +11,12 @@
     import Gauge from "./Gauge.vue";
     import STRINGS from '../mixins/strings';
     import ui from "../mixins/ui";
+    import logic from '../mixins/logic'
 
     export default {
         name: "Vitals",
         components: {Gauge},
-        mixins: [STRINGS, ui]
+        mixins: [STRINGS, ui, logic]
     }
 </script>
 

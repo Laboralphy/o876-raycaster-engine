@@ -1,51 +1,24 @@
 [
   {
-    "id": "g_angry_girl",
-    "ref": "g_angry_girl",
+    "id": "g_angry_girl_0",
     "tileset": "g_angry_girl",
     "scale": 3,
-    "thinker": "ChaserThinker",
     "size": 24,
-    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
-    "data": {
-      "type": "v",
-      "speed": 2,
-      "vitality": 100,
-      "power": 5,
-      "score": 100
-    }
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
   },
   {
-    "id": "g_banshee",
-    "ref": "g_banshee",
+    "id": "g_banshee_0",
     "tileset": "g_banshee",
     "scale": 3,
-    "thinker": "ChaserThinker",
     "size": 24,
-    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
-    "data": {
-      "type": "v",
-      "speed": 2,
-      "vitality": 100,
-      "power": 5,
-      "score": 100
-    }
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
   },
   {
-    "id": "g_bashed_boy",
-    "ref": "g_bashed_boy",
+    "id": "g_bashed_boy_0",
     "tileset": "g_bashed_boy",
     "scale": 3,
-    "thinker": "ChaserThinker",
     "size": 24,
-    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
-    "data": {
-      "type": "v",
-      "speed": 2,
-      "vitality": 100,
-      "power": 5,
-      "score": 100
-    }
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
   },
   {
     "id": "w_cowled_skull",
@@ -61,7 +34,6 @@
   },
   {
     "id": "o_flame",
-    "ref": "o_flame",
     "tileset": "o_flame",
     "scale": 1,
     "thinker": "AnimThinker",
@@ -70,7 +42,6 @@
   },
   {
     "id": "u_visor",
-    "ref": "u_visor",
     "tileset": "u_visor",
     "scale": 1,
     "size": 0,
@@ -78,7 +49,6 @@
   },
   {
     "id": "u_lamp",
-    "ref": "u_lamp",
     "tileset": "u_lamp",
     "scale": 1,
     "size": 0,

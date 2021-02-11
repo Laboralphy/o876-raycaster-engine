@@ -3,8 +3,8 @@
         <div class="container ui-panel-window">
             <TitleAndCo :title="title"><div class="score">{{ computedScore }}</div></TitleAndCo>
             <hr />
-            <Photo :content="content" :caption="''" :big="true"></Photo>
-            <p class="description" v-for="d in description">{{ d }}</p>
+            <Photo v-if="content !== ''" :content="content" :caption="''" :big="true"></Photo>
+            <Description :text="description"></Description>
         </div>
     </div>
 </template>
@@ -12,11 +12,12 @@
 <script>
     import TitleAndCo from "./TitleAndCo.vue";
     import Photo from "./Photo.vue";
+    import Description from "./Description.vue";
     import ui from "../mixins/ui";
 
     export default {
         name: "PhotoDetails",
-        components: {Photo, TitleAndCo},
+        components: {Photo, TitleAndCo, Description},
         mixins: [ui],
         props: {
             title: {
@@ -30,7 +31,8 @@
             },
             content: {
                 type: String,
-                required: true
+                required: false,
+                default: ''
             },
             description: {
                 type: Array,
@@ -71,20 +73,6 @@
         height: 50%;
         top: 25%;
         left: 16%;
-    }
-
-    p.description {
-        margin-left: 2em;
-        padding-right: 1.2em;
-        text-align: justify;
-        font-size: 0.9em;
-        color: black;
-        font-family: "OldNewspaperTypes", Courier, monospace;
-    }
-
-    p.description::first-letter {
-        font-weight: bold;
-        font-size: 130%;
     }
 
     hr {

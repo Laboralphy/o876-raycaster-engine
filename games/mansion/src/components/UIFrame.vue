@@ -2,8 +2,8 @@
     <section :class="getComputedClass">
         <Sidebar></Sidebar>
         <Album v-if="getUIActiveTab === 'album'"></Album>
-        <Inventory v-if="getUIActiveTab === 'inv'" title="inventory"></Inventory>
-        <DivDummy v-if="getUIActiveTab === 'notes'" title="Notes"></DivDummy>
+        <Inventory v-if="getUIActiveTab === 'inv'"></Inventory>
+        <Notes v-if="getUIActiveTab === 'notes'"></Notes>
         <PhotoDetails
                 v-if="isPhotoDetailsVisible"
                 :content="getPhotoDetailsContent"
@@ -15,6 +15,7 @@
 </template>
 
 <script>
+    import Notes from "./Notes.vue";
     import Album from "./Album.vue";
     import Sidebar from "./Sidebar.vue";
     import DivDummy from "./DivDummy.vue";
@@ -24,7 +25,7 @@
 
     export default {
         name: "UIFrame",
-        components: {Inventory, PhotoDetails, DivDummy, Sidebar, Album},
+        components: {Notes, Inventory, PhotoDetails, DivDummy, Sidebar, Album},
         mixins: [ui],
         computed: {
             getComputedClass: function() {

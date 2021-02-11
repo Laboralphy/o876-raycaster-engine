@@ -9,7 +9,7 @@
  */
 export function push(game, remove, x, y, item) {
     const d = game.logic.getItemData(item);
-    game.ui.popup('ITEM_ACQUIRED', d.icon, 'ITEMS.' + item + '.name');
+    game.ui.popup('EVENT_ITEM_ACQUIRED', d.icon, 'ITEMS.' + item + '.name');
     game.removeDecals(x, y);
     game.logic.addInventoryItem(item);
     remove();

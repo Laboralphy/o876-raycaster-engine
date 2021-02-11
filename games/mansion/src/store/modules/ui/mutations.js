@@ -90,5 +90,9 @@ export default {
 
     [TYPES.SET_TODO_INNER_PHASE]: function(state, {value}) {
         state.mainmenu.todo.innerPhase = value;
+    },
+
+    [TYPES.SET_NOTE_SELECTED_TYPE]: function(state, {value}) {
+        state.uiframe.activeNoteTab = value;
     }
 }

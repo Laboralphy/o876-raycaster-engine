@@ -29,32 +29,5 @@ export default {
 </script>
 
 <style scoped>
-span.tokenized-string.red {
-  color: red;
-}
-
-span.tokenized-string.blue {
-  color: blue;
-}
-
-span.tokenized-string.smooth {
-  opacity: 0.5;
-}
-
-span.tokenized-string.b {
-  font-weight: bold;
-}
-
-span.tokenized-string.i {
-  font-style: italic;
-}
-
-span.tokenized-string.s {
-  text-decoration: line-through;
-}
-
-span.tokenized-string.u {
-  text-decoration: underline;
-}
 
 </style>

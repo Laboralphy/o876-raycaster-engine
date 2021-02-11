@@ -69,14 +69,23 @@ class Engine {
         this._renderContext = null;
         this._filters = new FilterManager();
         this._events = new Events();
-        this._startpoints = [];
+        // this._startpoints = [];
 
         this._config = {
             fetchLevelAction: CONSTS.FETCH_LEVEL_URL,
             fetchDataAction: CONSTS.FETCH_DATA_URL,
+            autofetchData: true,
             thinkers: {},
             cameraThinker: 'FPSControlThinker'
         };
+    }
+
+    get config() {
+        return this._config
+    }
+
+    set config(value) {
+        this._config = value;
     }
 
     /**
@@ -1491,14 +1500,20 @@ class Engine {
         const xts = 'tilesets' in extra ? extra.tilesets : [];
         const xbp = 'blueprints' in extra ? extra.blueprints : [];
         const sp = 'startpoint' in extra ? extra.startpoint : -1;
-        const fts = [
-            ...await this.fetchData('tilesets'),
-            ...xts
-        ];
-        const fbp = [
+        const afd = this._config.autofetchData;
+        console.log('autofetch data is', afd)
+        const fts = afd
+            ? [
+                ...await this.fetchData('tilesets'),
+                ...xts
+            ]
+            : [ ...xts ];
+        const fbp = afd
+            ? [
             ...await this.fetchData('blueprints'),
             ...xbp
-        ];
+            ]
+            : [ ...xbp ];
         const data = await this.fetchLevel(sName);
         return this.buildLevel(data, {startpoint: sp, tilesets: fts, blueprints: fbp});
     }

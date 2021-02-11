@@ -22,10 +22,14 @@ import Album from "./Album";
 import SenseMap from "./SenseMap";
 import Serializer from "./Serializer";
 
+import DATA from './data';
+
 class Game extends GameAbstract {
     init() {
         this._debug = true;
+        this._compiledBlueprints = null;
         super.init();
+        this.engine.config.autofetchData = false;
         this.log('initialize user interface')
         this._ui = new UI('#vue-application');
         this.log('initialize game logic and state')
@@ -82,8 +86,33 @@ class Game extends GameAbstract {
         await super.initAsync();
     }
 
+    getCompiledBlueprints() {
+        if (this._compiledBlueprints) {
+            return this._compiledBlueprints;
+        }
+        const bp = DATA.BLUEPRINTS;
+        const oGhosts = DATA.GHOSTS;
+        // patch blueprints
+        for (let sGhostId in oGhosts) {
+            const gi = oGhosts[sGhostId];
+            const oGhostBlueprint = bp.find(x => x.id === sGhostId);
+            if (oGhostBlueprint) {
+                oGhostBlueprint.ref = oGhostBlueprint.id;
+                oGhostBlueprint.thinker = gi.thinker;
+                oGhostBlueprint.data = { ...gi, type: 'v' };
+                delete oGhostBlueprint.data.thinker;
+            } else {
+                console.warn('compile blueprint: id ', sGhostId, 'is present in ghosts.json but absent in blueprints.json')
+            }
+        }
+        this._compiledBlueprints = bp;
+        return bp;
+    }
 
     async loadLevel(sLevel, extra = {}) {
+        // fetching data and completing blueprints
+        extra.tilesets = DATA.TILESETS;
+        extra.blueprints = this.getCompiledBlueprints();
         this._mutations.decals = [];
         this._mutations.level = sLevel;
         await super.loadLevel(sLevel, extra);

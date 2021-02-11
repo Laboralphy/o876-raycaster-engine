@@ -4,8 +4,7 @@
             <TitleAndCo :title="title"><div class="score" v-if="score > 0">{{ computedScore }}</div></TitleAndCo>
             <hr />
             <Photo :content="content" :caption="''" :big="true"></Photo>
-            <!--<p class="description" v-for="d in description">{{ d }}</p>-->
-            <RichText :text="description"></RichText>
+            <Description :text="description"></Description>
         </div>
     </div>
 </template>
@@ -14,11 +13,11 @@
     import TitleAndCo from "./TitleAndCo.vue";
     import Photo from "./Photo.vue";
     import ui from "../mixins/ui";
-    import RichText from './RichText'
+    import Description from './Description'
 
     export default {
         name: "ItemDetails",
-        components: { RichText, Photo, TitleAndCo},
+        components: { Description, Photo, TitleAndCo},
         mixins: [ui],
         props: {
             title: {
@@ -73,20 +72,6 @@
         height: 50%;
         top: 25%;
         left: 16%;
-    }
-
-    p.description {
-        margin-left: 2em;
-        padding-right: 1.2em;
-        text-align: justify;
-        font-size: 0.9em;
-        color: black;
-        font-family: "OldNewspaperTypes", Courier, monospace;
-    }
-
-    p.description::first-letter {
-        font-weight: bold;
-        font-size: 130%;
     }
 
     hr {

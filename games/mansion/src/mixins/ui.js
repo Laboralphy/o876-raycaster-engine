@@ -33,6 +33,8 @@ export default {
             'isStoryPageDisplayed',
             'isUIFrameFullyVisible',
             'isUIFrameVisible',
+            'getNotes',
+            'getActiveNoteTab'
         ]),
         phase: {
             get: function() {
@@ -48,7 +50,8 @@ export default {
             setPhase: MUTATIONS.SET_MAIN_MENU_PHASE,
             setActiveTab: MUTATIONS.SET_MAIN_ACTIVE_TAB,
             setActiveType: MUTATIONS.SET_ITEM_TYPE_ACTIVE_TYPE,
-            setPhotoDetails: MUTATIONS.SET_PHOTO_DETAILS
+            setPhotoDetails: MUTATIONS.SET_PHOTO_DETAILS,
+            setNoteActiveType: MUTATIONS.SET_NOTE_SELECTED_TYPE
         })
     }
 }

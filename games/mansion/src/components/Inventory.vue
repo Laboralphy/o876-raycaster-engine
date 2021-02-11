@@ -3,7 +3,7 @@
     <TitleAndCo title="Inventaire">
       <ItemTypes></ItemTypes>
     </TitleAndCo>
-    <div class="inv-container"> <!-- QUEST ITEMS -->
+    <div class="inv-container" v-if="getInventoryContent.length > 0">
       <Item
           v-for="(item, i) in getInventoryContent"
           :key="item.id + ':' + i"
@@ -11,6 +11,9 @@
           :name="item.name"
           :icon="item.icon"
           @click="({id}) => inventoryItemClicked(id)"></Item>
+    </div>
+    <div v-else class="no-item-here typewriter">
+      <span>{{ STRINGS.INVENTORY_TAB_EMPTY }}</span>
     </div>
   </div>
 </template>
@@ -21,11 +24,12 @@ import TitleAndCo from "./TitleAndCo.vue";
 import Item from "./Item.vue";
 import ItemTypes from "./ItemTypes.vue";
 import ui from "../mixins/ui";
+import logic from "../mixins/logic";
 
 export default {
   name: "Inventory",
   components: {ItemTypes, Item, TitleAndCo},
-  mixins: [strings, ui],
+  mixins: [strings, ui, logic],
 
   computed: {
     getInventoryContent: function() {

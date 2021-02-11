@@ -8,6 +8,6 @@ const CONSTS = require('../../consts')
  */
 
 export function main(game, remove, x, y) {
-    game.runScript('action.takeArtPhoto', 'w_cowled_skull', CONSTS.PHOTO_SCORE_COMMON);
+    game.runScript('action.takeArtPhoto', 'p_cowled_skull', CONSTS.PHOTO_SCORE_COMMON);
     remove();   // supprimer le tag, qui ne doit servir qu'une fois.
 }

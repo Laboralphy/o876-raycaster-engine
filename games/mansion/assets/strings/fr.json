@@ -23,6 +23,9 @@
   "ITEM_TYPES_KEY": "Clés",
   "ITEM_TYPES_BOOK": "Livres",
 
+  "NOTE_TYPES_JOURNAL": "Journal",
+  "NOTE_TYPES_HINT": "Infos",
+
   "MAIN_TAB_ALBUM": "Album",
   "MAIN_TAB_INV": "Inventaire",
   "MAIN_TAB_NOTES": "Notes",
@@ -65,7 +68,8 @@
     "5) Elucider le mystère de la disparition des villageois."
   ],
 
-  "ALBUM_TAB_EMPTY": "Cette section est vide.",
+  "ALBUM_TAB_EMPTY": "Cette section de l'album est vide.",
+  "INVENTORY_TAB_EMPTY": "Aucun objet dans cette catégorie.",
 
   "EVENT_PHOTO_MOGRIFY": "La photo s'est altérée mystérieusement !",
   "EVENT_PHOTO_ART_STORED": "Photo artistique stockée dans l'album.",
@@ -76,6 +80,11 @@
   "EVENT_ITEM_ACQUIRED": "Vous obtenez : %s.",
   "EVENT_DOOR_LOCKED": "Cette porte est verrouillée.",
   "EVENT_DOOR_UNLOCKED": "Vous déverrouillez la porte avec : %s.",
+
+  "LOCAL": {
+    "m0": {
+    }
+  },
 
   "PEOPLE_NAMES": [
     "Aubernessis",
@@ -116,9 +125,9 @@
     "book_glyphs" : {
       "name": "Les Glyphes d'interdiction",
       "description": [
-        "Une porte sur laquelle est tracé un glyphe d'interdiction, restera fermée tant que le glyphe n'est pas dissipé.",
-        "Un examen attentif du glyphe permet de localiser l'esprit tourmenté qui alimente le glyphe et qui condamne la porte.",
-        "La capture ou la révocation de l'esprit tourmenté permet la dissipation du glyphe et l'ouverture de la porte."
+        "Une porte sur laquelle est tracé un {u glyphe d'interdiction}, restera fermée tant que le glyphe n'est pas dissipé.",
+        "Un examen attentif du glyphe permet de {u localiser l'esprit tourmenté} qui alimente le glyphe et qui condamne la porte.",
+        "La {u capture} ou la {u révocation} de l'esprit tourmenté permet la dissipation du glyphe et {u l'ouverture de la porte}."
       ]
     }
   },
@@ -139,25 +148,56 @@
     },
 
     "m0_book_glyphs": {
-      "title": "Livre du Sigil",
+      "title": "Livre exposé",
       "description": [
-        "Cette photo est apparue après avoir photographié le {red sigil cyan} qui verrouille une des portes de la cabane.",
-        "La force qui maintient les sigils peut parfois s'affaiblir si on agit ailleurs dans la zone."
+        "Cette photo est apparue après avoir photographié le {u glyphe d'interdiction} qui verrouille une des portes de la cabane.",
+        "Il s'agit d'un livre d'aspect ancien, avec un symbole cabalistique tracé sur la couverture. C'est peut être l'un des grimoires occultes rares et précieux que vous recherchez."
       ]
     },
 
-    "m0_cyan_sigil": {
-      "title": "Sigil de verrouillage",
+    "p_cowled_skull": {
+      "title": "Crâne cagoulé",
       "description": [
-        "Ce sceau est inscrit sur une porte pour l'empêcher de l'ouvrir."
+        "L'un des doyens du cultes, mort depuis longtemps. Sa dépouille à été conservée et momifiée dans son sarcophage.",
+        "Un cultiste plus chelou que les autres a voulu lui tirer le portrait. Mais en ouvrant le sarcophage, il a ruiné le processus de momification ; et depuis le fantôme cri vengence."
       ]
     },
 
     "w_cowled_skull": {
       "title": "Crâne cagoulé",
       "description": [
-        "L'un des doyens du cultes, mort depuis longtemps. Sa dépouille à été conservée et momifiée dans son sarcophage.",
-        "Un cultiste plus chelou que les autres a voulu lui tirer le portrait. Mais en ouvrant le sarcophage, il a ruiné le processus de momification ; et depuis le fantôme cri vengence."
+        "Le spectre de l'un des doyens du culte rode maintenant que sa sépulture a été profanée.",
+        "Son corps momifié a pourri, et il recherche celui qui a ruiné sa momification et qui l'a tiré de son long repos."
+      ]
+    }
+  },
+  "NOTES": {
+    "story_so_far": {
+      "title": "Votre histoire...",
+      "description": [
+        "Vous venez d'atteindre le village abandonné. Vous pouvez y faire ce que vous voulez mais, pour faire grimper votre prestige vous devrez faire ceci : {li Récolter d'anciens grimoires rares et précieux.}{li Photographier des tableaux étranges disséminés dans le coin.}{li Photographier tout phénomène surnaturel dont vous serez témoin.}",
+        "En effet la rumeur dit que ce village contiendrait de nombreux ouvrages insolites que des collectionneurs fortunés pourraient s'arracher à prix d'or. Mais vous avez été également mis en garde : Le lieu serait hanté..."
+      ]
+    },
+    "how_to_hunt_ghosts": {
+      "title": "Camera Obscura",
+      "description": [
+        "Vous disposez d'un {u appareil photo} et vous pouvez l'utilisez pour prendre des clichés de tout un tas de choses par ici. En fait tout ce qui vous paraît {u anormal} pourrait être photographié car cela {u augmentera votre score}.",
+        "Le lieu a la réputation d'être hanté ? Pas grave ! Profitez-en pour tirer le portrait de tout {u ectoplasme} que vous rencontrerez. Les photos pourront bien intérésser quelqu'un quand vous retournerez à la civilisation."
+      ]
+    },
+    "look_for_books": {
+      "title": "A la recherche des grimoires anciens",
+      "description": [
+        "Saviez-vous qu'il y a un marché noir très lucratif pour les {u livres rares et anciens} traîtant d'occultisme, de rituels macabres, ou de croyances blasphématoires ?",
+        "Trouver ces livres au hasard de votre progression dans le village, et votre fortune sera faite."
+      ]
+    },
+    "look_for_paintings": {
+      "title": "Les tableaux perdus",
+      "description": [
+        "Certains spécimens de la haute société en mal de sensations fortes recherchent des {u tableaux} aux thèmes toujours plus dérangeants. Des {u tableaux d'artistes dérangés} peuvent se trouver dans le coin et si vous en trouvez, n'hésitez pas à {u les photographier}.",
+        "A défaut de ramener les toiles très lourdes, vous pourriez, à l'aide de vos photos, convaincre quelque mécène d'investir dans le rapatriement de ces oeuvres."
       ]
     }
   }

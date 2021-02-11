@@ -20,6 +20,25 @@ regular height for inline blocks, containing text or other readable things (smal
 }
 
 
+/*** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT ***/
+/*** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT ***/
+/*** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT *** RICH TEXT ***/
+
+section.description p {
+    margin-left: 2em;
+    padding-right: 1.2em;
+    text-align: justify;
+    font-size: 0.9em;
+    color: black;
+    font-family: "OldNewspaperTypes", Courier, monospace;
+}
+
+section.description p::first-letter {
+    font-weight: bold;
+    font-size: 130%;
+}
+
+
 .ui.regular-height {
     height: 1.2em;
 }
@@ -55,6 +74,17 @@ div.ui-panel-window {
 div.ui-menu-window {
     position: absolute;
 }
+
+div.no-item-here {
+    font-size: 3em;
+    color: rgba(0, 0, 0, 0.25);
+    margin-top: 15%;
+    margin-left: 10%;
+    font-weight: bolder;
+    transform: rotate(-12deg);
+}
+
+
 
 
 /*** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES *** WINDOW SIZES ***/
