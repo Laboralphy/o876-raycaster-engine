@@ -18,7 +18,7 @@
     import ui from "../mixins/ui";
 
     export default {
-        name: "Scores",
+        name: "PhotoShotAttributes",
         mixins: [STRINGS, ui]
     }
 </script>

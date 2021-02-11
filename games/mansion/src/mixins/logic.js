@@ -11,6 +11,7 @@ export default {
             'getPlayerAttributeHPMax',
             'isPlayerDead',
             'getStateContent',
+            'getInventoryTotalValue'
         ])
     }
 }

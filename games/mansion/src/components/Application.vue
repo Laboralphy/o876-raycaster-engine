@@ -3,14 +3,14 @@
         <section v-if="isHUDVisible">
             <HUD pos="tl">
                 <Vitals></Vitals>
-                <Scores></Scores>
+                <PhotoShotAttributes></PhotoShotAttributes>
             </HUD>
-            <HUD pos="bl"><p>bottom left</p></HUD>
+            <HUD pos="bl"><p></p></HUD>
 
             <HUD pos="t"></HUD>
 
-            <HUD pos="tr"><p>top-right</p></HUD>
-            <HUD pos="br"><p>bottom right</p></HUD>
+            <HUD pos="tr"><ScoreSection></ScoreSection></HUD>
+            <HUD pos="br"><p></p></HUD>
         </section>
         <UIFrame v-if="isUIFrameVisible"></UIFrame>
         <MainMenu v-if="isMainMenuVisible"></MainMenu>
@@ -22,14 +22,15 @@
     import HUD from "./HUD.vue";
     import Popups from "./Popups.vue";
     import Vitals from "./Vitals.vue";
-    import Scores from "./Scores.vue";
+    import PhotoShotAttributes from "./PhotoShotAttributes.vue";
     import UIFrame from "./UIFrame.vue";
     import MainMenu from "./MainMenu.vue";
-    import ui from "../mixins/ui"
+    import ui from "../mixins/ui";
+    import ScoreSection from './ScoreSection.vue';
 
     export default {
         name: "Application",
-        components: {MainMenu, UIFrame, Scores, Vitals, HUD, Popups},
+        components: {MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
         mixins: [ui]
     }
 </script>

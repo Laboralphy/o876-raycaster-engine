@@ -1,5 +1,6 @@
 {
   "ATTR_HITPOINTS" : "Mental",
+  "ATTR_SCORE": "Score",
 
   "SHOT_FATAL" : "Cadrage fatal",
   "SHOT_ZERO" : "Tir zéro",

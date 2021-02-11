@@ -20,9 +20,8 @@ import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import SenseMap from "./SenseMap";
-import Serializer from "./Serializer";
 
-import DATA from './data';
+import DATA from '../assets/data';
 
 class Game extends GameAbstract {
     init() {

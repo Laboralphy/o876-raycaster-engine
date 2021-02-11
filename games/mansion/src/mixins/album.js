@@ -6,9 +6,10 @@ const {mapGetters, mapMutations} = createNamespacedHelpers('album');
 export default {
     computed: {
         ...mapGetters([
-            'getPhotos',
-            'getPhotoTypes',
-            'getActiveType'
+          'getPhotos',
+          'getPhotoTypes',
+          'getActiveType',
+          'getAlbumTotalScore'
         ])
     },
 

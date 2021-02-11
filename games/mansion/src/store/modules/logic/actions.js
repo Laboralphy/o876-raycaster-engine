@@ -1,6 +1,6 @@
 import * as ACTIONS from './action-types';
 import * as MUTATIONS from './mutation-types';
-import DATA from '../../../data';
+import DATA from '../../../../assets/data';
 
 export default {
     [ACTIONS.LOAD_ITEMS]: async function({commit}) {

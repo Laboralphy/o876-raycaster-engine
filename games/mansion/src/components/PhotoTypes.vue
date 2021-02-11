@@ -28,10 +28,6 @@ export default {
     getTypeList: function () {
       return [
         {
-          ref: 'debug',
-          caption: this.STRINGS.PHOTO_TYPES_DEBUG,
-        },
-        {
           ref: 'clue',
           caption: this.STRINGS.PHOTO_TYPES_CLUE,
         },
