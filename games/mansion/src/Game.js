@@ -22,6 +22,7 @@ import Album from "./Album";
 import SenseMap from "./SenseMap";
 
 import DATA from '../assets/data';
+import GameOver from './filters/GameOver'
 
 class Game extends GameAbstract {
     init() {
@@ -70,17 +71,6 @@ class Game extends GameAbstract {
             }
         )
     }
-
-
-    get state() {
-        //return Serializer.saveState(this);
-        return 0;
-    }
-
-    set state(value) {
-        //Serializer.restoreState(this, value);
-    }
-
 
     async initAsync() {
         await super.initAsync();
@@ -255,9 +245,11 @@ class Game extends GameAbstract {
      * Called when the user enters UI mode by exiting FPS Mode
      */
     enterUI() {
-        this.engine.stopDoomLoop();
-        this.ui.show();
-        this.dimSurface();
+        if (!this.logic.isPlayerDead()) {
+            this.engine.stopDoomLoop();
+            this.ui.show();
+            this.dimSurface();
+        }
     }
 
     /**
@@ -715,10 +707,20 @@ class Game extends GameAbstract {
             });
             this.engine.filters.link(oFilter);
             if (this.logic.isPlayerDead()) {
-                oThinker.kill();
-                this.freezePlayer();
+                this.gameOver();
             }
         }
+    }
+
+    gameOver () {
+        this.player.thinker.kill();
+        this.freezePlayer();
+        this.engine.delayCommand(() => {
+            // fading out
+            this.engine.filters.link(new GameOver());
+            this.screen.disablePointerLock();
+            this.ui.commit('SET_GAME_OVER_PROMPT_VISIBLE', { value: true });
+        }, 1500);
     }
 
 //  _                _                   _        _   _

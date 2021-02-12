@@ -1,0 +1,9 @@
+:root {
+    --color-spirit: rgb(96, 220, 255);
+    --color-spirit-shadow: rgba(96, 220, 255, 0.5);
+    --color-text-in-ui: black;
+    --color-text-shadow-in-ui: rgba(0, 0, 0, 0.5);
+    --color-window-background: rgb(181, 151, 91);
+    --color-window-border: rgb(37, 26, 26);
+    --color-text-no-item: rgba(0, 0, 0, 0.25)
+}

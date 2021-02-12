@@ -94,5 +94,9 @@ export default {
 
     [TYPES.SET_NOTE_SELECTED_TYPE]: function(state, {value}) {
         state.uiframe.activeNoteTab = value;
+    },
+
+    [TYPES.SET_GAME_OVER_PROMPT_VISIBLE]: function (state, {value}) {
+        state.gameoverprompt.visible = value;
     }
 }

@@ -35,6 +35,10 @@
   "COMMAND_CAPTION_PREV": "Précédent",
   "COMMAND_CAPTION_START": "Démarrer",
 
+  "GAME_OVER": "C'est fini",
+  "GAME_OVER_CAPTION": "La présence malfaisante des fantômes a eu raison de votre santé mentale. Un nouvel esprit tourmenté hantera ces lieux.",
+  "GAME_OVER_BUTTON_CAPTION": "Menu principal",
+
   "GAME_TITLE": "Le patelin chelou",
   "GAME_SUB_TITLE": [
     "Tout un village mystérieusement vidé de ses habitants !",

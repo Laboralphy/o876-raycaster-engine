@@ -24,8 +24,8 @@ export default {
 <style scoped>
 .score-section {
   font-weight: bolder;
-  color: aquamarine;
-  text-shadow: 0 0 0.2em mediumaquamarine, 0 0 1em black;
+  color: gold;
+  text-shadow: 0 0 0.2em goldenrod, 0 0 1em black;
   text-align: right;
   margin-right: 1em;
   margin-top: 1em;

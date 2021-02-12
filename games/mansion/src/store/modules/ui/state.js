@@ -11,6 +11,10 @@ export default {
         visible: false
     },
 
+    gameoverprompt: {
+        visible: false
+    },
+
     uiframe: {
         visible: false,
         fullyVisible: false,

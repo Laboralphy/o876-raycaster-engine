@@ -6,13 +6,12 @@
                 <PhotoShotAttributes></PhotoShotAttributes>
             </HUD>
             <HUD pos="bl"><p></p></HUD>
-
             <HUD pos="t"></HUD>
-
             <HUD pos="tr"><ScoreSection></ScoreSection></HUD>
             <HUD pos="br"><p></p></HUD>
         </section>
-        <UIFrame v-if="isUIFrameVisible"></UIFrame>
+        <GameOverPrompt v-if="isGameOverPromptVisible"></GameOverPrompt>
+        <UIFrame v-else-if="isUIFrameVisible"></UIFrame>
         <MainMenu v-if="isMainMenuVisible"></MainMenu>
         <Popups></Popups>
     </div>
@@ -27,10 +26,11 @@
     import MainMenu from "./MainMenu.vue";
     import ui from "../mixins/ui";
     import ScoreSection from './ScoreSection.vue';
+    import GameOverPrompt from './GameOverPrompt.vue';
 
     export default {
         name: "Application",
-        components: {MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
+        components: { GameOverPrompt, MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
         mixins: [ui]
     }
 </script>
