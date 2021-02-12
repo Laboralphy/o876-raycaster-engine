@@ -59,15 +59,6 @@
       "desc": "Activer/désactiver le mode photo."
     }
   ],
-  "INTRO_MAP_TITLE": "Trucs à faire",
-  "INTRO_MAP_TASKS": [
-    "Liste des objectifs pour ce job...",
-    "1) Se rendre au village abandonné.",
-    "2) Visiter le village, vérifier qu'il soit bien désert.",
-    "3) Photographier tous les tableaux.",
-    "4) Récupérer tous les livres rares et précieux.",
-    "5) Elucider le mystère de la disparition des villageois."
-  ],
 
   "ALBUM_TAB_EMPTY": "Cette section de l'album est vide.",
   "INVENTORY_TAB_EMPTY": "Aucun objet dans cette catégorie.",
@@ -86,35 +77,6 @@
     "m0": {
     }
   },
-
-  "PEOPLE_NAMES": [
-    "Aubernessis",
-    "Bragneys",
-    "Courtoire",
-    "Dangelle",
-    "Esbache",
-    "Fresnil",
-    "Grifond",
-    "Halano",
-    "Istrud",
-    "Jablone",
-    "Kourth",
-    "Lauverne",
-    "Malertus",
-    "Nouvix",
-    "Ouzentin",
-    "Pryves",
-    "Quin",
-    "Rimogny",
-    "Sola",
-    "Taves",
-    "Ubazan",
-    "Vijonsac",
-    "Westre",
-    "Xerolle",
-    "Yvrest",
-    "Zillesty"
-  ],
 
   "ITEMS": {
     "key_cabin" : {

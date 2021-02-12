@@ -37,5 +37,43 @@
       "le coin et de faire main basse sur tous",
       "ces trésors."
     ]
-  }
+  },
+
+  "INTRO_MAP_TITLE": "Trucs à faire",
+  "INTRO_MAP_TASKS": [
+    "Liste des objectifs pour ce job...",
+    "1) Se rendre au village abandonné.",
+    "2) Visiter le village, vérifier qu'il soit bien désert.",
+    "3) Photographier tous les tableaux.",
+    "4) Récupérer tous les livres rares et précieux.",
+    "5) Elucider le mystère de la disparition des villageois."
+  ],
+  "PEOPLE_NAMES": [
+    "Aubernessis",
+    "Bragneys",
+    "Courtoire",
+    "Dangelle",
+    "Esbache",
+    "Fresnil",
+    "Grifond",
+    "Halano",
+    "Istrud",
+    "Jablone",
+    "Kourth",
+    "Lauverne",
+    "Malertus",
+    "Nouvix",
+    "Ouzentin",
+    "Pryves",
+    "Quin",
+    "Rimogny",
+    "Sola",
+    "Taves",
+    "Ubazan",
+    "Vijonsac",
+    "Westre",
+    "Xerolle",
+    "Yvrest",
+    "Zillesty"
+  ]
 }
