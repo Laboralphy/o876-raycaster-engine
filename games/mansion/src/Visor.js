@@ -179,8 +179,8 @@ class Visor extends StoreAbstract {
         this.commit(MUTATIONS.DEPLETE_ENERGY);
     }
 
-    shoot(time) {
-        this.commit(MUTATIONS.SHOOT, {time});
+    setShootLastTime(time) {
+        this.commit(MUTATIONS.SET_SHOOT_LAST_TIME, {time});
     }
 }
 

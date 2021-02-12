@@ -9631,52 +9631,20 @@
   "startpoints": [
     {
       "x": 9,
-      "y": 0,
+      "y": 6,
       "z": 1,
       "angle": 1.5707963267948966
     }
   ],
   "camera": {
-    "x": 9,
-    "y": 0,
-    "z": 1,
-    "angle": 1.5707963267948966,
-    "thinker": "IntroThinker"
+    "thinker": ""
   },
   "tags": [
     {
       "x": 9,
-      "y": 0,
+      "y": 4,
       "tags": [
-        "locator mi_start"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 20,
-      "tags": [
-        "lookat w"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 21,
-      "tags": [
-        "lookat s"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 27,
-      "tags": [
-        "open mi_door_0"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 30,
-      "tags": [
-        "locator mi_door_0"
+        "goto mans-cabin 1"
       ]
     },
     {
@@ -9684,42 +9652,6 @@
       "y": 32,
       "tags": [
         "event mi_lightning_0"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 39,
-      "tags": [
-        "open mi_door_1"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 42,
-      "tags": [
-        "locator mi_door_1"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 49,
-      "tags": [
-        "lookat e"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 50,
-      "tags": [
-        "lookat s",
-        "locator mi_finish_1"
-      ]
-    },
-    {
-      "x": 9,
-      "y": 52,
-      "tags": [
-        "locator mi_finish_2"
       ]
     }
   ],

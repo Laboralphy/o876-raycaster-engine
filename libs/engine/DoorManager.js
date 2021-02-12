@@ -1,7 +1,4 @@
-import DoorContext from "./DoorContext";
 import * as RC_CONSTS from "../raycaster/consts";
-
-
 
 class DoorManager {
 
@@ -11,6 +8,15 @@ class DoorManager {
 
     get doors() {
         return this._doors;
+    }
+
+    get state() {
+        return this._doors.map(d => ({
+            ...d.state,
+            x: d.data.x,
+            y: d.data.y,
+            autoclose: d.data.autoclose
+        }));
     }
 
     /**

@@ -6,7 +6,7 @@
  */
 export function quoteSplit(str) {
     return str
-        .match(/\w+|"[^"]+"/g)
+        .match(/\S+|"[^"]+"/g)
         .map(s => s
             .replace(/^"/, '')
             .replace(/"$/, '')
