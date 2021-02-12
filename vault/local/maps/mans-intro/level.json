@@ -2671,9 +2671,7 @@
       {
         "block": 39,
         "upperblock": 0,
-        "tags": [
-          "locator mi_start"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -5299,7 +5297,9 @@
       {
         "block": 39,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "goto mans-cabin 1"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -15707,9 +15707,7 @@
       {
         "block": 54,
         "upperblock": 0,
-        "tags": [
-          "lookat w"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -16341,9 +16339,7 @@
       {
         "block": 54,
         "upperblock": 0,
-        "tags": [
-          "lookat s"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -20289,9 +20285,7 @@
       {
         "block": 2,
         "upperblock": 0,
-        "tags": [
-          "open mi_door_0"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -22296,9 +22290,7 @@
       {
         "block": 21,
         "upperblock": 16,
-        "tags": [
-          "locator mi_door_0"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -28175,9 +28167,7 @@
       {
         "block": 18,
         "upperblock": 0,
-        "tags": [
-          "open mi_door_1"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -30148,9 +30138,7 @@
       {
         "block": 21,
         "upperblock": 0,
-        "tags": [
-          "locator mi_door_1"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -34747,9 +34735,7 @@
       {
         "block": 47,
         "upperblock": 0,
-        "tags": [
-          "lookat e"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -35417,10 +35403,7 @@
       {
         "block": 47,
         "upperblock": 0,
-        "tags": [
-          "lookat s",
-          "locator mi_finish_1"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -36722,9 +36705,7 @@
       {
         "block": 47,
         "upperblock": 0,
-        "tags": [
-          "locator mi_finish_2"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -41314,8 +41295,9 @@
   "startpoints": [
     {
       "x": 9,
-      "y": 0,
-      "angle": 0.5
+      "y": 5,
+      "angle": 0.5,
+      "z": 1
     }
   ],
   "preview": "6ae3b140dcbb7b57be9b7b73609f6306.jpg"

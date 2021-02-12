@@ -28,7 +28,7 @@ export default {
         state.energy.value = 0;
     },
 
-    [TYPES.SHOOT]: function(state, {time}) {
+    [TYPES.SET_SHOOT_LAST_TIME]: function(state, {time}) {
         state.lastShotTime = time;
     },
 

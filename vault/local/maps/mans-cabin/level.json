@@ -310,6 +310,14 @@
         "width": 64,
         "height": 64,
         "animation": null
+      },
+      {
+        "id": 92,
+        "type": "flat",
+        "content": "dffb72be9f7f2df74962c5b72987d59d.png",
+        "width": 64,
+        "height": 64,
+        "animation": null
       }
     ],
     "sprites": [
@@ -820,6 +828,27 @@
       }
     },
     {
+      "id": 39,
+      "ref": "",
+      "phys": 0,
+      "offs": 0,
+      "preview": "4805ece95d347ab903c1569ce23c3019.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": null,
+        "e": null,
+        "w": null,
+        "s": null,
+        "f": 92,
+        "c": null
+      }
+    },
+    {
       "id": 3,
       "ref": "",
       "phys": 1,
@@ -1265,7 +1294,7 @@
       "ref": "",
       "phys": 10,
       "offs": "32",
-      "preview": "79db71a76a2e220fdd27ca8060dc663b.png",
+      "preview": "03d1ab53fa850ac4db825e549068de5a.png",
       "light": {
         "enabled": false,
         "value": 0,
@@ -1277,7 +1306,7 @@
         "e": null,
         "w": null,
         "s": null,
-        "f": 23,
+        "f": 92,
         "c": null
       }
     },
@@ -3106,7 +3135,9 @@
       {
         "block": 12,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "goto mans-test1 0"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -9372,7 +9403,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -9731,7 +9762,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -10120,7 +10151,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -10479,7 +10510,7 @@
         ]
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -10853,7 +10884,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -11233,7 +11264,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -11592,7 +11623,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 39,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -13602,7 +13633,7 @@
     "brightness": 0
   },
   "actor": {
-    "startpoint": 0,
+    "startpoint": 1,
     "thinker": ""
   },
   "startpoints": [
@@ -13611,6 +13642,12 @@
       "y": 26,
       "angle": 1.5,
       "z": 1
+    },
+    {
+      "x": 28,
+      "y": 2,
+      "z": 1,
+      "angle": 1
     }
   ],
   "preview": "53290f621219d03ea52239798919d703.jpg"

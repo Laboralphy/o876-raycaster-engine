@@ -1501,7 +1501,6 @@ class Engine {
         const xbp = 'blueprints' in extra ? extra.blueprints : [];
         const sp = 'startpoint' in extra ? extra.startpoint : -1;
         const afd = this._config.autofetchData;
-        console.log('autofetch data is', afd)
         const fts = afd
             ? [
                 ...await this.fetchData('tilesets'),
@@ -1518,6 +1517,42 @@ class Engine {
         return this.buildLevel(data, {startpoint: sp, tilesets: fts, blueprints: fbp});
     }
 
+
+
+//       _        _         _    __
+//   ___| |_ __ _| |_ ___  (_)  / /__
+//  / __| __/ _` | __/ _ \ | | / / _ \
+//  \__ \ || (_| | ||  __/ | |/ / (_) |
+//  |___/\__\__,_|\__\___| |_/_/ \___/
+
+    getEngineState() {
+        return {
+            doors: this.getDoorManagerState(),
+            locks: this._locks.state,
+            tags: this._tm.grid.state,
+            time: this.getTime()
+        }
+    }
+
+    setEngineState(value) {
+        const {doors, locks, tags, time} = value;
+        this._time = time;
+        this._tm.grid.state = tags;
+        this._locks.state = locks;
+        this.setDoorManagerState(doors);
+    }
+
+    getDoorManagerState() {
+        return this._dm.state;
+    }
+
+    setDoorManagerState(value) {
+        value.forEach(({x, y, time, phase, autoclose}) => {
+            this.openDoor(x, y, autoclose);
+            const dc = this._dm.getDoorContext(x, y);
+            dc.state = {time, phase};
+        })
+    }
 }
 
 export default Engine;

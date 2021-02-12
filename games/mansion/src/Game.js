@@ -20,9 +20,9 @@ import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
 import Album from "./Album";
 import SenseMap from "./SenseMap";
-import Serializer from "./Serializer";
 
-import DATA from './data';
+import DATA from '../assets/data';
+import GameOver from './filters/GameOver'
 
 class Game extends GameAbstract {
     init() {
@@ -61,6 +61,7 @@ class Game extends GameAbstract {
             decals: [],
             level: ''
         }
+        this._levelStates = {}
         this.ui.store.watch(
             (state, getters) => getters['ui/isGameRunning'],
             (newValue, oldValue) => {
@@ -70,17 +71,6 @@ class Game extends GameAbstract {
             }
         )
     }
-
-
-    get state() {
-        //return Serializer.saveState(this);
-        return 0;
-    }
-
-    set state(value) {
-        //Serializer.restoreState(this, value);
-    }
-
 
     async initAsync() {
         await super.initAsync();
@@ -110,6 +100,11 @@ class Game extends GameAbstract {
     }
 
     async loadLevel(sLevel, extra = {}) {
+        // save current level state
+        if (this._mutations.level !== '') {
+            this.log('save current level state', this._mutations.level);
+            this._levelStates[this._mutations.level] = this.getLevelState();
+        }
         // fetching data and completing blueprints
         extra.tilesets = DATA.TILESETS;
         extra.blueprints = this.getCompiledBlueprints();
@@ -120,6 +115,12 @@ class Game extends GameAbstract {
             visor: this.engine.getTileSet('u_visor'),
             lamp: this.engine.getTileSet('u_lamp')
         });
+        this.visor.setShootLastTime(0);
+        // restore new level state (if defined)
+        if (sLevel in this._levelStates) {
+            this.log('restore level state', sLevel);
+            this.setLevelState(this._levelStates[sLevel]);
+        }
     }
 
 
@@ -129,6 +130,28 @@ class Game extends GameAbstract {
 // | (_| |  __/ (_| (_| | \__ \ | (_) | |_) |  __/ | | (_| | |_| | (_) | | | \__ \
 //  \__,_|\___|\___\__,_|_|___/  \___/| .__/ \___|_|  \__,_|\__|_|\___/|_| |_|___/
 //                                    |_|
+
+    setDecalState(value) {
+        value.forEach(mut => {
+           switch (mut.op) {
+               case 'del':
+                   this.removeDecals(mut.x, mut.y, mut.sides);
+                   break;
+
+               case 'rot':
+                   this.rotateDecals(mut.x, mut.y, mut.cw);
+                   break;
+
+               case 'app':
+                   this.applyDecal(mut.x, mut.y, mut.sides, mut.ref);
+                   break;
+           }
+        });
+    }
+
+    getDecalState() {
+        return this._mutations.decals;
+    }
 
     /**
      * Remove all decals from a block
@@ -222,9 +245,11 @@ class Game extends GameAbstract {
      * Called when the user enters UI mode by exiting FPS Mode
      */
     enterUI() {
-        this.engine.stopDoomLoop();
-        this.ui.show();
-        this.dimSurface();
+        if (!this.logic.isPlayerDead()) {
+            this.engine.stopDoomLoop();
+            this.ui.show();
+            this.dimSurface();
+        }
     }
 
     /**
@@ -474,7 +499,7 @@ class Game extends GameAbstract {
         // calculer les dégats
         // lancer des script pour les spectres
         this.execAimedCellPhotoScript();
-        this.visor.shoot(nThisTime);
+        this.visor.setShootLastTime(nThisTime);
     }
 
     /**
@@ -682,10 +707,20 @@ class Game extends GameAbstract {
             });
             this.engine.filters.link(oFilter);
             if (this.logic.isPlayerDead()) {
-                oThinker.kill();
-                this.freezePlayer();
+                this.gameOver();
             }
         }
+    }
+
+    gameOver () {
+        this.player.thinker.kill();
+        this.freezePlayer();
+        this.engine.delayCommand(() => {
+            // fading out
+            this.engine.filters.link(new GameOver());
+            this.screen.disablePointerLock();
+            this.ui.commit('SET_GAME_OVER_PROMPT_VISIBLE', { value: true });
+        }, 1500);
     }
 
 //  _                _                   _        _   _
@@ -837,6 +872,26 @@ class Game extends GameAbstract {
      */
     removeSense(sRef) {
         this._senseMap.removeSense(sRef);
+    }
+
+    getLevelState() {
+        const {doors, locks, tags, time} = this.engine.getEngineState();
+        const decals = this.getDecalState();
+        const senses = this._senseMap.state;
+        return {
+            time,
+            tags,
+            doors,
+            locks,
+            decals,
+            senses
+        };
+    }
+
+    setLevelState({ tags, doors, locks, decals, senses, time }) {
+        this.engine.setEngineState({doors, locks, tags, time});
+        this.setDecalState(decals);
+        this._senseMap.state = senses
     }
 }
 

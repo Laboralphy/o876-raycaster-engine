@@ -27,7 +27,7 @@ export function push(game, remove, x, y, key) {
         // the door is simply locked without key
         // display message only if the cell is a door
         if (game.engine.isDoor(x, y)) {
-            game.ui.popup('DOOR_LOCKED', 'keyhole');
+            game.ui.popup('EVENT_DOOR_LOCKED', 'keyhole');
         }
     }
 }

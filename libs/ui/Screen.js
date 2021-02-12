@@ -26,7 +26,7 @@ class Screen {
         };
         this._surface = null;
         this._overlay = null;
-        this._enablePointerlock = true;
+        this._enablePointerLock = true;
         const pl = new PointerLock();
         pl.init();
         pl.on('mousemove', event => this._events.emit('mousemove', event));
@@ -54,6 +54,17 @@ class Screen {
 
     get pointerlock() {
         return this._pointerlock;
+    }
+
+    enablePointerLock () {
+        this._enablePointerLock = true;
+    }
+
+    disablePointerLock () {
+        this._enablePointerLock = false;
+        if (this.pointerlock.locked()) {
+            this.pointerlock.exitPointerLock();
+        }
     }
 
     _getClickEventOffset(event) {
@@ -130,20 +141,19 @@ class Screen {
         if (pointerlock && PointerLock.hasPointerLockFeature()) {
             if (!!this.overlay) {
                 this._handlers.click = event => {
-                    if (this._enablePointerlock) {
+                    if (this._enablePointerLock) {
                         const oClicked = this._getClickEventOffset(event);
                         this._events.emit('click', oClicked);
                         const oTarget = event.target;
                         if (oTarget === this._surface || oTarget === this._overlay || oTarget.hasAttribute(pointerlockAttribute)) {
                             this._pointerlock.requestPointerLock(this.surface);
                         }
-
                     }
                 };
                 this.overlay.addEventListener('click', this._handlers.click);
             } else {
                 this._handlers.click = event => {
-                    if (this._enablePointerlock) {
+                    if (this._enablePointerLock) {
                         const oClicked = this._getClickEventOffset(event);
                         this._events.emit('click', oClicked);
                         this._pointerlock.requestPointerLock(this.surface);

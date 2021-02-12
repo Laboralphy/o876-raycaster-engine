@@ -1,5 +1,6 @@
 {
   "ATTR_HITPOINTS" : "Mental",
+  "ATTR_SCORE": "Score",
 
   "SHOT_FATAL" : "Cadrage fatal",
   "SHOT_ZERO" : "Tir zéro",
@@ -34,6 +35,10 @@
   "COMMAND_CAPTION_PREV": "Précédent",
   "COMMAND_CAPTION_START": "Démarrer",
 
+  "GAME_OVER": "C'est fini",
+  "GAME_OVER_CAPTION": "La présence malfaisante des fantômes a eu raison de votre santé mentale. Un nouvel esprit tourmenté hantera ces lieux.",
+  "GAME_OVER_BUTTON_CAPTION": "Menu principal",
+
   "GAME_TITLE": "Le patelin chelou",
   "GAME_SUB_TITLE": [
     "Tout un village mystérieusement vidé de ses habitants !",
@@ -58,15 +63,6 @@
       "desc": "Activer/désactiver le mode photo."
     }
   ],
-  "INTRO_MAP_TITLE": "Trucs à faire",
-  "INTRO_MAP_TASKS": [
-    "Liste des objectifs pour ce job...",
-    "1) Se rendre au village abandonné.",
-    "2) Visiter le village, vérifier qu'il soit bien désert.",
-    "3) Photographier tous les tableaux.",
-    "4) Récupérer tous les livres rares et précieux.",
-    "5) Elucider le mystère de la disparition des villageois."
-  ],
 
   "ALBUM_TAB_EMPTY": "Cette section de l'album est vide.",
   "INVENTORY_TAB_EMPTY": "Aucun objet dans cette catégorie.",
@@ -85,35 +81,6 @@
     "m0": {
     }
   },
-
-  "PEOPLE_NAMES": [
-    "Aubernessis",
-    "Bragneys",
-    "Courtoire",
-    "Dangelle",
-    "Esbache",
-    "Fresnil",
-    "Grifond",
-    "Halano",
-    "Istrud",
-    "Jablone",
-    "Kourth",
-    "Lauverne",
-    "Malertus",
-    "Nouvix",
-    "Ouzentin",
-    "Pryves",
-    "Quin",
-    "Rimogny",
-    "Sola",
-    "Taves",
-    "Ubazan",
-    "Vijonsac",
-    "Westre",
-    "Xerolle",
-    "Yvrest",
-    "Zillesty"
-  ],
 
   "ITEMS": {
     "key_cabin" : {
@@ -184,6 +151,12 @@
       "description": [
         "Vous disposez d'un {u appareil photo} et vous pouvez l'utilisez pour prendre des clichés de tout un tas de choses par ici. En fait tout ce qui vous paraît {u anormal} pourrait être photographié car cela {u augmentera votre score}.",
         "Le lieu a la réputation d'être hanté ? Pas grave ! Profitez-en pour tirer le portrait de tout {u ectoplasme} que vous rencontrerez. Les photos pourront bien intérésser quelqu'un quand vous retournerez à la civilisation."
+      ]
+    },
+    "commands": {
+      "title": "Contrôlez-vous !",
+      "description": [
+        "Principales commandes : {br}{purple {b Clavier: Z.Q.S.D}} = Déplacement avant, gauche, arrière, droite.{br}{purple {b Souris: Bouton gauche}} = Activer/Ouvrir porte/Prendre photo.{br}{purple {b Souris: Bouton droit}} = Sortir/Ranger appareil photo.{br}{purple {b Touche: \"Echap.\"}} Ecran inventaire/Album/Notes."
       ]
     },
     "look_for_books": {

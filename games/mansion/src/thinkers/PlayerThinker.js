@@ -2,6 +2,8 @@ import FPSControlThinker from "libs/engine/thinkers/FPSControlThinker";
 import * as CONSTS from "../consts";
 import Easing from "libs/easing";
 
+const Z_FLOOR_LEVEL = 1.75;
+
 class PlayerThinker extends FPSControlThinker {
     constructor() {
         super();
@@ -15,9 +17,7 @@ class PlayerThinker extends FPSControlThinker {
                 ["t_on_floor", "s_dead"]
             ]
         };
-
     }
-
 
     /**
      * rewrited behavior for pushing blocks
@@ -116,7 +116,7 @@ class PlayerThinker extends FPSControlThinker {
      * @return boolean
      */
     isHeightAtFloorLevel() {
-        return this.entity.position.z > 1.75;
+        return this.entity.position.z > Z_FLOOR_LEVEL;
     }
 
     s_death() {
@@ -125,8 +125,9 @@ class PlayerThinker extends FPSControlThinker {
     s_dying() {
         if (this.isHeightAtFloorLevel()) {
             this._nDeathZSpeed = 0;
+            this.entity.position.z = Z_FLOOR_LEVEL;
         } else {
-            this._nDeathZSpeed += 0.01;
+            this._nDeathZSpeed += 0.005;
             this.entity.position.z += this._nDeathZSpeed;
         }
     }

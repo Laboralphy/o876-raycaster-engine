@@ -34,7 +34,8 @@ export default {
             'isUIFrameFullyVisible',
             'isUIFrameVisible',
             'getNotes',
-            'getActiveNoteTab'
+            'getActiveNoteTab',
+            'isGameOverPromptVisible'
         ]),
         phase: {
             get: function() {

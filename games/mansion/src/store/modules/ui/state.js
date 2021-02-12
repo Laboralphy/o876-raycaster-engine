@@ -11,6 +11,10 @@ export default {
         visible: false
     },
 
+    gameoverprompt: {
+        visible: false
+    },
+
     uiframe: {
         visible: false,
         fullyVisible: false,
@@ -57,6 +61,11 @@ export default {
         {
             ref: "story_so_far",
             type: 'journal',
+            read: false
+        },
+        {
+            ref: "commands",
+            type: "hint",
             read: false
         },
         {

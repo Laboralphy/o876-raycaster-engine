@@ -14,7 +14,7 @@ class CurlyTokenizer {
       init: [
         ['isEscape', 'incIndex', 'parseText'],
         ['isCurlOpen', 'incIndex', 'parseCommand'],
-        ['isCurlClose', 'incIndex', 'pushToken', 'pushText', 'popToken', 'init'],
+        ['isCurlClose', 'incIndex', 'pushText', 'popToken', 'init'],
         ['isEndOfText', 'end'],
         [1, 'parseText']
       ],
@@ -27,7 +27,7 @@ class CurlyTokenizer {
       parseCommand: [
         ['isEscape', 'incIndex', 'parseCommand'],
         ['isSpace', 'pushToken', 'parseSeparator'],
-        ['isCurlClose', 'incIndex', 'pushToken', 'pushText', 'popToken', 'init'],
+        ['isCurlClose', 'incIndex', 'pushToken', 'pushEmptyText', 'popToken', 'init'],
         ['isEndOfText', 'end']
       ],
       parseSeparator: [
@@ -122,6 +122,14 @@ class CurlyTokenizer {
       });
       this._subtext = '';
     }
+  }
+
+  pushEmptyText () {
+    this._parsed.push({
+      tokens: ArrayHelper.uniq(this._tokens),
+      text: ''
+    });
+    this._subtext = '';
   }
 
   pushToken () {

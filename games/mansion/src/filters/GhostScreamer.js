@@ -11,7 +11,6 @@ class GhostScreamer extends AbstractFilter {
         this.TIME_OUT = 25;
     }
 
-
     addGhost(oGhost) {
         const g = {
             time: 0,

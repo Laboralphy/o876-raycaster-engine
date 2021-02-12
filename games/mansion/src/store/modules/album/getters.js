@@ -4,5 +4,5 @@ export default {
     getPhotoTypes: state => state.photoTypes,
     getAllPhotos: state => state.photos,
     getStateContent: state => state,
-    getAlbumTotalScore: state => state.photos.reduce((prev, curr) => prev + curr.value,1)
+    getAlbumTotalScore: state => state.photos.reduce((prev, curr) => prev + curr.value, 0)
 };

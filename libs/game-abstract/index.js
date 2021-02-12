@@ -246,10 +246,10 @@ class GameAbstract {
         const yCenter = canvas.height >> 1;
         context.lineWidth = LINEWIDTH;
         context.clearRect(
-            xCenter - (SIZE >> 1),
-            yCenter - (SIZE >> 1),
-            SIZE,
-            SIZE
+            0,
+            0,
+            canvas.width,
+            canvas.height
         );
         context.strokeStyle = '#222';
         context.beginPath();

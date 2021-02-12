@@ -20,8 +20,8 @@ describe('CurlyTokenizer', function () {
       { tokens: [], text: 'ecrire ' },
       { tokens: [ 'c1' ], text: 'utilisation du rouge et ' },
       { tokens: [ 'c1', 'b' ], text: 'du gras' },
-      { tokens: [ 'c1' ], text: ' ' },
-      { tokens: [ 'c1', 'c2' ], text: 'youy' }
+      { tokens: [], text: ' ' },
+      { tokens: [ 'c2' ], text: 'youy' }
     ]);
   })
 
@@ -31,7 +31,25 @@ describe('CurlyTokenizer', function () {
     expect(ct._parsed).toEqual([
       { tokens: [], text: 'ecrire {c1 utilisation du rouge et ' },
       { tokens: [ 'b' ], text: 'du gras' },
-      { tokens: [], text: '}' },
+      { tokens: [], text: '}' }
+    ]);
+  })
+
+  it('multi curly', function () {
+    const ct = new CurlyTokenizer();
+    ct.parse('{purple {b xxxx xxxx}} blabla');
+    expect(ct._parsed).toEqual([
+      { tokens: ['purple', 'b'], text: 'xxxx xxxx' },
+      { tokens: [], text: ' blabla' }
+    ]);
+  })
+
+  it('signle tag', function () {
+    const ct = new CurlyTokenizer();
+    ct.parse('xxx{br}');
+    expect(ct._parsed).toEqual([
+      { tokens: [], text: 'xxx' },
+      { tokens: ['br'], text: '' }
     ]);
   })
 })

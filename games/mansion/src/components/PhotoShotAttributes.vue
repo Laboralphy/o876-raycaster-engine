@@ -1,5 +1,5 @@
 <template>
-    <div :class="'ui scores ' + (isShotVisible ? 'visible' : 'hidden')">
+    <div :class="'ui typewriter scores ' + (isShotVisible ? 'visible' : 'hidden')">
         <div class="value damage" v-if="isShotDamaging">{{ STRINGS.SHOT_DAMAGE }} {{ getShotScore }}pt{{ getShotScore > 1 ? 's' : '' }}</div>
         <div class="value" v-else>{{ STRINGS.SHOT_VALUE }} {{ getShotScore }}pt{{ getShotScore > 1 ? 's' : '' }}</div>
         <div class="fatal" v-if="isShotFatal">{{ STRINGS.SHOT_FATAL }}</div>
@@ -18,7 +18,7 @@
     import ui from "../mixins/ui";
 
     export default {
-        name: "Scores",
+        name: "PhotoShotAttributes",
         mixins: [STRINGS, ui]
     }
 </script>
