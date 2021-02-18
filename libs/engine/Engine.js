@@ -868,14 +868,18 @@ class Engine {
      * @returns {Thinker}
      */
     createThinkerInstance(sThinker) {
-        if (!sThinker) {
-            sThinker = 'Thinker';
+        try {
+            if (!sThinker) {
+                sThinker = 'Thinker';
+            }
+            const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
+            const oThinker = new pThinker();
+            oThinker.engine = this;
+            oThinker._context = this._thinkerContext;
+            return oThinker;
+        } catch (e) {
+            throw new Error('could not instanciate thinker class "' + sThinker + '"');
         }
-        const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
-        const oThinker = new pThinker();
-        oThinker.engine = this;
-        oThinker._context = this._thinkerContext;
-        return oThinker;
     }
 
     /**

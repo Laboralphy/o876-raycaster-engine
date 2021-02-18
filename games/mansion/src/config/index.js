@@ -1,4 +1,4 @@
-import PlayerThinker from "../thinkers/PlayerThinker";
+import PlayerThinker from "../thinkers.d/PlayerThinker";
 
 export default {
     thinkers: {

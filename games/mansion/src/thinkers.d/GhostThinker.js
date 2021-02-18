@@ -15,6 +15,7 @@ class GhostThinker extends MoverThinker {
         this._nTime = 0;
         this._nTimeOut = 0;
         this._target = null; // cible designée
+        this._teleportDestination = null;
         this.transitions = {
             "s_init": [
                 ["1", "s_spawn"]
@@ -30,6 +31,10 @@ class GhostThinker extends MoverThinker {
             "s_despawn": [
                 // lorsque l'opacité est à 0 on dead
                 ["t_zero_opacity", "s_dead"]
+            ],
+
+            "s_teleport": [
+                ["t_zero_opacity", "s_teleport_move", "s_spawn"]
             ]
         };
     }
@@ -110,10 +115,15 @@ class GhostThinker extends MoverThinker {
         this.entity.position.angle = this.vectorToTarget().angle();
     }
 
-    moveTowardTarget() {
+    /**
+     * Define a speed vector with an angle modifier
+     * @param fSpeedMod {number} speed modifier (scale)
+     * @param fAngleMod {number}
+     */
+    moveTowardTarget(fSpeedMod = 1, fAngleMod = 0) {
         this.lookAtTarget();
-        const ms = this.entity.data.speed;
-        const a = this.entity.position.angle;
+        const ms = this.entity.data.speed * fSpeedMod;
+        const a = this.entity.position.angle + fAngleMod;
         this.setSpeed(
             ms * Math.cos(a),
             ms * Math.sin(a)
@@ -227,6 +237,41 @@ class GhostThinker extends MoverThinker {
             (x, y) => this.testWalkable(x, y));
     }
 
+    /**
+     * Choose a location inside the target's cone of visibility
+     */
+    teleportInsideVisibilityCone () {
+        const engine = this.engine;
+        const target = this.target;
+        const targetPos = target.position;
+        const rc = engine.raycaster;
+        const nDistance = this.getDistanceToTarget();
+        const aVisibleSectors = rc
+          .visibleFrontCells
+          .toArray()
+          .map(({ x, y }) => {
+              const cc = engine.getCellCenter(x, y)
+              return {
+                  xCell: x,
+                  yCell: y,
+                  distance: Geometry.distance(cc.x, cc.y, targetPos.x, targetPos.y)
+              }
+          })
+          .sort((a, b) => Math.abs(nDistance - a.distance) - Math.abs(nDistance - b.distance))
+        if (aVisibleSectors.length > 0) {
+            const vs = aVisibleSectors[0];
+            this.teleport(vs.x, vs.y);
+        } else {
+            // la cible à le nez collé au mur
+            // il va falloir se teleporter derrière son dos
+        }
+    }
+
+    teleport(xCell, yCell) {
+        this._teleportDestination = { x: xCell, y: yCell };
+        this.automaton.state = 's_teleport';
+    }
+
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -283,6 +328,14 @@ class GhostThinker extends MoverThinker {
 
     s_time_250() {
         this.setTimeOut(250);
+    }
+
+    s_teleport() {
+        this.s_despawn();
+    }
+
+    s_teleport_move() {
+        this.target.position.set(this.engine.getCellCenter(this._teleportDestination));
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
