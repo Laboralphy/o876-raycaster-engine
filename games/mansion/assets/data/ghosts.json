@@ -29,10 +29,10 @@
   "g_test": {
     "tileset": "g_bashed_boy",
     "level": 0,
-    "speed": 2,
+    "speed": 3,
     "vitality": 100,
     "power": 2,
     "score": 100,
-    "thinker": "ZigZagChaserThinker"
+    "thinker": "ZigZagRusherThinker"
   }
 }

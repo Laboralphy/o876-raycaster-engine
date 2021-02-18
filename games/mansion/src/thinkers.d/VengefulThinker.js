@@ -8,6 +8,9 @@ class VengefulThinker extends GhostThinker {
         super();
         this._ghostAI = new Automaton();
         this._ghostAI.instance = this;
+        this._nGhostTimeOut = 0;
+        this._bWounded = false;
+        this._bShutterChance = false;
         this.transitions = {
             // recherche joueur cible
             "s_idle": [
@@ -69,12 +72,17 @@ class VengefulThinker extends GhostThinker {
         this.automaton.state = 's_init';
     }
 
+    get shutterChance () {
+        return this._bShutterChance;
+    }
+
     kill() {
         this.automaton.state = 's_kill';
     }
 
     wound(bCritical) {
-        this.automaton.state = bCritical ? 's_wounded_critical' : 's_wounded_light';
+        this._bWounded = true;
+        this.automaton.state = (this._bShutterChance || bCritical) ? 's_wounded_critical' : 's_wounded_light';
     }
 
     get ghostAI() {
@@ -84,6 +92,26 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+
+    gs_time_500 () {
+        this._nGhostTimeOut = this.engine.getTime() + 500;
+    }
+
+    gs_time_750 () {
+        this._nGhostTimeOut = this.engine.getTime() + 750;
+    }
+
+    gs_time_1000 () {
+        this._nGhostTimeOut = this.engine.getTime() + 1000;
+    }
+
+    gs_shutter_chance_on () {
+        this._bShutterChance = true;
+    }
+
+    gs_shutter_chance_off () {
+        this._bShutterChance = false;
+    }
 
     /**
      * Etat initialisation
@@ -191,6 +219,16 @@ class VengefulThinker extends GhostThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+
+    gt_time_out () {
+        return this.engine.getTime() >= this._nGhostTimeOut;
+    }
+
+    gt_wounded () {
+        const bWounded = this._bWounded;
+        this._bWounded = false;
+        return bWounded;
+    }
 
     /**
      * Tests if dead opacity is depleted

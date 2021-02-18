@@ -553,6 +553,7 @@ class Game extends GameAbstract {
                         oGhostDetails.value += Math.round(entity.data.score * value);
                         oGhostDetails.distance = Math.min(oGhostDetails.distance, distance);
                         oGhostDetails.angle = Math.min(oGhostDetails.angle, precision);
+                        oGhostDetails.shutter = entity.thinker.shutterChance;
                         ++oGhostDetails.targets;
                         break;
                 }

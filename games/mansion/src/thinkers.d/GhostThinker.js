@@ -281,7 +281,7 @@ class GhostThinker extends MoverThinker {
             this._teleportDestination = vCellBehind;
         } else {
             // la cellule derrière la cible n'est pas traversable.
-
+            this._teleportDestination = null;
         }
     }
 
