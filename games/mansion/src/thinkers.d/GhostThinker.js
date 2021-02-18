@@ -33,6 +33,10 @@ class GhostThinker extends MoverThinker {
                 ["t_zero_opacity", "s_dead"]
             ],
 
+            "s_teleport_in_sight": [
+                [1, "s_teleport"]
+            ],
+
             "s_teleport": [
                 ["t_zero_opacity", "s_teleport_move", "s_spawn"]
             ]
@@ -240,7 +244,7 @@ class GhostThinker extends MoverThinker {
     /**
      * Choose a location inside the target's cone of visibility
      */
-    teleportInsideVisibilityCone () {
+    computeTeleportInsideVisibilityCone () {
         const engine = this.engine;
         const target = this.target;
         const targetPos = target.position;
@@ -252,24 +256,33 @@ class GhostThinker extends MoverThinker {
           .map(({ x, y }) => {
               const cc = engine.getCellCenter(x, y)
               return {
-                  xCell: x,
-                  yCell: y,
+                  x,
+                  y,
                   distance: Geometry.distance(cc.x, cc.y, targetPos.x, targetPos.y)
               }
           })
           .sort((a, b) => Math.abs(nDistance - a.distance) - Math.abs(nDistance - b.distance))
         if (aVisibleSectors.length > 0) {
             const vs = aVisibleSectors[0];
-            this.teleport(vs.x, vs.y);
+            this._teleportDestination = vs;
         } else {
             // la cible à le nez collé au mur
             // il va falloir se teleporter derrière son dos
         }
     }
 
-    teleport(xCell, yCell) {
-        this._teleportDestination = { x: xCell, y: yCell };
-        this.automaton.state = 's_teleport';
+    computeTeleportBehind () {
+        const engine = this.engine;
+        const target = this.target;
+        const targetPos = target.position;
+        const vCellBehind = targetPos.front(-engine.cellSize);
+        // test if cell is walkable
+        if (engine.getCellType(vCellBehind.x, vCellBehind.y) !== RC_CONSTS.PHYS_NONE) {
+            this._teleportDestination = vCellBehind;
+        } else {
+            // la cellule derrière la cible n'est pas traversable.
+
+        }
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -330,12 +343,20 @@ class GhostThinker extends MoverThinker {
         this.setTimeOut(250);
     }
 
+    s_teleport_in_sight() {
+        this.computeTeleportInsideVisibilityCone();
+    }
+
     s_teleport() {
         this.s_despawn();
     }
 
     s_teleport_move() {
-        this.target.position.set(this.engine.getCellCenter(this._teleportDestination));
+        if (this._teleportDestination) {
+            const { x, y } = this._teleportDestination;
+            this.entity.position.set(this.engine.getCellCenter(x, y));
+            this._teleportDestination = null;
+        }
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -351,6 +372,7 @@ class GhostThinker extends MoverThinker {
     }
 
     t_zero_opacity() {
+        console.log('test opacity', this._nOpacity)
         return this._nOpacity <= 0;
     }
 

@@ -16,7 +16,11 @@ class VengefulThinker extends GhostThinker {
                 // trouver : commencer la chasse
                 ["t_target_found", "s_time_250", "s_start_walk_anim", "s_ghost_ai", "s_move_forward"],
                 // attendre 1 seconde puis refaire une recherche
-                ["t_target_not_found", "s_time_1000", "s_wait_then_idle"]
+                ["t_target_not_found", "s_time_1000", "s_wait_then_teleport_in_sight"]
+            ],
+
+            "s_wait_then_teleport_in_sight": [
+                ["t_time_out", "s_teleport_in_sight"]
             ],
 
             // attendre le time out avant de refaire une recherche
