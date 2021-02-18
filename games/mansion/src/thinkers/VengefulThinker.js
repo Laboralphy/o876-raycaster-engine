@@ -1,30 +1,33 @@
 import GhostThinker from "./GhostThinker";
 import * as CONSTS from "../consts";
+import Automaton from "libs/automaton";
 
 class VengefulThinker extends GhostThinker {
 
     constructor() {
         super();
+        this._ghostAI = new Automaton();
+        this._ghostAI.instance = this;
         this.transitions = {
             // recherche joueur cible
             "s_idle": [
                 // player dead: plus rien a faire,
                 ["t_target_dead", "s_despawn"],
                 // trouver : commencer la chasse
-                ["t_target_found", "s_look_at_target", "s_time_250", "s_start_walk_anim", "s_chase"],
+                ["t_target_found", "s_time_250", "s_start_walk_anim", "s_ghost_ai", "s_move_forward"],
                 // attendre 1 seconde puis refaire une recherche
-                ["t_target_not_found", "s_time_1000", "s_time_out_then_idle"]
+                ["t_target_not_found", "s_time_1000", "s_wait_then_idle"]
             ],
 
             // attendre le time out avant de refaire une recherche
-            "s_time_out_then_idle": [
+            "s_wait_then_idle": [
                 ["t_time_out", "s_idle"]
             ],
 
             // marcher mais verifier qu'on a toujours le joueur en vue
-            "s_chase": [
+            "s_move_forward": [
                 // cible touchée
-                ["t_hit_target", "s_attack_target", "s_time_750", "s_time_out_then_idle"],
+                ["t_hit_target", "s_attack_target", "s_time_750", "s_wait_then_idle"],
                 // temps écoulé , choisir une autre action
                 ["t_time_out", "s_idle"]
             ],
@@ -44,14 +47,17 @@ class VengefulThinker extends GhostThinker {
                 [1, "s_time_1000", "s_rebuked"]
             ],
 
+            // fantome repoussé
             "s_rebuked": [
                 ["t_time_out", "s_idle"]
             ],
 
+            // fantome eliminé
             "s_kill": [
                 [1, "s_burn"]
             ],
 
+            // flamme bleue
             "s_burn": [
                 ["t_anim_over", "s_spawn_flame", "s_despawn"]
             ]
@@ -65,6 +71,10 @@ class VengefulThinker extends GhostThinker {
 
     wound(bCritical) {
         this.automaton.state = bCritical ? 's_wounded_critical' : 's_wounded_light';
+    }
+
+    get ghostAI() {
+        return this._ghostAI;
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -82,20 +92,19 @@ class VengefulThinker extends GhostThinker {
         this.entity.sprite.setCurrentAnimation('walk');
     }
 
+    s_move_forward() {
+        this.moveForward()
+    }
+
+    s_ghost_ai() {
+        this._ghostAI.process();
+    }
+
     /**
      * Etat : démarrer animation marche
      */
     s_start_walk_anim() {
         this.entity.sprite.setCurrentAnimation('walk');
-    }
-
-    /**
-     * Etat : se tourner vers la cible
-     */
-    s_look_at_target() {
-        // rechercher la cible
-        this.lookAtTarget();
-        this.moveTowardTarget();
     }
 
     /**
@@ -139,7 +148,7 @@ class VengefulThinker extends GhostThinker {
     /**
      * attente fin de timer avant passe en idle
      */
-    s_time_out_then_idle() {
+    s_wait_then_idle() {
         this.pulse();
     }
 
