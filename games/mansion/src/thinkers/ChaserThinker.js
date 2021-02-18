@@ -5,12 +5,21 @@ import VengefulThinker from "./VengefulThinker";
  */
 class ChaserThinker extends VengefulThinker {
 
+    constructor() {
+        super();
+        this.ghostAI.transitions = {
+            "gs_start": [
+                [1, "gs_chase"]
+            ]
+        }
+    }
+
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    s_chase() {
-        this.moveForward();
+    gs_chase() {
+        this.moveTowardTarget();
     }
 
 }

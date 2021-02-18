@@ -1,0 +1,3335 @@
+{
+  "tiles": {
+    "walls": [
+      {
+        "id": 1,
+        "type": "wall",
+        "content": "25b095745613418d576228ce4e360444.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      }
+    ],
+    "flats": [
+      {
+        "id": 2,
+        "type": "flat",
+        "content": "88b0b1c110556b46965c94af951a83bf.png",
+        "width": 64,
+        "height": 64,
+        "animation": null
+      },
+      {
+        "id": 3,
+        "type": "flat",
+        "content": "079a36577630ac84fbeccaab59dc547b.png",
+        "width": 64,
+        "height": 64,
+        "animation": null
+      }
+    ],
+    "sprites": []
+  },
+  "blocks": [
+    {
+      "id": 1,
+      "ref": "",
+      "phys": 0,
+      "offs": 0,
+      "preview": "d046ac4105f7861c4fa13c55a0ef4d40.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": null,
+        "e": null,
+        "w": null,
+        "s": null,
+        "f": 3,
+        "c": 2
+      }
+    },
+    {
+      "id": 2,
+      "ref": "",
+      "phys": 1,
+      "offs": 0,
+      "preview": "72834375ebc59bc96e9e1135a73d0d06.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": 1,
+        "e": 1,
+        "w": 1,
+        "s": 1,
+        "f": null,
+        "c": null
+      }
+    }
+  ],
+  "things": [],
+  "grid": [
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [
+          "locator g_spawnpoint"
+        ],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [
+          "event test_ghost_ai",
+          "event mi_lightning_0"
+        ],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ],
+    [
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
+        "block": 2,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      }
+    ]
+  ],
+  "metrics": {
+    "tileHeight": 96,
+    "tileWidth": 64
+  },
+  "flags": {
+    "smooth": false,
+    "stretch": false,
+    "export": true
+  },
+  "time": {
+    "interval": 40
+  },
+  "ambiance": {
+    "sky": "",
+    "fog": {
+      "distance": 50,
+      "color": "black"
+    },
+    "filter": {
+      "enabled": false,
+      "color": ""
+    },
+    "brightness": 0
+  },
+  "actor": {
+    "thinker": "",
+    "startpoint": 0
+  },
+  "startpoints": [
+    {
+      "x": 8,
+      "y": 15,
+      "z": 1,
+      "angle": 1.5
+    }
+  ],
+  "preview": "1b28ce4ffd9e801ecb46d855f356ba2f.jpg"
+}

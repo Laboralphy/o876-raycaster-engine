@@ -85,15 +85,18 @@ class Game extends GameAbstract {
         // patch blueprints
         for (let sGhostId in oGhosts) {
             const gi = oGhosts[sGhostId];
-            const oGhostBlueprint = bp.find(x => x.id === sGhostId);
-            if (oGhostBlueprint) {
-                oGhostBlueprint.ref = oGhostBlueprint.id;
-                oGhostBlueprint.thinker = gi.thinker;
-                oGhostBlueprint.data = { ...gi, type: 'v' };
-                delete oGhostBlueprint.data.thinker;
-            } else {
-                console.warn('compile blueprint: id ', sGhostId, 'is present in ghosts.json but absent in blueprints.json')
-            }
+            const oGhostBlueprint = {
+                id: sGhostId,
+                ref: sGhostId,
+                tileset: gi.tileset,
+                scale: 3,
+                size: 24,
+                fx: ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
+                thinker: gi.thinker,
+                data: { ...gi, type: 'v' }
+            };
+            delete oGhostBlueprint.data.thinker;
+            bp.push(oGhostBlueprint);
         }
         this._compiledBlueprints = bp;
         return bp;

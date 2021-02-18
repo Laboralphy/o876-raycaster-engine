@@ -1,5 +1,6 @@
 {
   "g_angry_girl_0": {
+    "tileset": "g_angry_girl",
     "level": 0,
     "speed": 1,
     "vitality": 25,
@@ -8,6 +9,7 @@
     "thinker": "ChaserThinker"
   },
   "g_banshee_0": {
+    "tileset": "g_banshee",
     "level": 0,
     "speed": 1,
     "vitality": 25,
@@ -16,9 +18,19 @@
     "thinker": "ChaserThinker"
   },
   "g_bashed_boy_0": {
+    "tileset": "g_bashed_boy",
     "level": 0,
     "speed": 1,
     "vitality": 25,
+    "power": 2,
+    "score": 100,
+    "thinker": "ChaserThinker"
+  },
+  "g_test": {
+    "tileset": "g_bashed_boy",
+    "level": 0,
+    "speed": 2,
+    "vitality": 100,
     "power": 2,
     "score": 100,
     "thinker": "ChaserThinker"
