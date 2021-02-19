@@ -1,8 +1,8 @@
 import VengefulThinker from "./VengefulThinker";
 
-const ZIGZAG_PULSE = 8;
-const ZIGZAG_CLOSE_RANGE = 96;
-const ZIGZAG_SECURITY_RANGE = 64;
+const THINKER_ZIGZAG_PULSE = 8;
+const THINKER_ZIGZAG_CLOSE_RANGE = 96;
+const THINKER_ZIGZAG_SECURITY_RANGE = 64;
 
 /**
  * Le fantome ne fait que suivre bêtement le target
@@ -31,7 +31,7 @@ class ZigZagChaserThinker extends VengefulThinker {
 
     gs_zigzag() {
         ++this._zigzagTime;
-        const a = -(Math.PI / 4) * Math.cos(Math.PI * this._zigzagTime / ZIGZAG_PULSE);
+        const a = -(Math.PI / 4) * Math.cos(Math.PI * this._zigzagTime / THINKER_ZIGZAG_PULSE);
         this.moveTowardTarget(1, a)
     }
 
@@ -45,11 +45,11 @@ class ZigZagChaserThinker extends VengefulThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
     t_target_close () {
-        return this.getDistanceToTarget() < ZIGZAG_CLOSE_RANGE;
+        return this.getDistanceToTarget() < THINKER_ZIGZAG_CLOSE_RANGE;
     }
 
     t_target_far () {
-        return this.getDistanceToTarget() > (ZIGZAG_CLOSE_RANGE + ZIGZAG_SECURITY_RANGE);
+        return this.getDistanceToTarget() > (THINKER_ZIGZAG_CLOSE_RANGE + THINKER_ZIGZAG_SECURITY_RANGE);
     }
 }
 

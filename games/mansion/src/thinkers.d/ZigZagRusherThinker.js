@@ -1,9 +1,9 @@
 import RusherThinker from "./RusherThinker";
 
-const ZIGZAG_PULSE = 8;
+const THINKER_ZIGZAG_PULSE = 8;
 
 /**
- * Chase target directly.
+ * Chase target with zigzag movement.
  * When close enough to target, rushes at constant angle... must be avoided.
  */
 class ZigZagRusherThinker extends RusherThinker {
@@ -18,7 +18,7 @@ class ZigZagRusherThinker extends RusherThinker {
 
     gs_chase() {
         ++this._zigzagTime;
-        const a = -(Math.PI / 4) * Math.cos(Math.PI * this._zigzagTime / ZIGZAG_PULSE);
+        const a = -(Math.PI / 4) * Math.cos(Math.PI * this._zigzagTime / THINKER_ZIGZAG_PULSE);
         this.moveTowardTarget(1, a)
     }
 }

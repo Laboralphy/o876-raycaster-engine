@@ -414,6 +414,14 @@ class Game extends GameAbstract {
         return aPhotos;
     }
 
+    /**
+     * Renvoie true si on est en train de viser un fantome dont le shutter chance est actif
+     */
+    isAimingShutterChance () {
+        // il faut au moins un fantome
+
+    }
+
     isAimingCellSupernatural() {
         return this.getAimedCellPhotoTags() !== null;
     }
@@ -430,14 +438,19 @@ class Game extends GameAbstract {
         const fLightSM = this._senseMap.getSenseAt(xPlayer, yPlayer);
         // déterminer la présence de spectres
         let fLightCE = 0;
-        if (this.capturableEntities.length > 0) {
-            const e = this
-                .capturableEntities
-                .sort((a, b) => b.value - a.value);
+        let bShutterChance = false;
+        const ce = this.capturableEntities;
+        if (ce.length > 0) {
+            const e = ce.sort((a, b) => b.value - a.value);
             const {precision, proximity} = e[0];
             fLightCE = (proximity + precision) / 2;
+            // checks shutters chances
+            bShutterChance = ce.some(({ entity }) => entity.data.type === "v" && entity.thinker.shutterChance);
         }
-        this._cameraFilter.lampIntensity = Math.max(fLightSM, fLightCE);
+        // allumer le filament en précence de fantome
+        const cf = this._cameraFilter;
+        cf.lampIntensity = Math.max(fLightSM, fLightCE);
+        cf.critical = bShutterChance;
     }
 
     /**

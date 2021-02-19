@@ -33,6 +33,6 @@
     "vitality": 100,
     "power": 2,
     "score": 100,
-    "thinker": "ZigZagRusherThinker"
+    "thinker": "TeleChaserThinker"
   }
 }

@@ -555,6 +555,17 @@ class Engine {
     }
 
     /**
+     * Renvoie les coordonnées d'une celle en fonction de la poisition texel fournie
+     * @param x {number}
+     * @param y {number}
+     * @return {{x: number, y: number}};
+     */
+    clipCell(x, y) {
+        const ps = this.cellSize;
+        return {x: x / ps | 0, y: y / ps | 0};
+    }
+
+    /**
      * Changement d'un block (offset, code-physique, material)
      * @param x {number} positon of block to change
      * @param y {number}

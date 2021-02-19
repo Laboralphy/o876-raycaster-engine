@@ -6,6 +6,7 @@ export default {
         depleteRate: 0.7
     },
     power: 100,
+    criticalModifier: 2,
     width: 0,
     captureRadius: 1,
     lastShotTime: 0,

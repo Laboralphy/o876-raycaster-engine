@@ -102,11 +102,12 @@ class Visor extends StoreAbstract {
      * @returns {number}
      */
     damageGhost(entity, amount) {
+        const fCrit = entity.thinker.shutterChance ? this.prop('getCameraCriticalModifier') : 1;
         const nDamage = Math.ceil(
-            amount
-            * this.prop('getCameraEnergy')
-            * this.prop('getCameraPower')
-            / 100
+            amount *
+            this.prop('getCameraEnergy') *
+            this.prop('getCameraPower') *
+            fCrit / 100
         );
         entity.data.vitality -= nDamage;
         if (entity.data.vitality <= 0) {

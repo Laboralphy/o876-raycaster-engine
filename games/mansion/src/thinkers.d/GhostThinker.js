@@ -7,6 +7,7 @@ import Easing from "libs/easing";
 
 const PULSE_MAP = [2 ,3, 4, 3];
 
+
 class GhostThinker extends MoverThinker {
 
     constructor() {
@@ -15,7 +16,6 @@ class GhostThinker extends MoverThinker {
         this._nTime = 0;
         this._nTimeOut = 0;
         this._target = null; // cible designée
-        this._teleportDestination = null;
         this.transitions = {
             "s_init": [
                 ["1", "s_spawn"]
@@ -31,14 +31,6 @@ class GhostThinker extends MoverThinker {
             "s_despawn": [
                 // lorsque l'opacité est à 0 on dead
                 ["t_zero_opacity", "s_dead"]
-            ],
-
-            "s_teleport_in_sight": [
-                [1, "s_teleport"]
-            ],
-
-            "s_teleport": [
-                ["t_zero_opacity", "s_teleport_move", "s_spawn"]
             ]
         };
     }
@@ -203,14 +195,14 @@ class GhostThinker extends MoverThinker {
         vis.size = r.dw;
     }
 
-	testSolid(x, y) {
-		return !this.testWalkable(x, y);
-	}
+    testSolid(x, y) {
+    return !this.testWalkable(x, y);
+    }
 
-	testWalkable(x, y) {
+    testWalkable(x, y) {
         const c = this.context.game.engine.getCellType(x, y);
         return c === RC_CONSTS.PHYS_NONE;
-	}
+    }
 
 
     /**
@@ -239,50 +231,6 @@ class GhostThinker extends MoverThinker {
             xTarget,
             yTarget,
             (x, y) => this.testWalkable(x, y));
-    }
-
-    /**
-     * Choose a location inside the target's cone of visibility
-     */
-    computeTeleportInsideVisibilityCone () {
-        const engine = this.engine;
-        const target = this.target;
-        const targetPos = target.position;
-        const rc = engine.raycaster;
-        const nDistance = this.getDistanceToTarget();
-        const aVisibleSectors = rc
-          .visibleFrontCells
-          .toArray()
-          .map(({ x, y }) => {
-              const cc = engine.getCellCenter(x, y)
-              return {
-                  x,
-                  y,
-                  distance: Geometry.distance(cc.x, cc.y, targetPos.x, targetPos.y)
-              }
-          })
-          .sort((a, b) => Math.abs(nDistance - a.distance) - Math.abs(nDistance - b.distance))
-        if (aVisibleSectors.length > 0) {
-            const vs = aVisibleSectors[0];
-            this._teleportDestination = vs;
-        } else {
-            // la cible à le nez collé au mur
-            // il va falloir se teleporter derrière son dos
-        }
-    }
-
-    computeTeleportBehind () {
-        const engine = this.engine;
-        const target = this.target;
-        const targetPos = target.position;
-        const vCellBehind = targetPos.front(-engine.cellSize);
-        // test if cell is walkable
-        if (engine.getCellType(vCellBehind.x, vCellBehind.y) !== RC_CONSTS.PHYS_NONE) {
-            this._teleportDestination = vCellBehind;
-        } else {
-            // la cellule derrière la cible n'est pas traversable.
-            this._teleportDestination = null;
-        }
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -341,22 +289,6 @@ class GhostThinker extends MoverThinker {
 
     s_time_250() {
         this.setTimeOut(250);
-    }
-
-    s_teleport_in_sight() {
-        this.computeTeleportInsideVisibilityCone();
-    }
-
-    s_teleport() {
-        this.s_despawn();
-    }
-
-    s_teleport_move() {
-        if (this._teleportDestination) {
-            const { x, y } = this._teleportDestination;
-            this.entity.position.set(this.engine.getCellCenter(x, y));
-            this._teleportDestination = null;
-        }
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////

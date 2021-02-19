@@ -6,5 +6,6 @@ export default {
     getCameraWidth: state => state.width,
     getCameraPower: state => state.power,
     isCameraAimingSupernatural: state => state.sensor.supernatural,
-    getCameraSensorLamp: state => state.sensor.lamp
+    getCameraSensorLamp: state => state.sensor.lamp,
+    getCameraCriticalModifier: state => state.criticalModifier
 };

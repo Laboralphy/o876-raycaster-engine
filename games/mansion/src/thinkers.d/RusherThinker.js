@@ -1,5 +1,7 @@
 import VengefulThinker from "./VengefulThinker";
 
+const THINKER_DISTANCE_RUSH = 256; // distance à laquel le ghost va rusher
+
 /**
  * Chase target directly.
  * When close enough to target, rushes at constant angle... must be avoided.
@@ -9,7 +11,7 @@ class RusherThinker extends VengefulThinker {
         super();
         this.ghostAI.transitions = {
             "gs_init": [
-                [1, "gs_shutter_chance_off", "gs_chase"]
+                [1, "gs_stop", "gs_shutter_chance_off", "gs_chase"]
             ],
 
             "gs_chase": [
@@ -17,7 +19,7 @@ class RusherThinker extends VengefulThinker {
             ],
 
             "gs_wait_before_rush": [
-                ["gt_time_out", "gs_rush_init", "gs_rush"]
+                ["gt_time_out", "gs_rush_init", "gs_shutter_chance_off", "gs_rush"]
             ],
 
             "gs_rush": [
@@ -49,7 +51,7 @@ class RusherThinker extends VengefulThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
     gt_target_close () {
-        return this.getDistanceToTarget() < 256;
+        return this.getDistanceToTarget() < THINKER_DISTANCE_RUSH;
     }
 
     /**

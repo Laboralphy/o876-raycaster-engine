@@ -1,6 +1,10 @@
 import GhostThinker from "./GhostThinker";
 import * as CONSTS from "../consts";
 import Automaton from "libs/automaton";
+import Geometry from 'libs/geometry'
+import * as RC_CONSTS from 'libs/raycaster/consts'
+
+const PULSE_MAP_LARGE = [4, 3, 2, 1, 2, 3, 2, 1, 0, 1, 2, 1, 0, 1, 0];
 
 class VengefulThinker extends GhostThinker {
 
@@ -11,9 +15,12 @@ class VengefulThinker extends GhostThinker {
         this._nGhostTimeOut = 0;
         this._bWounded = false;
         this._bShutterChance = false;
+        this._teleportDestination = null;
+        this._teleportAnim = 0;
         this.transitions = {
             // recherche joueur cible
             "s_idle": [
+                ["t_teleport_ready", "s_teleport"],
                 // player dead: plus rien a faire,
                 ["t_target_dead", "s_despawn"],
                 // trouver : commencer la chasse
@@ -67,6 +74,18 @@ class VengefulThinker extends GhostThinker {
             // flamme bleue
             "s_burn": [
                 ["t_anim_over", "s_spawn_flame", "s_despawn"]
+            ],
+
+            "s_teleport_in_sight": [
+                [1, "s_teleport"]
+            ],
+
+            "s_teleport": [
+                [1, "s_teleport_pulse"]
+            ],
+
+            "s_teleport_pulse": [
+                ["t_teleport_anim_done", "s_teleport_move", "s_spawn"]
             ]
         };
         this.automaton.state = 's_init';
@@ -89,20 +108,78 @@ class VengefulThinker extends GhostThinker {
         return this._ghostAI;
     }
 
+    /**
+     * Choose a location inside the target's cone of visibility
+     */
+    computeTeleportInsideVisibilityCone () {
+        const engine = this.engine;
+        const target = this.target;
+        const targetPos = target.position;
+        const rc = engine.raycaster;
+        const nDistance = this.getDistanceToTarget();
+        const aVisibleSectors = rc
+          .visibleFrontCells
+          .toArray()
+          .map(({ x, y }) => {
+              const cc = engine.getCellCenter(x, y)
+              return {
+                  x,
+                  y,
+                  distance: Geometry.distance(cc.x, cc.y, targetPos.x, targetPos.y)
+              }
+          })
+          .sort((a, b) => Math.abs(nDistance - a.distance) - Math.abs(nDistance - b.distance))
+        if (aVisibleSectors.length > 0) {
+            this._teleportDestination = aVisibleSectors[0];
+        } else {
+            // la cible à le nez collé au mur
+            // il va falloir se teleporter derrière son dos
+        }
+    }
+
+    computeTeleportBehind () {
+        const engine = this.engine;
+        const target = this.target;
+        const targetPos = target.position;
+        const vCellBehind = targetPos.front(-engine.cellSize * 1.5);
+        // test if cell is walkable
+        const cc = engine.clipCell(vCellBehind.x, vCellBehind.y);
+        if (engine.getCellType(cc.x, cc.y) === RC_CONSTS.PHYS_NONE) {
+            console.log('teleport to', cc)
+            this._teleportDestination = cc;
+        } else {
+            // la cellule derrière la cible n'est pas traversable.
+            console.log('could not teleport to', cc)
+            this._teleportDestination = null;
+        }
+    }
+
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
+    _setGhostTimeOut (n) {
+        this._nGhostTimeOut = this.engine.getTime() + n;
+    }
+
+    gs_time_250 () {
+        this._setGhostTimeOut(250);
+    }
+
     gs_time_500 () {
-        this._nGhostTimeOut = this.engine.getTime() + 500;
+        this._setGhostTimeOut(500);
     }
 
     gs_time_750 () {
-        this._nGhostTimeOut = this.engine.getTime() + 750;
+        this._setGhostTimeOut(750);
     }
 
     gs_time_1000 () {
-        this._nGhostTimeOut = this.engine.getTime() + 1000;
+        this._setGhostTimeOut(1000);
+    }
+
+    gs_time_3000 () {
+        this._setGhostTimeOut(3000);
     }
 
     gs_shutter_chance_on () {
@@ -152,6 +229,7 @@ class VengefulThinker extends GhostThinker {
      * the ghost has been killed
      */
     s_kill() {
+        this._bShutterChance = false;
         this.entity.sprite.setCurrentAnimation('death');
     }
 
@@ -159,6 +237,7 @@ class VengefulThinker extends GhostThinker {
      * the ghost is wounded : set angle to go away from player
      */
     s_wounded_light() {
+        this._bShutterChance = false;
         this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH);
     }
 
@@ -167,6 +246,7 @@ class VengefulThinker extends GhostThinker {
      * it is rebuked : go away from player
      */
     s_wounded_critical() {
+        this._bShutterChance = false;
         this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * 2);
     }
 
@@ -174,6 +254,7 @@ class VengefulThinker extends GhostThinker {
      * Fantome repoussé
      */
     s_rebuked() {
+        this._bShutterChance = false;
         this.rebuke()
     }
 
@@ -216,6 +297,30 @@ class VengefulThinker extends GhostThinker {
         this.context.game.commitGhostAttack(this.entity, this.target);
     }
 
+
+    s_teleport_in_sight() {
+        this.computeTeleportInsideVisibilityCone();
+        this._teleportAnim = 0;
+    }
+
+    s_teleport_pulse() {
+        this._nOpacity = PULSE_MAP_LARGE[this._teleportAnim];
+        this.setOpacityFlags();
+        ++this._teleportAnim;
+    }
+
+    s_teleport() {
+        this._teleportAnim = 0;
+    }
+
+    s_teleport_move() {
+        if (this._teleportDestination) {
+            const { x, y } = this._teleportDestination;
+            this.entity.position.set(this.engine.getCellCenter(x, y));
+            this._teleportDestination = null;
+        }
+    }
+
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -228,6 +333,10 @@ class VengefulThinker extends GhostThinker {
         const bWounded = this._bWounded;
         this._bWounded = false;
         return bWounded;
+    }
+
+    gt_has_teleported () {
+        return this._teleportDestination === null;
     }
 
     /**
@@ -256,6 +365,14 @@ class VengefulThinker extends GhostThinker {
 
     t_target_not_found() {
         return !this.t_target_found();
+    }
+
+    t_teleport_ready () {
+        return this._teleportDestination !== null;
+    }
+
+    t_teleport_anim_done () {
+        return this._teleportAnim >= (PULSE_MAP_LARGE.length - 1);
     }
 }
 
