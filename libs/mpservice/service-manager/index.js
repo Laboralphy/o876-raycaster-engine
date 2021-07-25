@@ -1,7 +1,6 @@
 const ClientManager = require('../client-manager');
 const logger = require('../logger');
 
-const util = require('util');
 const STRINGS = require('../consts/strings');
 
 class ServiceManager {

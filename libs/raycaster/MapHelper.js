@@ -1,6 +1,5 @@
 import Translator from '../translator/Translator';
 import * as CONSTS from './consts';
-import util from "util";
 
 /**
  * Will transforme a text map into a serie of Renderer.setCellMaterial/Phys/offset calls
@@ -69,7 +68,7 @@ class MapHelper {
     getMaterial(legend) {
         const m = this._materials[legend];
         if (!m) {
-            throw new Error(util.format('[MapHelper] this material code does not exist : "%s"', legend));
+            throw new Error(`[MapHelper] this material code does not exist : "${legend}"`);
         }
         return m;
     }

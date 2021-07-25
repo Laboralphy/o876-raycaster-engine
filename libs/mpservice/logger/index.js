@@ -1,4 +1,3 @@
-const util = require('util');
 
 class Log {
 
@@ -37,22 +36,6 @@ class Log {
      */
     err() {
         console.error(this.buildDateString(new Date()), String.fromCharCode(27) + '[4m/!\\' + String.fromCharCode(27) + '[0m', ...arguments);
-    }
-
-
-    /**
-	 * Même chose que log mais prend en premier argument la chaine formatable
-	 * et les argument suivant seront les arguments de cette chaine
-     */
-	logfmt(sString, ...values) {
-		this.log(util.format(sString, ...values));
-	}
-
-    /**
-     * Même chose que logfmt mais pour les erreur
-     */
-    errfmt(sString, ...values) {
-        this.err(util.format(sString, ...values));
     }
 }
 

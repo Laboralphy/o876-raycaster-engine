@@ -56,7 +56,10 @@ const exampleConfig = require('./webpack.config.demos');
  */
 const gameConfig = require('./webpack.config.game');
 
+const polyfillConfig = require('./webpack.config.polyfills')
+
 const CONFIG = [
+    polyfillConfig,
     testConfig,
     exampleConfig,
     devConfig,
