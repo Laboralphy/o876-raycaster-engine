@@ -8,7 +8,6 @@ import Horde from "./Horde";
 import Easing from "../easing";
 import Entity from "./Entity";
 import Blueprint from "./Blueprint";
-import util from "util";
 import CanvasHelper from "../canvas-helper/CanvasHelper";
 import Translator from "../translator/Translator";
 import Extender from "../object-helper/Extender";
@@ -280,7 +279,7 @@ class Engine {
             if (phys === RC_CONSTS.PHYS_SECRET_BLOCK) {
                 // secondary secret door
                 if (++nSecurityCheck > 1) {
-                    throw new Error(util.format('this secret block has more than one secret neighbor : (%d, %d)', x, y));
+                    throw new Error(`this secret block has more than one secret neighbor : (${x}, ${y})`);
                 }
                 const dc2 = new DoorContext({
                     sdur: nSlidingDuration,
@@ -847,16 +846,17 @@ class Engine {
      */
     _getObjectItem(sItem, oItems, sLabel) {
         if (typeof oItems !== 'object') {
-            throw new Error(util.format('this is not a collection of "%s"', sLabel));
+            throw new Error(`this is not a collection of "${sLabel}"`);
         }
         if (sItem in oItems) {
             return oItems[sItem];
         } else {
             const aItems = Object.keys(oItems);
             if (aItems.length > 0) {
-                throw new Error(util.format('There is no such %s : "%s". Did you mean "%s" ?', sLabel, sItem, suggest(sItem, aItems)));
+                const sSuggest = suggest(sItem, aItems);
+                throw new Error(`There is no such ${sLabel} : "${sItem}". Did you mean "${sSuggest}" ?`);
             } else {
-                throw new Error(util.format('No %s has been declared so far in the given collection', sLabel));
+                throw new Error(`No ${sLabel} has been declared so far in the given collection`);
             }
         }
     }
