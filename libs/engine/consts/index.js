@@ -38,8 +38,3 @@ export const DECAL_ALIGN_RIGHT = 6;
 export const DECAL_ALIGN_BOTTOM_LEFT = 1;
 export const DECAL_ALIGN_BOTTOM = 2;
 export const DECAL_ALIGN_BOTTOM_RIGHT = 3;
-
-// built in path values
-export const FETCH_LEVEL_URL = './assets/levels/:name.json';
-export const FETCH_DATA_URL = './assets/data/:name.json';
-export const FETCH_LEVEL_LIST_URL = './levels';

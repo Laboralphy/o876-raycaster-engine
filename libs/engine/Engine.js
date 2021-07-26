@@ -16,7 +16,6 @@ import MapHelper from "../raycaster/MapHelper";
 import Camera from "./Camera";
 import thinkers from "./thinkers";
 import {suggest} from "../levenshtein";
-import {fetchJSON} from '../fetch-json';
 import {jsonValidate} from '../json-validate';
 import SCHEMA_RCE_100 from '../schemas/rce-100.json';
 
@@ -71,9 +70,6 @@ class Engine {
         // this._startpoints = [];
 
         this._config = {
-            fetchLevelAction: CONSTS.FETCH_LEVEL_URL,
-            fetchDataAction: CONSTS.FETCH_DATA_URL,
-            autofetchData: true,
             thinkers: {},
             cameraThinker: 'FPSControlThinker'
         };
@@ -1144,7 +1140,7 @@ class Engine {
 
         this._refs = {};
 
-        if (typeof extra === 'object' && extra !== null) {
+        if (typeof extra === 'object') {
             if ('blueprints' in extra) {
                 extra.blueprints.forEach(bp => data.blueprints.push(bp));
             }
@@ -1460,61 +1456,6 @@ class Engine {
 
         feedback('done', 1);
         this.events.emit('level.load');
-    }
-
-
-
-//    _                    __      _       _
-//   (_)___  ___  _ __    / _| ___| |_ ___| |__
-//   | / __|/ _ \| '_ \  | |_ / _ \ __/ __| '_ \
-//   | \__ \ (_) | | | | |  _|  __/ || (__| | | |
-//  _/ |___/\___/|_| |_| |_|  \___|\__\___|_| |_|
-// |__/
-
-    /**
-     * This will fetch a level asset. You just have to specify the name, without path and without the .json extension.
-     * @example fetchLevel('the-hangar') will fetch a level file named "./assets/levels/the-hangar.json" (by default)
-     * @param sName {string} asset name
-     * @return {*} the loaded json (a promise in fact)
-     */
-    fetchLevel(sName) {
-        return fetchJSON(this._config.fetchLevelAction.replace(/:name/, sName));
-    }
-
-    /**
-     * This will fetch a data asset. Works exactly as fetchLevel, by with data
-     * @param sName {string} asset name
-     * @return {*} the loaded json (a promise in fact)
-     */
-    fetchData(sName) {
-        return fetchJSON(this._config.fetchDataAction.replace(/:name/, sName));
-    }
-
-    /**
-     * Loads a level
-     * @param sName {string}
-     * @param extra {{startpoint : number, tilesets: [], blueprints: []}} extra json data to be loaded as tilesets and blueprints
-     * @return {Promise<void>}
-     */
-    async loadLevel(sName, extra= {}) {
-        const xts = 'tilesets' in extra ? extra.tilesets : [];
-        const xbp = 'blueprints' in extra ? extra.blueprints : [];
-        const sp = 'startpoint' in extra ? extra.startpoint : -1;
-        const afd = this._config.autofetchData;
-        const fts = afd
-            ? [
-                ...await this.fetchData('tilesets'),
-                ...xts
-            ]
-            : [ ...xts ];
-        const fbp = afd
-            ? [
-            ...await this.fetchData('blueprints'),
-            ...xbp
-            ]
-            : [ ...xbp ];
-        const data = await this.fetchLevel(sName);
-        return this.buildLevel(data, {startpoint: sp, tilesets: fts, blueprints: fbp});
     }
 
 
