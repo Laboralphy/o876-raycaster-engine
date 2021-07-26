@@ -1,4 +1,4 @@
-import * as crypto from 'crypto';
+// import * as crypto from 'crypto';
 
 let bDefaultImageSmoothing = true;
 
@@ -30,15 +30,15 @@ class CanvasHelper {
 		return oCanvas.toDataURL(sType);
 	}
 
-    /**
-	 * Return a checksum of the image, in order to compare content
-	 * @param oCanvas {HTMLCanvasElement}
-	 * @param sType {string}
-	 * @return {string}
-     */
-	static getHash(oCanvas, sType = 'md5') {
-		return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).hash('hex');
-	}
+    // /**
+	//  * Return a checksum of the image, in order to compare content
+	//  * @param oCanvas {HTMLCanvasElement}
+	//  * @param sType {string}
+	//  * @return {string}
+    //  */
+	// static getHash(oCanvas, sType = 'md5') {
+	// 	return crypto.createHash(sType).update(CanvasHelper.getData(oCanvas)).hash('hex');
+	// }
 	
 	/**
 	 * Sets canvas image smoothing flag on or off

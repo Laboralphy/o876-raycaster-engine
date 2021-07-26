@@ -19,12 +19,6 @@ function loadEnvFile() {
 loadEnvFile();
 
 /**
- * libraycaster.js
- * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {libraycaster: string}, plugins: *[], module: {rules: *[]}, target: string}}
- */
-const devConfig = require('./webpack.config.dev');
-
-/**
  * Unit tests
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {tests: string}, plugins: *[], module: {rules: *[]}, target: string}}
  */
@@ -59,7 +53,6 @@ const gameConfig = require('./webpack.config.game');
 const CONFIG = [
     testConfig,
     exampleConfig,
-    devConfig,
     mapeditConfig,
     websiteConfig,
     gameConfig

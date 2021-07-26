@@ -62,7 +62,7 @@ class Engine extends GameAbstract {
 	 * @param data {*} donnée du niveau
 	 * @param liveData {*} donnée du niveau
 	 */
-	async loadLevel(data, liveData) {
+	async buildLevel(data, liveData) {
 		this._levelLiveData = liveData;
 		this.engine.
 		this.initRaycaster(data);
