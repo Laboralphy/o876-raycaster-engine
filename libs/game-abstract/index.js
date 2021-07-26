@@ -7,7 +7,10 @@ import CanvasHelper from "../canvas-helper";
 
 const SERIAL_VERSION = 1;
 
-
+// built in path values
+const FETCH_LEVEL_URL = './assets/levels/:name.json';
+const FETCH_DATA_URL = './assets/data/:name.json';
+const FETCH_LEVEL_LIST_URL = './levels';
 
 class GameAbstract {
 
@@ -53,15 +56,15 @@ class GameAbstract {
 
             // this is an url. when the game needs to load a level from the server, it uses this url.
             // DO NOT CHANGE ! // DO NOT CHANGE ! // DO NOT CHANGE !
-            fetchLevelAction: ENGINE_CONSTS.FETCH_LEVEL_URL,
+            fetchLevelAction: FETCH_LEVEL_URL,
 
             // this is an url. when the game needs to load a data file from the server, it uses this url.
             // DO NOT CHANGE ! // DO NOT CHANGE ! // DO NOT CHANGE !
-            fetchDataAction: ENGINE_CONSTS.FETCH_DATA_URL,
+            fetchDataAction: FETCH_DATA_URL,
 
             // this is an url. when the game needs to fetch the level list from the server, it uses this url.
             // DO NOT CHANGE ! // DO NOT CHANGE ! // DO NOT CHANGE !
-            fetchLevelListAction: ENGINE_CONSTS.FETCH_LEVEL_LIST_URL
+            fetchLevelListAction: FETCH_LEVEL_LIST_URL
 
         };
         this._runCalled = false;
@@ -284,15 +287,15 @@ class GameAbstract {
 
     /**
      * loads a level and starts the doomloop.
-     * @param name {string} level name
+     * @param data {object} level name
      * @param extra {object} extra json data to be loaded as tilesets and blueprints
      * @return {Promise<void>}
      */
-    async loadLevel(name, extra = {}) {
+    async buildLevel(data, extra = {}) {
         const engine = this._engine;
-        this.log('loading level', name);
+        this.log('loading level');
         engine.stopDoomLoop();
-        await engine.loadLevel(name, extra);
+        await engine.buildLevel(data, extra);
         this.log('data successfuly loaded and parsed');
         engine.startDoomLoop();
         this.log('doom loop started');
@@ -322,7 +325,8 @@ class GameAbstract {
             if (!!level) {
                 try {
                     this.log('autoloading level', level.name);
-                    await this.loadLevel(level.name);
+                    const oLevelData = await fetchJSON(this.options.fetchLevelAction.replace(/:name/, level.name))
+                    await this.buildLevel(oLevelData);
                     this.log('level', level.name, 'successfully loaded');
                 } catch (e) {
                     console.error(e);

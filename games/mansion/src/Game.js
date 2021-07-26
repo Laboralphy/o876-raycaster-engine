@@ -29,7 +29,6 @@ class Game extends GameAbstract {
         this._debug = true;
         this._compiledBlueprints = null;
         super.init();
-        this.engine.config.autofetchData = false;
         this.log('initialize user interface')
         this._ui = new UI('#vue-application');
         this.log('initialize game logic and state')
@@ -102,6 +101,12 @@ class Game extends GameAbstract {
         return bp;
     }
 
+    /**
+     * @override
+     * @param sLevel {string}
+     * @param extra
+     * @returns {Promise<void>}
+     */
     async loadLevel(sLevel, extra = {}) {
         // save current level state
         if (this._mutations.level !== '') {
@@ -113,7 +118,8 @@ class Game extends GameAbstract {
         extra.blueprints = this.getCompiledBlueprints();
         this._mutations.decals = [];
         this._mutations.level = sLevel;
-        await super.loadLevel(sLevel, extra);
+        const oLevelData = require(__dirname + '/../assets/levels/' + sLevel + '.json');
+        await this.buildLevel(oLevelData, extra);
         this._cameraFilter.assignAssets({
             visor: this.engine.getTileSet('u_visor'),
             lamp: this.engine.getTileSet('u_lamp')
