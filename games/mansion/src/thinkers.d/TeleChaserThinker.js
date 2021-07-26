@@ -8,6 +8,8 @@ const THINKER_TELEPORT_BEHIND = 2;
  * Will chase target normally.
  * When close enought to target : will teleport behind target
  * Will not use teleportation more than a few second
+ *
+ * testé : fonctionne correctement
  */
 class TeleChaserThinker extends VengefulThinker {
 

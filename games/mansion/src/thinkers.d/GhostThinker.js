@@ -56,7 +56,7 @@ class GhostThinker extends MoverThinker {
      */
     setOpacityFlags() {
         const sprite = this.entity.sprite;
-        switch (this._nOpacity) {
+        switch (Math.floor(this._nOpacity)) {
             case 0:
                 sprite.removeFlag(RC_CONSTS.FX_ALPHA_25 | RC_CONSTS.FX_ALPHA_50 | RC_CONSTS.FX_ALPHA_75);
                 sprite.visible = false;
@@ -254,7 +254,7 @@ class GhostThinker extends MoverThinker {
      * The ghost is spawning, the alpha prop is increasing
      */
     s_spawn() {
-        ++this._nOpacity;
+        this._nOpacity += 0.5;
         this.setOpacityFlags();
     }
 
@@ -262,7 +262,7 @@ class GhostThinker extends MoverThinker {
      * The ghost is vanishing
      */
     s_despawn() {
-        --this._nOpacity;
+        this._nOpacity -= 0.5;
         this.setOpacityFlags();
     }
 
@@ -304,7 +304,6 @@ class GhostThinker extends MoverThinker {
     }
 
     t_zero_opacity() {
-        console.log('test opacity', this._nOpacity)
         return this._nOpacity <= 0;
     }
 

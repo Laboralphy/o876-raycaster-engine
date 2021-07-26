@@ -5,6 +5,8 @@ const THINKER_DISTANCE_RUSH = 256; // distance à laquel le ghost va rusher
 /**
  * Chase target directly.
  * When close enough to target, rushes at constant angle... must be avoided.
+ *
+ * testé : fonctionne bien, mais après téléportation de recherche : peut rusher dans une direction éronée
  */
 class RusherThinker extends VengefulThinker {
     constructor() {
@@ -23,6 +25,7 @@ class RusherThinker extends VengefulThinker {
             ],
 
             "gs_rush": [
+                ["t_target_not_found", "gs_init"],
                 ["gt_hit_wall", "gs_init"],
                 ["gt_wounded", "gs_init"]
             ]

@@ -6,6 +6,8 @@ const THINKER_ZIGZAG_SECURITY_RANGE = 64;
 
 /**
  * Le fantome ne fait que suivre bêtement le target
+ *
+ * testé : fonctionne correctement
  */
 class ZigZagChaserThinker extends VengefulThinker {
 

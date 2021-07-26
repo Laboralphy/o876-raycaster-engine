@@ -2,6 +2,8 @@ import VengefulThinker from "./VengefulThinker";
 
 /**
  * Le fantome ne fait que suivre bêtement le target
+ *
+ * testé : fonctionne comme prévu
  */
 class ChaserThinker extends VengefulThinker {
 

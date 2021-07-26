@@ -5,6 +5,8 @@ const THINKER_ZIGZAG_PULSE = 8;
 /**
  * Chase target with zigzag movement.
  * When close enough to target, rushes at constant angle... must be avoided.
+ *
+ * testé : correct
  */
 class ZigZagRusherThinker extends RusherThinker {
     constructor() {

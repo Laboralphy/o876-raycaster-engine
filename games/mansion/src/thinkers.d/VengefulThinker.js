@@ -134,6 +134,7 @@ class VengefulThinker extends GhostThinker {
         } else {
             // la cible à le nez collé au mur
             // il va falloir se teleporter derrière son dos
+            // ou attendre... de toutes facon le joueur doit bouger au bout d'un moment.
         }
     }
 
@@ -311,6 +312,8 @@ class VengefulThinker extends GhostThinker {
 
     s_teleport() {
         this._teleportAnim = 0;
+        this._nOpacity = 0;
+        this.setOpacityFlags();
     }
 
     s_teleport_move() {
