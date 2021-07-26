@@ -19,12 +19,6 @@ function loadEnvFile() {
 loadEnvFile();
 
 /**
- * libraycaster.js
- * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {libraycaster: string}, plugins: *[], module: {rules: *[]}, target: string}}
- */
-const devConfig = require('./webpack.config.dev');
-
-/**
  * Unit tests
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {tests: string}, plugins: *[], module: {rules: *[]}, target: string}}
  */
@@ -56,13 +50,9 @@ const exampleConfig = require('./webpack.config.demos');
  */
 const gameConfig = require('./webpack.config.game');
 
-const polyfillConfig = require('./webpack.config.polyfills')
-
 const CONFIG = [
-    polyfillConfig,
     testConfig,
     exampleConfig,
-    devConfig,
     mapeditConfig,
     websiteConfig,
     gameConfig
