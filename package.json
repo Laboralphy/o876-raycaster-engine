@@ -3,8 +3,7 @@
   "version": "1.4.0",
   "description": "A Raycasting Rendering Engine, to build HTML 5 games in javascript that use the raycasting technology.",
   "main": "./srv/index.js",
-  "browser": {
-  },
+  "browser": {},
   "esm": true,
   "scripts": {
     "test": "$NODE node_modules/.bin/jasmine dist/tests/tests.js",
