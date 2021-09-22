@@ -1,1 +1,0 @@
-Whenever a level is published, its structure definition file is stored in this directory.
