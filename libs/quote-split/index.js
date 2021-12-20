@@ -5,10 +5,11 @@
  * @return {string[]} output array
  */
 export function quoteSplit(str) {
-    return str
-        .match(/\S+|"[^"]+"/g)
-        .map(s => s
+    const s = str.match(/(?:[^\s"]+|"[^"]*")+/g)
+    return s
+        ? s.map(s => s
             .replace(/^"/, '')
             .replace(/"$/, '')
-        );
+        )
+        : str
 }

@@ -6,7 +6,7 @@
   "browser": {},
   "esm": true,
   "scripts": {
-    "test": "$NODE node_modules/.bin/jasmine dist/tests/tests.js",
+    "test": "$NODE -r esm node_modules/.bin/jasmine tests/*.js",
     "build": "$NODE node_modules/.bin/webpack",
     "watch": "$NODE node_modules/.bin/webpack --watch",
     "serve": "$NODE srv/index"
