@@ -25,7 +25,7 @@ function lsIndex(sSource, sEntry) {
  */
 const demoConfig = {
     mode: "development",
-    entry: lsIndex('apps/demos', 'index.js'),
+    entry: lsIndex('apps/demos', 'vault-fs.js'),
     resolve: {
         alias: {
             libs: path.resolve(DIR_NAME, 'libs')

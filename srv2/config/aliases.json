@@ -1,0 +1,4 @@
+{
+  "LevelRepository": "FileLevelRepository",
+  "GameInteractor": "GameService"
+}

@@ -1,5 +1,5 @@
 import TagGrid from "../tag-grid";
-import {quoteSplit} from "../quote-split";
+import quoteSplit from "../quote-split";
 import Events from "events";
 
 class TagManager {

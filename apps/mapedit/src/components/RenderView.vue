@@ -15,8 +15,8 @@
     import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
     import Window from "./Window.vue";
-    import generate from '../libraries/generate';
-    import {appendImages} from "../libraries/append-images";
+    import generate from '../libs/generate';
+    import {appendImages} from "../libs/append-images";
     import Engine from "libs/engine/Engine";
     import CanvasHelper from "libs/canvas-helper";
 

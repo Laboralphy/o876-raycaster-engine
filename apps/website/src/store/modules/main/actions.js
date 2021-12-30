@@ -1,7 +1,7 @@
 import * as ACTIONS from './action-types';
 import * as MUTATIONS from './mutation-types';
 
-import {fetchJSON} from 'libs/fetch-json';
+import {fetchJSON, postJSON} from 'libs/fetch-json';
 
 export default {
     [ACTIONS.CHECK_USER_AUTH]: async function({commit, dispatch}) {
@@ -26,7 +26,7 @@ export default {
 
     [ACTIONS.CHECK_ONLINE_STATUS]: async function({commit, getters}) {
         if (getters.isOnline === false && getters.isOffline === false) {
-            const {result} = await fetchJSON('/online');
+            const {result} = await postJSON('/online');
             commit(MUTATIONS.SET_FLAG_ONLINE, {value: result ? 1 : 0});
         }
     },

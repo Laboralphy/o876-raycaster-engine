@@ -52,6 +52,7 @@ class Vault {
      * @return {Promise<unknown>}
      */
     async save(filename, contents) {
+        console.log(filename, this.fqn(filename))
         return promfs.write(this.fqn(filename), contents);
     }
 

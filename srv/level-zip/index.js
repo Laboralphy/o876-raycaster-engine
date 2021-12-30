@@ -11,8 +11,6 @@ const generate = require('../generate');
 const appendImages = require('../append-images');
 const archiver = require('archiver');
 
-
-
 const wf = util.promisify(fs.writeFile);
 
 /**

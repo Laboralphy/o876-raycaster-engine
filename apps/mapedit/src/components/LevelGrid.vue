@@ -184,13 +184,13 @@
     import * as LEVEL_MUTATIONS from '../store/modules/level/mutation-types';
     import * as EDITOR_MUTATIONS from '../store/modules/editor/mutation-types';
     import {createNamespacedHelpers} from 'vuex';
-    import * as FH from '../libraries/fetch-helper';
+    import * as FH from '../libs/fetch-helper';
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
     import MapIcon from "vue-material-design-icons/Map.vue";
     import OfficeBuildingIcon from "vue-material-design-icons/OfficeBuilding.vue";
     import Tile from "./Tile.vue";
-    import GridRenderer from "../libraries/grid-renderer";
+    import GridRenderer from "../libs/grid-renderer";
     import ArrowCollapseIcon from "vue-material-design-icons/ArrowCollapse.vue";
     import ArrowExpandIcon from "vue-material-design-icons/ArrowExpand.vue";
     import MagnifyPlusIcon from "vue-material-design-icons/MagnifyPlus.vue";
@@ -204,13 +204,13 @@
     import PencilIcon from "vue-material-design-icons/Pencil.vue";
     import ArrowUpBoldIcon from "vue-material-design-icons/ArrowUpBold.vue";
     import ArrowDownBoldIcon from "vue-material-design-icons/ArrowDownBold.vue";
-    import BlockCache from "../libraries/block-cache";
+    import BlockCache from "../libs/block-cache";
     import UndoIcon from "vue-material-design-icons/Undo.vue";
     import ContentCopyIcon from "vue-material-design-icons/ContentCopy.vue";
     import ContentPasteIcon from "vue-material-design-icons/ContentPaste.vue";
     import CloseIcon from "vue-material-design-icons/Close.vue";
 
-    import SillyCanvasFactory from "../libraries/silly-canvas-factory";
+    import SillyCanvasFactory from "../libs/silly-canvas-factory";
 
     const {mapGetters: levelGetters, mapActions: levelActions, mapMutations: levelMapMutation} = createNamespacedHelpers('level');
     const {mapGetters: editorGetters, mapActions: editorActions, mapMutations: editorMutations} = createNamespacedHelpers('editor');

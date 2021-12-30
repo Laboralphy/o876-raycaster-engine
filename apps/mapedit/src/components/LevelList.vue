@@ -31,7 +31,7 @@
     import {createNamespacedHelpers} from 'vuex';
     import * as EDITOR_ACTIONS from '../store/modules/editor/action-types';
     import * as LEVEL_ACTIONS from '../store/modules/level/action-types';
-    import * as FH from '../libraries/fetch-helper';
+    import * as FH from '../libs/fetch-helper';
     import LevelThumbnail from "./LevelThumbnail.vue";
     import Window from "./Window.vue";
     import MyButton from "./MyButton.vue";
@@ -98,16 +98,10 @@
 
             exportToGame: async function() {
                 try {
-                  const name = this.selectedLevel;
-                  const result = await FH.exportLevel(name);
-                  if (result.status === 'done') {
-                    await this.setStatusBarText({text: 'Level successfully published : ' + name});
-                    alert('Level successfully published : ' + name)
-                  } else {
-                    await this.setStatusBarText({text: 'Error while publishing level : ' + name + ' - ' + result.error});
-                    alert('Error while publishing level : ' + name + ' - ' + result.error)
-                  }
+                  await FH.exportLevel(this.selectedLevel);
+                  await this.setStatusBarText({text: 'Level published : ' + this.selectedLevel});
                 } catch (e) {
+                  await this.setStatusBarText({text: 'Error while publishing level : ' + this.selectedLevel});
                   alert('This function is available only in local development context.')
                 }
             }

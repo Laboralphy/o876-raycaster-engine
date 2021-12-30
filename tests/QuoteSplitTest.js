@@ -1,4 +1,4 @@
-const { quoteSplit } = require('../libs/quote-split')
+const quoteSplit = require('../libs/quote-split')
 
 describe('testing simple', function () {
     it('t1', function () {

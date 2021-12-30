@@ -1,5 +1,3 @@
-
-
 const CONFIG = {
     // not configurable by command line
     texture_path: 'assets/textures',

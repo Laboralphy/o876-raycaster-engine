@@ -7,7 +7,7 @@
 
 import Grid from "@laboralphy/grid";
 import Painting from "../painting";
-import {quoteSplit} from "../quote-split";
+import quoteSplit from "../quote-split";
 
 const SERIAL_VERSION = 1;
 

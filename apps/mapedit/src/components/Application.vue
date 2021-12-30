@@ -69,10 +69,6 @@
           ...editorActions({
               fetchUserData: EDITOR_ACTIONS.FETCH_USER_DATA
           })
-        },
-
-        mounted() {
-          this.fetchUserData();
         }
     }
 </script>

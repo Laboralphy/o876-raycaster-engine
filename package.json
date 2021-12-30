@@ -9,7 +9,8 @@
     "test": "$NODE -r esm node_modules/.bin/jasmine tests/*.js",
     "build": "$NODE node_modules/.bin/webpack",
     "watch": "$NODE node_modules/.bin/webpack --watch",
-    "serve": "$NODE srv/index"
+    "serve": "$NODE srv/index",
+    "serve2": "$NODE srv2/index"
   },
   "keywords": [
     "HTML5",
@@ -49,12 +50,13 @@
   },
   "dependencies": {
     "@laboralphy/grid": "^1.0.0",
-    "@laboralphy/ws-service": "^0.2.2",
     "archiver": "^3.1.1",
+    "awilix": "^6.0.0",
     "body-parser": "^1.19.0",
+    "debug": "^4.3.3",
     "dotenv": "^8.2.0",
     "esm": "^3.2.25",
-    "express": "^4.17.1",
+    "express": "^4.17.2",
     "express-session": "^1.17.1",
     "jsonschema": "^1.4.0",
     "mkdirp": "^1.0.4",

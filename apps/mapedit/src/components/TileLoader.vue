@@ -75,8 +75,8 @@
 </template>
 
 <script>
-    // libraries
-    import TilesetSplitter from '../libraries/tileset-splitter';
+    // libs
+    import TilesetSplitter from '../libs/tileset-splitter';
 
     // vuex
     import {createNamespacedHelpers} from'vuex';

@@ -23,7 +23,7 @@ async function saveLevel(sUser, sLevelName, data) {
 		const oNewData = await jb.deblob(data, async blobs => {
 			for (let hash in blobs) {
 				const blob = blobs[hash];
-				// persist the file "hash" with the content "blob"
+				// vault-fs the file "hash" with the content "blob"
 				await vault.mkdir(sTilePath);
 				await vault.save(path.join(sTilePath, hash), blob);
 			}

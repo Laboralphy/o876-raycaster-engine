@@ -1,10 +1,10 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types';
 import CanvasHelper from "libs/canvas-helper";
-import CACHE from "../../../libraries/block-cache";
-import {deleteLevel, exportLevel, loadLevel, saveLevel} from '../../../libraries/fetch-helper';
+import CACHE from "../../../libs/block-cache";
+import {deleteLevel, exportLevel, loadLevel, saveLevel} from '../../../libs/fetch-helper';
 import * as CONSTS from "../../../consts";
-import {render} from "../../../libraries/block-renderer";
+import {render} from "../../../libs/block-renderer";
 
 
 
