@@ -37,7 +37,7 @@
               :name="l.name"
               :date="l.date"
               :preview="l.preview"
-              :exported="l.exported"
+              :exported="l.published"
               :invault="l.invault"
               @unpublish="({name}) => unpublish(name)"
           ></LevelThumbnail>
@@ -56,7 +56,7 @@
               :name="l.name"
               :date="l.date"
               :preview="l.preview"
-              :exported="l.exported"
+              :exported="l.published"
               :invault="l.invault"
               :publishable="true"
               @publish="({name}) => publish(name)"
@@ -89,45 +89,59 @@ export default {
   computed: {
 
     getPublishedLevels: function () {
-      return this.levels.filter(l => l.exported);
+      return this.levels.filter(l => l.published);
     },
 
     getInVaultLevels: function () {
-      return this.levels.filter(l => !l.exported);
+      return this.levels.filter(l => !l.published);
     },
 
     getUnpublishedLevels: function () {
       const pl = this.getPublishedLevels.map(l => l.name);
-      return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+      return this.levels.filter(l => !l.published && pl.indexOf(l.name) < 0);
     },
   },
 
   methods: {
     unpublish: async function (name) {
-      const aStr = [];
       if (!this.getInVaultLevels.find(l => l.name === name)) {
         if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
           return;
         }
       }
-      await deleteJSON('/vault/publish/' + name);
+      await deleteJSON('/publish/' + name);
       return this.fetchLevelData();
     },
 
     publish: async function (name) {
-      await putJSON('/vault/publish/' + name);
+      await putJSON('/publish/' + name);
       return this.fetchLevelData();
     },
 
-    fetchLevelData: function () {
-      return fetchJSON('/api/levels').then(data => {
-        this.levels.splice(0, this.levels.length, ...data);
-      });
+    fetchLevelData: async function () {
+      const vaultLevels = (await fetchJSON('/vault')).map(({ name, date, preview }) => ({
+        name,
+        date,
+        invault: true,
+        preview
+      }))
+      const levels = (await fetchJSON('/publish')).map(({ name, date, preview }) => ({
+        name,
+        date,
+        published: true,
+        preview
+      }))
+      levels.forEach(l => l.invault = vaultLevels.find(l => l.name === name))
+      vaultLevels.forEach(l => l.published = levels.find(l => l.name === name))
+      this.levels.splice(0, this.levels.length, ...levels, ...vaultLevels);
     },
 
     runProject: function () {
       window.location.href = this.gameActionPrefix;
     }
+  },
+  mounted: function () {
+    this.fetchLevelData()
   }
 }
 </script>

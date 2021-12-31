@@ -3,7 +3,7 @@
  */
 const crypto = require('crypto');
 const fs = require('fs');
-const persist = require('../../srv2/frameworks/external-services/VaultService');
+const persist = require('../../srv/frameworks/external-services/VaultService');
 const path = require('path');
 const util = require('util');
 const mkdirp = require('mkdirp');

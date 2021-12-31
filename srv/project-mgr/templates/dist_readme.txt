@@ -1,1 +1,0 @@
-All scripts compiled by Webpack are stored in this directory.

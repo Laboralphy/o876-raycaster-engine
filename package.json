@@ -9,8 +9,7 @@
     "test": "$NODE -r esm node_modules/.bin/jasmine tests/*.js",
     "build": "$NODE node_modules/.bin/webpack",
     "watch": "$NODE node_modules/.bin/webpack --watch",
-    "serve": "$NODE srv/index",
-    "serve2": "$NODE srv2/index"
+    "serve": "$NODE srv/index"
   },
   "keywords": [
     "HTML5",

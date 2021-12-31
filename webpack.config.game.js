@@ -17,10 +17,10 @@ module.exports = {
         }
     },
     entry: {
-        game: path.resolve(DIR_NAME, 'game/src/index.js')
+        game: path.resolve(DIR_NAME, process.env.GAME_PATH, 'src/index.js')
     },
     output: {
-        path: path.resolve(DIR_NAME, 'game/dist'),
+        path: path.resolve(DIR_NAME, process.env.GAME_PATH, 'dist'),
         libraryTarget: 'umd',
         filename: '[name].js'
     },

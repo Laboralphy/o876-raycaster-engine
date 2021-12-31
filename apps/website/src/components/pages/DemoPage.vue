@@ -32,7 +32,7 @@
 
         mounted: async function() {
             // gettings all demos
-            const oResponse = await fetchJSON('/demos');
+            const oResponse = await fetchJSON('/demo/list');
             this.demos = oResponse.list;
         }
     }
