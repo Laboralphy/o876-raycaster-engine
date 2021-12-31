@@ -1,3 +1,4 @@
+const debug = require('debug')
 const {
     buildZip,
     exportLevel
@@ -5,6 +6,7 @@ const {
 const os = require('os');
 const promFS = require('../../../libs/prom-fs')
 const path = require('path')
+const log = debug('serv:gs')
 
 class GameService {
     constructor () {
@@ -12,6 +14,7 @@ class GameService {
         if (this._gamePath.startsWith('~/')) {
             this._gamePath = os.homedir() + this._gamePath.substr(1)
         }
+        log('game path : %s', this._gamePath)
     }
 
     buildZipBundle(name, data) {
@@ -25,6 +28,7 @@ class GameService {
      * @returns {Promise}
      */
     publishLevel(name, data) {
+        log('publishing level %s', name)
         return exportLevel(name, data, {
             textures: 'assets/textures',
             level: 'assets/levels',
@@ -32,10 +36,22 @@ class GameService {
         })
     }
 
-    async loadLevel(name) {
+    getLevelFileName(name) {
         const sGamePath = this._gamePath
         const sLevelPath = path.resolve(sGamePath, 'assets/levels')
-        return JSON.parse(await promFS.read(path.join(sLevelPath, name + '.json')))
+        return path.join(sLevelPath, name + '.json')
+    }
+
+    async unpublishLevel(name) {
+        log('unpublishing level %s', name)
+        // effacer le fichier json
+        await promFS.rm(this.getLevelFileName(name))
+        await this.deleteUnusedTextures()
+    }
+
+    async loadLevel(name) {
+        log('loading level %s', name)
+        return JSON.parse(await promFS.read(this.getLevelFileName(name)))
     }
 
     async getUnusedTextureList () {
@@ -56,11 +72,20 @@ class GameService {
             .filter(t => aExtentions.has(path.extname(t)) && !aTextureSet.has(t))
     }
 
+    /**
+     * Efface les textures inutilisée dans le dossier des textures
+     * @returns {Promise<void>}
+     */
     async deleteUnusedTextures () {
+        log('deleting unused textures')
         const sGamePath = this._gamePath
         const sTexturePath = path.resolve(sGamePath, 'assets/textures')
         const aTextureToDelete = await this.getUnusedTextureList()
-        const aPromDel = aTextureToDelete.map(t => promFS.rm(path.join(sTexturePath, t)))
+        const aPromDel = aTextureToDelete
+            .map(t => {
+                log('deleting %s', t)
+                return promFS.rm(path.join(sTexturePath, t))
+            })
         await Promise.all(aPromDel)
     }
 
@@ -94,15 +119,19 @@ class GameService {
         // déterminer le dossier ou se trouve les levels
         const sGamePath = this._gamePath
         const sLevelPath = path.resolve(sGamePath, 'assets/levels')
-        const sTexturePath = path.resolve(sGamePath, 'assets/textures')
         const aLevelList = await promFS.ls(sLevelPath)
         // pour chaque level il faut la liste des textures
         const aOutput = []
         for (const s of aLevelList) {
+            const oStat = await promFS.stat(path.join(sLevelPath, s.name))
             const sName = path.basename(s.name, '.json')
             if (path.extname(s.name) === '.json' && !s.dir) {
                 const o = {
                     name: sName,
+                    date: oStat.dates.modified,
+                    preview: null,
+                    exported: true,
+                    invault: null,
                     textures: await this.getLevelTextureList(sName)
                 }
                 aOutput.push(o)

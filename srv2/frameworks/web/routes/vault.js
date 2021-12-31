@@ -28,6 +28,10 @@ function main (container) {
         return VaultController.publishLevel(req, res)
     })
 
+    router.delete('/publish/:name', (req, res) =>  {
+        return VaultController.unpublishLevel(req, res)
+    })
+
     router.delete('/:name', (req, res) =>  {
         return VaultController.deleteLevel(req, res)
     })

@@ -1,4 +1,4 @@
-class GetPublishedLevelList {
+class GetUnusedTextures {
     constructor({ GameInteractor }) {
         this.gameInteractor = GameInteractor
     }
@@ -9,4 +9,4 @@ class GetPublishedLevelList {
     }
 }
 
-module.exports = GetPublishedLevelList
+module.exports = GetUnusedTextures

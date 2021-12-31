@@ -49,6 +49,7 @@ class Server {
       app.use('/game', express.static('./game'))
       app.use('/dist', express.static('./dist'))
       app.use('/editor', express.static('./apps/mapedit/index.html'))
+      app.use('/website', express.static('./apps/website/index.html'))
       app.use('/api', apiRouter(container))
       app.use('/vault', vaultRouter(container))
       app.use('/', express.static('./apps/website/index.html'))

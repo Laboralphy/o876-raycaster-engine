@@ -1,19 +1,6 @@
 <template>
   <div>
-    <div class="seamless" v-if="isOnline">
-      <div class="row">
-        <div class="col lg-12">
-          <h3>The Raycasting Game Engine Home Page (online version)</h3>
-          <ul>
-            <li>A game engine that builds raycasting based browser games.</li>
-            <li>Open source.</li>
-            <li>100% javascript.</li>
-          </ul>
-          <p>Click on <span class="button-text">Docs</span> for more information about it's features.</p>
-        </div>
-      </div>
-    </div>
-    <div class="seamless" v-if="isOffline">
+    <div class="seamless">
       <div class="row">
         <div class="col lg-12">
           <h3>Local project status</h3>
@@ -82,8 +69,7 @@
 
 <script>
 import LevelThumbnail from "../LevelThumbnail.vue";
-import {deleteJSON, fetchJSON} from "libs/fetch-json";
-import storeMixin from "../../mixins/store";
+import {deleteJSON, fetchJSON, putJSON} from "libs/fetch-json";
 
 import {createNamespacedHelpers} from 'vuex';
 
@@ -92,8 +78,6 @@ const {mapGetters: mainGetters} = createNamespacedHelpers('main');
 export default {
   name: "HomePage",
   components: {LevelThumbnail},
-
-  mixins: [storeMixin],
 
   data: function () {
     return {
@@ -126,41 +110,23 @@ export default {
           return;
         }
       }
-      await deleteJSON(this.gameActionPrefix + '/level/' + name);
+      await deleteJSON('/vault/publish/' + name);
       return this.fetchLevelData();
     },
 
     publish: async function (name) {
-      await fetchJSON('/export/' + name);
+      await putJSON('/vault/publish/' + name);
       return this.fetchLevelData();
     },
 
     fetchLevelData: function () {
-      if (this.isOffline) {
-        return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
-          this.levels.splice(0, this.levels.length, ...data);
-        });
-      } else {
-        return Promise.resolve([]);
-      }
+      return fetchJSON('/api/levels').then(data => {
+        this.levels.splice(0, this.levels.length, ...data);
+      });
     },
 
     runProject: function () {
       window.location.href = this.gameActionPrefix;
-    }
-  },
-
-  watch: {
-    getFlagOnline: {
-      handler: function (newValue, oldValue) {
-        if (typeof oldValue !== 'number') {
-          if (newValue === 0) {
-            // on est en localhost dev : il faut charger les niveaux
-            this.fetchLevelData();
-          }
-        }
-      },
-      immediate: true
     }
   }
 }
