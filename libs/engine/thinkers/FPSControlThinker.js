@@ -130,7 +130,8 @@ class FPSControlThinker extends TangibleThinker {
 
     /**
      * Compute forward vector
-     * @param fAngle
+     * @param fAngle {number}
+     * @param fSpeed {number}
      * @return {Vector}
      */
     getVectorForward(fAngle, fSpeed) {

@@ -21,7 +21,7 @@ class TeleChaserThinker extends VengefulThinker {
       ],
 
       "gs_chase_no_tele_init": [
-        [1, "gs_time_3000", "gs_chase_no_tele"]
+        [1, "gs_time_3000_ish", "gs_chase_no_tele"]
       ],
 
       "gs_chase_no_tele": [
@@ -52,6 +52,11 @@ class TeleChaserThinker extends VengefulThinker {
 
   gs_teleport_behind () {
     this.computeTeleportBehind();
+  }
+
+  // timer d'environ 3000 ms (+- 500ms
+  gs_time_3000_ish () {
+    this._setGhostTimeOut(Math.floor(Math.random() * 1000 + 2500));
   }
 
   ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////

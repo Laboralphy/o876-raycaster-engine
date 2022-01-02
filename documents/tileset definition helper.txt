@@ -1,0 +1,14 @@
+id {string} identifiant du tileset
+src {string} lien vers le fichier image
+width {number}
+height {number} dimension d'une tile en pixel (pas du tileset entier)
+animations : tableau d'animation
+- chaque élément de ce tableau :
+    {
+        id {string} id de l'animation
+        start {number[]} tableau des indices de tile
+        length {number} nombre de tile dans l'animation
+        duration {number} durée de l'animation d'une frame (en ms)
+        loop {string} '@LOOP_NONE', '@LOOP_FORWARD' '@LOOP_YOYO' ... type de boucle
+        iterations {number|null} nombre d'iteration (null pour infinity)
+    }

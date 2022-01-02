@@ -69,6 +69,8 @@ div.ui-panel-window {
     background-image: url(../uigfx/backgrounds/notebook-texture-2.jpg);
     border: solid 0.2em var(--color-window-border);
     border-radius: 0.5em;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 div.ui-menu-window {

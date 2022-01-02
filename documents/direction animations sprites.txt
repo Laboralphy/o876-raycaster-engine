@@ -1,0 +1,10 @@
+[
+    vue de dos
+    vue de dos vers la droite
+    vers la droite
+    vue de face vers la droite
+    vue de face
+    vue de face vers la gauche
+    vue de gauche
+    vue de dos vers la gauche
+]

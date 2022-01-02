@@ -6,6 +6,16 @@ import * as RC_CONSTS from 'libs/raycaster/consts'
 
 const PULSE_MAP_LARGE = [4, 3, 2, 1, 2, 3, 2, 1, 0, 1, 2, 1, 0, 1, 0];
 
+/**
+ * gt_time_out : renvoie true quand le time out est terminé
+ * gt_wounded : renvoie true quand le fantome est bléssé
+ * gt_has_teleported: renvoie true quand le fantome vien de se teleporté
+ *
+ * gs_time_XXX : initialise le timer à XXX millisecondes
+ * gs_shutter_chance_on: allume le shutter chance
+ * gs_shutter_chance_off: éteint le shutter chance
+ *
+ */
 class VengefulThinker extends GhostThinker {
 
     constructor() {
@@ -167,6 +177,10 @@ class VengefulThinker extends GhostThinker {
         this._setGhostTimeOut(250);
     }
 
+    gs_time_333 () {
+        this._setGhostTimeOut(333);
+    }
+
     gs_time_500 () {
         this._setGhostTimeOut(500);
     }
@@ -177,6 +191,10 @@ class VengefulThinker extends GhostThinker {
 
     gs_time_1000 () {
         this._setGhostTimeOut(1000);
+    }
+
+    gs_time_2000 () {
+        this._setGhostTimeOut(2000);
     }
 
     gs_time_3000 () {

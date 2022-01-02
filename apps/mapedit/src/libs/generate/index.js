@@ -1,2 +1,2 @@
-const generate = require('../../../../../srv/generate');
+const generate = require('../../../../../libs/generate');
 export default generate;

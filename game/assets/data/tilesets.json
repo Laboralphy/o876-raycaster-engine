@@ -32,15 +32,43 @@
   {
     "id": "u_visor",
     "src": "assets/camera/visor.png",
-    "width": "400",
-    "height": "250",
+    "width": 400,
+    "height": 250,
     "animations": []
   },
   {
     "id": "u_lamp",
     "src": "assets/camera/lamp.png",
-    "width": "128",
-    "height": "48",
+    "width": 128,
+    "height": 48,
     "animations": []
+  },
+  {
+    "id": "p_ecto",
+    "src": "assets/sprites/p_ecto.png",
+    "width": 66,
+    "height": 64,
+    "animations": [
+      {
+        "id": "fly",
+        "start": [
+          21, 12, 15, 18, 0, 3, 6, 9
+        ],
+        "length": 3,
+        "duration": 80,
+        "loop": "@LOOP_FORWARD",
+        "iterations": null
+      },
+      {
+        "id": "explode",
+        "start": [
+          24, 24, 24, 24, 24, 24, 24, 24
+        ],
+        "length": 6,
+        "duration": 40,
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
+      }
+    ]
   }
 ]

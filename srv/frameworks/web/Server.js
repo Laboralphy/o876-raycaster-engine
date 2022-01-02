@@ -54,6 +54,9 @@ class Server {
       app.use('/publish', publishRouter(container))
       app.use('/vault', vaultRouter(container))
       app.use('/demo', demosRouter(container))
+      app.get('/', (req, res) => {
+        res.redirect('/ui')
+      })
       this._httpServer = serv
     } catch (e) {
       logServ('server initialization failed')

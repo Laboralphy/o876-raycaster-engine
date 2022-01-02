@@ -13,14 +13,17 @@ class RusherThinker extends VengefulThinker {
         super();
         this.ghostAI.transitions = {
             "gs_init": [
+                // état initial : arret, shutter off, go chase
                 [1, "gs_stop", "gs_shutter_chance_off", "gs_chase"]
             ],
 
             "gs_chase": [
+                // si cible proche, activer shutter, demarrer chrono 500, s'arreter, attendre avec rush
                 ["gt_target_close", "gs_shutter_chance_on", "gs_time_500", "gs_stop", "gs_wait_before_rush"]
             ],
 
             "gs_wait_before_rush": [
+                // si time out (500 ms) rusher, eteindre le shutter
                 ["gt_time_out", "gs_rush_init", "gs_shutter_chance_off", "gs_rush"]
             ],
 
