@@ -356,6 +356,13 @@ class VengefulThinker extends GhostThinker {
         return bWounded;
     }
 
+    gt_critical_wounded () {
+        const bWounded = this._bWounded && this._bShutterChance;
+        this._bWounded = false;
+        this._bShutterChance = false;
+        return bWounded;
+    }
+
     gt_has_teleported () {
         return this._teleportDestination === null;
     }

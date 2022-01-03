@@ -6,14 +6,12 @@ const {
 const os = require('os');
 const promFS = require('../../../libs/prom-fs')
 const path = require('path')
+const {homeAliasPath} = require('../../../libs/home-alias-path');
 const log = debug('serv:gs')
 
 class GameService {
     constructor () {
-        this._gamePath = process.env.GAME_PATH
-        if (this._gamePath.startsWith('~/')) {
-            this._gamePath = os.homedir() + this._gamePath.substr(1)
-        }
+        this._gamePath = homeAliasPath(process.env.GAME_PATH)
         log('game path : %s', this._gamePath)
     }
 

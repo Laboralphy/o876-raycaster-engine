@@ -1,7 +1,7 @@
 import MissileThinker from "libs/engine/thinkers/MissileThinker";
 const MISSILE_SPEED = 10;
 
-class MagboltThinker extends MissileThinker {
+class MagBoltThinker extends MissileThinker {
     fire(owner) {
         const missile = this.entity;
         missile.sprite.setCurrentAnimation('fly');
@@ -22,4 +22,4 @@ class MagboltThinker extends MissileThinker {
 }
 
 
-export default MagboltThinker;
+export default MagBoltThinker;

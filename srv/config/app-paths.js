@@ -1,7 +1,7 @@
-const os = require('os')
 const path = require('path')
 const promFS = require('../../libs/prom-fs')
 const mkdirp = require('mkdirp')
+const {homeAliasPath} = require('../../libs/home-alias-path');
 
 let WORKING_PATH = null
 
@@ -10,10 +10,7 @@ function getWorkingPath () {
         return WORKING_PATH
     }
     let sPath = process.env.WORKING_PATH
-    if (sPath.startsWith('~/')) {
-        sPath = os.homedir() + sPath.substr(1)
-    }
-    WORKING_PATH = path.resolve(sPath)
+    WORKING_PATH = homeAliasPath(sPath)
     return WORKING_PATH
 }
 

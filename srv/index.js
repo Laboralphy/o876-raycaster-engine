@@ -12,7 +12,7 @@ logServ('%s v%s - %s', oPackage.name, oPackage.version, oPackage.description)
 function checkProcessEnv () {
   logServ('checking environment variables')
   const CHECK_LIST = [
-    'SERVER_PORT', 'GAME_PATH', 'WORKING_PATH', 'DATABASE_PATH'
+    'SERVER_PORT', 'GAME_PATH', 'WORKING_PATH'
   ]
   if (CHECK_LIST.some(c => {
     const bUndefined = process.env[c] === undefined

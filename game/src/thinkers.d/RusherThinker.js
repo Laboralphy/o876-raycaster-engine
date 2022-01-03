@@ -24,6 +24,7 @@ class RusherThinker extends VengefulThinker {
 
             "gs_wait_before_rush": [
                 // si time out (500 ms) rusher, eteindre le shutter
+                ["gt_critical_wounded", "gs_init"],
                 ["gt_time_out", "gs_rush_init", "gs_shutter_chance_off", "gs_rush"]
             ],
 

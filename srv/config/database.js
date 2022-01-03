@@ -1,15 +1,12 @@
 const path = require('path')
-const os = require('os')
+const {homeAliasPath} = require("../../libs/home-alias-path");
 
 function resolvePath (sPath) {
-  if (sPath.startsWith('~/')) {
-    sPath = os.homedir() + sPath.substr(1)
-  }
-  return path.resolve(sPath)
+  return homeAliasPath(sPath)
 }
 
 module.exports = {
-  path: resolvePath(path.join(process.env.WORKING_PATH, process.env.DATABASE_PATH)),
+  path: homeAliasPath(path.join(process.env.WORKING_PATH, 'database')),
   collections: ['levels'],
   indexes: {}
 }

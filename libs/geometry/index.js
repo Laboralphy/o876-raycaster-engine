@@ -83,12 +83,16 @@ class Geometry {
      * avec l'axe des X+
      * @param x1 {number|Vector}
      * @param y1 {number|Vector}
-     * @param x2 {number}
-     * @param y2 {number}
+     * @param [x2] {number}
+     * @param [y2] {number}
      * @return {number}
      */
     static angle(x1, y1, x2, y2) {
-        return Math.atan2(y2 - y1, x2 - x1);
+        if ((x1 instanceof Vector) && (y1 instanceof Vector)) {
+            return Geometry.angle(x1.x, x1.y, y1.x, y1.y)
+        } else {
+            return Math.atan2(y2 - y1, x2 - x1);
+        }
     }
 
     /**

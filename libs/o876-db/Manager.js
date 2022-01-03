@@ -1,6 +1,7 @@
 const path = require('path')
 const Collection = require('./Collection')
 const promFS = require('../prom-fs')
+const {homeAliasPath} = require("../home-alias-path");
 
 class Manager {
   constructor () {
@@ -35,7 +36,7 @@ class Manager {
   async init (options) {
     this._path = options.path || path.resolve(process.cwd())
     const aCollections = options.collections || []
-    const sPath = this._path
+    const sPath = homeAliasPath(this._path)
     if (!await promFS.stat(sPath)) {
       console.warn('Database path', sPath, 'is unreachable')
       throw new Error('ERR_DATABASE_PATH_NOT_FOUND')

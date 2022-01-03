@@ -1,6 +1,7 @@
 import FPSControlThinker from "libs/engine/thinkers/FPSControlThinker";
 import * as CONSTS from "../consts";
 import Easing from "libs/easing";
+import Geometry from "../../../libs/geometry";
 
 const Z_FLOOR_LEVEL = 1.75;
 
@@ -57,7 +58,8 @@ class PlayerThinker extends FPSControlThinker {
     computeAngleToMobile(t) {
         const pMe = this.entity.position;
         const pTarget = t.position;
-        return Math.atan2(pTarget.y - pMe.y, pTarget.x - pMe.x);
+        // return Math.atan2(pTarget.y - pMe.y, pTarget.x - pMe.x);
+        return Geometry.angle(pMe.x, pMe.y, pTarget.x, pTarget.y)
     }
 
     forceAngle(fTarget) {

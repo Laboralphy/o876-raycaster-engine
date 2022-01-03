@@ -9,7 +9,15 @@ class ShooterChaserThinker extends VengefulThinker {
         super();
         this.ghostAI.transitions = {
             "gs_start": [
+                [1, "gs_time_2000", "gs_chase", "gs_chasing"]
+            ],
+
+            "gs_start_1": [
                 [1, "gs_time_shoot", "gs_chasing"]
+            ],
+
+            "gs_pause_wounded": [
+                ["gt_time_out", "gs_start_1"]
             ],
 
             "gs_chasing": [
@@ -19,11 +27,12 @@ class ShooterChaserThinker extends VengefulThinker {
 
             "gs_is_going_to_shoot": [
                 // tirer, attendre 2s puis re chaser
-                ["gt_time_out", "gs_shoot", "gs_time_2000", "gs_shutter_chance_off", "gs_wait_after_shoot"]
+                ["gt_critical_wounded", "gs_time_1000", "gs_shutter_chance_off", "gs_pause_wounded"],
+                ["gt_time_out", "gs_shoot", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"]
             ],
 
             "gs_wait_after_shoot": [
-                ["gt_time_out", "gs_start"]
+                ["gt_time_out", "gs_chase", "gs_start_1"]
             ]
         }
     }
@@ -48,7 +57,7 @@ class ShooterChaserThinker extends VengefulThinker {
     }
 
     gs_shoot() {
-        this.moveTowardTarget();
+        this.moveTowardTarget(0, 0);
         // tirer un projectile
         const missile = this.engine.createEntity('p_linear_magbolt', this.entity.position);
         missile.thinker.fire(this.entity);
