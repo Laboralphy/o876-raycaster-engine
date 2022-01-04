@@ -10,6 +10,7 @@ class MissileThinker extends TangibleThinker {
     constructor() {
         super();
         this._owner = null;
+        this._speedNorm = 0;
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
         this.defineTransistions({
@@ -52,7 +53,13 @@ class MissileThinker extends TangibleThinker {
         missile.position.set(oOwnerLocation);
 
         // set proper speed vector
-        const {dx, dy} = Geometry.polar2rect(oOwnerLocation.angle, speed);
+        this._speedNorm = speed;
+        this.setAngle(oOwnerLocation.angle)
+    }
+
+    setAngle (a) {
+        this.entity.position.angle = a
+        const {dx, dy} = Geometry.polar2rect(a, this._speedNorm);
         this.setSpeed(dx, dy);
     }
 

@@ -1,29 +1,48 @@
 import MagBoltThinker from "./MagBoltThinker";
-import Geometry from "../../../libs/geometry";
-import cellSurfaceManager from "../../../libs/raycaster/CellSurfaceManager";
 
 class HomingMagBoltThinker extends MagBoltThinker {
-    s_move() {
-        super.s_move()
-        const nAngle = this.computeAngleToTarget()
-        // essayer de reduire cet angle
-        const nMaxTurnAngle = 0.1
-        const oSelf = this.entity
-        if (Math.abs(nAngle) <= nMaxTurnAngle) {
-            // se tourner direct vers cible
-            oSelf.position.angle -= nAngle
-        } else {
-            oSelf.position.angle -= Math.sign(nAngle) * nMaxTurnAngle
-        }
+    constructor () {
+        super()
+        this.ANGLE_TURNING = 0.05
     }
 
-    computeAngleToTarget () {
-        const oSelf = this.entity
+    s_move() {
+        super.s_move()
+        const nAngle = this.vectorToTarget().angle()
+        // essayer de reduire cet angle
+        this.setAngle(this.getAngleToTarget(nAngle))
+    }
+
+    getAngleToTarget(fTarget) {
+        const m = this.entity;
+        let fMe = m.position.angle;
+        while (fTarget < 0) {
+            fTarget += 2 * Math.PI;
+            fMe += 2 * Math.PI;
+        }
+        // notre angle est fMe
+        // il faudrait tourner vers fTarget
+        if (Math.abs(fMe - fTarget) <= this.ANGLE_TURNING) {
+            return fTarget
+        }
+        if (fMe < fTarget) {
+            return fMe + this.ANGLE_TURNING
+        }
+        if (fMe > fTarget) {
+            return fMe - this.ANGLE_TURNING
+        }
+        return fMe
+    }
+
+    vectorToTarget() {
+        const oSelf = this.entity;
         const oOwner = this._owner
         const oTarget = oOwner.thinker.target
-        const pSelf = oSelf.position
-        const pTarget = oTarget.position
+        const vSelf = oSelf.position
+        const vTarget = oTarget.position
+        return vTarget.vector().sub(vSelf.vector());
     }
+
 }
 
 
