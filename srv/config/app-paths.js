@@ -3,15 +3,15 @@ const promFS = require('../../libs/prom-fs')
 const mkdirp = require('mkdirp')
 const {homeAliasPath} = require('../../libs/home-alias-path');
 
-let WORKING_PATH = null
+let SAVE_FILES_PATH = null
 
 function getWorkingPath () {
-    if (WORKING_PATH !== null) {
-        return WORKING_PATH
+    if (SAVE_FILES_PATH !== null) {
+        return SAVE_FILES_PATH
     }
-    let sPath = process.env.WORKING_PATH
-    WORKING_PATH = homeAliasPath(sPath)
-    return WORKING_PATH
+    let sPath = process.env.SAVE_FILES_PATH
+    SAVE_FILES_PATH = homeAliasPath(sPath)
+    return SAVE_FILES_PATH
 }
 
 function getDatabasePath () {

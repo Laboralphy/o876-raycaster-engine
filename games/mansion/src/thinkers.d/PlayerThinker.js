@@ -1,7 +1,7 @@
 import FPSControlThinker from "libs/engine/thinkers/FPSControlThinker";
 import * as CONSTS from "../consts";
 import Easing from "libs/easing";
-import Geometry from "../../../libs/geometry";
+import Geometry from "../../../../libs/geometry";
 
 const Z_FLOOR_LEVEL = 1.75;
 

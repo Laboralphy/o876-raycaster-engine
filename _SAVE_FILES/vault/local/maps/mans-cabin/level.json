@@ -13633,7 +13633,7 @@
     "brightness": 0
   },
   "actor": {
-    "startpoint": 1,
+    "startpoint": 0,
     "thinker": ""
   },
   "startpoints": [

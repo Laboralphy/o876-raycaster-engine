@@ -1,13 +1,11 @@
 import VengefulThinker from "./VengefulThinker";
 import Blindness from "../filters/Blindness";
-import Timed from '../../../libs/engine/filters/Timed';
-
-const THINKER_DISTANCE_RUSH = 256; // distance à laquel le ghost va rusher
+import Timed from "../../../../libs/engine/filters/Timed";
 
 /**
  * Le fantome se déplace vers la cible en tirant des projectiles
  */
-class BlinderChaserThinker extends VengefulThinker {
+class BlinderWalkerThinker extends VengefulThinker {
 
     constructor() {
         super();
@@ -25,25 +23,18 @@ class BlinderChaserThinker extends VengefulThinker {
             ],
 
             "gs_chasing": [
-                // si timeout terminé, stopper pendant 250 ms puis fatal frame on & flasher
+                // si timeout terminer, stoper pendant 500ms puis tirer
                 ["gt_time_out", "gs_stop", "gs_time_250", "gs_flash", "gs_shutter_chance_on", "gs_is_going_to_flash"]
             ],
 
             "gs_is_going_to_flash": [
-                // si photo ; cadrage fatal off, anime de blessage puis attendre 1000
+                // tirer, attendre 2s puis re chaser
                 ["gt_critical_wounded", "gs_time_1000", "gs_shutter_chance_off", "gs_pause_wounded"],
-                // flasher, cadrage fatal off, puis attendre 250 ms
-                ["gt_time_out", "gs_fire_flash", "gs_shutter_chance_off", "gs_go_rush"]
+                ["gt_time_out", "gs_time_250", "gs_fire_flash", "gs_shutter_chance_off", "gs_wait_after_flash"]
             ],
 
-            "gs_go_rush": [
-                [1, "gs_rush_init", "gs_rush"]
-            ],
-
-            "gs_rush": [
-                ["t_target_not_found", "gs_start_1"],
-                ["gt_hit_wall", "gs_start_1"],
-                ["gt_wounded", "gs_start_1"]
+            "gs_wait_after_flash": [
+                ["gt_time_out", "gs_chase", "gs_start_1"]
             ]
         }
     }
@@ -68,11 +59,6 @@ class BlinderChaserThinker extends VengefulThinker {
         this.moveTowardTarget();
     }
 
-    gs_rush_init() {
-        // define rush vector
-        this.moveTowardTarget(4, 0);
-    }
-
     /**
      * Randomly choose timer between 3 and 5s
      */
@@ -88,22 +74,6 @@ class BlinderChaserThinker extends VengefulThinker {
         this.moveTowardTarget(0, 0);
         this.engine.createEntity('o_flare', this.entity.position);
     }
-
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-
-    gt_target_close () {
-        return this.getDistanceToTarget() < THINKER_DISTANCE_RUSH;
-    }
-
-    /**
-     * returns true if this entity hits something (wall or other entity)
-     * @return {boolean}
-     */
-    gt_hit_wall() {
-        return !!this._cwc.wcf.c;
-    }
 }
 
-export default BlinderChaserThinker
+export default BlinderWalkerThinker

@@ -47,7 +47,7 @@ class Server {
       // Route http
       logServ('declaring webserver routes and middlewares')
       app.use(httpPresentedResponse)
-      app.use('/game', express.static('./game'))
+      app.use('/game', express.static(process.env.GAME_PATH))
       app.use('/dist', express.static('./dist'))
       app.use('/editor', express.static('./apps/mapedit/index.html'))
       app.use('/ui', express.static('./apps/website/index.html'))

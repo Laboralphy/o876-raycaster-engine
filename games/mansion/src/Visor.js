@@ -1,7 +1,7 @@
 import * as MUTATIONS from './store/modules/visor/mutation-types';
 import StoreAbstract from "./StoreAbstract";
-import RangeCollider from "../../libs/range-collider";
-import * as Interpolator from "../../libs/interpolator";
+import RangeCollider from "../../../libs/range-collider";
+import * as Interpolator from "../../../libs/interpolator";
 import * as CONSTS from "./consts";
 
 class Visor extends StoreAbstract {

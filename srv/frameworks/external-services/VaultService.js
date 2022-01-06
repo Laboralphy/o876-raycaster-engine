@@ -91,7 +91,7 @@ class VaultService {
 	}
 
 	/**
-	 * sets a new value for the VAULT_PATH variable, the folder location where all files are stored
+	 * sets a new value for the SAVE_FILES_PATH variable, the folder location where all files are stored
 	 * @param sPath {string} new vault path value
 	 */
 	setVaultPath(sPath) {

@@ -1,12 +1,12 @@
 const path = require('path');
 const promfs = require('../../../../libs/prom-fs');
 
-const VAULT_PATH = '.';
+const SAVE_FILES_PATH = '.';
 
 class VaultFs {
 
     constructor() {
-        this._vaultPath = VAULT_PATH;
+        this._vaultPath = SAVE_FILES_PATH;
         this._namespace = '/';
     }
 

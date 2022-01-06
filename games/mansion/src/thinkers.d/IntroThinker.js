@@ -1,6 +1,6 @@
 import Easing from "libs/easing";
 import Thinker from "libs/engine/thinkers/Thinker";
-import FadeOut from "../../../libs/engine/filters/FadeOut";
+import FadeOut from "../../../../libs/engine/filters/FadeOut";
 import SimpleText from "../filters/SimpleText";
 import Link from "libs/engine/filters/Link";
 import STRINGS from "../../assets/strings";

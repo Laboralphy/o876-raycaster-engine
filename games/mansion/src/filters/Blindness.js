@@ -1,5 +1,5 @@
-import AbstractFilter from "../../../libs/filters/AbstractFilter";
-import CanvasHelper from "../../../libs/canvas-helper";
+import AbstractFilter from "../../../../libs/filters/AbstractFilter";
+import CanvasHelper from "../../../../libs/canvas-helper";
 
 class Blindness extends AbstractFilter {
     constructor() {
