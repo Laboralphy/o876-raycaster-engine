@@ -947,6 +947,7 @@ class Engine {
                     start: a.start,
                     length: a.length,
                     loop: a.loop,
+                    duration: a.duration,
                     iterations: a.iterations
                 };
             });

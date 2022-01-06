@@ -72,6 +72,62 @@
     ]
   },
   {
+    "id": "p_ecto_2",
+    "src": "assets/sprites/p_ecto_2.png",
+    "width": 64,
+    "height": 64,
+    "animations": [
+      {
+        "id": "fly",
+        "start": [
+          21, 12, 15, 18, 0, 3, 6, 9
+        ],
+        "length": 3,
+        "duration": 80,
+        "loop": "@LOOP_FORWARD",
+        "iterations": null
+      },
+      {
+        "id": "explode",
+        "start": [
+          24, 24, 24, 24, 24, 24, 24, 24
+        ],
+        "length": 5,
+        "duration": 40,
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
+      }
+    ]
+  },
+  {
+    "id": "p_ecto_3",
+    "src": "assets/sprites/p_ecto_3.png",
+    "width": 80,
+    "height": 64,
+    "animations": [
+      {
+        "id": "fly",
+        "start": [
+          8, 12, 15, 18, 0, 3, 6, 9
+        ],
+        "length": 3,
+        "duration": 80,
+        "loop": "@LOOP_FORWARD",
+        "iterations": null
+      },
+      {
+        "id": "explode",
+        "start": [
+          24, 24, 24, 24, 24, 24, 24, 24
+        ],
+        "length": 5,
+        "duration": 40,
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
+      }
+    ]
+  },
+  {
     "id": "o_flare",
     "src": "assets/sprites/o_flare.png",
     "width": 96,
@@ -81,7 +137,7 @@
         "id": "flare",
         "start": [0, 0, 0, 0, 0, 0, 0, 0],
         "length": 5,
-        "duration": 300,
+        "duration": 64,
         "loop": "@LOOP_YOYO",
         "iterations": 2
       }

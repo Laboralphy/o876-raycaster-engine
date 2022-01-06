@@ -3,16 +3,18 @@ import VengefulThinker from "./VengefulThinker";
 /**
  * Le fantome se déplace vers la cible en tirant des projectiles
  */
-class ShooterChaserThinker extends VengefulThinker {
+class ShooterWalkerThinker extends VengefulThinker {
 
     constructor() {
         super();
         this.ghostAI.transitions = {
             "gs_start": [
+                // se tourner vers cible et avancer, attendre 2000 ms
                 [1, "gs_time_2000", "gs_chase", "gs_chasing"]
             ],
 
             "gs_start_1": [
+                // definir un timer avant le tir, puis chaser
                 [1, "gs_time_shoot", "gs_chasing"]
             ],
 
@@ -59,9 +61,9 @@ class ShooterChaserThinker extends VengefulThinker {
     gs_shoot() {
         this.moveTowardTarget(0, 0);
         // tirer un projectile
-        const missile = this.engine.createEntity('p_homing_magbolt', this.entity.position);
+        const missile = this.engine.createEntity('p_magbolt', this.entity.position);
         missile.thinker.fire(this.entity);
     }
 }
 
-export default ShooterChaserThinker
+export default ShooterWalkerThinker

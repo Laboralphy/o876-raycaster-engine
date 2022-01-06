@@ -87,8 +87,6 @@ class Sprite {
             start.forEach(x => this.buildAnimation({start: x, length, duration, loop, iterations}, ref));
             return;
         }
-        console.trace()
-        console.log({X: '555', start, length, duration, loop, iterations})
         a.base = start;
         a.count = length;
         a.duration = duration;

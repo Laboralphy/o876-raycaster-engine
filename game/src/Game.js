@@ -65,7 +65,7 @@ class Game extends GameAbstract {
             (state, getters) => getters['ui/isGameRunning'],
             (newValue, oldValue) => {
                 if (newValue && !oldValue) {
-                  this.loadLevel(CONSTS.FIRST_LEVEL);
+                  this.loadLevel(this.options.firstLevel);
                 }
             }
         )

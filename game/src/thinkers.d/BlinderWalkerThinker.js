@@ -1,9 +1,11 @@
 import VengefulThinker from "./VengefulThinker";
+import Blindness from "../filters/Blindness";
+import Timed from "../../../libs/engine/filters/Timed";
 
 /**
  * Le fantome se déplace vers la cible en tirant des projectiles
  */
-class BlinderChaserThinker extends VengefulThinker {
+class BlinderWalkerThinker extends VengefulThinker {
 
     constructor() {
         super();
@@ -22,13 +24,13 @@ class BlinderChaserThinker extends VengefulThinker {
 
             "gs_chasing": [
                 // si timeout terminer, stoper pendant 500ms puis tirer
-                ["gt_time_out", "gs_stop", "gs_time_250", "gs_shutter_chance_on", "gs_is_going_to_flash"]
+                ["gt_time_out", "gs_stop", "gs_time_250", "gs_flash", "gs_shutter_chance_on", "gs_is_going_to_flash"]
             ],
 
             "gs_is_going_to_flash": [
                 // tirer, attendre 2s puis re chaser
                 ["gt_critical_wounded", "gs_time_1000", "gs_shutter_chance_off", "gs_pause_wounded"],
-                ["gt_time_out", "gs_flash", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_flash"]
+                ["gt_time_out", "gs_time_250", "gs_fire_flash", "gs_shutter_chance_off", "gs_wait_after_flash"]
             ],
 
             "gs_wait_after_flash": [
@@ -41,7 +43,19 @@ class BlinderChaserThinker extends VengefulThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
+    gs_fire_flash () {
+        if (this.t_target_found()) {
+            const oBlind = new Blindness()
+            const oTime = new Timed({ child: oBlind, duration: 3000 })
+            this.engine.filters.link(oTime)
+        }
+    }
+
     gs_chase() {
+        this.moveTowardTarget();
+    }
+
+    gs_chasing() {
         this.moveTowardTarget();
     }
 
@@ -62,4 +76,4 @@ class BlinderChaserThinker extends VengefulThinker {
     }
 }
 
-export default BlinderChaserThinker
+export default BlinderWalkerThinker
