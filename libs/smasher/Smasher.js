@@ -1,6 +1,6 @@
-import SectorRegistry from "libs/sector-registry/SectorRegistry";
-import Geometry from "libs/geometry";
-import Vector from "libs/geometry/Vector";
+import SectorRegistry from "../sector-registry/SectorRegistry";
+import Geometry from "../geometry";
+import Vector from "../geometry/Vector";
 import Events from "events";
 import Dummy from "./Dummy";
 

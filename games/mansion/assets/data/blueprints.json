@@ -32,5 +32,29 @@
     "scale": 1,
     "size": 0,
     "fx": ["@FX_LIGHT_SOURCE"]
+  },
+  {
+    "id": "p_linear_magbolt",
+    "tileset": "p_ecto",
+    "scale": 1,
+    "size": 8,
+    "thinker": "MagBoltThinker",
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+  },
+  {
+    "id": "p_homing_magbolt",
+    "tileset": "p_ecto",
+    "scale": 1,
+    "size": 8,
+    "thinker": "HomingMagBoltThinker",
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+  },
+  {
+    "id": "o_flare",
+    "tileset": "o_flare",
+    "scale": 1,
+    "size": 0,
+    "thinker": "AnimThinker",
+    "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
   }
 ]

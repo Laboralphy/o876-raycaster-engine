@@ -1,16 +1,12 @@
-export async function fetchJSON(url, postData = null) {
+export async function fetchJSON(url) {
     try {
-        const bPost = !!postData;
         const oRequest = {
-            method: bPost ? 'POST' : 'GET',
+            method: 'GET',
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
         };
-        if (bPost) {
-            oRequest.body = JSON.stringify(postData);
-        }
         const response = await fetch(url, oRequest);
         const oJSON = await response.json();
         if (response.status === 500) {
@@ -19,6 +15,35 @@ export async function fetchJSON(url, postData = null) {
         return oJSON;
     } catch (e) {
         throw new Error('FetchJSON Error while fetching ' + url + ' - ' + e.message);
+    }
+}
+
+export function putJSON(url, data) {
+    return sendJSON(url, 'PUT', data)
+}
+
+export function postJSON(url, data) {
+    return sendJSON(url, 'POST', data)
+}
+
+export async function sendJSON(url, method, data) {
+    try {
+        const oRequest = {
+            method,
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        };
+        oRequest.body = JSON.stringify(data);
+        const response = await fetch(url, oRequest);
+        const oJSON = await response.json();
+        if (response.status === 500) {
+            throw new Error('Error 500 : internal server error : ' + oJSON.message);
+        }
+        return oJSON;
+    } catch (e) {
+        throw new Error('FetchJSON Error while putting ' + url + ' - ' + e.message);
     }
 }
 

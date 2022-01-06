@@ -7,7 +7,7 @@
 
 <script>
     import MyButton from "./MyButton.vue";
-    import * as EMOJI from '../libraries/emoji';
+    import * as EMOJI from '../libs/emoji';
     import HomeIcon from "vue-material-design-icons/Home.vue";
     export default {
         name: "HomeButton",

@@ -1,46 +1,44 @@
-require('dotenv').config({ path: './.env' });
+require('dotenv').config()
+const oPackage = require('../package.json')
+const Server = require('./frameworks/web/Server')
+const dependencies = require('./config/dependencies')
+const debug = require('debug')
+const appPaths = require('./config/app-paths')
 
-const WSService = require('@laboralphy/ws-service');
-const WebSite = require('./services/website');
-const MapEdit = require('./services/mapedit');
-const Passport = require('./services/passport');
-const GameProject = require('./services/game-project');
-const Examples = require('./services/demos');
-const Init = require('./services/init');
+const logServ = debug('serv:main')
 
-const CONFIG = require('./config');
+logServ('%s v%s - %s', oPackage.name, oPackage.version, oPackage.description)
 
-function main() {
-    console.log('O876 Raycaster Engine Web Service');
-    console.log('version: ' + process.env.npm_package_version);
-    console.log('Laboralphy');
-    console.log(' ');
-
-    console.group('paths');
-    console.log('game :', CONFIG.getVariable('game_path'));
-    console.log('vault :', CONFIG.getVariable('vault_path'));
-    console.log('sessions :', CONFIG.getVariable('session_path'));
-    console.groupEnd('paths');
-
-    console.group('server');
-    console.log('port :', CONFIG.getVariable('port'));
-    console.log('context :', CONFIG.getVariable('local_dev') ? 'local development' : 'online');
-    console.log('server local url :', 'http://' + CONFIG.getVariable('address') + ':' + CONFIG.getVariable('port'));
-    console.groupEnd('server');
-
-    // micro-services
-
-    const wss = new WSService();
-
-    wss.service(new Init());
-    wss.service(new Passport());
-    wss.service(new WebSite());
-    wss.service(new MapEdit());
-    wss.service(new GameProject());
-    wss.service(new Examples());
-
-    wss.listen(CONFIG.getVariable('port'), CONFIG.getVariable('address'));
-    console.log('now listening...');
+function checkProcessEnv () {
+  logServ('checking environment variables')
+  const CHECK_LIST = [
+    'SERVER_PORT', 'GAME_PATH', 'SAVE_FILES_PATH'
+  ]
+  if (CHECK_LIST.some(c => {
+    const bUndefined = process.env[c] === undefined
+    if (bUndefined) {
+      console.warn(c, 'variable is undefined')
+    }
+    return bUndefined
+  })) {
+    throw new Error('ERR_ESSENTIAL_ENV_VARIABLE_UNDEFINED')
+  }
 }
 
-main();
+
+async function run () {
+  checkProcessEnv()
+  logServ('checking application working paths')
+  await appPaths.checkAppDataPaths()
+
+  const oServer = new Server()
+  await oServer.init({
+    dependencies
+  })
+  await oServer.listen(process.env.SERVER_PORT)
+  return oServer
+}
+
+run()
+  .then(() => logServ('accepting incoming connections...'))
+  .catch(e => console.error(e))

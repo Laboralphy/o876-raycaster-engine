@@ -1,19 +1,6 @@
 <template>
   <div>
-    <div class="seamless" v-if="isOnline">
-      <div class="row">
-        <div class="col lg-12">
-          <h3>The Raycasting Game Engine Home Page (online version)</h3>
-          <ul>
-            <li>A game engine that builds raycasting based browser games.</li>
-            <li>Open source.</li>
-            <li>100% javascript.</li>
-          </ul>
-          <p>Click on <span class="button-text">Docs</span> for more information about it's features.</p>
-        </div>
-      </div>
-    </div>
-    <div class="seamless" v-if="isOffline">
+    <div class="seamless">
       <div class="row">
         <div class="col lg-12">
           <h3>Local project status</h3>
@@ -50,7 +37,7 @@
               :name="l.name"
               :date="l.date"
               :preview="l.preview"
-              :exported="l.exported"
+              :exported="l.published"
               :invault="l.invault"
               @unpublish="({name}) => unpublish(name)"
           ></LevelThumbnail>
@@ -69,7 +56,7 @@
               :name="l.name"
               :date="l.date"
               :preview="l.preview"
-              :exported="l.exported"
+              :exported="l.published"
               :invault="l.invault"
               :publishable="true"
               @publish="({name}) => publish(name)"
@@ -82,8 +69,7 @@
 
 <script>
 import LevelThumbnail from "../LevelThumbnail.vue";
-import {deleteJSON, fetchJSON} from "libs/fetch-json";
-import storeMixin from "../../mixins/store";
+import {deleteJSON, fetchJSON, putJSON} from "libs/fetch-json";
 
 import {createNamespacedHelpers} from 'vuex';
 
@@ -92,8 +78,6 @@ const {mapGetters: mainGetters} = createNamespacedHelpers('main');
 export default {
   name: "HomePage",
   components: {LevelThumbnail},
-
-  mixins: [storeMixin],
 
   data: function () {
     return {
@@ -105,63 +89,59 @@ export default {
   computed: {
 
     getPublishedLevels: function () {
-      return this.levels.filter(l => l.exported);
+      return this.levels.filter(l => l.published);
     },
 
     getInVaultLevels: function () {
-      return this.levels.filter(l => !l.exported);
+      return this.levels.filter(l => !l.published);
     },
 
     getUnpublishedLevels: function () {
       const pl = this.getPublishedLevels.map(l => l.name);
-      return this.levels.filter(l => !l.exported && pl.indexOf(l.name) < 0);
+      return this.levels.filter(l => !l.published && pl.indexOf(l.name) < 0);
     },
   },
 
   methods: {
     unpublish: async function (name) {
-      const aStr = [];
       if (!this.getInVaultLevels.find(l => l.name === name)) {
         if (!confirm('This action will delete the level "' + name + '" permanently ; because there is no backup of this level in the Map Editor vault.')) {
           return;
         }
       }
-      await deleteJSON(this.gameActionPrefix + '/level/' + name);
+      await deleteJSON('/publish/' + name);
       return this.fetchLevelData();
     },
 
     publish: async function (name) {
-      await fetchJSON('/export/' + name);
+      await putJSON('/publish/' + name);
       return this.fetchLevelData();
     },
 
-    fetchLevelData: function () {
-      if (this.isOffline) {
-        return fetchJSON(this.gameActionPrefix + '/levels').then(data => {
-          this.levels.splice(0, this.levels.length, ...data);
-        });
-      } else {
-        return Promise.resolve([]);
-      }
+    fetchLevelData: async function () {
+      const vaultLevels = (await fetchJSON('/vault')).map(({ name, date, preview }) => ({
+        name,
+        date,
+        invault: true,
+        preview
+      }))
+      const levels = (await fetchJSON('/publish')).map(({ name, date, preview }) => ({
+        name,
+        date,
+        published: true,
+        preview
+      }))
+      levels.forEach(l => l.invault = vaultLevels.find(l => l.name === name))
+      vaultLevels.forEach(l => l.published = levels.find(l => l.name === name))
+      this.levels.splice(0, this.levels.length, ...levels, ...vaultLevels);
     },
 
     runProject: function () {
       window.location.href = this.gameActionPrefix;
     }
   },
-
-  watch: {
-    getFlagOnline: {
-      handler: function (newValue, oldValue) {
-        if (typeof oldValue !== 'number') {
-          if (newValue === 0) {
-            // on est en localhost dev : il faut charger les niveaux
-            this.fetchLevelData();
-          }
-        }
-      },
-      immediate: true
-    }
+  mounted: function () {
+    this.fetchLevelData()
   }
 }
 </script>

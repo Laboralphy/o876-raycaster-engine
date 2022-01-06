@@ -19,12 +19,6 @@ function loadEnvFile() {
 loadEnvFile();
 
 /**
- * Unit tests
- * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string}, devtool: string, entry: {tests: string}, plugins: *[], module: {rules: *[]}, target: string}}
- */
-const testConfig = require('./webpack.config.test');
-
-/**
  * The map editor software
  * @type {{mode: string, output: {path: string, libraryTarget: string, filename: string, publicPath: string}, devtool: string, entry: {mapedit: string}, plugins: [VueLoader.VueLoaderPlugin], module: {rules: [{test: RegExp, use: string}, {test: RegExp, use: [string, string]}, {test: RegExp, loader: string, options: {limit: number}}]}, target: string}}
  */
@@ -51,7 +45,6 @@ const exampleConfig = require('./webpack.config.demos');
 const gameConfig = require('./webpack.config.game');
 
 const CONFIG = [
-    testConfig,
     exampleConfig,
     mapeditConfig,
     websiteConfig,

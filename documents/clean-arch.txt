@@ -1,0 +1,30 @@
+📂 srv
+ ├📁 application
+ │ ├📁 interfaces
+ │ └📁 use-cases
+ ├📁 config
+ │ └🗎 dependencies.ts
+ ├📁 controllers
+ ├📁 entities
+ ├📁 frameworks
+ │ ├📁 commons
+ │ ├📁 external-services
+ │ ├📁 persistance
+ │ │ ├📁 InMemory
+ │ │ └📁 Database
+ │ ├📁 web
+ │ │ ├📁 middlewares
+ │ │ ├📁 InMemory
+ │ │ ├📁 InMemory
+ │ │ └📁 Database
+ │ └🗎 Server.ts
+ └🗎 index.ts
+
+
+
+
+
+
+
+   └📁Bad Songs
+    └⚠️ This folder is empty﻿

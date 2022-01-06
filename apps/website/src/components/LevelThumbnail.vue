@@ -8,10 +8,10 @@
                 <span class="filename">{{ name }}</span> - <span class="datestring">{{ getDateString }}</span>
             </div>
             <div v-if="exported">
-                <a href="#" @click="unpublish(name)">{{ invault ? 'Unpublish' : 'Delete'}}</a>
+                <a href="#" @click.prevent="unpublish(name)">{{ invault ? 'Unpublish' : 'Delete'}}</a>
             </div>
             <div v-else-if="publishable">
-                <a href="#" @click="publish(name)">Publish</a>
+                <a href="#" @click.prevent="publish(name)">Publish</a>
             </div>
         </figcaption>
     </figure>

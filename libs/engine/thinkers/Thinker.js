@@ -12,18 +12,6 @@ class Thinker {
         this._engine = null;
         this._automaton = new Automaton();
         this._automaton.instance = this;
-        this._automaton.events.on('test', t => {
-            if (t.test in this) {
-              t.result = this[t.test]();
-            } else {
-              throw new Error('Thinker : no test-method named ' + t.test)
-            }
-        })
-        this._automaton.events.on('state', state => {
-            if (state in this) {
-              this[state]();
-            }
-        })
     }
 
     get context() {

@@ -1,7 +1,5 @@
 <template>
-  <section>
-    <RichText class="description" :text="text"></RichText>
-  </section>
+  <RichText class="description" :text="text"></RichText>
 </template>
 
 <script>

@@ -1,4 +1,4 @@
-import PlayerThinker from "../thinkers/PlayerThinker";
+import PlayerThinker from "../thinkers.d/PlayerThinker";
 
 export default {
     thinkers: {
@@ -6,5 +6,6 @@ export default {
     },
     cameraThinker: 'PlayerThinker',
     mouseSensitivity: 0.01,
-    autoload: false
+    autoload: false,
+    firstLevel: 'mans-cabin'
 };

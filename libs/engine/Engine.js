@@ -550,6 +550,17 @@ class Engine {
     }
 
     /**
+     * Renvoie les coordonnées d'une celle en fonction de la poisition texel fournie
+     * @param x {number}
+     * @param y {number}
+     * @return {{x: number, y: number}};
+     */
+    clipCell(x, y) {
+        const ps = this.cellSize;
+        return {x: x / ps | 0, y: y / ps | 0};
+    }
+
+    /**
      * Changement d'un block (offset, code-physique, material)
      * @param x {number} positon of block to change
      * @param y {number}
@@ -864,14 +875,18 @@ class Engine {
      * @returns {Thinker}
      */
     createThinkerInstance(sThinker) {
-        if (!sThinker) {
-            sThinker = 'Thinker';
+        try {
+            if (!sThinker) {
+                sThinker = 'Thinker';
+            }
+            const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
+            const oThinker = new pThinker();
+            oThinker.engine = this;
+            oThinker._context = this._thinkerContext;
+            return oThinker;
+        } catch (e) {
+            throw new Error('could not instanciate thinker class "' + sThinker + '"');
         }
-        const pThinker = this._getObjectItem(sThinker, this._thinkers, 'thinker');
-        const oThinker = new pThinker();
-        oThinker.engine = this;
-        oThinker._context = this._thinkerContext;
-        return oThinker;
     }
 
     /**
@@ -932,6 +947,7 @@ class Engine {
                     start: a.start,
                     length: a.length,
                     loop: a.loop,
+                    duration: a.duration,
                     iterations: a.iterations
                 };
             });

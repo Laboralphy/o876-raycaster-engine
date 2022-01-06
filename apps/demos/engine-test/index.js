@@ -340,7 +340,6 @@ async function main() {
         oWarlock.thinker.keyUp(event.key);
     });
 
-
     // starts engine doomloop
     engine.startDoomLoop();
 

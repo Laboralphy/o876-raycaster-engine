@@ -1,6 +1,6 @@
 import * as ACTION from './action-types';
 import * as MUTATION from './mutation-types'
-import {getLevelList, getUserData} from "../../../libraries/fetch-helper";
+import {getLevelList, getUserData} from "../../../libs/fetch-helper";
 
 
 function getHighlightedTags(sr, grid) {

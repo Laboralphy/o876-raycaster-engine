@@ -28,7 +28,9 @@ const DURATION_RAISING = 400;
 
 const STYLE_BG_CIRCLE = 'rgba(255, 255, 255, 0.5)';
 const STYLE_FG_CIRCLE = 'rgba(128, 255, 255, 1)';
+const STYLE_FG_CIRCLE_CRITICAL = 'rgba(255, 240, 64, 1)';
 const STYLE_SHAD_CIRCLE = 'rgba(0, 128, 255, 0.25)';
+const STYLE_SHAD_CIRCLE_CRITICAL = 'rgba(255, 128, 0, 0.25)';
 const STYLE_FG_CIRCLE_FP = 'rgba(192, 192, 192, 1)';
 const STYLE_SHAD_CIRCLE_FP = 'rgba(128, 128, 128, 0.25)';
 
@@ -68,7 +70,8 @@ class CameraObscura extends AbstractFilter {
             current: 25,
             max: 100,
             radius: 1,
-            forcePulse: false
+            forcePulse: false,
+            critical: false
         };
         this._oManagedEnergyData = new Reactor(this._oEnergyData);
 
@@ -94,6 +97,13 @@ class CameraObscura extends AbstractFilter {
         return this._oEnergyData.forcePulse;
     }
 
+    get critical() {
+        return this._oEnergyData.critical;
+    }
+
+    set critical (value) {
+        this._oEnergyData.critical = value;
+    }
 
     get y() {
         switch (this._nState) {
@@ -177,6 +187,7 @@ class CameraObscura extends AbstractFilter {
     }
 
     renderCircle() {
+        const critical = this.critical;
         const fp = this.forcePulse;
         const data = this._oEnergyData;
         const energy = fp ? data.max : data.current;
@@ -199,13 +210,21 @@ class CameraObscura extends AbstractFilter {
         ctx.stroke();
         ctx.closePath();
         ctx.beginPath();
-        ctx.strokeStyle = fp ? STYLE_SHAD_CIRCLE_FP : STYLE_SHAD_CIRCLE;
-        ctx.lineWidth = 8;
+        ctx.strokeStyle = fp
+          ? STYLE_SHAD_CIRCLE_FP
+          : critical
+            ? STYLE_SHAD_CIRCLE_CRITICAL
+            : STYLE_SHAD_CIRCLE;
+        ctx.lineWidth = critical ? 10 : 8;
         ctx.arc(x, y, r, -PI_D_2, fAngle);
         ctx.stroke();
         ctx.closePath();
         ctx.beginPath();
-        ctx.strokeStyle = fp ? STYLE_FG_CIRCLE_FP : STYLE_FG_CIRCLE;
+        ctx.strokeStyle = fp
+          ? STYLE_FG_CIRCLE_FP
+          : critical
+            ? STYLE_FG_CIRCLE_CRITICAL
+            : STYLE_FG_CIRCLE;
         ctx.lineWidth = 2;
         ctx.arc(x, y, r, -PI_D_2, fAngle);
         ctx.stroke();

@@ -61,5 +61,3 @@ export function suggest(sSubject, aStrings) {
         .shift()
         .s;
 }
-
-

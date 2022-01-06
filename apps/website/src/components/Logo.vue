@@ -2,9 +2,9 @@
     <a :href="href">
         <figure class="logo">
             <div class="logo-container">
-                <img alt="logo" :src="src" />
+              <slot></slot>
             </div>
-            <figcaption><slot></slot></figcaption>
+            <figcaption>{{ caption }}</figcaption>
         </figure>
     </a>
 </template>
@@ -12,7 +12,7 @@
 <script>
     export default {
         name: "Logo",
-        props: ['src', 'href']
+        props: ['src', 'href', 'caption']
     }
 </script>
 
