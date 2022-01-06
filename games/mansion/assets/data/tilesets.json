@@ -108,20 +108,20 @@
       {
         "id": "fly",
         "start": [
-          8, 12, 15, 18, 0, 3, 6, 9
+          14, 0, 2, 4, 6, 8, 10, 12
         ],
-        "length": 3,
-        "duration": 80,
+        "length": 2,
+        "duration": 200,
         "loop": "@LOOP_FORWARD",
         "iterations": null
       },
       {
         "id": "explode",
         "start": [
-          24, 24, 24, 24, 24, 24, 24, 24
+          16, 16, 16, 16, 16, 16, 16, 16
         ],
-        "length": 5,
-        "duration": 40,
+        "length": 6,
+        "duration": 80,
         "loop": "@LOOP_FORWARD",
         "iterations": 1
       }

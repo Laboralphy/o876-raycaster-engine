@@ -43,7 +43,7 @@
   },
   {
     "id": "p_homing_magbolt",
-    "tileset": "p_ecto",
+    "tileset": "p_ecto_3",
     "scale": 1,
     "size": 8,
     "thinker": "HomingMagBoltThinker",
