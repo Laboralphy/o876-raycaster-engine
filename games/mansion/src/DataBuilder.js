@@ -20,7 +20,7 @@ class DataBuilder {
                 console.log(data)
                 return data.find(d => d.id == id);
             })
-            .map(({id, thinker, speed, vitality, power, score, level}) => ({
+            .map(({id, thinker, speed, vitality, power, score, level, missile}) => ({
             id,
             ref: id,
             tileset: id,
@@ -34,7 +34,8 @@ class DataBuilder {
                 vitality,
                 power,
                 score,
-                level
+                level,
+                missile
             }
         }));
     }

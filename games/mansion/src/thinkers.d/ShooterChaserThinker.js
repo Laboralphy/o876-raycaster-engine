@@ -3,7 +3,7 @@ import VengefulThinker from "./VengefulThinker";
 /**
  * Le fantome se déplace vers la cible en tirant des projectiles
  */
-class HomingShooterWalkerThinker extends VengefulThinker {
+class ShooterWalkerThinker extends VengefulThinker {
 
     constructor() {
         super();
@@ -29,7 +29,7 @@ class HomingShooterWalkerThinker extends VengefulThinker {
 
             "gs_is_going_to_shoot": [
                 // tirer, attendre 2s puis re chaser
-                ["gt_critical_wounded", "gs_time_1000", "gs_shutter_chance_off", "gs_pause_wounded"],
+                ["gt_critical_wounded", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"],
                 ["gt_time_out", "gs_shoot", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"]
             ],
 
@@ -47,6 +47,10 @@ class HomingShooterWalkerThinker extends VengefulThinker {
         this.moveTowardTarget();
     }
 
+    gs_chasing() {
+        this.moveTowardTarget();
+    }
+
     /**
      * Randomly choose timer between 3 and 5s
      */
@@ -61,9 +65,13 @@ class HomingShooterWalkerThinker extends VengefulThinker {
     gs_shoot() {
         this.moveTowardTarget(0, 0);
         // tirer un projectile
-        const missile = this.engine.createEntity('p_homing_magbolt', this.entity.position);
-        missile.thinker.fire(this.entity);
+        const oMissileData = Array.isArray(this.entity.data.missile)
+            ? this.entity.data.missile[Math.floor(Math.random() * this.entity.data.missile.length)]
+            : this.entity.data.missile
+        const sMissileResRef = oMissileData.resref
+        const missile = this.engine.createEntity(sMissileResRef, this.entity.position);
+        missile.thinker.fire(this.entity, oMissileData);
     }
 }
 
-export default HomingShooterWalkerThinker
+export default ShooterWalkerThinker

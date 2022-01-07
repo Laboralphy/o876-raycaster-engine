@@ -90,6 +90,10 @@ class VengefulThinker extends GhostThinker {
                 [1, "s_teleport"]
             ],
 
+            "s_teleport_behind_target": [
+                [1, "s_teleport"]
+            ],
+
             "s_teleport": [
                 [1, "s_teleport_pulse"]
             ],
@@ -110,8 +114,10 @@ class VengefulThinker extends GhostThinker {
     }
 
     wound(bCritical) {
-        this._bWounded = true;
-        this.automaton.state = (this._bShutterChance || bCritical) ? 's_wounded_critical' : 's_wounded_light';
+        if (this.automaton.state !== 's_rebuked') {
+            this._bWounded = true;
+            this.automaton.state = (this._bShutterChance || bCritical) ? 's_wounded_critical' : 's_wounded_light';
+        }
     }
 
     get ghostAI() {
@@ -171,6 +177,10 @@ class VengefulThinker extends GhostThinker {
 
     _setGhostTimeOut (n) {
         this._nGhostTimeOut = this.engine.getTime() + n;
+    }
+
+    s_time_reset () {
+        this._nGhostTimeOut = 0;
     }
 
     gs_time_250 () {
@@ -322,6 +332,11 @@ class VengefulThinker extends GhostThinker {
         this._teleportAnim = 0;
     }
 
+    s_teleport_behind_target() {
+        this.computeTeleportBehind();
+        this._teleportAnim = 0;
+    }
+
     s_teleport_pulse() {
         this._nOpacity = PULSE_MAP_LARGE[this._teleportAnim];
         this.setOpacityFlags();
@@ -362,6 +377,7 @@ class VengefulThinker extends GhostThinker {
             this._bShutterChance = false;
             return true
         }
+        this._bWounded = false;
         return false;
     }
 

@@ -1,6 +1,6 @@
-import MagBoltThinker from "./MagBoltThinker";
+import LinearBoltThinker from "./LinearBoltThinker";
 
-class HomingMagBoltThinker extends MagBoltThinker {
+class HomingBoltThinker extends LinearBoltThinker {
     constructor () {
         super()
         this.ANGLE_TURNING = 0.05
@@ -46,4 +46,4 @@ class HomingMagBoltThinker extends MagBoltThinker {
 }
 
 
-export default HomingMagBoltThinker;
+export default HomingBoltThinker;

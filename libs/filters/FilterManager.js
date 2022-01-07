@@ -40,19 +40,26 @@ class FilterManager {
         this._filters = [];
     }
 
+    removeTerminatedFilters() {
+        for (let i = this._filters.length - 1; i >= 0; --i) {
+            if (this._filters[i].over()) {
+                this._filters.splice(i, 1)
+            }
+        }
+    }
+
     /**
      * run process method for all filters
      * removes dead filters
      * @param time {number} advancement time
      */
     process(time) {
-        this._filters = this
+        this.removeTerminatedFilters()
+        this
             ._filters
-            .filter(f => !f.over())
-            .map(f => {
+            .forEach(f => {
                 f.computeClock(time);
                 f.process();
-                return f;
             });
     }
 

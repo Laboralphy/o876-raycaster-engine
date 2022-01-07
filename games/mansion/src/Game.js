@@ -285,7 +285,9 @@ class Game extends GameAbstract {
         this.computeCapturableEntities();
         // checks for visor energy
         if (this.isCameraRaised()) {
-            this.visor.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
+            if (!this.hasRecentlyShot()) {
+                this.visor.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
+            }
             this.syncCameraStore();
         }
         this.computeSupernaturalCloseness();
@@ -492,13 +494,17 @@ class Game extends GameAbstract {
         return oPhoto;
     }
 
+    hasRecentlyShot() {
+        const nLastTime = this.visor.lastShotTime;
+        const nThisTime = this.engine.getTime();
+        return ((nThisTime - nLastTime) < CONSTS.CAMERA_RETRIGGER_DELAY)
+    }
+
     /**
      * shoot a photo
      */
     triggerCamera() {
-        const nLastTime = this.visor.lastShotTime;
-        const nThisTime = this.engine.getTime();
-        if ((nThisTime - nLastTime) < CONSTS.CAMERA_RETRIGGER_DELAY) {
+        if (this.hasRecentlyShot()) {
             // trop peu de temps depuis la dernière photo
             return;
         }
@@ -521,7 +527,7 @@ class Game extends GameAbstract {
         // calculer les dégats
         // lancer des script pour les spectres
         this.execAimedCellPhotoScript();
-        this.visor.setShootLastTime(nThisTime);
+        this.visor.setShootLastTime(this.engine.getTime());
     }
 
     /**
@@ -717,10 +723,10 @@ class Game extends GameAbstract {
      * applying wound on player
      * applying visual effect
      */
-    commitGhostAttack(oGhost, oTarget) {
+    commitGhostAttack(oGhost, oTarget, nMultiplier) {
         if (oTarget === this.player) {
             // get ghost power
-            this.logic.damagePlayer(oGhost);
+            this.logic.damagePlayer(oGhost, nMultiplier);
             const oThinker = this.player.thinker;
             oThinker.ghostThreat(oGhost);
             // filtre visuel

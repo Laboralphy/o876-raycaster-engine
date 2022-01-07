@@ -6,7 +6,8 @@
     "vitality": 25,
     "power": 2,
     "score": 100,
-    "thinker": "ChaserThinker"
+    "thinker": "ChaserThinker",
+    "missile": null
   },
   "g_banshee_0": {
     "tileset": "g_banshee",
@@ -15,7 +16,8 @@
     "vitality": 25,
     "power": 2,
     "score": 100,
-    "thinker": "ChaserThinker"
+    "thinker": "ChaserThinker",
+    "missile": null
   },
   "g_bashed_boy_0": {
     "tileset": "g_bashed_boy",
@@ -24,15 +26,35 @@
     "vitality": 25,
     "power": 2,
     "score": 100,
-    "thinker": "ChaserThinker"
+    "thinker": "ChaserThinker",
+    "missile": null
   },
   "g_test": {
     "tileset": "g_bashed_boy",
     "level": 0,
-    "speed": 3,
+    "speed": 4,
     "vitality": 100,
     "power": 2,
     "score": 100,
-    "thinker": "HomingShooterWalkerThinker"
+    "thinker": "ZigZagTeleChaserThinker",
+    "missile": [{
+      "speed": 10,
+      "resref": "p_yellow_magbolt",
+      "effect": "confusion",
+      "duration": 5000
+    },{
+      "speed": 10,
+      "resref": "p_white_magbolt",
+      "effect": "blindness",
+      "duration": 3000
+    },{
+      "speed": 10,
+      "resref": "p_linear_magbolt",
+      "effect": "damage"
+    },{
+      "speed": 10,
+      "resref": "p_ghost_magbolt",
+      "effect": "damage"
+    }]
   }
 }

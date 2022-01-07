@@ -11,6 +11,10 @@ class Timed extends AbstractFilter {
         this._child = child;
     }
 
+    get child () {
+        return this._child
+    }
+
     process() {
         const c = this._child;
         if (!!c) {

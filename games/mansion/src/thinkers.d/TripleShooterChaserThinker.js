@@ -55,6 +55,10 @@ class TripleShooterWalkerThinker extends VengefulThinker {
         this.moveTowardTarget();
     }
 
+    gs_chasing() {
+        this.moveTowardTarget();
+    }
+
     /**
      * Randomly choose timer between 3 and 5s
      */

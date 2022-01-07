@@ -1,8 +1,6 @@
 import VengefulThinker from "./VengefulThinker";
 
-const THINKER_DISTANCE_TELEPORT_BEHIND = 256; // distance à laquel le ghost va rusher
-const THINKER_TELEPORT_IN_SIGHT = 1;
-const THINKER_TELEPORT_BEHIND = 2;
+const THINKER_DISTANCE_TELEPORT_BEHIND = 256; // distance à laquel le ghost va téléporter
 
 /**
  * Will chase target normally.
