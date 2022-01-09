@@ -3008,7 +3008,9 @@
       {
         "block": 1,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "bgm music/cthulhu"
+        ],
         "mark": {
           "color": 0,
           "shape": 0

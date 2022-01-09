@@ -260,6 +260,7 @@ class VengefulThinker extends GhostThinker {
     s_kill() {
         this._bShutterChance = false;
         this.entity.sprite.setCurrentAnimation('death');
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
     }
 
     /**
@@ -268,6 +269,7 @@ class VengefulThinker extends GhostThinker {
     s_wounded_light() {
         this._bShutterChance = false;
         this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH);
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
     }
 
     /**
@@ -277,6 +279,7 @@ class VengefulThinker extends GhostThinker {
     s_wounded_critical() {
         this._bShutterChance = false;
         this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * 2);
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
     }
 
     /**
@@ -313,7 +316,8 @@ class VengefulThinker extends GhostThinker {
      */
     s_spawn_flame() {
         const p = this.entity.position;
-        this.engine.createEntity("o_flame", p);
+        const oFlame = this.engine.createEntity("o_flame", p);
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_BURN, { entity: oFlame })
     }
 
     /**

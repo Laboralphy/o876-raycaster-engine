@@ -30,6 +30,7 @@ export default {
     getPhotoDetailsTitle: state => state.photodetails.title,
 
     getMainMenuPhase: state => state.mainmenu.phase,
+    isLoadingPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.init,
     isMainMenuPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.main,
     isControlsPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.controls,
     isStoryPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.todo,

@@ -3113,7 +3113,9 @@
       {
         "block": 12,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "bgm music/forest"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -3786,7 +3788,7 @@
         "block": 14,
         "upperblock": 0,
         "tags": [
-          "bgm inside"
+          "bgm music/inside"
         ],
         "mark": {
           "color": 0,
@@ -3802,7 +3804,8 @@
           "lock",
           "photo m0_cyan_sigil",
           "archive m0_book_glyphs",
-          "locator cyan_sigil"
+          "locator cyan_sigil",
+          "doorsound door-open-2 door-close-2"
         ],
         "mark": {
           "color": "cyan",
@@ -3821,7 +3824,7 @@
         "block": 14,
         "upperblock": 15,
         "tags": [
-          "bgm wood"
+          "bgm music/forest"
         ],
         "mark": {
           "color": 0,
@@ -4084,7 +4087,8 @@
         "tags": [
           "locator m0_bloody_deadend_target",
           "archive m0_bloody_deadend",
-          "lock"
+          "lock",
+          "doorsound push-stone"
         ],
         "mark": {
           "color": "yellow",
@@ -4149,7 +4153,8 @@
       {
         "block": 21,
         "tags": [
-          "locator red_sigil"
+          "locator red_sigil",
+          "doorsound door-open-2 door-close-2"
         ],
         "mark": {
           "color": 0,
@@ -5195,7 +5200,8 @@
       {
         "block": 21,
         "tags": [
-          "event m0_wraith_skull_face"
+          "event m0_wraith_skull_face",
+          "doorsound door-open-2 door-close-2"
         ],
         "mark": {
           "color": "yellow",
@@ -6282,7 +6288,9 @@
       },
       {
         "block": 21,
-        "tags": [],
+        "tags": [
+          "doorsound door-open-2 door-close-2"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -8329,7 +8337,7 @@
       {
         "block": 18,
         "tags": [
-          "bgm inside"
+          "bgm music/inside"
         ],
         "mark": {
           "color": 0,
@@ -8671,7 +8679,8 @@
         "upperblock": 0,
         "tags": [
           "lock key_cabin",
-          "discard key_cabin"
+          "discard key_cabin",
+          "doorsound door-open-2 door-close-2"
         ],
         "mark": {
           "color": 0,
@@ -9042,7 +9051,7 @@
         "block": 14,
         "upperblock": 15,
         "tags": [
-          "bgm wood"
+          "bgm music/forest"
         ],
         "mark": {
           "color": 0,
@@ -11625,7 +11634,9 @@
       {
         "block": 39,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "bgm music/forest"
+        ],
         "mark": {
           "color": 0,
           "shape": 0

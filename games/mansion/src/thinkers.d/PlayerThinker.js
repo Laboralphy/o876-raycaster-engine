@@ -106,6 +106,7 @@ class PlayerThinker extends FPSControlThinker {
     think() {
         this.processAngle();
         super.think();
+        this.context.game._audioManager.setListeningEntity(this.entity.position)
     }
 
     kill() {

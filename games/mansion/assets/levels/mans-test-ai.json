@@ -404,6 +404,13 @@
         "event test_ghost_ai",
         "event mi_lightning_0"
       ]
+    },
+    {
+      "x": 8,
+      "y": 15,
+      "tags": [
+        "bgm music/cthulhu"
+      ]
     }
   ],
   "lightsources": [],

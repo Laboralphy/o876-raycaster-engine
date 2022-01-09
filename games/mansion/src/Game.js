@@ -15,6 +15,7 @@ import RedHaze from "./filters/RedHaze";
 import Position from "libs/engine/Position";
 import Index from "libs/geometry";
 import ObjectExtender from "libs/object-helper/Extender";
+import AudioManager from "./AudioManager";
 
 import THINKERS from './thinkers';
 import CanvasHelper from "libs/canvas-helper";
@@ -23,6 +24,22 @@ import SenseMap from "./SenseMap";
 
 import DATA from '../assets/data';
 import GameOver from './filters/GameOver'
+
+const {
+    AUDIO_EVENT_CAMERA_SHOOT,
+    AUDIO_EVENT_CAMERA_CHARGING,
+    AUDIO_EVENT_CAMERA_CHARGED,
+    AUDIO_EVENT_CAMERA_SUPERNATURAL,
+    AUDIO_EVENT_GHOST_ATTACK,
+    AUDIO_EVENT_GHOST_DIE,
+    AUDIO_EVENT_GHOST_WOUNDED,
+    AUDIO_EVENT_GHOST_BURN,
+    AUDIO_EVENT_EXPLORE_PICKUP_ITEM,
+    AUDIO_EVENT_EXPLORE_DOOR_CLOSE,
+    AUDIO_EVENT_EXPLORE_DOOR_OPEN,
+    AUDIO_EVENT_EXPLORE_DOOR_LOCKED,
+    AUDIO_EVENT_EXPLORE_DOOR_UNLOCK
+} = CONSTS
 
 class Game extends GameAbstract {
     init() {
@@ -56,10 +73,12 @@ class Game extends GameAbstract {
         this.engine.filters.link(this._ghostScream);
         this._senseMap = new SenseMap();
         this._capturableEntities = null;
+        this._audioManager = new AudioManager()
         this._mutations = {
             decals: [],
             level: ''
         }
+        this.initEngineEvents()
         this._levelStates = {}
         this.ui.store.watch(
             (state, getters) => getters['ui/isGameRunning'],
@@ -73,6 +92,9 @@ class Game extends GameAbstract {
 
     async initAsync() {
         await super.initAsync();
+        await this._audioManager.init();
+        console.log('[g] end if init')
+        this.ui.commit('SET_MAIN_MENU_PHASE', { value: 1 })
     }
 
     getCompiledBlueprints() {
@@ -286,7 +308,14 @@ class Game extends GameAbstract {
         // checks for visor energy
         if (this.isCameraRaised()) {
             if (!this.hasRecentlyShot()) {
-                this.visor.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
+                const { prev, curr, max } = this.visor.updateCameraEnergy(this.capturableEntities, this.isAimingCellSupernatural());
+                if (prev < curr) {
+                    if (max) {
+                        this.soundEvent(AUDIO_EVENT_CAMERA_CHARGED)
+                    } else if ((prev % 15) >= (curr % 15)) {
+                        this.soundEvent(AUDIO_EVENT_CAMERA_CHARGING)
+                    }
+                }
             }
             this.syncCameraStore();
         }
@@ -331,6 +360,15 @@ class Game extends GameAbstract {
         }
     }
 
+    initEngineEvents () {
+        const engine = this.engine
+        engine.events.on('door.open', ({ x, y }) => {
+            this.soundEvent(AUDIO_EVENT_EXPLORE_DOOR_OPEN, {x, y })
+        })
+        engine.events.on('door.closed', ({ x, y }) => {
+            this.soundEvent(AUDIO_EVENT_EXPLORE_DOOR_CLOSE, {x, y })
+        })
+    }
 
 //                _       _
 //  ___  ___ _ __(_)_ __ | |_ ___
@@ -514,6 +552,7 @@ class Game extends GameAbstract {
             duration: CONSTS.FLASH_DURATION * 2,
             strength: 6
         }));
+        this.soundEvent(CONSTS.AUDIO_EVENT_CAMERA_SHOOT)
         this.engine.filters.link(new FadeIn({
             color: 'white',
             duration: CONSTS.FLASH_DURATION / 2
@@ -734,6 +773,7 @@ class Game extends GameAbstract {
                 child: new RedHaze(),
                 duration: 750
             });
+            this.soundEvent(AUDIO_EVENT_GHOST_ATTACK, { entity: oGhost })
             this.engine.filters.link(oFilter);
             if (this.logic.isPlayerDead()) {
                 this.gameOver();
@@ -807,12 +847,11 @@ class Game extends GameAbstract {
       const cell = tg.cell(x, y);
       const a = []
       cell.forEach(t => {
-          a.push({
+        a.push({
           x, y,
           tag: quoteSplit(tg.getTag(t)),
           id: t,
           remove: () => {
-              console.log('removing tag id', t, tg.getTag(t), 'at', x, y)
               tg.removeTag(x, y, t)
           }
         })
@@ -921,6 +960,130 @@ class Game extends GameAbstract {
         this.engine.setEngineState({doors, locks, tags, time});
         this.setDecalState(decals);
         this._senseMap.state = senses
+    }
+
+//                               _
+//     ___  ___  _   _ _ __   __| |___
+//    / __|/ _ \| | | | '_ \ / _` / __|
+//    \__ \ (_) | |_| | | | | (_| \__ \
+//    |___/\___/ \__,_|_| |_|\__,_|___/
+
+
+    getPannerAttribute () {
+        return {
+            panningModel: 'HRTF',
+            refDistance: 128,
+            rolloffFactor: 2.5,
+            distanceModel: 'exponential'
+        }
+    }
+
+    soundEvent(sId, params = {}) {
+        const am = this._audioManager
+        switch (sId) {
+            case AUDIO_EVENT_CAMERA_SHOOT: {
+                const { sound, id } = am.play('camera-trigger')
+                sound.rate(Math.random() * 0.2 + 0.9, id)
+                break
+            }
+
+            case AUDIO_EVENT_CAMERA_CHARGING: {
+                am.play('camera-charge')
+                break
+            }
+
+            case AUDIO_EVENT_CAMERA_CHARGED: {
+                am.play('camera-full-charge')
+                break
+            }
+
+            case AUDIO_EVENT_GHOST_BURN: {
+                const {sound, id} = am.play('ghost-burn')
+                const p = params.entity.position
+                sound.pos(p.x, p.y, p.z, id)
+                sound.pannerAttr(this.getPannerAttribute(), id)
+                break
+            }
+
+            case AUDIO_EVENT_GHOST_DIE: {
+                const entity = params.entity
+                const soundset = entity.data.soundset
+                if (soundset) {
+                    const { sound, id } = am.play(soundset + '-die')
+                    const p = entity.position
+                    sound.pos(p.x, p.y, p.z, id)
+                    sound.rate(Math.random() * 0.4 + 0.8, id)
+                    sound.pannerAttr(this.getPannerAttribute(), id)
+                } else {
+                    console.error('no soundset define for this ghost')
+                }
+                break
+            }
+
+            case AUDIO_EVENT_GHOST_ATTACK: {
+                const {sound, id} = am.play('ghost-attack')
+                const p = params.entity.position
+                sound.pos(p.x, p.y, p.z, id)
+                sound.pannerAttr(this.getPannerAttribute(), id)
+                break
+            }
+
+            case AUDIO_EVENT_GHOST_WOUNDED: {
+                const entity = params.entity
+                const soundset = entity.data.soundset
+                if (soundset) {
+                    const { sound, id } = am.play(soundset + '-hit')
+                    const p = entity.position
+                    sound.pos(p.x, p.y, p.z, id)
+                    sound.rate(Math.random() * 0.4 + 0.8, id)
+                    sound.pannerAttr(this.getPannerAttribute(), id)
+                } else {
+                    console.error('no soundset define for this ghost')
+                }
+                break
+            }
+
+            case AUDIO_EVENT_EXPLORE_PICKUP_ITEM: {
+                am.play(params.item.type)
+                break
+            }
+
+            case AUDIO_EVENT_EXPLORE_DOOR_CLOSE: {
+                const { x, y } = params
+                const aTags = this.getTagsAt(x, y)
+                const oDoorTag = aTags.find(t => t.tag[0] === 'doorsound')
+                if (oDoorTag) {
+                    const { sound, id } = am.play(oDoorTag.tag[2])
+                    const p = this.engine.getCellCenter(x, y)
+                    sound.pos(p.x, p.y, 1, id)
+                    sound.pannerAttr(this.getPannerAttribute(), id)
+                }
+                break
+            }
+
+            case AUDIO_EVENT_EXPLORE_DOOR_OPEN: {
+                const { x, y } = params
+                const aTags = this.getTagsAt(x, y)
+                const oDoorTag = aTags.find(t => t.tag[0] === 'doorsound')
+                if (oDoorTag) {
+                    const { sound, id } = am.play(oDoorTag.tag[1])
+                    const p = this.engine.getCellCenter(x, y)
+                    sound.pos(p.x, p.y, 1, id)
+                    sound.pannerAttr(this.getPannerAttribute(), id)
+                }
+                break
+            }
+
+            case AUDIO_EVENT_EXPLORE_DOOR_LOCKED: {
+                am.play('door-locked')
+                break
+            }
+
+            case AUDIO_EVENT_EXPLORE_DOOR_UNLOCK: {
+                am.play('door-unlock')
+                break
+            }
+        }
     }
 }
 

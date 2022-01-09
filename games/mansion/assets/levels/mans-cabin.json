@@ -4334,6 +4334,13 @@
   },
   "tags": [
     {
+      "x": 28,
+      "y": 2,
+      "tags": [
+        "bgm music/forest"
+      ]
+    },
+    {
       "x": 30,
       "y": 2,
       "tags": [
@@ -4351,7 +4358,7 @@
       "x": 18,
       "y": 4,
       "tags": [
-        "bgm inside"
+        "bgm music/inside"
       ]
     },
     {
@@ -4361,14 +4368,15 @@
         "lock",
         "photo m0_cyan_sigil",
         "archive m0_book_glyphs",
-        "locator cyan_sigil"
+        "locator cyan_sigil",
+        "doorsound door-open-2 door-close-2"
       ]
     },
     {
       "x": 20,
       "y": 4,
       "tags": [
-        "bgm wood"
+        "bgm music/forest"
       ]
     },
     {
@@ -4377,14 +4385,16 @@
       "tags": [
         "locator m0_bloody_deadend_target",
         "archive m0_bloody_deadend",
-        "lock"
+        "lock",
+        "doorsound push-stone"
       ]
     },
     {
       "x": 16,
       "y": 5,
       "tags": [
-        "locator red_sigil"
+        "locator red_sigil",
+        "doorsound door-open-2 door-close-2"
       ]
     },
     {
@@ -4419,7 +4429,8 @@
       "x": 9,
       "y": 8,
       "tags": [
-        "event m0_wraith_skull_face"
+        "event m0_wraith_skull_face",
+        "doorsound door-open-2 door-close-2"
       ]
     },
     {
@@ -4447,6 +4458,13 @@
       ]
     },
     {
+      "x": 11,
+      "y": 11,
+      "tags": [
+        "doorsound door-open-2 door-close-2"
+      ]
+    },
+    {
       "x": 14,
       "y": 11,
       "tags": [
@@ -4464,7 +4482,7 @@
       "x": 11,
       "y": 17,
       "tags": [
-        "bgm inside"
+        "bgm music/inside"
       ]
     },
     {
@@ -4472,14 +4490,22 @@
       "y": 18,
       "tags": [
         "lock key_cabin",
-        "discard key_cabin"
+        "discard key_cabin",
+        "doorsound door-open-2 door-close-2"
       ]
     },
     {
       "x": 11,
       "y": 19,
       "tags": [
-        "bgm wood"
+        "bgm music/forest"
+      ]
+    },
+    {
+      "x": 11,
+      "y": 26,
+      "tags": [
+        "bgm music/forest"
       ]
     },
     {

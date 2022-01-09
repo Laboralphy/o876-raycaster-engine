@@ -10,7 +10,7 @@ export const SERVICE_URL_SAVE = '/vault/';
 export const SERVICE_URL_LOAD = '/vault/';
 export const SERVICE_URL_LIST = '/vault';
 export const SERVICE_URL_DELETE = '/vault/';
-export const SERVICE_URL_EXPORT = '/vault/publish/';
+export const SERVICE_URL_EXPORT = '/publish/';
 export const SERVICE_URL_USER = '/user.json';
 
 export const SHAPE_NONE = 0;

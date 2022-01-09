@@ -9,7 +9,7 @@
       >{{ s }}</div>
       <ul class="options">
         <li>
-          <button class="typewriter" @click="phase = 1">{{ STRINGS.COMMAND_CAPTION_START }}</button>
+          <button class="typewriter" @click="phase = 2">{{ STRINGS.COMMAND_CAPTION_START }}</button>
         </li>
       </ul>
     </div>
@@ -27,6 +27,22 @@ export default {
 </script>
 
 <style scoped>
+
+@keyframes animFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+div.ui-menu-window {
+  animation-name: animFadeIn;
+  animation-duration: 3000ms;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: 1;
+}
 
 div.game-title {
   font-size: 3em;

@@ -17,6 +17,9 @@ function doMogrify(game, p0, p1) {
             }});
             game.engine.filters.link(oLink);
             game.engine.filters.link(oPhotoMog);
+            setTimeout(() => {
+                game._audioManager.play('magic-chime-low')
+            }, 2000)
         } catch (e) {
             oLink.terminate();
             reject(e);
