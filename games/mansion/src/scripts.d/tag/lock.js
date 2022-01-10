@@ -13,6 +13,8 @@ export function init(game, remove, x, y) {
 
 /**
  * This script will unlock a door if the player have the right unlocking item.
+ * lorsque le tag est "push" on vérifie la présence de la clé qui ouvre le block locké
+ * un dis
  * @param game
  * @param remove
  * @param x

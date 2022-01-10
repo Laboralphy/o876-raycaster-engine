@@ -6,11 +6,14 @@ class AudioManager {
         this.audioPath = 'assets/audio'
         this.streamedSounds = new Set([
             'ambiance',
+            'ambiance-loops',
             'apparitions',
             'events',
             'music'
         ])
         this._bgm = null
+        this._ovrBgm = false
+        this._saveBgm = ''
         this._registry = {}
         this.BGM_VOLUME = 0.5
     }
@@ -22,6 +25,12 @@ class AudioManager {
         ]
     }
 
+    /**
+     *
+     * @param sFile {string}
+     * @param options {object}
+     * @returns {Promise<{filename: string, sound: Howl, id: number}>}
+     */
     load (sFile, options) {
         return new Promise((resolve, reject) => {
             try {
@@ -62,16 +71,27 @@ class AudioManager {
         Howler.orientation(x, y, z, 0, 1, 0)
     }
 
+    /**
+     * Arret général de tous les sons
+     */
+    stop() {
+        Howler.stop()
+    }
+
     stopBGM () {
-        if (this._bgm) {
-            this._bgm.sound.fade(1, 0, 2000, undefined)
-            this._bgm = null
-        }
+        return new Promise(resolve => {
+            this._bgm.sound.fade(this.BGM_VOLUME, 0, 2000, undefined)
+            this._bgm.sound.once('fade', () => {
+                resolve()
+            })
+        })
     }
 
     async playBGM (sFile) {
-        console.log('[a] received new play bgm order : %s', sFile)
-        if (this._bgm === null) {
+        if (this._ovrBgm) {
+            console.log('[a] during override, stacking: %s', sFile)
+            this._saveBgm = sFile
+        } else if (this._bgm === null) {
             if (!!sFile) {
                 console.log('[a] creating new bgm object')
                 this._bgm = await this.load(sFile, {
@@ -93,15 +113,42 @@ class AudioManager {
             }
             this._bgm.next = sFile
             console.log('[a] fading out current bgm')
-            this._bgm.sound.fade(this.BGM_VOLUME, 0, 2000, undefined)
-            this._bgm.sound.once('fade', () => {
-                console.log('[a] fade out complete')
-                const sNewBGM = this._bgm.next
-                this._bgm = null
-                if (sNewBGM) {
-                    return this.playBGM(sNewBGM)
-                }
-            })
+            const sNewBGM = this._bgm.next
+            await this.stopBGM()
+            console.log('[a] fade out complete')
+            this._bgm = null
+            if (sNewBGM) {
+                console.log('[a] received new play bgm order : %s', sFile)
+                await this.playBGM(sNewBGM)
+            }
+        }
+    }
+
+    /**
+     * Remplacer la musique actuelle par une musique de combat
+     * Gérer les changement de BGM
+     * @param sFile {string}
+     */
+    async playOverriddenBGM (sFile) {
+        // Détecter si on est deja en overridden
+        // si oui : ne rien faire
+        // sinon : sauver le BGM File actuel
+        // changer de BGM
+        if (this._ovrBgm) {
+            // juste changer de ovr
+            await this.playBGM(sFile)
+        } else {
+            this._saveBgm = this._bgm.filename
+            await this.playBGM(sFile)
+            this._ovrBgm = true
+        }
+    }
+
+    async stopOverridenBGM () {
+        if (this._saveBgm) {
+            this._ovrBgm = false
+            await this.playBGM(this._saveBgm)
+            this._saveBgm = ''
         }
     }
 
@@ -109,14 +156,33 @@ class AudioManager {
      * Joue un son d'ambiance. Ce genre de son n'a pas besoin d'être chargé au debut du prorgamme.
      * Même si le son est joué avec une fraction de seconde en retard ce n'est pas grave.
      * @param sFile {string}
+     * @param bLoop {boolean} le son sera bouclé et ne sera déchargé que si on l'arrête manuellement
      */
-    async playAmbiance (sFile) {
+    async playAmbiance (sFile, bLoop = false) {
         const { sound } = await this.load(sFile, {
-            autoplay: true
+            autoplay: true,
+            loop: bLoop
         })
-        sound.on('end', () => {
+        sound.on(bLoop ? 'stop' : 'end', () => {
+            if (bLoop) {
+                console.log('[a] unloading looped ambiance sound %s', sFile)
+            }
             sound.unload()
         })
+        return { sound }
+    }
+
+    getPannerAttribute (nDistance = 128) {
+        return {
+            coneInnerAngle: 360,
+            coneOuterAngle: 360,
+            coneOuterGain: 0,
+            distanceModel: 'exponential',
+            maxDistance: 65536,
+            refDistance: nDistance,
+            rolloffFactor: 2.5,
+            panningModel: 'HRTF'
+        }
     }
 
     /**

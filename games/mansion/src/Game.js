@@ -34,11 +34,13 @@ const {
     AUDIO_EVENT_GHOST_DIE,
     AUDIO_EVENT_GHOST_WOUNDED,
     AUDIO_EVENT_GHOST_BURN,
+    AUDIO_EVENT_GHOST_SPAWN,
     AUDIO_EVENT_EXPLORE_PICKUP_ITEM,
     AUDIO_EVENT_EXPLORE_DOOR_CLOSE,
     AUDIO_EVENT_EXPLORE_DOOR_OPEN,
     AUDIO_EVENT_EXPLORE_DOOR_LOCKED,
-    AUDIO_EVENT_EXPLORE_DOOR_UNLOCK
+    AUDIO_EVENT_EXPLORE_DOOR_UNLOCK,
+    AUDIO_EVENT_AMBIANCE_LOOP
 } = CONSTS
 
 class Game extends GameAbstract {
@@ -130,6 +132,8 @@ class Game extends GameAbstract {
      * @returns {Promise<void>}
      */
     async loadLevel(sLevel, extra = {}) {
+        // Stop all sound
+        this._audioManager.stop()
         // save current level state
         if (this._mutations.level !== '') {
             this.log('save current level state', this._mutations.level);
@@ -153,7 +157,6 @@ class Game extends GameAbstract {
             this.setLevelState(this._levelStates[sLevel]);
         }
     }
-
 
 //      _                _                                  _   _
 //   __| | ___  ___ __ _| |___    ___  _ __   ___ _ __ __ _| |_(_) ___  _ __  ___
@@ -338,10 +341,7 @@ class Game extends GameAbstract {
     engineEntityDestroyedHandler(entity) {
         const sType = entity.data.type;
         if (sType === 'w' || sType === 'v') {
-            const i = this._activeGhosts.indexOf(entity);
-            if (i >= 0) {
-                this._activeGhosts.splice(i, 1);
-            }
+            this.unregisterActiveGhost(entity)
         }
         this.triggerEntityEvent(entity, 'death');
     }
@@ -390,6 +390,26 @@ class Game extends GameAbstract {
             return script.main(this, ...params);
         }
         // throw new ReferenceError('Unable to run script : "' + sName + '". No published function.');
+    }
+
+    registerActiveGhost(oGhost) {
+        const bInitiallyNoGhost = this.getVengefulGhostCount() === 0
+        this._activeGhosts.push(oGhost)
+        if (this.getVengefulGhostCount() > 0 && bInitiallyNoGhost) {
+            this._audioManager.playOverriddenBGM('music/combat')
+        }
+    }
+
+    unregisterActiveGhost(oGhost) {
+        const bInitiallyHasGhost = this.getVengefulGhostCount() > 0
+        const i = this._activeGhosts.indexOf(oGhost);
+        if (i >= 0) {
+            this._activeGhosts.splice(i, 1);
+        }
+        if (this.getVengefulGhostCount() === 0 && bInitiallyHasGhost) {
+            // la musique de combat
+            this._audioManager.stopOverridenBGM()
+        }
     }
 
 //            _                 _          _                  _   _               _
@@ -702,6 +722,10 @@ class Game extends GameAbstract {
         return !this.isPlayerFrozen();
     }
 
+    getVengefulGhostCount () {
+        return this._activeGhosts.filter(g => g.data.type === 'v').length
+    }
+
     /**
      * Captures an image at the given location (player location by default)
      * @param pos {Position}
@@ -809,13 +833,16 @@ class Game extends GameAbstract {
         const oGhost = yCell === undefined && (typeof xCell === 'string')
             ? this.engine.createEntity(sRef, this.getLocator(xCell).position)
             : this.engine.createEntity(sRef, new Position(this.engine.getCellCenter(xCell, yCell)));
-        this._activeGhosts.push(oGhost);
+        this.registerActiveGhost(oGhost);
         oGhost.thinker.target = this.player;
         oGhost.data.events = {
             death: null,
             attack: null,
             damaged: null
         }
+        this.soundEvent(AUDIO_EVENT_GHOST_SPAWN, {
+            entity: oGhost
+        })
         return oGhost;
     }
 
@@ -968,16 +995,6 @@ class Game extends GameAbstract {
 //    \__ \ (_) | |_| | | | | (_| \__ \
 //    |___/\___/ \__,_|_| |_|\__,_|___/
 
-
-    getPannerAttribute () {
-        return {
-            panningModel: 'HRTF',
-            refDistance: 128,
-            rolloffFactor: 2.5,
-            distanceModel: 'exponential'
-        }
-    }
-
     soundEvent(sId, params = {}) {
         const am = this._audioManager
         switch (sId) {
@@ -1001,7 +1018,21 @@ class Game extends GameAbstract {
                 const {sound, id} = am.play('ghost-burn')
                 const p = params.entity.position
                 sound.pos(p.x, p.y, p.z, id)
-                sound.pannerAttr(this.getPannerAttribute(), id)
+                sound.pannerAttr(am.getPannerAttribute(), id)
+                break
+            }
+
+            case AUDIO_EVENT_GHOST_SPAWN: {
+                const oGhost = params.entity
+                if (('sounds' in oGhost.data) && ('spawn' in oGhost.data.sounds)) {
+                    console.log(oGhost.data.sounds.spawn)
+                    am.playAmbiance(oGhost.data.sounds.spawn).then(({ sound }) => {
+                        console.log('play ghost sound', oGhost.data.sounds.spawn)
+                        const p = oGhost.position
+                        sound.pos(p.x, p.y, p.z)
+                        sound.pannerAttr(am.getPannerAttribute())
+                    })
+                }
                 break
             }
 
@@ -1013,7 +1044,7 @@ class Game extends GameAbstract {
                     const p = entity.position
                     sound.pos(p.x, p.y, p.z, id)
                     sound.rate(Math.random() * 0.4 + 0.8, id)
-                    sound.pannerAttr(this.getPannerAttribute(), id)
+                    sound.pannerAttr(am.getPannerAttribute(), id)
                 } else {
                     console.error('no soundset define for this ghost')
                 }
@@ -1024,7 +1055,7 @@ class Game extends GameAbstract {
                 const {sound, id} = am.play('ghost-attack')
                 const p = params.entity.position
                 sound.pos(p.x, p.y, p.z, id)
-                sound.pannerAttr(this.getPannerAttribute(), id)
+                sound.pannerAttr(am.getPannerAttribute(), id)
                 break
             }
 
@@ -1036,7 +1067,7 @@ class Game extends GameAbstract {
                     const p = entity.position
                     sound.pos(p.x, p.y, p.z, id)
                     sound.rate(Math.random() * 0.4 + 0.8, id)
-                    sound.pannerAttr(this.getPannerAttribute(), id)
+                    sound.pannerAttr(am.getPannerAttribute(), id)
                 } else {
                     console.error('no soundset define for this ghost')
                 }
@@ -1056,7 +1087,7 @@ class Game extends GameAbstract {
                     const { sound, id } = am.play(oDoorTag.tag[2])
                     const p = this.engine.getCellCenter(x, y)
                     sound.pos(p.x, p.y, 1, id)
-                    sound.pannerAttr(this.getPannerAttribute(), id)
+                    sound.pannerAttr(am.getPannerAttribute(), id)
                 }
                 break
             }
@@ -1069,7 +1100,7 @@ class Game extends GameAbstract {
                     const { sound, id } = am.play(oDoorTag.tag[1])
                     const p = this.engine.getCellCenter(x, y)
                     sound.pos(p.x, p.y, 1, id)
-                    sound.pannerAttr(this.getPannerAttribute(), id)
+                    sound.pannerAttr(am.getPannerAttribute(), id)
                 }
                 break
             }
@@ -1081,6 +1112,17 @@ class Game extends GameAbstract {
 
             case AUDIO_EVENT_EXPLORE_DOOR_UNLOCK: {
                 am.play('door-unlock')
+                break
+            }
+
+            case AUDIO_EVENT_AMBIANCE_LOOP: {
+                const sFile = params.file
+                console.log('[g] starting ambiance', sFile)
+                const pos = this.engine.getCellCenter(params.x, params.y)
+                am.playAmbiance(sFile, true).then(({ sound }) => {
+                    sound.pos(pos.x, pos.y, 1)
+                    sound.pannerAttr(am.getPannerAttribute(params.distance))
+                })
                 break
             }
         }
