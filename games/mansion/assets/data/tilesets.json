@@ -44,8 +44,8 @@
     "animations": []
   },
   {
-    "id": "p_ecto",
-    "src": "assets/sprites/p_ecto.png",
+    "id": "p_blastbolt",
+    "src": "assets/sprites/p_blastbolt.png",
     "width": 66,
     "height": 64,
     "animations": [
@@ -72,15 +72,15 @@
     ]
   },
   {
-    "id": "p_ecto_2",
-    "src": "assets/sprites/p_ecto_2.png",
+    "id": "p_firebolt_yellow",
+    "src": "assets/sprites/p_fireball_yellow.png",
     "width": 64,
     "height": 64,
     "animations": [
       {
         "id": "fly",
         "start": [
-          21, 12, 15, 18, 0, 3, 6, 9
+          0, 3, 6, 9, 12, 15, 18, 21
         ],
         "length": 3,
         "duration": 80,
@@ -100,15 +100,15 @@
     ]
   },
   {
-    "id": "p_ecto_3",
-    "src": "assets/sprites/p_ecto_3.png",
-    "width": 80,
+    "id": "p_firebolt_0",
+    "src": "assets/sprites/p_fireball_0.png",
+    "width": 64,
     "height": 64,
     "animations": [
       {
         "id": "fly",
         "start": [
-          8, 12, 15, 18, 0, 3, 6, 9
+          0, 3, 6, 9, 12, 15, 18, 21
         ],
         "length": 3,
         "duration": 80,
@@ -122,6 +122,34 @@
         ],
         "length": 5,
         "duration": 40,
+        "loop": "@LOOP_FORWARD",
+        "iterations": 1
+      }
+    ]
+  },
+  {
+    "id": "p_raging_spirit",
+    "src": "assets/sprites/p_ecto_3.png",
+    "width": 80,
+    "height": 64,
+    "animations": [
+      {
+        "id": "fly",
+        "start": [
+          14, 0, 2, 4, 6, 8, 10, 12
+        ],
+        "length": 2,
+        "duration": 200,
+        "loop": "@LOOP_FORWARD",
+        "iterations": null
+      },
+      {
+        "id": "explode",
+        "start": [
+          16, 16, 16, 16, 16, 16, 16, 16
+        ],
+        "length": 6,
+        "duration": 80,
         "loop": "@LOOP_FORWARD",
         "iterations": 1
       }

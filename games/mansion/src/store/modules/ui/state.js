@@ -45,10 +45,11 @@ export default {
     mainmenu: {
         phase: 0,
         phases: {
-            main: 0,
-            controls: 1,
-            todo: 3,
-            game: 2
+            init: 0,
+            main: 1,
+            controls: 2,
+            todo: 4,
+            game: 3
         },
         todo: {
             innerPhase: 0,

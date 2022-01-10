@@ -37,7 +37,7 @@ function zBufferCompare(a, b) {
 const MAGIC_DIST_RATIO = 1.14734748441786;
 
 class Renderer {
-	
+
 	constructor() {
 	    this.configProperties();
         this.configOptions();
@@ -81,7 +81,6 @@ class Renderer {
         this._scanFrontCells = null;
         this._scanAimedCell = null;
         this._firstFloor = true; // if false then this instance is second story
-        this._filters = [];
         this._events = new Events();
     }
 

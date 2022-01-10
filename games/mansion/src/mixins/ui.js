@@ -19,6 +19,7 @@ export default {
             'isControlsPageDisplayed',
             'isHUDVisible',
             'isMainMenuPageDisplayed',
+            'isLoadingPageDisplayed',
             'isMainMenuVisible',
             'isPhotoDetailsVisible',
             'isShotClose',

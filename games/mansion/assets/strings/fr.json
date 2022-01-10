@@ -39,11 +39,12 @@
   "GAME_OVER_CAPTION": "La présence malfaisante des fantômes a eu raison de votre santé mentale. Un nouvel esprit tourmenté hantera ces lieux.",
   "GAME_OVER_BUTTON_CAPTION": "Menu principal",
 
-  "GAME_TITLE": "Le patelin chelou",
+  "LABEL_LOADING": "Chargement",
+  "GAME_TITLE": "Le hameau chelou",
   "GAME_SUB_TITLE": [
-    "Tout un village mystérieusement vidé de ses habitants !",
+    "Tout un village entièrement vidé de ses habitants !",
     "Mystère...",
-    "Allons joyeusement piller tout ce qu'il reste !"
+    "Un peu de rurex, pour voir ce qu'il s'est passé ?"
   ],
   "HOWTO_TITLE": "Contrôles",
   "HOWTO_ACTIONS": [

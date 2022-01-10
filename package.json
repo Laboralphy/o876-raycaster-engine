@@ -1,6 +1,6 @@
 {
   "name": "o876-raycaster-engine",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "A Raycasting Rendering Engine, to build HTML 5 games in javascript that use the raycasting technology.",
   "main": "./srv/index.js",
   "browser": {},
@@ -57,6 +57,7 @@
     "esm": "^3.2.25",
     "express": "^4.17.2",
     "express-session": "^1.17.1",
+    "howler": "^2.2.3",
     "jsonschema": "^1.4.0",
     "mkdirp": "^1.0.4",
     "passport": "^0.4.1",

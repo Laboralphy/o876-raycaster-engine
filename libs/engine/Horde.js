@@ -139,8 +139,13 @@ class Horde {
                     eds.remove(e);
                 }
                 const sector = sr.sector(xSector, ySector);
-                e._sector = sector;
-                sector.add(e);
+                if (sector) {
+                    e._sector = sector;
+                    sector.add(e);
+                } else {
+                    const sSector = '[' + xSector + ' : ' + ySector + ']'
+                    throw new Error('ERR_SECTOR_UNRECHABLE: tried to access sector ' + sSector)
+                }
             }
             // compute animation from angle
         }

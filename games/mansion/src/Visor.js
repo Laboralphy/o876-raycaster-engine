@@ -127,12 +127,21 @@ class Visor extends StoreAbstract {
         const nEnergy = aGhosts.reduce((prev, curr) => {
             return prev + curr.value;
         }, 0);
+        const nPrevEnergy = this.energy
         if (nEnergy > 0) {
             this.commit(MUTATIONS.INC_ENERGY, {amount: nEnergy});
         } else {
             this.commit(MUTATIONS.DEC_ENERGY);
         }
+        const nNewEnergy = this.energy
+        const bPrevSupernatural = this.aimingSupernatural
         this.commit(MUTATIONS.AIMING_SUPERNATURAL, {value: bSupernatural});
+        return {
+            sn: !bPrevSupernatural && bSupernatural,
+            max: nNewEnergy === this.energyMax,
+            prev: nPrevEnergy,
+            curr: nNewEnergy
+        }
     }
 
     /**

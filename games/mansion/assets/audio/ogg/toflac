@@ -1,0 +1,15 @@
+#!/bin/bash
+
+convertTo() {
+	sExtFrom=$1
+	sExtTo=$2
+	echo $sExtFrom to $sExtTo
+	for i in `find . -name "*.$sExtFrom" -print`
+	do
+		sBase="${i%%.$sExtFrom}"
+		ffmpeg -i $i ../$sExtTo/$sBase.$sExtTo
+	done
+}
+
+convertTo ogg flac
+

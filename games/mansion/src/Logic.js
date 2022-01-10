@@ -53,9 +53,9 @@ class Logic extends StoreAbstract {
         return this.prop('getInventoryItems').indexOf(ref) >= 0;
     }
 
-    damagePlayer(ghost) {
+    damagePlayer(ghost, nMultiplier = 1) {
         const nPower = ghost.data.power;
-        const nDamage = nPower;
+        const nDamage = Math.floor(nPower * nMultiplier);
         this.commit(MUTATIONS.MODIFY_PLAYER_HP, {value: -nDamage});
     }
 

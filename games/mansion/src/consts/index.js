@@ -7,7 +7,7 @@ export const FLASH_DURATION = 333;
 export const PLAYER_FULL_SPEED = 6; // player walking speed
 export const PLAYER_CAMERA_SPEED = 3; // player wlaking speed in visor mode
 
-export const CAMERA_RETRIGGER_DELAY = 1000; // minimum number of milliseconds between two shots
+export const CAMERA_RETRIGGER_DELAY = 1500; // minimum number of milliseconds between two shots
 export const CAMERA_EXAMINATION_RANGE = 512; // maximum distance a photo may be taken for examination purpose
 export const CAMERA_CIRCLE_SIZE = 0.15;
 export const CAMERA_OPTIMAL_DISTANCE = 512;
@@ -34,3 +34,20 @@ export const TANGIBILITY_GHOST = 4;
 export const TANGIBILITY_PLAYER = 1;
 
 export const REBUKE_STRENGTH = 6;
+
+export const AUDIO_EVENT_CAMERA_SHOOT = 100;
+export const AUDIO_EVENT_CAMERA_CHARGING = 101;
+export const AUDIO_EVENT_CAMERA_CHARGED = 102;
+export const AUDIO_EVENT_CAMERA_SUPERNATURAL = 103;
+
+export const AUDIO_EVENT_GHOST_WOUNDED = 200;
+export const AUDIO_EVENT_GHOST_ATTACK = 201;
+export const AUDIO_EVENT_GHOST_DIE = 202;
+export const AUDIO_EVENT_GHOST_BURN = 203;
+
+export const AUDIO_EVENT_EXPLORE_PICKUP_ITEM = 300
+export const AUDIO_EVENT_EXPLORE_DOOR_OPEN = 310
+export const AUDIO_EVENT_EXPLORE_DOOR_CLOSE = 311
+export const AUDIO_EVENT_EXPLORE_DOOR_LOCKED = 312
+export const AUDIO_EVENT_EXPLORE_DOOR_UNLOCK = 313
+

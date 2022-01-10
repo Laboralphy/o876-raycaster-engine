@@ -103,6 +103,10 @@ class Engine {
         return this._smasher;
     }
 
+    get timeInterval () {
+        return this._TIME_INTERVAL
+    }
+
     /**
      * This will setup the renderer and all associated structures
      */

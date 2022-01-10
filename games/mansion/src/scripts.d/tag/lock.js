@@ -5,6 +5,8 @@
  * @param x {number} cell door coordinates (x axis)
  * @param y {number} cell door coordinates (y axis)
  */
+import {AUDIO_EVENT_EXPLORE_DOOR_LOCKED, AUDIO_EVENT_EXPLORE_DOOR_UNLOCK} from "../../consts";
+
 export function init(game, remove, x, y) {
     game.engine.lockDoor(x, y, true);
 }
@@ -23,11 +25,13 @@ export function push(game, remove, x, y, key) {
         game.ui.popup('EVENT_DOOR_UNLOCKED', 'unlock', 'ITEMS.' + key + '.name');
         game.removeDecals(x, y); // remove keyhole decal from door
         game.engine.lockDoor(x, y, false); // unlock door
+        game.soundEvent(AUDIO_EVENT_EXPLORE_DOOR_UNLOCK, {x, y})
     } else {
         // the door is simply locked without key
         // display message only if the cell is a door
         if (game.engine.isDoor(x, y)) {
             game.ui.popup('EVENT_DOOR_LOCKED', 'keyhole');
+            game.soundEvent(AUDIO_EVENT_EXPLORE_DOOR_LOCKED, {x, y})
         }
     }
 }
