@@ -4475,7 +4475,8 @@
       "x": 19,
       "y": 14,
       "tags": [
-        "photo m0_fire_place"
+        "photo m0_fire_place",
+        "ambsound ambiance-loops/loop-fireplace"
       ]
     },
     {

@@ -7410,7 +7410,8 @@
       {
         "block": 25,
         "tags": [
-          "photo m0_fire_place"
+          "photo m0_fire_place",
+          "ambsound ambiance-loops/loop-fireplace"
         ],
         "mark": {
           "color": 0,

@@ -8,7 +8,10 @@
     "size": 24,
     "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
     "data": {
-      "type": "w"
+      "type": "w",
+      "sounds": {
+        "spawn": "apparitions/mournful"
+      }
     }
   },
   {

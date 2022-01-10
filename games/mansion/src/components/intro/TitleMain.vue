@@ -39,7 +39,7 @@ export default {
 
 div.ui-menu-window {
   animation-name: animFadeIn;
-  animation-duration: 3000ms;
+  animation-duration: 777ms;
   animation-timing-function: ease-in-out;
   animation-iteration-count: 1;
 }

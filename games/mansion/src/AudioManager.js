@@ -6,6 +6,7 @@ class AudioManager {
         this.audioPath = 'assets/audio'
         this.streamedSounds = new Set([
             'ambiance',
+            'ambiance-loops',
             'apparitions',
             'events',
             'music'
@@ -62,6 +63,13 @@ class AudioManager {
         Howler.orientation(x, y, z, 0, 1, 0)
     }
 
+    /**
+     * Arret général de tous les sons
+     */
+    stop() {
+        Howler.stop()
+    }
+
     stopBGM () {
         if (this._bgm) {
             this._bgm.sound.fade(1, 0, 2000, undefined)
@@ -109,14 +117,33 @@ class AudioManager {
      * Joue un son d'ambiance. Ce genre de son n'a pas besoin d'être chargé au debut du prorgamme.
      * Même si le son est joué avec une fraction de seconde en retard ce n'est pas grave.
      * @param sFile {string}
+     * @param bLoop {boolean} le son sera bouclé et ne sera déchargé que si on l'arrête manuellement
      */
-    async playAmbiance (sFile) {
+    async playAmbiance (sFile, bLoop = false) {
         const { sound } = await this.load(sFile, {
-            autoplay: true
+            autoplay: true,
+            loop: bLoop
         })
-        sound.on('end', () => {
+        sound.on(bLoop ? 'stop' : 'end', () => {
+            if (bLoop) {
+                console.log('[a] unloading looped ambiance sound %s', sFile)
+            }
             sound.unload()
         })
+        return { sound }
+    }
+
+    getPannerAttribute (nDistance = 128) {
+        return {
+            coneInnerAngle: 360,
+            coneOuterAngle: 360,
+            coneOuterGain: 0,
+            distanceModel: 'exponential',
+            maxDistance: 65536,
+            refDistance: nDistance,
+            rolloffFactor: 2.5,
+            panningModel: 'HRTF'
+        }
     }
 
     /**
