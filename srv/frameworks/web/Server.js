@@ -7,6 +7,7 @@ const httpPresentedResponse = require('./middlewares/httpPresentedResponse')
 const publishRouter = require('./routes/publish')
 const vaultRouter = require('./routes/vault')
 const demosRouter = require('./routes/demos')
+const faviconRouter = require('./routes/favicon')
 const appPaths = require('../../config/app-paths')
 const logServ = debug('serv:main')
 
@@ -54,6 +55,7 @@ class Server {
       app.use('/publish', publishRouter(container))
       app.use('/vault', vaultRouter(container))
       app.use('/demo', demosRouter(container))
+      app.use('/favicon.ico', faviconRouter(container))
       app.get('/', (req, res) => {
         res.redirect('/ui')
       })

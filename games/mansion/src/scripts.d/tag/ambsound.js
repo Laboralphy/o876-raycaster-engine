@@ -1,11 +1,14 @@
-// init : jouer le son en boucle
-// enter : jouer le son une fois
-//
-// ambsound loop ambiant-loop/fireplace
-// ambsound 1
+import { AUDIO_EVENT_AMBIANCE_LOOP } from "../../consts";
 
-import {AUDIO_EVENT_AMBIANCE_LOOP} from "../../consts";
-
+/**
+ *
+ * @param game {Game} instance du jeu
+ * @param remove {function} fonction à appeler si l'on souhaite retirer le tag de la map
+ * @param x {number} coordonnée x de la cellule ou se trouve le tag
+ * @param y {number} coordonnée y de la cellule ou se trouve le tag
+ * @param file {string} fichier de son
+ * @param distance {number} puissance du son
+ */
 export function init (game, remove, x, y, file, distance = 192) {
     const params = {
         x,
@@ -14,4 +17,5 @@ export function init (game, remove, x, y, file, distance = 192) {
         distance
     }
     game.soundEvent(AUDIO_EVENT_AMBIANCE_LOOP, params)
+    remove()
 }
