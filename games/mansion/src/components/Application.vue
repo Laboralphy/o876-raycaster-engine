@@ -30,7 +30,7 @@
 
     export default {
         name: "Application",
-        components: { GameOverPrompt, MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
+        components: {GameOverPrompt, MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
         mixins: [ui]
     }
 </script>
