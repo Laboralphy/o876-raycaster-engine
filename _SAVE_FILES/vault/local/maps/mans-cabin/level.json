@@ -8369,7 +8369,9 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "trigsound ambiance/distant-howl"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
