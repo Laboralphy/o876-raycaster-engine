@@ -40,7 +40,8 @@ const {
     AUDIO_EVENT_EXPLORE_DOOR_OPEN,
     AUDIO_EVENT_EXPLORE_DOOR_LOCKED,
     AUDIO_EVENT_EXPLORE_DOOR_UNLOCK,
-    AUDIO_EVENT_AMBIANCE_LOOP
+    AUDIO_EVENT_AMBIANCE_LOOP,
+    AUDIO_EVENT_AMBIANCE_TRIGGER
 } = CONSTS
 
 class Game extends GameAbstract {
@@ -1117,12 +1118,19 @@ class Game extends GameAbstract {
 
             case AUDIO_EVENT_AMBIANCE_LOOP: {
                 const sFile = params.file
-                console.log('[g] starting ambiance', sFile)
+                console.log('[g] starting ambiance loop', sFile)
                 const pos = this.engine.getCellCenter(params.x, params.y)
                 am.playAmbiance(sFile, true).then(({ sound }) => {
                     sound.pos(pos.x, pos.y, 1)
                     sound.pannerAttr(am.getPannerAttribute(params.distance))
                 })
+                break
+            }
+
+            case AUDIO_EVENT_AMBIANCE_TRIGGER: {
+                const sFile = params.file
+                console.log('[g] trigger ambiance sound', sFile)
+                am.playAmbiance(sFile, false)
                 break
             }
         }
