@@ -1,4 +1,4 @@
-const CONSTS = require('../../consts')
+import CONSTS from '../../consts'
 /**
  * This script is run when an item is being "pushed".
  * The items are initialy nailed on walls, and the push action is aimed at acquire them.

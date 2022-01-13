@@ -5,7 +5,7 @@
  * @param x {number} cell door coordinates (x axis)
  * @param y {number} cell door coordinates (y axis)
  */
-import {AUDIO_EVENT_EXPLORE_DOOR_LOCKED, AUDIO_EVENT_EXPLORE_DOOR_UNLOCK} from "../../consts";
+import { AUDIO_EVENT_EXPLORE_DOOR_LOCKED, AUDIO_EVENT_EXPLORE_DOOR_UNLOCK } from "../../consts"
 
 export function init(game, remove, x, y) {
     game.engine.lockDoor(x, y, true);
