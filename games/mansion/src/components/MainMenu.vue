@@ -15,10 +15,11 @@ import GenericBox from "./GenericBox.vue";
 import TitleMain from "./intro/TitleMain.vue";
 import TitleLoading from "./intro/TitleLoading.vue";
 import TitleControls from "./intro/TitleControls.vue";
+import EndOfGame from './EndOfGame.vue';
 
 export default {
   name: "MainMenu",
-  components: {TitleLoading, TitleControls, TitleMain, HowTo, TitleStory, GenericBox},
+  components: {TitleLoading, TitleControls, TitleMain, HowTo, TitleStory, GenericBox, EndOfGame},
   mixins: [STRINGS, UIMixin]
 }
 </script>

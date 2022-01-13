@@ -7,6 +7,7 @@ export default {
     isUIFrameFullyVisible: state => state.uiframe.fullyVisible,
     isMainMenuVisible: state => state.mainmenu.phase < state.mainmenu.phases.game,
     isGameOverPromptVisible: state => state.gameoverprompt.visible,
+    isEndOfGameVisible: state => state.endofgame.visible,
 
     isShotVisible: state => state.shot.visible,
     isShotFatal: state => state.shot.targets > 0 && state.shot.shutter,

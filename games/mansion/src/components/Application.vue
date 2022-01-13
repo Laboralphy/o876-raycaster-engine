@@ -11,6 +11,7 @@
             <HUD pos="br"><p></p></HUD>
         </section>
         <GameOverPrompt v-if="isGameOverPromptVisible"></GameOverPrompt>
+        <EndOfGame v-else-if="isEndOfGameVisible"></EndOfGame>
         <UIFrame v-else-if="isUIFrameVisible"></UIFrame>
         <MainMenu v-if="isMainMenuVisible"></MainMenu>
         <Popups></Popups>
@@ -27,10 +28,11 @@
     import ui from "../mixins/ui";
     import ScoreSection from './ScoreSection.vue';
     import GameOverPrompt from './GameOverPrompt.vue';
+    import EndOfGame from './EndOfGame.vue';
 
     export default {
         name: "Application",
-        components: {GameOverPrompt, MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection},
+        components: {GameOverPrompt, MainMenu, UIFrame, PhotoShotAttributes, Vitals, HUD, Popups, ScoreSection, EndOfGame},
         mixins: [ui]
     }
 </script>
