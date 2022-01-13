@@ -1,3 +1,5 @@
+import { SET_END_OF_GAME_VISIBLE } from "../../store/modules/ui/mutation-types";
+
 /**
  * Transition vers un autre niveau
  * @param game {Game} instance du jeu
@@ -8,5 +10,15 @@
  * @param startpoint {number} numéro du startpoint
  */
 export function enter(game, remove, x, y, level, startpoint) {
-    game.loadLevel(level, { startpoint });
+    switch (level) {
+        case '$END': {
+            game.endOfGame();
+            break;
+        }
+
+        default: {
+            game.loadLevel(level, { startpoint });
+            break;
+        }
+    }
 }

@@ -78,6 +78,11 @@ class AudioManager {
         Howler.stop()
     }
 
+    async generalFadeOutAndStop () {
+        await this.stopBGM()
+        this.stop()
+    }
+
     stopBGM () {
         return new Promise(resolve => {
             this._bgm.sound.fade(this.BGM_VOLUME, 0, 2000, undefined)

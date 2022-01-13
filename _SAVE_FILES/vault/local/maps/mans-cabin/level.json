@@ -3138,7 +3138,7 @@
         "block": 12,
         "upperblock": 0,
         "tags": [
-          "goto mans-test1 0"
+          "goto $END 0"
         ],
         "mark": {
           "color": 0,

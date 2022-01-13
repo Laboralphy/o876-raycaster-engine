@@ -15,6 +15,10 @@ export default {
         visible: false
     },
 
+    endofgame: {
+        visible: false
+    },
+
     uiframe: {
         visible: false,
         fullyVisible: false,

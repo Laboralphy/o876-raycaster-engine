@@ -4344,7 +4344,7 @@
       "x": 30,
       "y": 2,
       "tags": [
-        "goto mans-test1 0"
+        "goto $END 0"
       ]
     },
     {

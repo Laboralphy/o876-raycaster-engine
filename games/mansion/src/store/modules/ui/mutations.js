@@ -98,5 +98,9 @@ export default {
 
     [TYPES.SET_GAME_OVER_PROMPT_VISIBLE]: function (state, {value}) {
         state.gameoverprompt.visible = value;
+    },
+
+    [TYPES.SET_END_OF_GAME_VISIBLE]: function (state, {value}) {
+        state.endofgame.visible = value
     }
 }

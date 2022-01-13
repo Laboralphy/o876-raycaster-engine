@@ -809,12 +809,20 @@ class Game extends GameAbstract {
     gameOver () {
         this.player.thinker.kill();
         this.freezePlayer();
+        this._audioManager.generalFadeOutAndStop()
         this.engine.delayCommand(() => {
             // fading out
             this.engine.filters.link(new GameOver());
             this.screen.disablePointerLock();
             this.ui.commit('SET_GAME_OVER_PROMPT_VISIBLE', { value: true });
         }, 1500);
+    }
+
+    endOfGame () {
+        this.freezePlayer();
+        this.screen.disablePointerLock();
+        this.ui.commit('SET_END_OF_GAME_VISIBLE', { value: true });
+        this._audioManager.generalFadeOutAndStop()
     }
 
 //  _                _                   _        _   _
