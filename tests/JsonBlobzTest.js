@@ -1,4 +1,4 @@
-const JsonBlobz = require("../srv/json-blobz");
+const JsonBlobz = require("../libs/json-blobz");
 
 describe('#jsonblobz', function () {
     it('should work', async function () {
