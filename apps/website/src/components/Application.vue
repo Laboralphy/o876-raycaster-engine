@@ -5,6 +5,7 @@
                 <nav>
                     <ul>
                         <li><button @click="$router.push('/')">Home</button></li>
+                        <li><button @click="$router.push('/pm')">Project manager</button></li>
                         <li><button @click="$router.push('/mapedit')">Map editor</button></li>
                         <li><button @click="$router.push('/tech')">Docs</button></li>
                         <li><button @click="$router.push('/demos')">Demos</button></li>
