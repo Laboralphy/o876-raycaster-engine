@@ -27,24 +27,28 @@ export function postJSON(url, data) {
 }
 
 export async function sendJSON(url, method, data) {
-    try {
-        const oRequest = {
-            method,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            }
-        };
-        oRequest.body = JSON.stringify(data);
-        const response = await fetch(url, oRequest);
-        const oJSON = await response.json();
-        if (response.status === 500) {
-            throw new Error('Error 500 : internal server error : ' + oJSON.message);
+    const oRequest = {
+        method,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
         }
-        return oJSON;
-    } catch (e) {
-        throw new Error('FetchJSON Error while putting ' + url + ' - ' + e.message);
+    };
+    oRequest.body = JSON.stringify(data);
+    const response = await fetch(url, oRequest);
+    switch (response.status) {
+        case 403: {
+            throw new Error('Err 403 : forbidden')
+        }
+        case 404: {
+            throw new Error('Err 404 : not found')
+        }
+        case 500: {
+            throw new Error('Err 500 : internal server error')
+        }
     }
+    const oJSON = await response.json();
+    return oJSON;
 }
 
 
@@ -58,9 +62,17 @@ export async function deleteJSON(url) {
         },
     };
     const response = await fetch(url, oRequest);
-    const oJSON = await response.json();
-    if (response.status === 500) {
-        throw new Error('Error 500 : internal server error : ' + oJSON.message);
+    switch (response.status) {
+        case 403: {
+            throw new Error('Err 403 : forbidden')
+        }
+        case 404: {
+            throw new Error('Err 404 : not found')
+        }
+        case 500: {
+            throw new Error('Err 500 : internal server error')
+        }
     }
+    const oJSON = await response.json();
     return oJSON;
 }

@@ -925,12 +925,22 @@
                 }
                 const sFileName = prompt('Enter a filename', this.getLevelName);
                 if (!!sFileName) {
-                    await FH.saveLevel(sFileName, this.getLevel);
-                    if (this.getFlagExport) {
-                        await FH.exportLevel(sFileName);
-                        this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
-                    } else {
-                        this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                    let bSave = false
+                    try {
+                        await FH.saveLevel(sFileName, this.getLevel);
+                        bSave = true
+                        if (this.getFlagExport) {
+                            await FH.exportLevel(sFileName);
+                            this.setStatusBarText({text: 'Level saved and published : ' + sFileName});
+                        } else {
+                            this.setStatusBarText({text: 'Level saved : ' + sFileName});
+                        }
+                    } catch (e) {
+                        if (bSave) {
+                            this.setStatusBarText({text: 'Level saved but not published : ' + e.message});
+                        } else {
+                            this.setStatusBarText({text: 'Level NOT saved : ' + e.message});
+                        }
                     }
                 } else {
                     this.setStatusBarText({text: 'Level NOT saved'});

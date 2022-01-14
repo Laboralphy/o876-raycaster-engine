@@ -1,13 +1,15 @@
 <template>
   <div>
     <div class="row">
-      <div class="col lg-12">
+      <div class="col lg-6 lg-offset-3">
           <h3>Current active project</h3>
-          <p>Welcome to your local game project management page.</p>
+          <p>Haunted village exploration / Exorcise vengefull spirits with a camera.</p>
+      </div>
+      <div class="col lg-6 lg-offset-3">
           <nav>
             <ul>
               <li>
-                <button class="green" @click="runProject">Play now</button>
+                <button class="green" @click="runProject"><img src="../../../assets/images/launcher-mansion.jpg" /></button>
               </li>
             </ul>
           </nav>

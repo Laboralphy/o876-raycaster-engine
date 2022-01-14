@@ -28,8 +28,9 @@ function createContainer() {
     }
     container.register({
         ...oAliases,
-        DEV_MODE: awilix.asValue(!!process.env.DEV_MODE)
+        DEV_MODE: awilix.asValue(parseInt(process.env.DEV_MODE) !== 0)
     })
+    console.log(parseInt(process.env.DEV_MODE) !== 0)
     return container
 }
 

@@ -32,11 +32,19 @@ class VaultController {
     }
 
     async saveLevel(req, res) {
-        res.send.ok(await this.SaveLevel.execute(req.params.name, req.body))
+        if (this.DEV_MODE) {
+            res.send.ok(await this.SaveLevel.execute(req.params.name, req.body))
+        } else {
+            res.send.forbidden()
+        }
     }
 
     async deleteLevel(req, res) {
-        res.send.ok(await this.DeleteLevel.execute(req.params.name))
+        if (this.DEV_MODE) {
+            res.send.ok(await this.DeleteLevel.execute(req.params.name))
+        } else {
+            res.send.forbidden()
+        }
     }
 }
 

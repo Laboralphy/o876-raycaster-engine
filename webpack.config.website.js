@@ -1,5 +1,6 @@
 const path = require('path');
 const {VueLoaderPlugin} = require('vue-loader');
+const webpack = require('webpack');
 
 const websiteConfig = {
     mode: "development",
