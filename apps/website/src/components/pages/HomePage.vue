@@ -3,7 +3,7 @@
     <div class="row">
       <div class="col lg-6 lg-offset-3">
           <h3>Current active project</h3>
-          <p>Haunted village exploration / Exorcise vengefull spirits with a camera.</p>
+          <p>Haunted village exploration / Exorcise vengeful spirits with a camera.</p>
       </div>
       <div class="col lg-6 lg-offset-3">
           <nav>
