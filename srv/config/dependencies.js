@@ -27,7 +27,8 @@ function createContainer() {
         oAliases[key] = awilix.aliasTo(aliases[key])
     }
     container.register({
-        ...oAliases
+        ...oAliases,
+        DEV_MODE: awilix.asValue(!!process.env.DEV_MODE)
     })
     return container
 }

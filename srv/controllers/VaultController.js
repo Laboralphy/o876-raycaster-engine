@@ -5,16 +5,14 @@ class VaultController {
         LoadLevel,
         SaveLevel,
         DeleteLevel,
-        PublishLevel,
-        UnpublishLevel
+        DEV_MODE
     }) {
         this.GetLevelList = GetLevelList
         this.GetLevelPreview = GetLevelPreview
         this.LoadLevel = LoadLevel
         this.SaveLevel = SaveLevel
         this.DeleteLevel = DeleteLevel
-        this.PublishLevel = PublishLevel
-        this.UnpublishLevel = UnpublishLevel
+        this.DEV_MODE = DEV_MODE
     }
 
     async getLevelList(req, res) {
@@ -36,19 +34,19 @@ class VaultController {
     }
 
     async saveLevel(req, res) {
-        res.send.ok(await this.SaveLevel.execute(req.params.name, req.body))
+        if (DEV_MODE) {
+            res.send.ok(await this.SaveLevel.execute(req.params.name, req.body))
+        } else {
+            res.send.forbidden()
+        }
     }
 
     async deleteLevel(req, res) {
-        res.send.ok(await this.DeleteLevel.execute(req.params.name))
-    }
-
-    async publishLevel(req, res) {
-        res.send.ok(await this.PublishLevel.execute(req.params.name))
-    }
-
-    async unpublishLevel(req, res) {
-        res.send.ok(await this.UnpublishLevel.execute(req.params.name))
+        if (DEV_MODE) {
+            res.send.ok(await this.DeleteLevel.execute(req.params.name))
+        } else {
+            res.send.forbidden()
+        }
     }
 }
 
