@@ -17,7 +17,7 @@
     "id": "itm_camera",
     "type": "plot",
     "icon": "camera",
-    "thumbnail": "",
+    "thumbnail": "item-camera-obscura",
     "value": 0
   }
 ]

@@ -97,6 +97,14 @@
         "Un examen attentif du glyphe permet de {u localiser l'esprit tourmenté} qui alimente le glyphe et qui condamne la porte.",
         "La {u capture} ou la {u révocation} de l'esprit tourmenté permet la dissipation du glyphe et {u l'ouverture de la porte}."
       ]
+    },
+    "itm_camera": {
+      "name": "Camera Obscura",
+      "description": [
+        "Marre d'être seul(e) à voir des fantômes et de ne pas pouvoir les photographier pour prouver à vos amis que vous ne délirez pas ?",
+        "La Camera Obscura est faite pour vous. Cet appareil construit à partir d'un vieux KiddyZoum, d'un cristal de fluorine et d'une micro-imprimante Agix-770,",
+        "vous permettra de fixer, sans trucage, sur photographie instantanée, de manifiques clichés de fantôme, ou de toute autre manifestation surnaturelle."
+      ]
     }
   },
 
