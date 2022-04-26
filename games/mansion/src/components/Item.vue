@@ -1,6 +1,7 @@
 <template>
   <div class="item" @click="$emit('click', {id})">
     <img class="icon" :src="'assets/icons/' + icon + '.png'">
+    <span class="description" v-if="count > 1">{{ count }} x</span>
     <span class="description">{{ name }}</span>
   </div>
 </template>
@@ -20,6 +21,11 @@ export default {
     name: {
       type: String,
       required: true
+    },
+    count: {
+      type: Number,
+      required: false,
+      default: 1
     }
   }
 }
