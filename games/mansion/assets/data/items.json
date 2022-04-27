@@ -12,5 +12,12 @@
     "icon": "grimoir",
     "thumbnail": "note-sigils",
     "value": 100
+  },
+  {
+    "id": "itm_camera",
+    "type": "plot",
+    "icon": "camera",
+    "thumbnail": "item-camera-obscura",
+    "value": 0
   }
 ]

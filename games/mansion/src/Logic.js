@@ -50,7 +50,9 @@ class Logic extends StoreAbstract {
      * @param ref {string}
      */
     hasInventoryItem(ref) {
-        return this.prop('getInventoryItems').indexOf(ref) >= 0;
+        return this
+            .prop('getInventoryItems')
+            .find(({ item }) => ref === item);
     }
 
     damagePlayer(ghost, nMultiplier = 1) {
