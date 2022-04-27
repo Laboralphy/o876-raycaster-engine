@@ -10,6 +10,7 @@
           :id="item.id"
           :name="item.name"
           :icon="item.icon"
+          :count="item.count"
           @click="({id}) => inventoryItemClicked(id)"></Item>
     </div>
     <div v-else class="no-item-here typewriter">
@@ -36,7 +37,7 @@ export default {
       const sActiveType = this.getInventoryActiveTab;
       return this
           .getInventoryItems
-          .map(id => this.getItemDataById(id))
+          .map(({ item, count }) => ({ ...this.getItemDataById(item), count }))
           .filter(item => sActiveType === 'all' || item.type === sActiveType);
     }
   },
@@ -61,8 +62,10 @@ export default {
     },
 
     inventoryItemClicked: function(id) {
+      const oData = this.getItemDataById(id)
       this.setPhotoDetails({
-        ...this.getItemDataById(id),
+        ...oData,
+        title: oData.name,
         value: 0,
         visible: true
       });
