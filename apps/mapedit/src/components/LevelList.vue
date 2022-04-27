@@ -90,9 +90,13 @@
             erase: async function() {
                 const name = this.selectedLevel;
                 if (confirm('Do you want to delete this level : ' + name + ' ? (this operation is definitive)')) {
-                    await FH.deleteLevel(name);
-                    await this.setStatusBarText({text: 'Level delete : ' + name});
-                    await this.listLevels();
+                    try {
+                        await FH.deleteLevel(name);
+                        await this.setStatusBarText({text: 'Level deleted : ' + name});
+                        await this.listLevels();
+                    } catch (e) {
+                        await this.setStatusBarText({text: 'Level NOT deleted : ' + e.message});
+                    }
                 }
             },
 

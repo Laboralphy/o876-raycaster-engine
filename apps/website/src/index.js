@@ -12,6 +12,7 @@ import "./styles/base.css";
 
 import Application from './components/Application.vue';
 import HomePage from "./components/pages/HomePage.vue";
+import ProjectMgrPage from "./components/pages/ProjectMgrPage.vue";
 import ExamplePage from "./components/pages/DemoPage.vue";
 import MapEditPage from "./components/pages/MapEditPage.vue";
 import FeatPage from "./components/pages/FeatPage.vue";
@@ -31,6 +32,13 @@ function createApplication() {
             name: 'home',
             components: {
                 default: HomePage
+            }
+        },
+        {
+            path: '/pm',
+            name: 'pm',
+            components: {
+                default: ProjectMgrPage
             }
         },
         {
