@@ -1,10 +1,7 @@
 export default {
     player: {
         inventory: [
-            'itm_camera',
-            'book_glyphs',
-            'book_glyphs',
-            'book_glyphs'
+            'itm_camera'
         ],
         attributes: {
             hp: 100,
