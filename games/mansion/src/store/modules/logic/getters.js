@@ -1,5 +1,19 @@
 export default {
-    getInventoryItems: state => state.player.inventory,
+    getInventoryItems: state => {
+        const oItems = {}
+        state.player.inventory.forEach(item => {
+            if (item in oItems) {
+                ++oItems[item]
+            } else {
+                oItems[item] = 1
+            }
+        })
+        const aItems = []
+        for (const item in oItems) {
+            aItems.push({ item, count: oItems[item] })
+        }
+        return aItems
+    },
     getItemData: state => state.data.items,
 
     getPlayerAttributeHP: state => state.player.attributes.hp,

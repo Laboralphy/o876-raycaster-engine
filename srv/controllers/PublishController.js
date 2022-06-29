@@ -20,9 +20,9 @@ class PublishController {
   async getUnusedTextures (req, res) {
     res.send.ok(await this.GetUnusedTextures.execute())
   }
-
+  
   async publishLevel(req, res) {
-    if (this.DEV_MODE) {
+    if (DEV_MODE) {
       res.send.ok(await this.PublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()
@@ -30,7 +30,7 @@ class PublishController {
   }
 
   async unpublishLevel(req, res) {
-    if (this.DEV_MODE) {
+    if (DEV_MODE) {
       res.send.ok(await this.UnpublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()
