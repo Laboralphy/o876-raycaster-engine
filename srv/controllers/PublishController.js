@@ -4,13 +4,13 @@ class PublishController {
     GetUnusedTextures,
     PublishLevel,
     UnpublishLevel,
-    DEV_MODE
+    MAP_EDITOR
   }) {
     this.GetPublishedLevelList = GetPublishedLevelList
     this.GetUnusedTextures = GetUnusedTextures
     this.PublishLevel = PublishLevel
     this.UnpublishLevel = UnpublishLevel
-    this.DEV_MODE = DEV_MODE
+    this.MAP_EDITOR = MAP_EDITOR
   }
 
   async getPublishedLevelList (req, res) {
@@ -22,7 +22,7 @@ class PublishController {
   }
   
   async publishLevel(req, res) {
-    if (DEV_MODE) {
+    if (this.MAP_EDITOR) {
       res.send.ok(await this.PublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()
@@ -30,7 +30,7 @@ class PublishController {
   }
 
   async unpublishLevel(req, res) {
-    if (DEV_MODE) {
+    if (this.MAP_EDITOR) {
       res.send.ok(await this.UnpublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()
