@@ -28,7 +28,7 @@ function createContainer() {
     }
     container.register({
         ...oAliases,
-        DEV_MODE: awilix.asValue(parseInt(process.env.DEV_MODE) !== 0)
+        MAP_EDITOR: awilix.asValue(parseInt(process.env.MAP_EDITOR) !== 0)
     })
     return container
 }

@@ -50,7 +50,15 @@ class Server {
       app.use(httpPresentedResponse)
       app.use('/game', express.static(process.env.GAME_PATH))
       app.use('/dist', express.static('./dist'))
-      app.use('/editor', express.static('./apps/mapedit/index.html'))
+
+      const MAP_EDITOR = container.resolve('MAP_EDITOR')
+      app.get('/editor/status', (req, res) => {
+        res.json({ status: MAP_EDITOR })
+        res.end()
+      })
+      if (MAP_EDITOR) {
+        app.use('/editor', express.static('./apps/mapedit/index.html'))
+      }
       app.use('/ui', express.static('./apps/website/index.html'))
       app.use('/publish', publishRouter(container))
       app.use('/vault', vaultRouter(container))
