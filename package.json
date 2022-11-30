@@ -60,7 +60,7 @@
     "set-value": "^4.0.1",
     "uniqid": "^5.2.0",
     "url": "^0.11.0",
-    "vue": "^2.6.12",
+    "vue": "^2.7.0",
     "vue-router": "^3.4.8",
     "vuex": "^3.5.1",
     "vue-material-design-icons": "^3.4.0"
