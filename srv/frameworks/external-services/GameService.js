@@ -11,7 +11,7 @@ const log = debug('serv:gs')
 
 class GameService {
     constructor () {
-        this._gamePath = homeAliasPath(process.env.GAME_PATH)
+        this._gamePath = homeAliasPath(process.env.RCGDK_GAME_PATH)
         log('game path : %s', this._gamePath)
     }
 
