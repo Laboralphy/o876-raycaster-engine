@@ -5,7 +5,7 @@ export default {
         PlayerThinker
     },
     cameraThinker: 'PlayerThinker',
-    mouseSensitivity: 0.01,
+    mouseSensitivity: 0.001,
     autoload: false,
-    firstLevel: 'mans-cabin'
+    firstLevel: 'mans-test-ai'
 };

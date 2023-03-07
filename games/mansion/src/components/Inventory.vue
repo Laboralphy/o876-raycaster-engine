@@ -1,6 +1,6 @@
 <template>
   <div class="ui-panel-window ui-size-60-90">
-    <TitleAndCo title="Inventaire">
+    <TitleAndCo :title="STRINGS.MAIN_TAB_INV">
       <ItemTypes></ItemTypes>
     </TitleAndCo>
     <div class="inv-container" v-if="getInventoryContent.length > 0">

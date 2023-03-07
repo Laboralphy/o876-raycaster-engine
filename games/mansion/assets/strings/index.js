@@ -1,3 +1,3 @@
-import STRINGS from "./fr.json";
+import STRINGS from "./fr";
 
 export default STRINGS;

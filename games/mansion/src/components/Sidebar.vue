@@ -4,6 +4,7 @@
             <li><span @click="select('inv')">{{ STRINGS.MAIN_TAB_INV }}</span></li>
             <li><span @click="select('album')">{{ STRINGS.MAIN_TAB_ALBUM }}</span></li>
             <li><span @click="select('notes')">{{ STRINGS.MAIN_TAB_NOTES }}</span></li>
+            <li><span @click="select('settings')">{{ STRINGS.MAIN_TAB_SETTINGS }}</span></li>
         </ul>
     </div>
 </template>

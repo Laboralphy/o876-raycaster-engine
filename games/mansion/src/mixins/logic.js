@@ -1,6 +1,7 @@
 import {createNamespacedHelpers} from 'vuex';
+import * as LOGIC_MUTATIONS_TYPES from '../store/modules/logic/mutation-types'
 
-const {mapGetters} = createNamespacedHelpers('logic');
+const {mapGetters, mapMutations} = createNamespacedHelpers('logic');
 
 export default {
     computed: {
@@ -11,7 +12,13 @@ export default {
             'getPlayerAttributeHPMax',
             'isPlayerDead',
             'getStateContent',
-            'getInventoryTotalValue'
+            'getInventoryTotalValue',
+            'getCombatScore'
         ])
+    },
+    methods: {
+        ...mapMutations({
+            incCombatScore: LOGIC_MUTATIONS_TYPES.INC_SCORE
+        })
     }
 }

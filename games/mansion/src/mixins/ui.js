@@ -37,7 +37,10 @@ export default {
             'getNotes',
             'getActiveNoteTab',
             'isGameOverPromptVisible',
-            'isEndOfGameVisible'
+            'isEndOfGameVisible',
+            'getSettingMouseFactor',
+            'getSettingMusicVolume',
+            'getSettingSFXVolume'
         ]),
         phase: {
             get: function() {
@@ -54,7 +57,10 @@ export default {
             setActiveTab: MUTATIONS.SET_MAIN_ACTIVE_TAB,
             setActiveType: MUTATIONS.SET_ITEM_TYPE_ACTIVE_TYPE,
             setPhotoDetails: MUTATIONS.SET_PHOTO_DETAILS,
-            setNoteActiveType: MUTATIONS.SET_NOTE_SELECTED_TYPE
+            setNoteActiveType: MUTATIONS.SET_NOTE_SELECTED_TYPE,
+            setSettingMouseFactor: MUTATIONS.SET_MOUSE_FACTOR,
+            setSettingMusicVolume: MUTATIONS.SET_MUSIC_VOLUME,
+            setSettingSFXVolume: MUTATIONS.SET_SFX_VOLUME
         })
     }
 }

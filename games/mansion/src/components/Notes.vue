@@ -12,7 +12,7 @@
         :id="note.ref"
         :key="note.ref"
         icon="note"
-        :name="STRINGS.NOTES[note.ref].title"
+        :name="note.ref in STRINGS.NOTES ? STRINGS.NOTES[note.ref].title : ('[' + note.ref + ' is undefined]')"
         @click="({id}) => noteClicked(id)"
       ></Item>
     </div>
@@ -36,6 +36,7 @@ export default {
   mixins: [strings, ui, logic],
   computed: {
     getNoteTypes: function () {
+      console.log(this.STRINGS.NOTES)
       return [
         {
           ref: 'journal',

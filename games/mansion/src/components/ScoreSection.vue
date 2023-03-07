@@ -14,7 +14,8 @@ export default {
     getScoreString: function() {
       const nAlbumScore = this.getAlbumTotalScore;
       const nInventoryScore = this.getInventoryTotalValue;
-      const nTotal = nAlbumScore + nInventoryScore;
+      const nCombatScore = this.getCombatScore
+      const nTotal = nAlbumScore + nInventoryScore + nCombatScore;
       return nTotal.toString();
     }
   }

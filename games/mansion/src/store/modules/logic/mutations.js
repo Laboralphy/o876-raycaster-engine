@@ -65,5 +65,9 @@ export default {
         for (let i in content) {
             state[i] = content[i];
         }
+    },
+
+    [TYPES.INC_SCORE]: function(state, {value}) {
+        state.data.score += parseInt(value) || 0
     }
 }

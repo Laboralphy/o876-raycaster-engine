@@ -87,8 +87,28 @@ class Game extends GameAbstract {
             (state, getters) => getters['ui/isGameRunning'],
             (newValue, oldValue) => {
                 if (newValue && !oldValue) {
-                  this.loadLevel(this.options.firstLevel);
+                    this.loadLevel(this.options.firstLevel);
                 }
+            }
+        )
+        this.ui.store.watch(
+            (state, getters) => getters['ui/getSettingMouseFactor'],
+            (newValue, oldValue) => {
+                // 0 => 0.001
+                // 100 => 0.1
+                this.setMouseSensitivity(Math.max(1, newValue) / 2000)
+            }
+        )
+        this.ui.store.watch(
+            (state, getters) => getters['ui/getSettingMusicVolume'],
+            (newValue, oldValue) => {
+                this._audioManager.setBGMVolume(newValue / 100)
+            }
+        )
+        this.ui.store.watch(
+            (state, getters) => getters['ui/getSettingSFXVolume'],
+            (newValue, oldValue) => {
+                this._audioManager.setSoundVolume(newValue / 100)
             }
         )
     }
@@ -96,8 +116,21 @@ class Game extends GameAbstract {
     async initAsync() {
         await super.initAsync();
         await this._audioManager.init();
+        this._audioManager.setBGMVolume(this.ui.prop('getSettingMusicVolume') / 100)
+        this._audioManager.setSoundVolume(this.ui.prop('getSettingSFXVolume') / 100)
         console.log('[g] end if init')
         this.ui.commit('SET_MAIN_MENU_PHASE', { value: 1 })
+    }
+
+    getOneGhostData(oData, sGhostId) {
+        let gi = {
+            ...oData[sGhostId]
+        }
+        if ('extends' in gi) {
+            gi = Object.assign({}, this.getOneGhostData(oData, gi.extends), gi)
+        }
+        delete gi.extends
+        return gi
     }
 
     getCompiledBlueprints() {
@@ -108,7 +141,7 @@ class Game extends GameAbstract {
         const oGhosts = DATA.GHOSTS;
         // patch blueprints
         for (let sGhostId in oGhosts) {
-            const gi = oGhosts[sGhostId];
+            let gi = this.getOneGhostData(oGhosts, sGhostId)
             const oGhostBlueprint = {
                 id: sGhostId,
                 ref: sGhostId,
@@ -644,6 +677,8 @@ class Game extends GameAbstract {
                 }
             });
         if (oGhostDetails.targets > 0) {
+            this.logic.incScore(oGhostDetails.value)
+            this.log('increment score', oGhostDetails.value)
             this.ui.displayPhotoDetailScore(oGhostDetails);
         }
     }

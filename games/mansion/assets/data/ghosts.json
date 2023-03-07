@@ -39,7 +39,7 @@
     "vitality": 100,
     "power": 2,
     "score": 100,
-    "thinker": "ZigZagTeleChaserThinker",
+    "thinker": "TripleShooterWalkerThinker",
     "soundset": "b40",
     "missile": [{
       "speed": 10,
@@ -59,6 +59,17 @@
       "speed": 10,
       "resref": "p_ghost_magbolt",
       "effect": "damage"
+    }]
+  },
+  "g_test_2": {
+    "extends": "g_test",
+    "power": 6,
+    "score": 600,
+    "missile": [{
+      "speed": 10,
+      "resref": "p_yellow_magbolt",
+      "effect": "confusion",
+      "duration": 5000
     }]
   }
 }

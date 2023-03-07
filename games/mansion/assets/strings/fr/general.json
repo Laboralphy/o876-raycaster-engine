@@ -1,0 +1,90 @@
+{
+  "ATTR_HITPOINTS" : "Mental",
+  "ATTR_SCORE": "Score",
+
+  "SHOT_FATAL" : "Cadrage fatal",
+  "SHOT_ZERO" : "Tir zéro",
+  "SHOT_CLOSE" : "A bout portant",
+  "SHOT_CORE" : "Tir à cœur",
+  "SHOT_DOUBLE" : "Double tir",
+  "SHOT_TRIPLE" : "Triple tir",
+  "SHOT_MULTIPLE" : "tir multiple",
+  "SHOT_VALUE" : "Valeur",
+  "SHOT_DAMAGE": "Dégâts",
+
+  "PHOTO_TYPES_DEBUG": "_debug",
+  "PHOTO_TYPES_ART": "Art",
+  "PHOTO_TYPES_CLUE": "Indices",
+  "PHOTO_TYPES_WRAITH": "Spectres",
+  "PHOTO_TYPES_AMBIENT": "Ambiance",
+  "PHOTO_TYPES_ARCHIVE": "Archives",
+
+  "ITEM_TYPES_ALL": "Tous",
+  "ITEM_TYPES_QUEST": "Intrigue",
+  "ITEM_TYPES_KEY": "Clés",
+  "ITEM_TYPES_BOOK": "Livres",
+
+  "NOTE_TYPES_JOURNAL": "Journal",
+  "NOTE_TYPES_HINT": "Infos",
+
+  "MAIN_TAB_ALBUM": "Album",
+  "MAIN_TAB_INV": "Inventaire",
+  "MAIN_TAB_NOTES": "Notes",
+  "MAIN_TAB_SETTINGS": "Réglages",
+
+  "COMMAND_CAPTION_NEXT": "Suivant",
+  "COMMAND_CAPTION_PREV": "Précédent",
+  "COMMAND_CAPTION_START": "Démarrer",
+
+  "GAME_OVER": "C'est fini",
+  "GAME_OVER_CAPTION": "La présence malfaisante des fantômes a eu raison de votre santé mentale. Un nouvel esprit tourmenté hantera ces lieux.",
+  "GAME_OVER_BUTTON_CAPTION": "Menu principal",
+
+  "LABEL_LOADING": "Chargement",
+  "GAME_TITLE": "Le hameau chelou",
+  "GAME_SUB_TITLE": [
+    "Tout un village entièrement vidé de ses habitants !",
+    "Mystère...",
+    "Un peu de rurex, pour voir ce qu'il s'est passé ?"
+  ],
+  "HOWTO_TITLE": "Contrôles",
+  "HOWTO_ACTIONS": [
+    {
+      "desc": "Diriger le point de vue du personnage.",
+      "note": "Cliquer sur l'écran de jeu pour prendre le contrôle"
+    },
+    {
+      "desc": "Ouvrir l'écran d'inventaire/album.",
+      "note": "Cliquer en dehors de l'interface pour reprendre le jeu"
+    },
+    {
+      "desc": "Saisir un objet. Ouvrir ou déverrouiller les portes. Prendre une photo.",
+      "note": "Prendre une photo n'est possible qu'en mode photo"
+    },
+    {
+      "desc": "Activer/désactiver le mode photo."
+    }
+  ],
+
+  "ALBUM_TAB_EMPTY": "Cette section de l'album est vide.",
+  "INVENTORY_TAB_EMPTY": "Aucun objet dans cette catégorie.",
+
+  "EVENT_PHOTO_MOGRIFY": "La photo s'est altérée mystérieusement !",
+  "EVENT_PHOTO_ART_STORED": "Photo artistique stockée dans l'album.",
+  "EVENT_PHOTO_CLUE_STORED": "Indice stocké dans l'album.",
+  "EVENT_PHOTO_WRAITH_STORED": "Spectre stocké dans l'album.",
+  "EVENT_PHOTO_NAMED_STORED": "\"%s\" stockée dans l'album.",
+  "EVENT_PHOTO_ARCHIVED": "Photo \"%s\" déplacée dans l'onglet \"Archives\".",
+  "EVENT_ITEM_ACQUIRED": "Vous obtenez : %s.",
+  "EVENT_DOOR_LOCKED": "Cette porte est verrouillée.",
+  "EVENT_DOOR_UNLOCKED": "Vous déverrouillez la porte avec : %s.",
+
+  "SETTINGS_MOUSE_SENS_LABEL": "Sensibilité souris",
+  "SETTINGS_MUSIC_VOLUME_LABEL": "Volume sonore d'ambiance",
+  "SETTINGS_SFX_VOLUME_LABEL": "Volume sonore des bruitages",
+
+  "LOCAL": {
+    "m0": {
+    }
+  }
+}

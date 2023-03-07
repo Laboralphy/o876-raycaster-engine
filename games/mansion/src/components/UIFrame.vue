@@ -4,6 +4,7 @@
         <Album v-if="getUIActiveTab === 'album'"></Album>
         <Inventory v-if="getUIActiveTab === 'inv'"></Inventory>
         <Notes v-if="getUIActiveTab === 'notes'"></Notes>
+        <Settings v-if="getUIActiveTab === 'settings'"></Settings>
         <PhotoDetails
                 v-if="isPhotoDetailsVisible"
                 :content="getPhotoDetailsContent"
@@ -17,6 +18,7 @@
 <script>
     import Notes from "./Notes.vue";
     import Album from "./Album.vue";
+    import Settings from "./Settings.vue";
     import Sidebar from "./Sidebar.vue";
     import DivDummy from "./DivDummy.vue";
     import PhotoDetails from "./PhotoDetails.vue";
@@ -25,7 +27,7 @@
 
     export default {
         name: "UIFrame",
-        components: {Notes, Inventory, PhotoDetails, DivDummy, Sidebar, Album},
+        components: {Settings, Notes, Inventory, PhotoDetails, DivDummy, Sidebar, Album},
         mixins: [ui],
         computed: {
             getComputedClass: function() {

@@ -88,5 +88,10 @@ export default {
             type: 'hint',
             read: false
         }
-    ]
+    ],
+    settings: {
+        mouseFactor: 50,
+        musicVolume: 1,
+        sfxVolume: 1
+    }
 };

@@ -186,7 +186,8 @@ class GameAbstract {
         });
         if (this._options.pointerlock) {
             this.screen.on('mousemove', event => {
-                this.invokeCameraThinkerFunction('look', event.x);
+                const x = event.x
+                this.invokeCameraThinkerFunction('look', x);
             });
         }
     }

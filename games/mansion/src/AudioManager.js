@@ -16,6 +16,7 @@ class AudioManager {
         this._saveBgm = ''
         this._registry = {}
         this.BGM_VOLUME = 0.5
+        this.SND_VOLUME = 0.5
     }
 
     buildFileLoadingArray (sFile) {
@@ -90,6 +91,17 @@ class AudioManager {
                 resolve()
             })
         })
+    }
+
+    setBGMVolume (value) {
+        this.BGM_VOLUME = value
+        if (this._bgm) {
+            this._bgm.sound.volume(value)
+        }
+    }
+
+    setSoundVolume (value) {
+        this.SND_VOLUME = value
     }
 
     async playBGM (sFile) {
@@ -199,6 +211,7 @@ class AudioManager {
     play (sId) {
         if (sId in this._registry) {
             const { sound } = this._registry[sId]
+            sound.volume(this.SND_VOLUME)
             return {
                 id: sound.play(),
                 sound

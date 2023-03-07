@@ -65,6 +65,9 @@ class Logic extends StoreAbstract {
         return this.prop('isPlayerDead');
     }
 
+    incScore(value) {
+        return this.commit(MUTATIONS.INC_SCORE, {value})
+    }
 }
 
 export default Logic;
