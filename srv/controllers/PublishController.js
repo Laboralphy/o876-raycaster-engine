@@ -4,13 +4,13 @@ class PublishController {
     GetUnusedTextures,
     PublishLevel,
     UnpublishLevel,
-    MAP_EDITOR
+    RCGDK_MAP_EDITOR
   }) {
     this.GetPublishedLevelList = GetPublishedLevelList
     this.GetUnusedTextures = GetUnusedTextures
     this.PublishLevel = PublishLevel
     this.UnpublishLevel = UnpublishLevel
-    this.MAP_EDITOR = MAP_EDITOR
+    this.RCGDK_MAP_EDITOR = RCGDK_MAP_EDITOR
   }
 
   async getPublishedLevelList (req, res) {
@@ -22,7 +22,7 @@ class PublishController {
   }
   
   async publishLevel(req, res) {
-    if (this.MAP_EDITOR) {
+    if (this.RCGDK_MAP_EDITOR) {
       res.send.ok(await this.PublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()
@@ -30,7 +30,7 @@ class PublishController {
   }
 
   async unpublishLevel(req, res) {
-    if (this.MAP_EDITOR) {
+    if (this.RCGDK_MAP_EDITOR) {
       res.send.ok(await this.UnpublishLevel.execute(req.params.name))
     } else {
       res.send.forbidden()

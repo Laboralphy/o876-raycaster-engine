@@ -6,7 +6,7 @@ function resolvePath (sPath) {
 }
 
 module.exports = {
-  path: homeAliasPath(path.join(process.env.SAVE_FILES_PATH, 'database')),
+  path: homeAliasPath(path.join(process.env.RCGDK_SAVE_FILES_PATH, 'database')),
   collections: ['levels'],
   indexes: {}
 }

@@ -1,12 +1,12 @@
 const path = require('path');
 const promfs = require('../../../../libs/prom-fs');
 
-const SAVE_FILES_PATH = '.';
+const RCGDK_SAVE_FILES_PATH = '.';
 
 class VaultFs {
 
     constructor() {
-        this._vaultPath = SAVE_FILES_PATH;
+        this._vaultPath = RCGDK_SAVE_FILES_PATH;
         this._namespace = '/';
     }
 

@@ -28,7 +28,7 @@ function createContainer() {
     }
     container.register({
         ...oAliases,
-        MAP_EDITOR: awilix.asValue(parseInt(process.env.MAP_EDITOR) !== 0)
+        RCGDK_MAP_EDITOR: awilix.asValue(parseInt(process.env.RCGDK_MAP_EDITOR) !== 0)
     })
     return container
 }

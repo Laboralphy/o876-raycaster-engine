@@ -48,15 +48,15 @@ class Server {
       // Route http
       logServ('declaring webserver routes and middlewares')
       app.use(httpPresentedResponse)
-      app.use('/game', express.static(process.env.GAME_PATH))
+      app.use('/game', express.static(process.env.RCGDK_GAME_PATH))
       app.use('/dist', express.static('./dist'))
 
-      const MAP_EDITOR = container.resolve('MAP_EDITOR')
+      const RCGDK_MAP_EDITOR = container.resolve('RCGDK_MAP_EDITOR')
       app.get('/editor/status', (req, res) => {
-        res.json({ status: MAP_EDITOR })
+        res.json({ status: RCGDK_MAP_EDITOR })
         res.end()
       })
-      if (MAP_EDITOR) {
+      if (RCGDK_MAP_EDITOR) {
         app.use('/editor', express.static('./apps/mapedit/index.html'))
       }
       app.use('/ui', express.static('./apps/website/index.html'))
