@@ -237,7 +237,7 @@ class Automaton {
                         break;
                     }
                 } else {
-                    throw new Error('automaton: each transition line must be an array of 2+ elements');
+                    throw new Error('automaton: each transition line must be an array of 2+ elements');
                 }
             }
         }

@@ -1,0 +1,19 @@
+{
+  "description": "a test-action",
+  "type": "object",
+  "require": [
+    "test",
+    "state"
+  ],
+  "allowAdditionalProperties": false,
+  "properties": {
+    "test": {
+      "description": "a test definition",
+      "type": "string"
+    },
+    "state": {
+      "description": "a name of a state where to go if the test succeed",
+      "type": "string"
+    }
+  }
+}

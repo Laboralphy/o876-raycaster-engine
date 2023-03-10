@@ -15,14 +15,14 @@ class TeleChaserThinker extends VengefulThinker {
     super();
     this.ghostAI.transitions = {
       "gs_init": [
-        [1, "gs_chase_no_tele_init"]
+        [1, "gs_chase_without_teleport_init"]
       ],
 
-      "gs_chase_no_tele_init": [
-        [1, "gs_time_3000_ish", "gs_chase_no_tele"]
+      "gs_chase_without_teleport_init": [
+        [1, "gs_time_3000_ish", "gs_chase_without_teleport"]
       ],
 
-      "gs_chase_no_tele": [
+      "gs_chase_without_teleport": [
         ["gt_time_out", "gs_chase"]
       ],
 
@@ -31,7 +31,7 @@ class TeleChaserThinker extends VengefulThinker {
       ],
 
       "gs_teleport_out": [
-        ["gt_has_teleported", "gs_shutter_chance_off", "gs_chase_no_tele_init"]
+        ["gt_has_teleported", "gs_shutter_chance_off", "gs_chase_without_teleport_init"]
       ]
     }
   }
@@ -44,7 +44,7 @@ class TeleChaserThinker extends VengefulThinker {
     this.moveTowardTarget();
   }
 
-  gs_chase_no_tele() {
+  gs_chase_without_teleport() {
     this.moveTowardTarget();
   }
 

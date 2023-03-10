@@ -1,4 +1,4 @@
-import Automaton from "../../automaton";
+import Automaton from "../../automaton/v2";
 
 /**
  * a class with basic mechanism to manage states.
@@ -11,6 +11,13 @@ class Thinker {
         this._entity = null;
         this._engine = null;
         this._automaton = new Automaton();
+        this._automaton.events.on('action', ({
+            state,
+            action,
+            parameters
+        }) => {
+            this[action](...parameters)
+        })
         this._automaton.instance = this;
     }
 

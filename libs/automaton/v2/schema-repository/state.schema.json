@@ -1,0 +1,55 @@
+{
+  "description": "state definition",
+  "type": "object",
+  "properties": {
+    "init": {
+      "description": "list of actions to do when automaton reaches this state",
+      "type": "array",
+      "items": {
+        "description": "an action",
+        "type": "string"
+      }
+    },
+    "loop": {
+      "description": "list of actions to do when automaton is repeatedly processed",
+      "type": "array",
+      "items": {
+        "description": "an action",
+        "type": "string"
+      }
+    },
+    "done": {
+      "description": "list of actions to do when automaton is leaving this state",
+      "type": "array",
+      "items": {
+        "description": "an action",
+        "type": "string"
+      }
+    },
+    "jump": {
+      "description": "list of test-action, each test will be evaluated, upon meeting a valid test, the automaton will jump to the matching state",
+      "type": "array",
+      "items": {
+        "$ref": "/transition"
+      }
+    },
+    "call": {
+      "description": "list of test-action, just like jump. but instead of jumping straight away, the automaton will stack the current state before jumping",
+      "type": "array",
+      "items": {
+        "$ref": "/transition"
+      }
+    },
+    "back": {
+      "description": "list of test, if one test success, the automaton pops the top-state from the stack and go there",
+      "type": "array",
+      "items": {
+        "$ref": "/test"
+      }
+    },
+    "data": {
+      "description": "a set of variable which builds the context of the state",
+      "type": "object"
+    }
+  }
+}

@@ -154,6 +154,9 @@ class VengefulThinker extends GhostThinker {
         }
     }
 
+    /**
+     * Calculer une destination de téléportation proche
+     */
     computeTeleportBehind () {
         const engine = this.engine;
         const target = this.target;
