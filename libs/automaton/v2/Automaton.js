@@ -127,7 +127,7 @@ class Automaton {
 
     enterState (sState) {
         if (!(sState in this._states)) {
-            throw new Error('state "' + sState + '" is undefined')
+            throw new Error('state ' + sState + ' is undefined')
         }
         this._currentState = sState
         const sc = this.currentStateContext
