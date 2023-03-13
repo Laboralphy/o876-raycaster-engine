@@ -63,7 +63,7 @@ class VengefulThinker extends GhostThinker {
                 ],
                 loop: [
                     '$pulse',
-                    '$moveForward'
+                    '$move'
                 ],
                 jump: [{
                     test: '$isTargetHit',
@@ -209,6 +209,12 @@ class VengefulThinker extends GhostThinker {
 
     setupGhostAI () {
         const gai = this._ghostAI
+        gai.events.on('state', ({
+            state,
+            data
+        }) => {
+            data._timer = this.engine.getTime()
+        })
         gai.events.on('test', ({
            test,
            parameters,
@@ -335,10 +341,6 @@ class VengefulThinker extends GhostThinker {
         this.entity.sprite.setCurrentAnimation('walk');
     }
 
-    $moveFormat() {
-        this.moveForward()
-    }
-
     /**
      * Etat : démarrer animation marche
      */
@@ -389,7 +391,7 @@ class VengefulThinker extends GhostThinker {
         this._teleportAnim = 0;
     }
 
-    $computeTeleportBehindTarget() {
+    $teleportBehindTarget() {
         this.computeTeleportBehind();
         this._teleportAnim = 0;
     }
@@ -414,15 +416,26 @@ class VengefulThinker extends GhostThinker {
         }
     }
 
+    $stop() {
+        this.setSpeed(0, 0)
+    }
+
     $doGhostAi () {
         this._ghostAI.process()
     }
 
-    $dump () {
-        const ent = this.entity
-        const tgt = this.target
-
+    $duration(n) {
+        this.setTimeOut(this.ghostAI.currentStateContext.data, n)
     }
+
+    /**
+     * returns true if the time is out
+     * @returns {boolean}
+     */
+    $timeout() {
+        return this.isTimeOut(this.ghostAI.currentStateContext)
+    }
+
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -486,6 +499,14 @@ class VengefulThinker extends GhostThinker {
 
     $isTeleportAnimDone () {
         return this._teleportAnim >= (PULSE_MAP_LARGE.length - 1);
+    }
+
+    /**
+     * Renvoie true si la durée du state dépasse un certain valeur
+     */
+    $elapsedTime (n) {
+        const t = this.engine.getTime()
+        return this._ghostAI.currentStateContext.data._timer + n < t
     }
 }
 

@@ -12,6 +12,10 @@ class StateContext {
         this._events = new Events
     }
 
+    get data () {
+        return this._data
+    }
+
     get events () {
         return this._events
     }
@@ -35,26 +39,26 @@ class StateContext {
     }
 
     runJump () {
-        for (const { test, state } of this._jump) {
-            if (this.invokeTest(test)) {
-                this._events.emit('state', { state, transitionType: 'jump' })
+        for (const { test = undefined, state } of this._jump) {
+            if (test === undefined || this.invokeTest(test)) {
+                this._events.emit('state', { state, data: this._data, transitionType: 'jump' })
                 break
             }
         }
     }
 
     runCall () {
-        for (const { test, state } of this._call) {
-            if (this.invokeTest(test)) {
-                this._events.emit('state', { state, transitionType: 'call' })
+        for (const { test = undefined, state } of this._call) {
+            if (test === undefined || this.invokeTest(test)) {
+                this._events.emit('state', { state, data: this._data, transitionType: 'call' })
                 break
             }
         }
     }
 
     runBack () {
-        for (const { test } of this._back) {
-            if (this.invokeTest(test)) {
+        for (const { test = undefined } of this._back) {
+            if (test === undefined || this.invokeTest(test)) {
                 this._events.emit('back', {})
                 break
             }

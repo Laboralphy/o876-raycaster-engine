@@ -39,7 +39,7 @@
     "vitality": 100,
     "power": 2,
     "score": 100,
-    "thinker": "WalkerThinker",
+    "thinker": "ChaserThinker",
     "soundset": "b40",
     "missile": [{
       "speed": 10,

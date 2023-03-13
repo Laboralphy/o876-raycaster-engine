@@ -138,10 +138,10 @@ class GhostThinker extends MoverThinker {
         return this.vectorToTarget().length();
     }
 
-    moveForward() {
+    $move() {
         this.pulse();
         this.updateVisibilityData();
-        this.$move();
+        super.$move();
     }
 
     rebuke() {
@@ -152,12 +152,24 @@ class GhostThinker extends MoverThinker {
         this._speed.scale(0.9);
     }
 
-    setTimeOut(n) {
-        this._nTimeOut = this.engine.getTime() + n;
+    /**
+     * définit le timer de l'état automate spécifié
+     * @param n {number}
+     * @param scd {{timeOut: number}}
+     */
+    setTimeOut(scd, n) {
+        scd.timeOut = this.engine.getTime() + n;
     }
 
-    isTimeOut() {
-        return this._nTimeOut <= this.engine.getTime();
+    /**
+     * renvoie true si le timer interne de l'etat automate spécifié est dépassé
+     * @return {boolean}
+     * @param scd {{timeOut: number}}
+     */
+    isTimeOut(scd) {
+        const nEngineTime = this.engine.getTime()
+        const nTimeOut = scd.timeOut || Infinity
+        return nTimeOut <= nEngineTime
     }
 
     /**
@@ -276,7 +288,7 @@ class GhostThinker extends MoverThinker {
     }
 
     $setTimeOut(n) {
-        this.setTimeOut(n)
+        this.setTimeOut(this.automaton.currentStateContext.data, n)
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -300,7 +312,7 @@ class GhostThinker extends MoverThinker {
      * @returns {boolean}
      */
     $isTimeOut() {
-        return this.isTimeOut()
+        return this.isTimeOut(this.automaton.currentStateContext.data)
     }
 }
 

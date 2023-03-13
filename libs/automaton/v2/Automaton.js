@@ -62,7 +62,6 @@ class Automaton {
         })
         oState.events.on('state', eventObject => {
             this.changeState(eventObject.state, eventObject.transitionType)
-            this._events.emit('state', eventObject)
         })
         oState.events.on('back', () => {
             this.changeState(this._stack.pop(), 'back')
@@ -133,6 +132,7 @@ class Automaton {
         this._currentState = sState
         const sc = this.currentStateContext
         if (sc) {
+            this._events.emit('state', { state: sState, data: sc.data })
             sc.runInit()
         }
     }

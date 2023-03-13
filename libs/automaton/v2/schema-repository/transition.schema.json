@@ -2,7 +2,6 @@
   "description": "a test-action",
   "type": "object",
   "require": [
-    "test",
     "state"
   ],
   "allowAdditionalProperties": false,

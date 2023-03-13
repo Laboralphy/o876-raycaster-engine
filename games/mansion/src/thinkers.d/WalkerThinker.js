@@ -2,6 +2,9 @@ import VengefulThinker from "./VengefulThinker";
 
 /**
  * Le fantome se dirige vers sa cible et la suit si elle se déplace.
+ * Le fantome fait des pause dans son déplacement
+ *
+ * testé
  */
 class WalkerThinker extends VengefulThinker {
 
@@ -9,7 +12,18 @@ class WalkerThinker extends VengefulThinker {
         super();
         this.ghostAI.defineStates({
             init: {
-                loop: ['$moveTowardTarget']
+                loop: ['$followTarget'],
+                jump: [{
+                    test: '$elapsedTime 5000',
+                    state: 'wait'
+                }]
+            },
+            wait: {
+                init: ['$stop'],
+                jump: [{
+                    test: '$elapsedTime 2000',
+                    state: 'init'
+                }]
             }
         })
     }
@@ -18,11 +32,10 @@ class WalkerThinker extends VengefulThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    $moveTowardTarget() {
+    $followTarget() {
         this.moveTowardTarget()
     }
 
 }
-
 
 export default WalkerThinker;
