@@ -55,6 +55,7 @@ class Engine {
         this._smasher.setCellHeight(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
 
         this._smasher.events.on('entity.dummy.update', ({entity}) => {
+            console.log('SYNCDUMMY')
             this._syncEntityDummy(entity);
         });
         this._smasher.events.on('entity.smashed', ({entity, smashers}) => {
@@ -417,6 +418,8 @@ class Engine {
                 // entity management
                 //this._camera.think(this); // visor is now in the entity list : indx 0
                 this._horde.process(this);
+                // Seul les thinker qui exploite les dummy (comme Tangible)
+                // peuvent faire usage des secteur et du collisionneur
                 this._smasher.process();
                 this
                     ._horde
@@ -889,6 +892,7 @@ class Engine {
             oThinker._context = this._thinkerContext;
             return oThinker;
         } catch (e) {
+            console.error(e)
             throw new Error('could not instanciate thinker class "' + sThinker + '"');
         }
     }
@@ -1048,6 +1052,7 @@ class Engine {
         }
 
         this._horde.linkEntity(entity);
+        this._smasher.updateEntity(entity)
         this.events.emit('entity.created', {entity});
         return entity;
     }

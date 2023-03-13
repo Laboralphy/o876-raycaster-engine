@@ -10,10 +10,11 @@ class TangibleThinker extends MoverThinker {
     constructor() {
         super();
         this.transitions = {
-            "s_init": [[1, "s_move"]],
-            "s_move": []
+            main: {
+                init: ['$init'],
+                loop: ['$move']
+            }
         };
-        this.automaton.state = "s_init";
     }
 
     processForces() {
@@ -30,13 +31,13 @@ class TangibleThinker extends MoverThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    s_init() {
+    $init() {
         this.engine.smasher.registerEntity(this.entity);
         this.processForces();
     }
 
-    s_move() {
-        super.s_move();
+    $move() {
+        super.$move();
         this.processForces();
     }
 }

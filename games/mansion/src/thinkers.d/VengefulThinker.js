@@ -1,6 +1,6 @@
 import GhostThinker from "./GhostThinker";
 import * as CONSTS from "../consts";
-import Automaton from "libs/automaton";
+import Automaton from "libs/automaton/v2";
 import Geometry from 'libs/geometry'
 import * as RC_CONSTS from 'libs/raycaster/consts'
 
@@ -21,12 +21,111 @@ class VengefulThinker extends GhostThinker {
     constructor() {
         super();
         this._ghostAI = new Automaton();
-        this._ghostAI.instance = this;
         this._nGhostTimeOut = 0;
         this._bWounded = false;
         this._bShutterChance = false;
         this._teleportDestination = null;
         this._teleportAnim = 0;
+        this.automaton.defineStates({
+            idle: {
+                jump: [{
+                    test: '$isTeleportReady',
+                    state: 'teleport'
+                }, {
+                    test: '$isTargetDead',
+                    state: 'despawn'
+                }, {
+                    test: '$isTargetFound',
+                    state: 'ghostAI'
+                }, {
+                    test: '$isTargetNotFound',
+                    state: 'teleportNearTarget'
+                }]
+            },
+            teleportNearTarget: {
+                init: [
+                    '$setTimeOut 1000'
+                ],
+                done: [
+                    '$computeTeleportInSight'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'teleport'
+                }]
+            },
+            ghostAI: {
+                init: [
+                    '$setTimeOut 250',
+                    '$setAnimation walk',
+                    '$dump',
+                    '$doGhostAi',
+                ],
+                loop: [
+                    '$pulse',
+                    '$moveForward'
+                ],
+                jump: [{
+                    test: '$isTargetHit',
+                    state: 'attack'
+                }, {
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            attack: {
+                init: [
+                    '$doAttackTarget',
+                    '$setTimeOut 750'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            teleport: {
+                init: ['$doTeleportVanish'],
+                loop: ['$doTeleportPulse'],
+                done: ['$doTeleportMove'],
+                jump: [{
+                    test: '$isTeleportAnimDone',
+                    state: 'spawn'
+                }]
+            },
+            wounded: {
+                init: [
+                    '$setTimeOut 600',
+                    '$rebuke 1'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            woundedCritical: {
+                init: [
+                    '$setTimeOut 750',
+                    '$rebuke 2'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            burning: {
+                done: [
+                    '$spawnFlame'
+                ],
+                loop: [
+                    '$pulse'
+                ],
+                jump: [{
+                    test: '$isCurrentAnimOver',
+                    state: 'despawn'
+                }]
+            }
+        })
+        /*
         this.transitions = {
             // recherche joueur cible
             "s_idle": [
@@ -103,6 +202,30 @@ class VengefulThinker extends GhostThinker {
             ]
         };
         this.automaton.state = 's_init';
+
+         */
+        this.setupGhostAI()
+    }
+
+    setupGhostAI () {
+        const gai = this._ghostAI
+        gai.events.on('test', ({
+           test,
+           parameters,
+           pass
+        }) => {
+            pass(this._invoke(test, ...parameters))
+        })
+        gai.events.on('action', ({
+            action,
+            parameters
+        }) => {
+            this._invoke(action, ...parameters)
+        })
+        gai.defineStates({
+            'init': {}
+        })
+        gai.initialState = 'init'
     }
 
     get shutterChance () {
@@ -110,13 +233,16 @@ class VengefulThinker extends GhostThinker {
     }
 
     kill() {
-        this.automaton.state = 's_kill';
+        this._bShutterChance = false;
+        this.entity.sprite.setCurrentAnimation('death');
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
+        this.automaton.state = 'burning';
     }
 
     wound(bCritical) {
-        if (this.automaton.state !== 's_rebuked') {
+        if (this.automaton.state !== 'wounded' && this.automaton.state !== 'woundedCritical') {
             this._bWounded = true;
-            this.automaton.state = (this._bShutterChance || bCritical) ? 's_wounded_critical' : 's_wounded_light';
+            this.automaton.state = (this._bShutterChance || bCritical) ? 'woundedCritical' : 'wounded';
         }
     }
 
@@ -174,6 +300,17 @@ class VengefulThinker extends GhostThinker {
         }
     }
 
+    compareTargetDistance (n) {
+        if (this.target) {
+            const n2 = n * n
+            const mpos = this.entity.position
+            const opos = this.target.position
+            return Math.sign(Geometry.squareDistance(mpos.x, mpos.y, opos.x, opos.y) - n2);
+        } else {
+            throw new Error('this entity has no target')
+        }
+    }
+
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
@@ -186,138 +323,51 @@ class VengefulThinker extends GhostThinker {
         this._nGhostTimeOut = 0;
     }
 
-    gs_time_250 () {
-        this._setGhostTimeOut(250);
-    }
-
-    gs_time_333 () {
-        this._setGhostTimeOut(333);
-    }
-
-    gs_time_500 () {
-        this._setGhostTimeOut(500);
-    }
-
-    gs_time_750 () {
-        this._setGhostTimeOut(750);
-    }
-
-    gs_time_1000 () {
-        this._setGhostTimeOut(1000);
-    }
-
-    gs_time_2000 () {
-        this._setGhostTimeOut(2000);
-    }
-
-    gs_time_3000 () {
-        this._setGhostTimeOut(3000);
-    }
-
-    gs_shutter_chance_on () {
-        this._bShutterChance = true;
-    }
-
-    gs_shutter_chance_off () {
-        this._bShutterChance = false;
+    $shutterChance (bOn) {
+        this._bShutterChance = bOn;
     }
 
     /**
      * Etat initialisation
      */
-    s_init() {
-        super.s_init();
-        this.engine.smasher.registerEntity(this.entity);
-        this.entity.dummy.tangibility.self = CONSTS.TANGIBILITY_GHOST;
-        this.entity.dummy.tangibility.hitmask = CONSTS.TANGIBILITY_PLAYER;
+    $init() {
+        super.$init();
         this.entity.sprite.setCurrentAnimation('walk');
     }
 
-    s_move_forward() {
+    $moveFormat() {
         this.moveForward()
-    }
-
-    s_ghost_ai() {
-        this._ghostAI.process();
     }
 
     /**
      * Etat : démarrer animation marche
      */
-    s_start_walk_anim() {
-        this.entity.sprite.setCurrentAnimation('walk');
+    $setAnimation(sAnim) {
+        this.entity.sprite.setCurrentAnimation(sAnim);
     }
 
     /**
      * The state of "doing nothing"
      * The ghost is pulsating
      */
-    s_idle() {
+    $pulse() {
         this.pulse();
         this.updateVisibilityData();
     }
 
     /**
-     * the ghost has been killed
-     */
-    s_kill() {
-        this._bShutterChance = false;
-        this.entity.sprite.setCurrentAnimation('death');
-        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
-    }
-
-    /**
      * the ghost is wounded : set angle to go away from player
      */
-    s_wounded_light() {
+    $rebuke(factor = 1) {
         this._bShutterChance = false;
-        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH);
+        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * factor);
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
-    }
-
-    /**
-     * the ghost is wounded critically
-     * it is rebuked : go away from player
-     */
-    s_wounded_critical() {
-        this._bShutterChance = false;
-        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * 2);
-        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
-    }
-
-    /**
-     * Fantome repoussé
-     */
-    s_rebuked() {
-        this._bShutterChance = false;
-        this.rebuke()
-    }
-
-    /**
-     * attente fin de timer avant passe en idle
-     */
-    s_wait_then_idle() {
-        this.pulse();
-    }
-
-    /**
-     * attente fin d'animation avant passe en idle
-     */
-    s_anim_then_idle() {
-        this.pulse();
-    }
-
-    /**
-     * The ghost is waiting before spawning flame and fading out
-     */
-    s_burn() {
-        this.pulse();
     }
 
     /**
      * A blueflame is spawned
      */
-    s_spawn_flame() {
+    $spawnFlame() {
         const p = this.entity.position;
         const oFlame = this.engine.createEntity("o_flame", p);
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_BURN, { entity: oFlame })
@@ -326,7 +376,7 @@ class VengefulThinker extends GhostThinker {
     /**
      * the ghost plays an attack animation
      */
-    s_attack_target() {
+    $doAttackTarget() {
         this.entity.sprite.setCurrentAnimation('attack');
         this.entity.sprite.getCurrentAnimation().reset();
         // wound player
@@ -334,34 +384,44 @@ class VengefulThinker extends GhostThinker {
     }
 
 
-    s_teleport_in_sight() {
+    $computeTeleportInSight() {
         this.computeTeleportInsideVisibilityCone();
         this._teleportAnim = 0;
     }
 
-    s_teleport_behind_target() {
+    $computeTeleportBehindTarget() {
         this.computeTeleportBehind();
         this._teleportAnim = 0;
     }
 
-    s_teleport_pulse() {
+    $doTeleportPulse() {
         this._nOpacity = PULSE_MAP_LARGE[this._teleportAnim];
         this.setOpacityFlags();
         ++this._teleportAnim;
     }
 
-    s_teleport() {
+    $doTeleportVanish() {
         this._teleportAnim = 0;
         this._nOpacity = 0;
         this.setOpacityFlags();
     }
 
-    s_teleport_move() {
+    $doTeleportMove() {
         if (this._teleportDestination) {
             const { x, y } = this._teleportDestination;
             this.entity.position.set(this.engine.getCellCenter(x, y));
             this._teleportDestination = null;
         }
+    }
+
+    $doGhostAi () {
+        this._ghostAI.process()
+    }
+
+    $dump () {
+        const ent = this.entity
+        const tgt = this.target
+
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -372,13 +432,13 @@ class VengefulThinker extends GhostThinker {
         return this.engine.getTime() >= this._nGhostTimeOut;
     }
 
-    gt_wounded () {
+    $isWounded () {
         const bWounded = this._bWounded;
         this._bWounded = false;
         return bWounded;
     }
 
-    gt_critical_wounded () {
+    $isWoundedCritical () {
         if (this._bWounded && this._bShutterChance) {
             this._bWounded = false;
             this._bShutterChance = false;
@@ -396,35 +456,35 @@ class VengefulThinker extends GhostThinker {
      * Tests if dead opacity is depleted
      * @returns {boolean}
      */
-    t_anim_over() {
+    $isCurrentAnimOver() {
         return this.entity.sprite.getCurrentAnimation().frozen;
     }
 
     /**
      * The ghost has it player
      */
-    t_hit_target() {
-        const s = this.entity.dummy.smashers;
-        return s.length > 0 && s.includes(this.target);
+    $isTargetHit() {
+        const d = this.compareTargetDistance(this.target.size + this.entity.size)
+        return d <= 0
     }
 
-    t_target_dead() {
+    $isTargetDead() {
         return this.context.game.logic.isPlayerDead();
     }
 
-    t_target_found() {
-        return this.isEntityVisible(this.target) && !this.t_target_dead();
+    $isTargetFound() {
+        return this.isEntityVisible(this.target) && !this.$isTargetDead();
     }
 
-    t_target_not_found() {
-        return !this.t_target_found();
+    $isTargetNotFound() {
+        return !this.$isTargetFound();
     }
 
-    t_teleport_ready () {
+    $isTeleportReady () {
         return this._teleportDestination !== null;
     }
 
-    t_teleport_anim_done () {
+    $isTeleportAnimDone () {
         return this._teleportAnim >= (PULSE_MAP_LARGE.length - 1);
     }
 }

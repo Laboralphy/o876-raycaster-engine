@@ -9,19 +9,27 @@ import ForceField from "../force-field/ForceField";
 
 class Dummy {
     constructor() {
-        this._entity = 0;
+        // this._entity = 0;
         this._position = new Vector();
-        this._dead = false; // les mobile noté "dead" doivent être retiré du jeu
+        this._dead = false; // les mobiles noté "dead" doivent être retiré du jeu
         this._radius = 0;
         this._mass = 1;
         this._tangibility = {
             self: 1,
             hitmask: 1
         };
-        this.colliderSector = null;
+        this._colliderSector = null;
         this._smashers = [];
         this.forceField = new ForceField();
         this._force = new Vector();
+    }
+
+    set colliderSector(value) {
+        this._colliderSector = value
+    }
+
+    get colliderSector() {
+        return this._colliderSector
     }
 
     setSmashers(a) {
@@ -48,13 +56,13 @@ class Dummy {
         this._mass = value;
     }
 
-    set entity(value) {
-        this._entity = value;
-    }
-
-    get entity() {
-        return this._entity;
-    }
+    // set entity(value) {
+    //     this._entity = value;
+    // }
+    //
+    // get entity() {
+    //     return this._entity;
+    // }
 
     get tangibility() {
         return this._tangibility;
@@ -103,6 +111,16 @@ class Dummy {
         let p1 = this.position;
         let p2 = oOther.position;
         return Geometry.squareDistance(p1.x, p1.y, p2.x, p2.y) < (d * d);
+    }
+
+    /**
+     *
+     * @param oOther {Dummy}
+     */
+    distanceTo(oOther) {
+        let p1 = this.position;
+        let p2 = oOther.position;
+        return Math.sqrt(Geometry.squareDistance(p1.x, p1.y, p2.x, p2.y));
     }
 
     /**

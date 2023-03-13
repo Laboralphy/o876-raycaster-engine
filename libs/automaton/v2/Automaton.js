@@ -23,6 +23,14 @@ class Automaton {
         return this.changeState(value, 'jump')
     }
 
+    get initialState () {
+        return this._initialState
+    }
+
+    set initialState (value) {
+        this._initialState = value
+    }
+
     get events () {
         return this._events
     }
@@ -76,7 +84,7 @@ class Automaton {
     }
 
     defineStates (oStates) {
-        for (const [sState, oState] of Object.entries(sState, oState)) {
+        for (const [sState, oState] of Object.entries(oStates)) {
             this.defineState(sState, oState)
         }
     }
@@ -87,13 +95,14 @@ class Automaton {
      */
     get currentStateContext () {
         if (this._currentState === '') {
-            this._currentState = this._initialState
+            this.enterState(this._initialState)
         }
-
         if (this._currentState === '' || this._currentState === undefined) {
             return undefined
-        } else {
+        } else if (this._currentState in this._states) {
             return this._states[this._currentState]
+        } else {
+            throw new Error('state ' + this._currentState + ' unknown')
         }
     }
 
@@ -118,6 +127,9 @@ class Automaton {
     }
 
     enterState (sState) {
+        if (!(sState in this._states)) {
+            throw new Error('state "' + sState + '" is undefined')
+        }
         this._currentState = sState
         const sc = this.currentStateContext
         if (sc) {

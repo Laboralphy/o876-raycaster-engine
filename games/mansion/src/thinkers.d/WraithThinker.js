@@ -14,26 +14,30 @@ class WraithThinker extends GhostThinker {
             x: new Easing(),
             y: new Easing()
         };
-        this.transitions = {
+        this.automaton.defineStates({
             // déplacement vers l'avant
-            "s_idle": [
-                // on va vérifer qu'on a pas été shooté
-                ["t_shot", "s_despawn"],
-                // lorsqu'on marche on va verifier qu'on a atteint notre destination
-                ["t_arrived", "s_despawn"]
-            ]
-        }
+            idle: {
+                loop: ['$moveAndPulse'],
+                jump: [{
+                    test: '$isShot',
+                    state: 'despawn'
+                }, {
+                    test: '$hasArrived',
+                    state: 'despawn'
+                }]
+            },
+        })
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    s_init() {
+    $spawn() {
         // décider de la marche à suivre
         // un spectre va toujours se déplacer en ligne droite, ou bien rester immobile
         // - déterminer le point d'apparition et le point de destination
-        super.s_init();
+        super.$spawn();
         const data = this.entity.data.wraith;
         const pFrom = this.entity.position;
         const pTo = data.destination;
@@ -58,7 +62,7 @@ class WraithThinker extends GhostThinker {
     /**
      * The ghost is pulsating and walking to its destination
      */
-    s_idle() {
+    $moveAndPulse() {
         // displacement
         const entity = this.entity;
         const t = this.elapsedTime;
@@ -74,11 +78,11 @@ class WraithThinker extends GhostThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
 
-    t_arrived() {
+    $hasArrived() {
         return this._easing.x.over() && this._easing.y.over();
     }
 
-    t_shot() {
+    $isShot() {
         return !!this.entity.data.shot;
     }
 }

@@ -11,14 +11,19 @@ class Thinker {
         this._entity = null;
         this._engine = null;
         this._automaton = new Automaton();
+        this._automaton.events.on('test', ({
+            test,
+            parameters,
+            pass
+        }) => {
+            pass(this._invoke(test, ...parameters))
+        })
         this._automaton.events.on('action', ({
-            state,
             action,
             parameters
         }) => {
-            this[action](...parameters)
+            this._invoke(action, ...parameters)
         })
-        this._automaton.instance = this;
     }
 
     get context() {
@@ -27,18 +32,6 @@ class Thinker {
 
     get automaton() {
         return this._automaton;
-    }
-
-    get transitions() {
-        return this._automaton.transitions;
-    }
-
-    set transitions(value) {
-        this._automaton.transitions = value;
-    }
-
-    defineTransistions(f) {
-        this._automaton.transitions = f;
     }
 
     emit(sEvent, payload) {
@@ -69,10 +62,11 @@ class Thinker {
     /**
      * Invoke a method in this instance
      * @param sMeth
+     * @param parameters {*}
      */
-    _invoke(sMeth) {
+    _invoke(sMeth, ...parameters) {
         if (sMeth in this) {
-            this[sMeth]();
+            return this[sMeth](...parameters);
         }
     }
 

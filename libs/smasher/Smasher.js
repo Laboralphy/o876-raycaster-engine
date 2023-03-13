@@ -44,6 +44,7 @@ class Smasher extends SectorRegistry {
         // checks if entity has "dummy"
         this.validateEntity(oEntity);
         this._entities.push(oEntity);
+        this.updateEntity(oEntity);
     }
 
     /**
@@ -78,7 +79,7 @@ class Smasher extends SectorRegistry {
      * Unregisters the object in all other sector
      * @param oEntity {SmashingEntity}
      */
-    updateEntity(oEntity) {
+    updateEntity(oEntity, bDebug = false) {
         let dummy = oEntity.dummy;
         let oOldSector = dummy.colliderSector;
         let v = dummy.position.sub(this._origin);
@@ -87,6 +88,11 @@ class Smasher extends SectorRegistry {
             throw new Error('sector ' + (v.x / this._cellWidth | 0).toString() + ' ' + (v.y / this._cellHeight | 0).toString() + ' does not exists.');
         }
         let bSameSector = s && oOldSector && s === oOldSector;
+        if (bSameSector && bDebug) {
+            const x = v.x / this._cellWidth | 0;
+            const y = v.y / this._cellHeight | 0;
+            console.log('SAME SECTOR', x, y)
+        }
         if (!bSameSector) {
 
             // it seems that dummy changed sector
@@ -123,7 +129,7 @@ class Smasher extends SectorRegistry {
      */
     processEntity(oEntity) {
         const oDummy = oEntity.dummy;
-        if (!oDummy) console.log(oEntity)
+        if (!oDummy) console.log('this entity has no dummy !', oEntity)
         // compute a new set of forces to be applied to the dummy
         const aHitters = this._getSmashingEntities(oEntity);
         if (!!aHitters && aHitters.length > 0) {

@@ -6,8 +6,8 @@ class HomingBoltThinker extends LinearBoltThinker {
         this.ANGLE_TURNING = 0.05
     }
 
-    s_move() {
-        super.s_move()
+    $move() {
+        super.$move()
         const nAngle = this.vectorToTarget().angle()
         // essayer de reduire cet angle
         this.setAngle(this.getAngleToTarget(nAngle))

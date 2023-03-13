@@ -12,12 +12,15 @@ class PlayerThinker extends FPSControlThinker {
         this.setupCommands({
             use: [' ', 'Mouse0']
         });
-        this.transitions = {
-            ...this.transitions,
-            "s_dying": [
-                ["t_on_floor", "s_dead"]
-            ]
-        };
+        this.automaton.defineStates({
+            dying: {
+                loop: ['$dyingAnimation'],
+                jump: [{
+                    test: '$isOnFloor',
+                    state: 'dead'
+                }]
+            }
+        })
     }
 
     /**
@@ -36,8 +39,8 @@ class PlayerThinker extends FPSControlThinker {
         this.SPEED = n;
     }
 
-    s_init() {
-        super.s_init();
+    $init() {
+        super.$init();
         this.entity.dummy.tangibility.self = CONSTS.TANGIBILITY_PLAYER;
         this.entity.dummy.tangibility.hitmask = CONSTS.TANGIBILITY_GHOST;
         this.engine.smasher.registerEntity(this.entity);
@@ -122,10 +125,7 @@ class PlayerThinker extends FPSControlThinker {
         return this.entity.position.z > Z_FLOOR_LEVEL;
     }
 
-    s_death() {
-    }
-
-    s_dying() {
+    $dyingAnimation() {
         if (this.isHeightAtFloorLevel()) {
             this._nDeathZSpeed = 0;
             this.entity.position.z = Z_FLOOR_LEVEL;
@@ -135,7 +135,7 @@ class PlayerThinker extends FPSControlThinker {
         }
     }
 
-    t_on_floor() {
+    $isOnFloor() {
         return this.isHeightAtFloorLevel();
     }
 }
