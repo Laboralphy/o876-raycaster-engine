@@ -13,7 +13,7 @@ class MissileThinker extends TangibleThinker {
         this._speedNorm = 0;
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
-        this.defineStates({
+        this.automaton.defineStates({
             "firing": {
                 loop: ['$move'],
                 jump: [

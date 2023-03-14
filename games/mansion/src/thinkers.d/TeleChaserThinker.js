@@ -1,11 +1,18 @@
 import VengefulThinker from "./VengefulThinker";
 
 /**
- * Will chase target normally.
- * When close enought to target : will teleport behind target
- * Will not use teleportation more than a few second
+ * 1) le fantôme suit la cible pendant 5 secondes, il ne se téléporte pas
  *
- * testé : fonctionne correctement
+ * 2) le fantôme suit la cible et se téléportera s'il arrive assez près
+ *
+ * 3) avant de se téléporter le fantome fait une pause de 0.75 seconde, durant ce laps de temps, le shutter chance est allumé
+ * si le fantôme est bléssé, la téléportation est annulée et on va en 1)
+ *
+ * 4) le fantôme se téléporte derrière sa cible
+ *
+ * 5) Le fantôme va en 1)
+ *
+ * Testé
  */
 class TeleChaserThinker extends VengefulThinker {
 
@@ -30,7 +37,7 @@ class TeleChaserThinker extends VengefulThinker {
         }]
       },
       pauseBeforeTeleport: {
-        init: ['$shutterChance 1'],
+        init: ['$unwound', '$shutterChance 1'],
         done: ['$shutterChance 0'],
         jump: [{
           test: '$elapsedTime 750',

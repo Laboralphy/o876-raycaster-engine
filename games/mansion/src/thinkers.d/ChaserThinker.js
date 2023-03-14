@@ -1,8 +1,7 @@
 import VengefulThinker from "./VengefulThinker";
 
 /**
- * Le fantome se dirige vers sa cible et la suit si elle se déplace.
- * Le fantome ne s'arrete pas
+ * 1) le fantôme se dirige vers la cible et corrige constament son mouvement pour toujours suivre la cible.
  *
  * Testé
  */
@@ -16,15 +15,6 @@ class ChaserThinker extends VengefulThinker {
             }
         })
     }
-
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-    $followTarget() {
-        this.moveTowardTarget()
-    }
-
 }
 
 export default ChaserThinker;

@@ -26,7 +26,6 @@ class GhostThinker extends MoverThinker {
             },
             idle: {},
             despawn: {
-                init: ['$despawn'],
                 loop: ['$decAlphaToZero'],
                 jump: [{
                     test: '$isAlphaZero',

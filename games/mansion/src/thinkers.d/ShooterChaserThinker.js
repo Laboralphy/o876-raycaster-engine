@@ -1,68 +1,55 @@
 import VengefulThinker from "./VengefulThinker";
 
 /**
- * Le fantome se déplace vers la cible en tirant des projectiles
+ * 1) Le fantôme se dirige en ligne droite vers sa cible, pendant 3 secondes, si la cible se déplace, le fantôme
+ * ne corrige pas sa trajectoire
+ *
+ * 2) le fantome s'arrete pendant 0.75 seconde et un shutter chance est allumé
+ *
+ * 3) le fantôme tire un projectile vers le joueur
+ *
+ * 4) le fantôme va en 1)
+ *
+ * testé
  */
-class ShooterWalkerThinker extends VengefulThinker {
+class ShooterChaserThinker extends VengefulThinker {
 
     constructor() {
         super();
-        this.ghostAI.transitions = {
-            "gs_start": [
-                // se tourner vers cible et avancer, attendre 2000 ms
-                [1, "gs_time_2000", "gs_chase", "gs_chasing"]
-            ],
-
-            "gs_start_1": [
-                // definir un timer avant le tir, puis chaser
-                [1, "gs_time_shoot", "gs_chasing"]
-            ],
-
-            "gs_pause_wounded": [
-                ["gt_time_out", "gs_start_1"]
-            ],
-
-            "gs_chasing": [
-                // si timeout terminer, stoper pendant 500ms puis tirer
-                ["gt_time_out", "gs_stop", "gs_time_250", "gs_shutter_chance_on", "gs_is_going_to_shoot"]
-            ],
-
-            "gs_is_going_to_shoot": [
-                // tirer, attendre 2s puis re chaser
-                ["gt_critical_wounded", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"],
-                ["gt_time_out", "gs_shoot", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"]
-            ],
-
-            "gs_wait_after_shoot": [
-                ["gt_time_out", "gs_chase", "gs_start_1"]
-            ]
-        }
+        this.ghostAI.defineStates({
+            init: {
+                loop: ['$followTarget'],
+                jump: [{
+                    test: '$elapsedTime 3000',
+                    state: 'pauseBeforeShoot'
+                }]
+            },
+            pauseBeforeShoot: {
+                init: ['$stop', '$shutterChance 1'],
+                done: ['$shutterChance 0'],
+                jump: [{
+                    test: '$isWoundedCritical',
+                    state: 'init'
+                }, {
+                    test: '$elapsedTime 750',
+                    state: 'shoot'
+                }]
+            },
+            shoot: {
+                init: ['$shoot'],
+                jump: [{
+                    test: '$elapsedTime 1000',
+                    state: 'init'
+                }]
+            }
+        })
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    gs_chase() {
-        this.moveTowardTarget();
-    }
-
-    gs_chasing() {
-        this.moveTowardTarget();
-    }
-
-    /**
-     * Randomly choose timer between 3 and 5s
-     */
-    gs_time_shoot () {
-        this._setGhostTimeOut(Math.floor(Math.random() * 2000) + 3000);
-    }
-
-    gs_stop() {
-        this.moveTowardTarget(0, 0);
-    }
-
-    gs_shoot() {
+    $shoot() {
         this.moveTowardTarget(0, 0);
         // tirer un projectile
         const oMissileData = Array.isArray(this.entity.data.missile)
@@ -74,4 +61,4 @@ class ShooterWalkerThinker extends VengefulThinker {
     }
 }
 
-export default ShooterWalkerThinker
+export default ShooterChaserThinker

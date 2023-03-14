@@ -58,7 +58,6 @@ class VengefulThinker extends GhostThinker {
                 init: [
                     '$setTimeOut 250',
                     '$setAnimation walk',
-                    '$dump',
                     '$doGhostAi',
                 ],
                 loop: [
@@ -135,19 +134,22 @@ class VengefulThinker extends GhostThinker {
             data
         }) => {
             data._timer = this.engine.getTime()
-            console.log('ghost state', state, 'time', data._timer)
+            console.log('ghost state', state)
         })
         gai.events.on('test', ({
            test,
            parameters,
            pass
         }) => {
-            pass(this._invoke(test, ...parameters))
+            const b = this._invoke(test, ...parameters)
+            console.log('ghost test', test, ...parameters, 'result :', b)
+            pass(b)
         })
         gai.events.on('action', ({
             action,
             parameters
         }) => {
+            console.log('ghost action', action, ...parameters)
             this._invoke(action, ...parameters)
         })
         gai.defineStates({
@@ -160,17 +162,24 @@ class VengefulThinker extends GhostThinker {
         return this._bShutterChance;
     }
 
+    set shutterChance (value) {
+        console.log('shutterChance =', value)
+        this._bShutterChance = value
+    }
+
     kill() {
-        this._bShutterChance = false;
         this.entity.sprite.setCurrentAnimation('death');
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
         this.automaton.state = 'burning';
     }
 
-    wound(bCritical) {
+    wound(bCritical = false) {
         if (this.automaton.state !== 'wounded' && this.automaton.state !== 'woundedCritical') {
+            console.log('wound ! critical', bCritical)
             this._bWounded = true;
-            this.automaton.state = (this._bShutterChance || bCritical) ? 'woundedCritical' : 'wounded';
+            this.automaton.state = bCritical ? 'woundedCritical' : 'wounded';
+        } else {
+            console.log('already wounding')
         }
     }
 
@@ -242,7 +251,10 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
     $shutterChance (bOn) {
-        this._bShutterChance = Boolean(bOn != 0);
+        if (typeof bOn !== 'number') {
+            throw new TypeError('$shutterChance needs 1 or 0 as number value')
+        }
+        this.shutterChance = bOn !== 0;
     }
 
     /**
@@ -250,7 +262,7 @@ class VengefulThinker extends GhostThinker {
      */
     $init() {
         super.$init();
-        this.entity.sprite.setCurrentAnimation('walk');
+        this.$setAnimation('walk');
     }
 
     /**
@@ -273,7 +285,6 @@ class VengefulThinker extends GhostThinker {
      * the ghost is wounded : set angle to go away from player
      */
     $rebuke(factor = 1) {
-        this._bShutterChance = false;
         this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * factor);
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
     }
@@ -336,9 +347,12 @@ class VengefulThinker extends GhostThinker {
         this._ghostAI.process()
     }
 
-
     $unwound () {
         this._bWounded = false
+    }
+
+    $followTarget (nSpeed = 1, nAngle = 0) {
+        this.moveTowardTarget(nSpeed, nAngle)
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -352,10 +366,8 @@ class VengefulThinker extends GhostThinker {
     }
 
     $isWoundedCritical () {
-        console.log(this._bWounded, this._bShutterChance)
-        if (this._bWounded && this._bShutterChance) {
-            this.$unwound();
-            this._bShutterChance = false;
+        if (this._bWounded && this.shutterChance) {
+            this.$unwound()
             return true
         }
         this.$unwound();

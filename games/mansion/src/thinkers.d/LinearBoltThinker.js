@@ -69,5 +69,4 @@ class LinearBoltThinker extends MissileThinker {
     }
 }
 
-
 export default LinearBoltThinker;

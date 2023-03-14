@@ -67,6 +67,8 @@ class Thinker {
     _invoke(sMeth, ...parameters) {
         if (sMeth in this) {
             return this[sMeth](...parameters);
+        } else {
+            throw new Error('This method "' + sMeth + '" does not existe in this thinker.')
         }
     }
 
