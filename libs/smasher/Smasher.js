@@ -79,7 +79,7 @@ class Smasher extends SectorRegistry {
      * Unregisters the object in all other sector
      * @param oEntity {SmashingEntity}
      */
-    updateEntity(oEntity, bDebug = false) {
+    updateEntity(oEntity) {
         let dummy = oEntity.dummy;
         let oOldSector = dummy.colliderSector;
         let v = dummy.position.sub(this._origin);
@@ -88,11 +88,6 @@ class Smasher extends SectorRegistry {
             throw new Error('sector ' + (v.x / this._cellWidth | 0).toString() + ' ' + (v.y / this._cellHeight | 0).toString() + ' does not exists.');
         }
         let bSameSector = s && oOldSector && s === oOldSector;
-        if (bSameSector && bDebug) {
-            const x = v.x / this._cellWidth | 0;
-            const y = v.y / this._cellHeight | 0;
-            console.log('SAME SECTOR', x, y)
-        }
         if (!bSameSector) {
 
             // it seems that dummy changed sector
