@@ -9,12 +9,12 @@ class TangibleThinker extends MoverThinker {
 
     constructor() {
         super();
-        this.transitions = {
+        this.automaton.defineStates({
             main: {
                 init: ['$init'],
                 loop: ['$move']
             }
-        };
+        })
     }
 
     processForces() {

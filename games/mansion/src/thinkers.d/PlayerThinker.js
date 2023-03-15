@@ -43,7 +43,6 @@ class PlayerThinker extends FPSControlThinker {
         super.$init();
         this.entity.dummy.tangibility.self = CONSTS.TANGIBILITY_PLAYER;
         this.entity.dummy.tangibility.hitmask = CONSTS.TANGIBILITY_GHOST;
-        this.engine.smasher.registerEntity(this.entity);
     }
 
     /**

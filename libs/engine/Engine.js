@@ -55,7 +55,6 @@ class Engine {
         this._smasher.setCellHeight(CONSTS.METRIC_SMASHER_SECTOR_SIZE);
 
         this._smasher.events.on('entity.dummy.update', ({entity}) => {
-            console.log('SYNCDUMMY')
             this._syncEntityDummy(entity);
         });
         this._smasher.events.on('entity.smashed', ({entity, smashers}) => {
@@ -416,10 +415,10 @@ class Engine {
                 this._scheduler.schedule(this._time);
                 this._doorProcess();
                 // entity management
-                //this._camera.think(this); // visor is now in the entity list : indx 0
+                // this._camera.think(this); // visor is now in the entity list : indx 0
                 this._horde.process(this);
-                // Seul les thinker qui exploite les dummy (comme Tangible)
-                // peuvent faire usage des secteur et du collisionneur
+                // Seuls les thinker qui exploite les dummy (comme Tangible)
+                // peuvent faire usage des secteurs et du collisionneur
                 this._smasher.process();
                 this
                     ._horde

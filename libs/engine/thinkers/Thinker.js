@@ -26,6 +26,10 @@ class Thinker {
         })
     }
 
+    get debugString () {
+        return this._entity
+    }
+
     get context() {
         return this._context;
     }

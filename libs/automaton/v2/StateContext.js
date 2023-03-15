@@ -20,10 +20,14 @@ class StateContext {
         return this._events
     }
 
-    runSmth (s) {
-        this['_' + s].forEach(s => {
+    runActions (a) {
+        a.forEach(s => {
             this.invokeAction(s)
         })
+    }
+
+    runSmth (s) {
+        this.runActions(this['_' + s])
     }
 
     runInit () {
@@ -39,8 +43,9 @@ class StateContext {
     }
 
     runJump () {
-        for (const { test = undefined, state } of this._jump) {
+        for (const { test = undefined, state, actions = [] } of this._jump) {
             if (test === undefined || this.invokeTest(test)) {
+                this.runActions(actions)
                 this._events.emit('state', { state, data: this._data, transitionType: 'jump' })
                 break
             }

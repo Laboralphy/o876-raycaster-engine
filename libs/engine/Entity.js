@@ -2,7 +2,6 @@ import Position from "./Position";
 import Vector from "../geometry/Vector";
 import Dummy from "libs/smasher/Dummy";
 
-
 let LAST_ID = 0;
 
 /**
@@ -31,6 +30,14 @@ class Entity {
         this.data = {}; // user data
     }
 
+    get debugString () {
+        const sDead = this._dead ? 'DEAD': ''
+        return `#${this._id}:${this._ref} ${sDead} pos(${this._position.x}, ${this._position.y}`
+    }
+
+    /**
+     * @returns {Dummy}
+     */
     get dummy() {
         return this._dummy;
     }

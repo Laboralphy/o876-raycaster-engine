@@ -14,6 +14,12 @@ class MissileThinker extends TangibleThinker {
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
         this.automaton.defineStates({
+            "main": {
+                init: ["$init"],
+                jump: [{
+                    state: "firing"
+                }]
+            },
             "firing": {
                 loop: ['$move'],
                 jump: [
@@ -46,7 +52,6 @@ class MissileThinker extends TangibleThinker {
                 init: ['$dead']
             }
         });
-        this.automaton.initialState = 'firing';
     }
 
     /**
