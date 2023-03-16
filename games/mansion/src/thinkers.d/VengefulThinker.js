@@ -402,6 +402,13 @@ class VengefulThinker extends GhostThinker {
         return !this.$isTargetFound();
     }
 
+    $isTargetCloserThan (nDist) {
+        return this.getDistanceToTarget() < nDist;
+    }
+
+    $isTargetFurtherThan (nDist) {
+        return this.getDistanceToTarget() > nDist;
+    }
     $isTeleportReady () {
         return this._teleportDestination !== null;
     }

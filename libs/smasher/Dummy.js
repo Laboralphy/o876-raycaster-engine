@@ -140,8 +140,7 @@ class Dummy {
      * @returns {boolean}
      */
     hits(oOther) {
-        const a = this.tangibleWith(oOther) && this.nearerThan(oOther, this._radius + oOther.radius);
-        return a;
+        return this.tangibleWith(oOther) && this.nearerThan(oOther, this._radius + oOther.radius);
     }
 }
 

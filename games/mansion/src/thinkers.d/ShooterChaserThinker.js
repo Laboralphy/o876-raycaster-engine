@@ -10,7 +10,7 @@ import VengefulThinker from "./VengefulThinker";
  *
  * 4) le fantôme va en 1)
  *
- * testé
+ * testé le 2023-03-15
  */
 class ShooterChaserThinker extends VengefulThinker {
 

@@ -12,7 +12,7 @@ import VengefulThinker from "./VengefulThinker";
  *
  * 5) Le fantôme va en 1)
  *
- * Testé
+ * testé le 2023-03-15
  */
 class TeleChaserThinker extends VengefulThinker {
 
@@ -40,11 +40,11 @@ class TeleChaserThinker extends VengefulThinker {
         init: ['$unwound', '$shutterChance 1'],
         done: ['$shutterChance 0'],
         jump: [{
-          test: '$elapsedTime 750',
-          state: 'teleport'
-        }, {
           test: '$isWoundedCritical',
           state: 'init'
+        }, {
+          test: '$elapsedTime 750',
+          state: 'teleport'
         }]
       },
       teleport: {
@@ -55,22 +55,5 @@ class TeleChaserThinker extends VengefulThinker {
       }
     })
   }
-
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-
-  $isTargetCloserThan (nDist) {
-    return this.getDistanceToTarget() < nDist;
-  }
-
-  $followTarget() {
-    this.moveTowardTarget()
-  }
-
 }
 export default TeleChaserThinker;

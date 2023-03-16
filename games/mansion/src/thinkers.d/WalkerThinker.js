@@ -6,7 +6,7 @@ import VengefulThinker from "./VengefulThinker";
  *
  * 2) le fantôme reste immobile pendant 1 seconde
  *
- * testé
+ * testé le 2023-03-15
  */
 class WalkerThinker extends VengefulThinker {
     constructor() {
