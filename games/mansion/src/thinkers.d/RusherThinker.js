@@ -1,7 +1,5 @@
 import VengefulThinker from "./VengefulThinker";
 
-const THINKER_DISTANCE_RUSH = 256; // distance à laquel le ghost va rusher
-
 /**
  * Chase target directly.
  * When close enough to target, rushes at constant angle... must be avoided.

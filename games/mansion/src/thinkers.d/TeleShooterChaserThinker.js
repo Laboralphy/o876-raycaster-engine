@@ -3,76 +3,63 @@ const THINKER_DISTANCE_TELEPORT_BEHIND = 256; // distance à laquel le ghost va 
 
 /**
  * Le fantome se déplace au hasard et tire en se téléportant
+ *
+ * Testé le 2023-03-16
  */
 class TeleShooterChaserThinker extends VengefulThinker {
 
     constructor() {
         super();
-        this.ghostAI.transitions = {
-            "gs_init": [
-                [1, "gs_chase_without_teleport"]
-            ],
-
-            "gs_chase_without_teleport_init": [
-                [1, "gs_time_3000_ish", "gs_chase_without_teleport"]
-            ],
-
-            "gs_chase_without_teleport": [
-                ["gt_time_out", "gs_chase"]
-            ],
-
-            // si la cible est proche, on s'arrete, on active shutterchance, on se téléporte
-            // sinon on continue de chaser
-            "gs_chase": [
-                ["gt_target_close", "gs_teleport_behind", "gs_shutter_chance_on", "gs_stop", "gs_teleport_out"]
-            ],
-
-            "gs_teleport_out": [
-                ["gt_has_teleported", "gs_shutter_chance_off", "gs_chase_without_teleport_init"]
-            ],
-
-            "gs_is_going_to_shoot": [
-                // tirer, attendre 2s puis re chaser
-                ["gt_critical_wounded", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"],
-                ["gt_time_out", "gs_shoot", "gs_time_250", "gs_shutter_chance_off", "gs_wait_after_shoot"]
-            ],
-
-            "gs_wait_after_shoot": [
-                ["gt_time_out", "gs_chase", "gs_start_1"]
-            ]
-        }
+        this.ghostAI.defineStates({
+            init: {
+                // Suit la cible sans se téléporter pendant 5 s
+                loop: ['$followTarget'],
+                jump: [{
+                    test: '$elapsedTime 3000',
+                    state: 'mayTeleport'
+                }]
+            },
+            mayTeleport: {
+                // Suit la cible, mais peut se téléporter si proche
+                loop: ['$followTarget'],
+                done: ['$stop'],
+                jump: [{
+                    test: '$isTargetCloserThan 256',
+                    state: 'pauseBeforeTeleport'
+                }]
+            },
+            pauseBeforeTeleport: {
+                init: ['$unwound', '$shutterChance 1'],
+                done: ['$shutterChance 0'],
+                jump: [{
+                    test: '$isWoundedCritical',
+                    state: 'init'
+                }, {
+                    test: '$elapsedTime 500',
+                    state: 'teleport'
+                }]
+            },
+            teleport: {
+                done: ['$teleportBehindTarget'],
+                jump: [{
+                    state: 'shootWhenTeleportDone'
+                }]
+            },
+            shootWhenTeleportDone: {
+                done: ['$shoot'],
+                jump: [{
+                    test: '$isTeleportAnimDone',
+                    state: 'init'
+                }]
+            }
+        })
     }
 
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    gs_chase() {
-        this.moveTowardTarget();
-    }
-
-    gs_chase_without_teleport_init() {
-        this.moveTowardTarget();
-    }
-
-    gs_teleport_behind () {
-        this.computeTeleportBehind();
-    }
-
-    // timer d'environ 3000 ms (+- 500ms
-    gs_time_3000_ish () {
-        this._setGhostTimeOut(Math.floor(Math.random() * 1000 + 2500));
-    }
-
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-
-    gt_target_close () {
-        return this.getDistanceToTarget() < THINKER_DISTANCE_TELEPORT_BEHIND;
-    }
-
-    gs_shoot() {
+    $shoot() {
         this.moveTowardTarget(0, 0);
         // tirer un projectile
         const oMissileData = Array.isArray(this.entity.data.missile)

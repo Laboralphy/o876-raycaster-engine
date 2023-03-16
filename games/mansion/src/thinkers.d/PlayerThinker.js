@@ -19,6 +19,8 @@ class PlayerThinker extends FPSControlThinker {
                     test: '$isOnFloor',
                     state: 'dead'
                 }]
+            },
+            dead: {
             }
         })
     }
@@ -112,7 +114,7 @@ class PlayerThinker extends FPSControlThinker {
     }
 
     kill() {
-        this.automaton.state = "s_dying";
+        this.automaton.state = "dying";
         this._nDeathZSpeed = 0;
     }
 

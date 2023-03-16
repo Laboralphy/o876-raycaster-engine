@@ -424,6 +424,12 @@ class VengefulThinker extends GhostThinker {
         const t = this.engine.getTime()
         return this._ghostAI.currentStateContext.data._timer + n < t
     }
+
+    $quantumChoice (n) {
+        const r = Math.random()
+        console.log(r, '<', n, '/', 100)
+        return r < (n / 100)
+    }
 }
 
 export default VengefulThinker;
