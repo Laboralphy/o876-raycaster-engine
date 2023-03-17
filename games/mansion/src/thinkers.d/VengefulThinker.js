@@ -1,6 +1,6 @@
 import GhostThinker from "./GhostThinker";
 import * as CONSTS from "../consts";
-import Automaton from "libs/automaton";
+import Automaton from "libs/automaton/v2";
 import Geometry from 'libs/geometry'
 import * as RC_CONSTS from 'libs/raycaster/consts'
 
@@ -21,102 +21,165 @@ class VengefulThinker extends GhostThinker {
     constructor() {
         super();
         this._ghostAI = new Automaton();
-        this._ghostAI.instance = this;
         this._nGhostTimeOut = 0;
         this._bWounded = false;
         this._bShutterChance = false;
         this._teleportDestination = null;
         this._teleportAnim = 0;
-        this.transitions = {
-            // recherche joueur cible
-            "s_idle": [
-                ["t_teleport_ready", "s_teleport"],
-                // player dead: plus rien a faire,
-                ["t_target_dead", "s_despawn"],
-                // trouver : commencer la chasse
-                ["t_target_found", "s_time_250", "s_start_walk_anim", "s_ghost_ai", "s_move_forward"],
-                // attendre 1 seconde puis refaire une recherche
-                ["t_target_not_found", "s_time_1000", "s_wait_then_teleport_in_sight"]
-            ],
+        this.automaton.defineStates({
+            idle: {
+                jump: [{
+                    test: '$isTeleportReady',
+                    state: 'teleport'
+                }, {
+                    test: '$isTargetDead',
+                    state: 'despawn'
+                }, {
+                    test: '$isTargetFound',
+                    state: 'ghostAI'
+                }, {
+                    test: '$isTargetNotFound',
+                    state: 'teleportNearTarget'
+                }]
+            },
+            teleportNearTarget: {
+                init: [
+                    '$setTimeOut 1000'
+                ],
+                done: [
+                    '$computeTeleportInSight'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'teleport'
+                }]
+            },
+            ghostAI: {
+                init: [
+                    '$setTimeOut 250',
+                    '$setAnimation walk',
+                    '$doGhostAi',
+                ],
+                loop: [
+                    '$pulse',
+                    '$move'
+                ],
+                jump: [{
+                    test: '$isTargetHit',
+                    state: 'attack'
+                }, {
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            attack: {
+                init: [
+                    '$doAttackTarget',
+                    '$setTimeOut 750'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            teleport: {
+                init: ['$doTeleportVanish'],
+                loop: ['$doTeleportPulse'],
+                done: ['$doTeleportMove'],
+                jump: [{
+                    test: '$isTeleportAnimDone',
+                    state: 'spawn'
+                }]
+            },
+            wounded: {
+                init: [
+                    '$setTimeOut 600',
+                    '$rebuke 1'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            woundedCritical: {
+                init: [
+                    '$setTimeOut 750',
+                    '$rebuke 2'
+                ],
+                jump: [{
+                    test: '$isTimeOut',
+                    state: 'idle'
+                }]
+            },
+            burning: {
+                done: [
+                    '$spawnFlame'
+                ],
+                loop: [
+                    '$pulse'
+                ],
+                jump: [{
+                    test: '$isCurrentAnimOver',
+                    state: 'despawn'
+                }]
+            }
+        })
+        this.setupGhostAI()
+    }
 
-            "s_wait_then_teleport_in_sight": [
-                ["t_time_out", "s_teleport_in_sight"]
-            ],
-
-            // attendre le time out avant de refaire une recherche
-            "s_wait_then_idle": [
-                ["t_time_out", "s_idle"]
-            ],
-
-            // marcher mais verifier qu'on a toujours le joueur en vue
-            "s_move_forward": [
-                // cible touchée
-                ["t_hit_target", "s_attack_target", "s_time_750", "s_wait_then_idle"],
-                // temps écoulé , choisir une autre action
-                ["t_time_out", "s_idle"]
-            ],
-
-            // attendre la fin naturelle de l'animation en cours
-            "s_anim_then_idle": [
-                ["t_anim_over", "s_idle"]
-            ],
-
-            // fantome blessé
-            "s_wounded_light": [
-                [1, "s_time_750", "s_rebuked"]
-            ],
-
-            // fantome blessé
-            "s_wounded_critical": [
-                [1, "s_time_1000", "s_rebuked"]
-            ],
-
-            // fantome repoussé
-            "s_rebuked": [
-                ["t_time_out", "s_idle"]
-            ],
-
-            // fantome eliminé
-            "s_kill": [
-                [1, "s_burn"]
-            ],
-
-            // flamme bleue
-            "s_burn": [
-                ["t_anim_over", "s_spawn_flame", "s_despawn"]
-            ],
-
-            "s_teleport_in_sight": [
-                [1, "s_teleport"]
-            ],
-
-            "s_teleport_behind_target": [
-                [1, "s_teleport"]
-            ],
-
-            "s_teleport": [
-                [1, "s_teleport_pulse"]
-            ],
-
-            "s_teleport_pulse": [
-                ["t_teleport_anim_done", "s_teleport_move", "s_spawn"]
-            ]
-        };
-        this.automaton.state = 's_init';
+    setupGhostAI () {
+        const gai = this._ghostAI
+        gai.events.on('state', ({
+            state,
+            data
+        }) => {
+            data._timer = this.engine.getTime()
+            console.log('ghost state', state)
+        })
+        gai.events.on('test', ({
+           test,
+           parameters,
+           pass
+        }) => {
+            const b = this._invoke(test, ...parameters)
+            console.log('ghost test', test, ...parameters, 'result :', b)
+            pass(b)
+        })
+        gai.events.on('action', ({
+            action,
+            parameters
+        }) => {
+            console.log('ghost action', action, ...parameters)
+            this._invoke(action, ...parameters)
+        })
+        gai.defineStates({
+            'init': {}
+        })
+        gai.initialState = 'init'
     }
 
     get shutterChance () {
         return this._bShutterChance;
     }
 
-    kill() {
-        this.automaton.state = 's_kill';
+    set shutterChance (value) {
+        console.log('shutterChance =', value)
+        this._bShutterChance = value
     }
 
-    wound(bCritical) {
-        if (this.automaton.state !== 's_rebuked') {
+    kill() {
+        this.entity.sprite.setCurrentAnimation('death');
+        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
+        this.automaton.state = 'burning';
+    }
+
+    wound(bCritical = false) {
+        if (this.automaton.state !== 'wounded' && this.automaton.state !== 'woundedCritical') {
+            console.log('wound ! critical', bCritical)
             this._bWounded = true;
-            this.automaton.state = (this._bShutterChance || bCritical) ? 's_wounded_critical' : 's_wounded_light';
+            this.automaton.state = bCritical ? 'woundedCritical' : 'wounded';
+        } else {
+            console.log('already wounding')
         }
     }
 
@@ -154,6 +217,9 @@ class VengefulThinker extends GhostThinker {
         }
     }
 
+    /**
+     * Calculer une destination de téléportation proche
+     */
     computeTeleportBehind () {
         const engine = this.engine;
         const target = this.target;
@@ -162,12 +228,21 @@ class VengefulThinker extends GhostThinker {
         // test if cell is walkable
         const cc = engine.clipCell(vCellBehind.x, vCellBehind.y);
         if (engine.getCellType(cc.x, cc.y) === RC_CONSTS.PHYS_NONE) {
-            console.log('teleport to', cc)
             this._teleportDestination = cc;
         } else {
             // la cellule derrière la cible n'est pas traversable.
-            console.log('could not teleport to', cc)
             this._teleportDestination = null;
+        }
+    }
+
+    compareTargetDistance (n) {
+        if (this.target) {
+            const n2 = n * n
+            const mpos = this.entity.position
+            const opos = this.target.position
+            return Math.sign(Geometry.squareDistance(mpos.x, mpos.y, opos.x, opos.y) - n2);
+        } else {
+            throw new Error('this entity has no target')
         }
     }
 
@@ -175,146 +250,49 @@ class VengefulThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    _setGhostTimeOut (n) {
-        this._nGhostTimeOut = this.engine.getTime() + n;
-    }
-
-    s_time_reset () {
-        this._nGhostTimeOut = 0;
-    }
-
-    gs_time_250 () {
-        this._setGhostTimeOut(250);
-    }
-
-    gs_time_333 () {
-        this._setGhostTimeOut(333);
-    }
-
-    gs_time_500 () {
-        this._setGhostTimeOut(500);
-    }
-
-    gs_time_750 () {
-        this._setGhostTimeOut(750);
-    }
-
-    gs_time_1000 () {
-        this._setGhostTimeOut(1000);
-    }
-
-    gs_time_2000 () {
-        this._setGhostTimeOut(2000);
-    }
-
-    gs_time_3000 () {
-        this._setGhostTimeOut(3000);
-    }
-
-    gs_shutter_chance_on () {
-        this._bShutterChance = true;
-    }
-
-    gs_shutter_chance_off () {
-        this._bShutterChance = false;
+    $shutterChance (bOn) {
+        if (typeof bOn !== 'number') {
+            throw new TypeError('$shutterChance needs 1 or 0 as number value')
+        }
+        this.shutterChance = bOn !== 0;
     }
 
     /**
      * Etat initialisation
      */
-    s_init() {
-        super.s_init();
-        this.engine.smasher.registerEntity(this.entity);
-        this.entity.dummy.tangibility.self = CONSTS.TANGIBILITY_GHOST;
-        this.entity.dummy.tangibility.hitmask = CONSTS.TANGIBILITY_PLAYER;
-        this.entity.sprite.setCurrentAnimation('walk');
-    }
-
-    s_move_forward() {
-        this.moveForward()
-    }
-
-    s_ghost_ai() {
-        this._ghostAI.process();
+    $init() {
+        super.$init();
+        this.$setAnimation('walk');
     }
 
     /**
      * Etat : démarrer animation marche
      */
-    s_start_walk_anim() {
-        this.entity.sprite.setCurrentAnimation('walk');
+    $setAnimation(sAnim) {
+        this.entity.sprite.setCurrentAnimation(sAnim);
     }
 
     /**
      * The state of "doing nothing"
      * The ghost is pulsating
      */
-    s_idle() {
+    $pulse() {
         this.pulse();
         this.updateVisibilityData();
     }
 
     /**
-     * the ghost has been killed
-     */
-    s_kill() {
-        this._bShutterChance = false;
-        this.entity.sprite.setCurrentAnimation('death');
-        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_DIE, { entity: this.entity })
-    }
-
-    /**
      * the ghost is wounded : set angle to go away from player
      */
-    s_wounded_light() {
-        this._bShutterChance = false;
-        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH);
+    $rebuke(factor = 1) {
+        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * factor);
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
-    }
-
-    /**
-     * the ghost is wounded critically
-     * it is rebuked : go away from player
-     */
-    s_wounded_critical() {
-        this._bShutterChance = false;
-        this.moveAwayFromTarget(CONSTS.REBUKE_STRENGTH * 2);
-        this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_WOUNDED, { entity: this.entity })
-    }
-
-    /**
-     * Fantome repoussé
-     */
-    s_rebuked() {
-        this._bShutterChance = false;
-        this.rebuke()
-    }
-
-    /**
-     * attente fin de timer avant passe en idle
-     */
-    s_wait_then_idle() {
-        this.pulse();
-    }
-
-    /**
-     * attente fin d'animation avant passe en idle
-     */
-    s_anim_then_idle() {
-        this.pulse();
-    }
-
-    /**
-     * The ghost is waiting before spawning flame and fading out
-     */
-    s_burn() {
-        this.pulse();
     }
 
     /**
      * A blueflame is spawned
      */
-    s_spawn_flame() {
+    $spawnFlame() {
         const p = this.entity.position;
         const oFlame = this.engine.createEntity("o_flame", p);
         this.context.game.soundEvent(CONSTS.AUDIO_EVENT_GHOST_BURN, { entity: oFlame })
@@ -323,7 +301,7 @@ class VengefulThinker extends GhostThinker {
     /**
      * the ghost plays an attack animation
      */
-    s_attack_target() {
+    $doAttackTarget() {
         this.entity.sprite.setCurrentAnimation('attack');
         this.entity.sprite.getCurrentAnimation().reset();
         // wound player
@@ -331,29 +309,29 @@ class VengefulThinker extends GhostThinker {
     }
 
 
-    s_teleport_in_sight() {
+    $computeTeleportInSight() {
         this.computeTeleportInsideVisibilityCone();
         this._teleportAnim = 0;
     }
 
-    s_teleport_behind_target() {
+    $teleportBehindTarget() {
         this.computeTeleportBehind();
         this._teleportAnim = 0;
     }
 
-    s_teleport_pulse() {
+    $doTeleportPulse() {
         this._nOpacity = PULSE_MAP_LARGE[this._teleportAnim];
         this.setOpacityFlags();
         ++this._teleportAnim;
     }
 
-    s_teleport() {
+    $doTeleportVanish() {
         this._teleportAnim = 0;
         this._nOpacity = 0;
         this.setOpacityFlags();
     }
 
-    s_teleport_move() {
+    $doTeleportMove() {
         if (this._teleportDestination) {
             const { x, y } = this._teleportDestination;
             this.entity.position.set(this.engine.getCellCenter(x, y));
@@ -361,68 +339,118 @@ class VengefulThinker extends GhostThinker {
         }
     }
 
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-
-    gt_time_out () {
-        return this.engine.getTime() >= this._nGhostTimeOut;
+    $stop() {
+        this.setSpeed(0, 0)
     }
 
-    gt_wounded () {
+    $doGhostAi () {
+        this._ghostAI.process()
+    }
+
+    $unwound () {
+        this._bWounded = false
+    }
+
+    $followTarget (nSpeed = 1, nAngle = 0) {
+        this.moveTowardTarget(nSpeed, nAngle)
+    }
+
+    $shoot () {
+        this.moveTowardTarget(0, 0);
+        // tirer un projectile
+        const oMissileData = Array.isArray(this.entity.data.missile)
+            ? this.entity.data.missile[Math.floor(Math.random() * this.entity.data.missile.length)]
+            : this.entity.data.missile
+        const sMissileResRef = oMissileData.resref
+        const missile = this.engine.createEntity(sMissileResRef, this.entity.position);
+        missile.thinker.fire(this.entity, oMissileData);
+    }
+
+
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+    ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+
+
+    /**
+     * returns true if this entity hits something (wall or other entity)
+     * @return {boolean}
+     */
+    $hitWall() {
+        return !!this._cwc.wcf.c;
+    }
+
+    $isWounded () {
         const bWounded = this._bWounded;
-        this._bWounded = false;
+        this.$unwound();
         return bWounded;
     }
 
-    gt_critical_wounded () {
-        if (this._bWounded && this._bShutterChance) {
-            this._bWounded = false;
-            this._bShutterChance = false;
+    $isWoundedCritical () {
+        if (this._bWounded && this.shutterChance) {
+            this.$unwound()
             return true
         }
-        this._bWounded = false;
+        this.$unwound();
         return false;
-    }
-
-    gt_has_teleported () {
-        return this._teleportDestination === null;
     }
 
     /**
      * Tests if dead opacity is depleted
      * @returns {boolean}
      */
-    t_anim_over() {
+    $isCurrentAnimOver() {
         return this.entity.sprite.getCurrentAnimation().frozen;
     }
 
     /**
      * The ghost has it player
      */
-    t_hit_target() {
-        const s = this.entity.dummy.smashers;
-        return s.length > 0 && s.includes(this.target);
+    $isTargetHit() {
+        const d = this.compareTargetDistance(this.target.size + this.entity.size)
+        return d <= 0
     }
 
-    t_target_dead() {
+    $isTargetDead() {
         return this.context.game.logic.isPlayerDead();
     }
 
-    t_target_found() {
-        return this.isEntityVisible(this.target) && !this.t_target_dead();
+    $isTargetFound() {
+        return this.isEntityVisible(this.target) && !this.$isTargetDead();
     }
 
-    t_target_not_found() {
-        return !this.t_target_found();
+    $isTargetNotFound() {
+        return !this.$isTargetFound();
     }
 
-    t_teleport_ready () {
+    $isTargetCloserThan (nDist) {
+        return this.getDistanceToTarget() < nDist;
+    }
+
+    $isTargetFurtherThan (nDist) {
+        return this.getDistanceToTarget() > nDist;
+    }
+    $isTeleportReady () {
         return this._teleportDestination !== null;
     }
 
-    t_teleport_anim_done () {
+    $isTeleportAnimDone () {
+        console.log(this._teleportAnim, '>= ', PULSE_MAP_LARGE.length - 1)
         return this._teleportAnim >= (PULSE_MAP_LARGE.length - 1);
+    }
+
+    /**
+     * Renvoie true si la durée du state dépasse un certain valeur
+     */
+    $elapsedTime (n) {
+        const t = this.engine.getTime()
+        return this._ghostAI.currentStateContext.data._timer + n < t
+    }
+
+    $quantumChoice (n) {
+        const r = Math.random()
+        console.log(r, '<', n, '/', 100)
+        return r < (n / 100)
     }
 }
 

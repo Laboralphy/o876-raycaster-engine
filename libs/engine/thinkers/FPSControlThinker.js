@@ -270,14 +270,14 @@ class FPSControlThinker extends TangibleThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    s_init() {
-        super.s_init();
+    $init() {
+        super.$init();
         this.entity.dummy.tangibility.self = CONSTS.COLLISION_CHANNEL_CREATURE;
     }
 
-    s_move() {
+    $move() {
         this.computeSpeedVector();
-        super.s_move();
+        super.$move();
     }
 }
 

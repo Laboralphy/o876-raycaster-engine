@@ -7,3 +7,5 @@ export const MODIFY_PLAYER_HP = 'MODIFY_PLAYER_HP';
 export const SET_PLAYER_MAX_HP = 'SET_PLAYER_MAX_HP';
 
 export const SET_STATE_CONTENT = 'SET_STATE_CONTENT';
+
+export const INC_SCORE = 'INC_SCORE'

@@ -1,69 +1,59 @@
 import VengefulThinker from "./VengefulThinker";
 
-const THINKER_DISTANCE_TELEPORT_BEHIND = 256; // distance à laquel le ghost va téléporter
-
 /**
- * Will chase target normally.
- * When close enought to target : will teleport behind target
- * Will not use teleportation more than a few second
+ * 1) le fantôme suit la cible pendant 5 secondes, il ne se téléporte pas
  *
- * testé : fonctionne correctement
+ * 2) le fantôme suit la cible et se téléportera s'il arrive assez près
+ *
+ * 3) avant de se téléporter le fantome fait une pause de 0.75 seconde, durant ce laps de temps, le shutter chance est allumé
+ * si le fantôme est bléssé, la téléportation est annulée et on va en 1)
+ *
+ * 4) le fantôme se téléporte derrière sa cible
+ *
+ * 5) Le fantôme va en 1)
+ *
+ * testé le 2023-03-15
  */
 class TeleChaserThinker extends VengefulThinker {
 
   constructor() {
     super();
-    this.ghostAI.transitions = {
-      "gs_init": [
-        [1, "gs_chase_no_tele_init"]
-      ],
-
-      "gs_chase_no_tele_init": [
-        [1, "gs_time_3000_ish", "gs_chase_no_tele"]
-      ],
-
-      "gs_chase_no_tele": [
-        ["gt_time_out", "gs_chase"]
-      ],
-
-      "gs_chase": [
-        ["gt_target_close", "gs_teleport_behind", "gs_shutter_chance_on", "gs_stop", "gs_teleport_out"]
-      ],
-
-      "gs_teleport_out": [
-        ["gt_has_teleported", "gs_shutter_chance_off", "gs_chase_no_tele_init"]
-      ]
-    }
+    this.ghostAI.defineStates({
+      init: {
+        // Suit la cible sans se téléporter pendant 5 s
+        loop: ['$followTarget'],
+        jump: [{
+          test: '$elapsedTime 5000',
+          state: 'mayTeleport'
+        }]
+      },
+      mayTeleport: {
+        // Suit la cible mais peut se téléporter si proche
+        loop: ['$followTarget'],
+        done: ['$stop'],
+        jump: [{
+          test: '$isTargetCloserThan 256',
+          state: 'pauseBeforeTeleport'
+        }]
+      },
+      pauseBeforeTeleport: {
+        init: ['$unwound', '$shutterChance 1'],
+        done: ['$shutterChance 0'],
+        jump: [{
+          test: '$isWoundedCritical',
+          state: 'init'
+        }, {
+          test: '$elapsedTime 750',
+          state: 'teleport'
+        }]
+      },
+      teleport: {
+        done: ['$teleportBehindTarget'],
+        jump: [{
+          state: 'init'
+        }]
+      }
+    })
   }
-
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-  ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-  gs_chase() {
-    this.moveTowardTarget();
-  }
-
-  gs_chase_no_tele() {
-    this.moveTowardTarget();
-  }
-
-  gs_teleport_behind () {
-    this.computeTeleportBehind();
-  }
-
-  // timer d'environ 3000 ms (+- 500ms
-  gs_time_3000_ish () {
-    this._setGhostTimeOut(Math.floor(Math.random() * 1000 + 2500));
-  }
-
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-  ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
-
-  gt_target_close () {
-    return this.getDistanceToTarget() < THINKER_DISTANCE_TELEPORT_BEHIND;
-  }
-
 }
 export default TeleChaserThinker;

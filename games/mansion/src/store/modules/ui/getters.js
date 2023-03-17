@@ -38,5 +38,9 @@ export default {
     isGameRunning: state => state.mainmenu.phase === state.mainmenu.phases.game,
 
     getNotes: state => state.notes.filter(n => n.type === state.uiframe.activeNoteTab),
-    getNoteActiveTab: state => state.uiframe.activeNoteTab
+    getNoteActiveTab: state => state.uiframe.activeNoteTab,
+
+    getSettingMouseFactor: state => state.settings.mouseFactor,
+    getSettingMusicVolume: state => state.settings.musicVolume,
+    getSettingSFXVolume: state => state.settings.sfxVolume
 };

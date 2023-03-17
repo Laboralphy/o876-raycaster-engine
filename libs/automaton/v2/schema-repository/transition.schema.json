@@ -1,0 +1,26 @@
+{
+  "description": "a test-action",
+  "type": "object",
+  "require": [
+    "state"
+  ],
+  "allowAdditionalProperties": false,
+  "properties": {
+    "test": {
+      "description": "a test definition",
+      "type": "string"
+    },
+    "actions": {
+      "description": "a list of action to do when the test passes",
+      "type": "array",
+      "items": {
+        "description": "an action",
+        "type": "string"
+      }
+    },
+    "state": {
+      "description": "a name of a state where to go if the test succeed",
+      "type": "string"
+    }
+  }
+}

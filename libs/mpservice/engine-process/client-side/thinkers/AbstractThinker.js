@@ -28,13 +28,21 @@ class AbstractThinker extends NodeThinker {
 		return info;
 	}
 
-    mobile(m) {
-        return o876.SpellBook.prop(this, '_mobile', m);
+    get mobile() {
+        return this._mobile
     }
 
-    game(m) {
-        return o876.SpellBook.prop(this, '_game', m);
-    }
+	set mobile (value) {
+		this._mobile = value
+	}
+
+	get game () {
+		return this._game
+	}
+
+	set game (value) {
+		this._game = value
+	}
 }
 
 export default AbstractThinker;

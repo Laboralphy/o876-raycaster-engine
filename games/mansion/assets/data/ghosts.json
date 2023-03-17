@@ -60,5 +60,16 @@
       "resref": "p_ghost_magbolt",
       "effect": "damage"
     }]
+  },
+  "g_test_2": {
+    "extends": "g_test",
+    "power": 6,
+    "score": 600,
+    "missile": [{
+      "speed": 10,
+      "resref": "p_yellow_magbolt",
+      "effect": "confusion",
+      "duration": 5000
+    }]
   }
 }

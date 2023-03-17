@@ -102,5 +102,17 @@ export default {
 
     [TYPES.SET_END_OF_GAME_VISIBLE]: function (state, {value}) {
         state.endofgame.visible = value
+    },
+
+    [TYPES.SET_MOUSE_FACTOR]: function (state, { value }) {
+        state.settings.mouseFactor = value
+    },
+
+    [TYPES.SET_MUSIC_VOLUME]: function (state, { value }) {
+        state.settings.musicVolume = value
+    },
+
+    [TYPES.SET_SFX_VOLUME]: function (state, { value }) {
+        state.settings.sfxVolume = value
     }
 }

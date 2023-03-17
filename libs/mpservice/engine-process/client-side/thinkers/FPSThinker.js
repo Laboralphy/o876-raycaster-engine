@@ -166,7 +166,7 @@ class FPSThinker extends AbstractThinker {
     /**
      * lecture de la souris
      * invokée par le pointerlock
-     * @param oEvent {PointerLockEvent}
+     * @param oEvent {{x: number, y: number}}
      */
     readMouseMovement(oEvent) {
         if (!this._bFrozen) {

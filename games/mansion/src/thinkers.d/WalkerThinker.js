@@ -1,34 +1,33 @@
 import VengefulThinker from "./VengefulThinker";
 
 /**
- * Le fantome ne fait que suivre bêtement le target
+ * 1) le fantôme démarre un mouvement vers sa cible, il se dirige en ligne droite sans changer de cap,
+ * le mouvement dure 3 secondes
  *
- * testé : fonctionne comme prévu
+ * 2) le fantôme reste immobile pendant 1 seconde
+ *
+ * testé le 2023-03-15
  */
 class WalkerThinker extends VengefulThinker {
-
     constructor() {
         super();
-        this.ghostAI.transitions = {
-            "gs_start": [
-                [1, "gs_chase", "gs_time_2000", "gs_walk"]
-            ],
-
-            "gs_walk": [
-                ["gt_time_out", "gs_start"]
-            ]
-        }
+        this.ghostAI.defineStates({
+            init: {
+                init: ['$followTarget'],
+                jump: [{
+                    test: '$elapsedTime 3000',
+                    state: 'wait'
+                }]
+            },
+            wait: {
+                init: ['$stop'],
+                jump: [{
+                    test: '$elapsedTime 1000',
+                    state: 'init'
+                }]
+            }
+        })
     }
-
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-    gs_chase() {
-        this.moveTowardTarget();
-    }
-
 }
-
 
 export default WalkerThinker;

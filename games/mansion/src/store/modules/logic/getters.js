@@ -30,5 +30,7 @@ export default {
             console.warn('weird : this item is in player inventory but not defined in item data :', sItemInv);
             return 0;
         }
-    }).reduce((prev, curr) => prev + curr, 0)
+    }).reduce((prev, curr) => prev + curr, 0),
+
+    getCombatScore: state => state.data.score
 };

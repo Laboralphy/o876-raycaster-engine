@@ -6,6 +6,8 @@ import Dummy from "./Dummy";
 
 /**
  * @typedef SmashingEntity
+ * @property id {string|number}
+ * @property debugString {string}
  * @property dummy {Dummy}
  */
 
@@ -43,7 +45,12 @@ class Smasher extends SectorRegistry {
     registerEntity(oEntity) {
         // checks if entity has "dummy"
         this.validateEntity(oEntity);
+        if (this._entities.indexOf(oEntity) >= 0) {
+            throw new Error('This entity has already been registered in the smasher : ' + oEntity.debugString)
+        }
         this._entities.push(oEntity);
+        oEntity.dummy.entity = oEntity.id
+        this.updateEntity(oEntity);
     }
 
     /**
@@ -123,7 +130,7 @@ class Smasher extends SectorRegistry {
      */
     processEntity(oEntity) {
         const oDummy = oEntity.dummy;
-        if (!oDummy) console.log(oEntity)
+        if (!oDummy) console.log('this entity has no dummy !', oEntity)
         // compute a new set of forces to be applied to the dummy
         const aHitters = this._getSmashingEntities(oEntity);
         if (!!aHitters && aHitters.length > 0) {

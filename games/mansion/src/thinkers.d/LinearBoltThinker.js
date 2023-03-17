@@ -58,7 +58,7 @@ class LinearBoltThinker extends MissileThinker {
         }
     }
 
-    s_hit() {
+    $setExplosionAnimation() {
         this.entity.sprite.setCurrentAnimation('explode', 0);
         const aEntities = this.getCollidingEntities()
         if (Array.isArray(aEntities)) {
@@ -68,6 +68,5 @@ class LinearBoltThinker extends MissileThinker {
         }
     }
 }
-
 
 export default LinearBoltThinker;

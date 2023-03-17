@@ -13,29 +13,52 @@ class MissileThinker extends TangibleThinker {
         this._speedNorm = 0;
         this._bCrashWall = true;
         this._victims = []; // list of entities that have been hit
-        this.defineTransistions({
-            "s_init": [
-                [1, "s_firing"]
-            ],
-            "s_firing": [
-                ["t_outofowner", "s_solid", "s_move"]
-            ],
-            "s_move": [
-                ["t_hitSomething", "s_hit"]
-            ],
-            "s_hit": [
-                [1,  "s_explode"]
-            ],
-            "s_explode": [
-                ["t_explosionFinished", "s_dead"]
-            ],
-            "s_dead": [
-                [1, "s_idle"]
-            ]
+        this.automaton.defineStates({
+            "main": {
+                init: ["$init"],
+                jump: [{
+                    state: "firing"
+                }]
+            },
+            "firing": {
+                loop: ['$move'],
+                jump: [
+                    {
+                        test: '$isOutsideOwner',
+                        state: 'moving'
+                    }
+                ]
+            },
+            'moving': {
+                init: ['$becomeFullSolid'],
+                loop: ['$move'],
+                jump: [
+                    {
+                        test: '$hitSomething',
+                        state: 'hit'
+                    }
+                ]
+            },
+            'hit': {
+                init: ['$setExplosionAnimation'],
+                jump: [
+                    {
+                        test: '$isExplosionFinished',
+                        state: 'dead'
+                    }
+                ]
+            },
+            dead: {
+                init: ['$dead']
+            }
         });
-        this.automaton.state = "s_init";
     }
 
+    /**
+     * Positionnement du missile devant le owner
+     * @param owner
+     * @param speed
+     */
     fire(owner, speed) {
         // sets the owner
         this._owner = owner;
@@ -85,20 +108,14 @@ class MissileThinker extends TangibleThinker {
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
     ////// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES ///// STATES /////
 
-    // the missile is firing,
-    // has just spawned be still colliding with owner
-    s_firing() {
-        this.s_move();
-    }
-
     // the missile is not colliding with owner :
     // the missile becomes solid and will hit any other entity.
-    s_solid() {
+    $becomeFullSolid() {
         this.entity.dummy.tangibility.hitmask = CONSTS.COLLISION_CHANNEL_CREATURE;
     }
 
     // The missile has hit something
-    s_dead() {
+    $dead() {
         this.entity.dead = true;
     }
 
@@ -109,7 +126,7 @@ class MissileThinker extends TangibleThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
     // true if missile is not colliding owner
-    t_outofowner() {
+    $isOutsideOwner() {
         // calculer la distance entre owner et missile
         const m = this.entity;
         const o = this._owner;
@@ -122,7 +139,7 @@ class MissileThinker extends TangibleThinker {
      * returns true if this entity hits something (wall or other entity)
      * @return {boolean}
      */
-    t_hitSomething() {
+    $hitSomething() {
         const bHitWall = !!this._cwc.wcf.c;
         const aHitters = this.getCollidingEntities();
         const bHitThing = !!aHitters && aHitters.length > 0;
@@ -133,7 +150,7 @@ class MissileThinker extends TangibleThinker {
      * returns true if the current sprite animation is finished
      * @return {boolean}
      */
-    t_explosionFinished() {
+    $isExplosionFinished() {
         return this.entity.sprite.getCurrentAnimation().frozen;
     }
 }

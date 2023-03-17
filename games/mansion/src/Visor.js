@@ -113,7 +113,7 @@ class Visor extends StoreAbstract {
         if (entity.data.vitality <= 0) {
             entity.thinker.kill();
         } else {
-            entity.thinker.wound(false);
+            entity.thinker.wound(entity.thinker.shutterChance);
         }
         return nDamage;
     }
