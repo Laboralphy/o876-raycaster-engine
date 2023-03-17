@@ -7,7 +7,7 @@ const THINKER_ZIGZAG_PULSE = 8;
  *
  * testé : le 2023-03-16
  */
-class ZigZagChaserThinker extends VengefulThinker {
+class ZigZagShooterThinker extends VengefulThinker {
 
     constructor() {
         super();
@@ -15,11 +15,18 @@ class ZigZagChaserThinker extends VengefulThinker {
             init: {
                 loop: ['$zigzag'],
                 jump: [{
-                    test: '$isTargetCloserThan 96',
-                    state: 'pauseBeforeRush'
+                    test: '$elapsedTime 2000',
+                    state: 'mayShoot'
                 }]
             },
-            pauseBeforeRush: {
+            mayShoot: {
+                loop: ['$zigzag'],
+                jump: [{
+                    test: '$isTargetCloserThan 256',
+                    state: 'pauseBeforeShoot'
+                }]
+            },
+            pauseBeforeShoot: {
                 init: ['$stop', '$shutterChance 1'],
                 done: ['$shutterChance 0'],
                 jump: [{
@@ -27,17 +34,13 @@ class ZigZagChaserThinker extends VengefulThinker {
                     state: 'init'
                 }, {
                     test: '$elapsedTime 750',
-                    state: 'rush'
+                    state: 'shoot'
                 }]
             },
-            rush: {
-                init: ['$rush'],
-                done: ['$stop'],
+            shoot: {
+                init: ['$shoot'],
                 jump: [{
-                    test: '$hitWall',
-                    state: 'init'
-                }, {
-                    test: '$isTargetHit',
+                    test: '$elapsedTime 500',
                     state: 'init'
                 }]
             }
@@ -54,11 +57,6 @@ class ZigZagChaserThinker extends VengefulThinker {
         const a = -(Math.PI / 4) * Math.cos(Math.PI * this._zigzagTime / THINKER_ZIGZAG_PULSE);
         this.moveTowardTarget(1, a)
     }
-
-    $rush() {
-        // define rush vector
-        this.moveTowardTarget(4, 0);
-    }
 }
 
-export default ZigZagChaserThinker;
+export default ZigZagShooterThinker;

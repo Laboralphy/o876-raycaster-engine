@@ -62,13 +62,6 @@ class RusherThinker extends VengefulThinker {
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
 
-    /**
-     * returns true if this entity hits something (wall or other entity)
-     * @return {boolean}
-     */
-    $hitWall() {
-        return !!this._cwc.wcf.c;
-    }
 }
 
 export default RusherThinker;

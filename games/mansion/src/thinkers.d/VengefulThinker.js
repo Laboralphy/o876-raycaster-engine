@@ -355,9 +355,30 @@ class VengefulThinker extends GhostThinker {
         this.moveTowardTarget(nSpeed, nAngle)
     }
 
+    $shoot () {
+        this.moveTowardTarget(0, 0);
+        // tirer un projectile
+        const oMissileData = Array.isArray(this.entity.data.missile)
+            ? this.entity.data.missile[Math.floor(Math.random() * this.entity.data.missile.length)]
+            : this.entity.data.missile
+        const sMissileResRef = oMissileData.resref
+        const missile = this.engine.createEntity(sMissileResRef, this.entity.position);
+        missile.thinker.fire(this.entity, oMissileData);
+    }
+
+
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
+
+
+    /**
+     * returns true if this entity hits something (wall or other entity)
+     * @return {boolean}
+     */
+    $hitWall() {
+        return !!this._cwc.wcf.c;
+    }
 
     $isWounded () {
         const bWounded = this._bWounded;
@@ -414,6 +435,7 @@ class VengefulThinker extends GhostThinker {
     }
 
     $isTeleportAnimDone () {
+        console.log(this._teleportAnim, '>= ', PULSE_MAP_LARGE.length - 1)
         return this._teleportAnim >= (PULSE_MAP_LARGE.length - 1);
     }
 

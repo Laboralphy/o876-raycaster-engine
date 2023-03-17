@@ -44,21 +44,6 @@ class ShooterChaserThinker extends VengefulThinker {
             }
         })
     }
-
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-    $shoot() {
-        this.moveTowardTarget(0, 0);
-        // tirer un projectile
-        const oMissileData = Array.isArray(this.entity.data.missile)
-            ? this.entity.data.missile[Math.floor(Math.random() * this.entity.data.missile.length)]
-            : this.entity.data.missile
-        const sMissileResRef = oMissileData.resref
-        const missile = this.engine.createEntity(sMissileResRef, this.entity.position);
-        missile.thinker.fire(this.entity, oMissileData);
-    }
 }
 
 export default ShooterChaserThinker
