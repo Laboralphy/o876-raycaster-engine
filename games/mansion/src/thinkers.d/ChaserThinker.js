@@ -1,30 +1,20 @@
 import VengefulThinker from "./VengefulThinker";
 
 /**
- * Le fantome ne fait que suivre bêtement le target
+ * 1) le fantôme se dirige vers la cible et corrige constamment son mouvement pour toujours suivre la cible.
  *
- * testé : fonctionne comme prévu
+ * Testé le 2023-03-15
  */
 class ChaserThinker extends VengefulThinker {
 
     constructor() {
         super();
-        this.ghostAI.transitions = {
-            "gs_start": [
-                [1, "gs_chase"]
-            ]
-        }
+        this.ghostAI.defineStates({
+            init: {
+                loop: ['$followTarget'],
+            }
+        })
     }
-
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-    ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
-
-    gs_chase() {
-        this.moveTowardTarget();
-    }
-
 }
-
 
 export default ChaserThinker;

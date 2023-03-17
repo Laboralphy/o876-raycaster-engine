@@ -42,7 +42,7 @@ class CurlyTokenizer {
   }
 
   getCurrentChar () {
-    return this._text.substr(this._index, 1);
+    return this._text.charAt(this._index);
   }
 
   reset () {

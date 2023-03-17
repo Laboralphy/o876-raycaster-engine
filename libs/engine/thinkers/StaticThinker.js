@@ -8,8 +8,9 @@ import Thinker from "./Thinker";
 class StaticThinker extends Thinker {
     constructor() {
         super();
-        this.defineTransistions({
-            "s_standing": []
+        this.automaton.defineStates({
+            "main": {
+            }
         });
     }
 }

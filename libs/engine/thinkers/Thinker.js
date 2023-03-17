@@ -1,4 +1,4 @@
-import Automaton from "../../automaton";
+import Automaton from "../../automaton/v2";
 
 /**
  * a class with basic mechanism to manage states.
@@ -11,7 +11,23 @@ class Thinker {
         this._entity = null;
         this._engine = null;
         this._automaton = new Automaton();
-        this._automaton.instance = this;
+        this._automaton.events.on('test', ({
+            test,
+            parameters,
+            pass
+        }) => {
+            pass(this._invoke(test, ...parameters))
+        })
+        this._automaton.events.on('action', ({
+            action,
+            parameters
+        }) => {
+            this._invoke(action, ...parameters)
+        })
+    }
+
+    get debugString () {
+        return this._entity
     }
 
     get context() {
@@ -20,18 +36,6 @@ class Thinker {
 
     get automaton() {
         return this._automaton;
-    }
-
-    get transitions() {
-        return this._automaton.transitions;
-    }
-
-    set transitions(value) {
-        this._automaton.transitions = value;
-    }
-
-    defineTransistions(f) {
-        this._automaton.transitions = f;
     }
 
     emit(sEvent, payload) {
@@ -62,10 +66,13 @@ class Thinker {
     /**
      * Invoke a method in this instance
      * @param sMeth
+     * @param parameters {*}
      */
-    _invoke(sMeth) {
+    _invoke(sMeth, ...parameters) {
         if (sMeth in this) {
-            this[sMeth]();
+            return this[sMeth](...parameters);
+        } else {
+            throw new Error('This method "' + sMeth + '" does not existe in this thinker.')
         }
     }
 

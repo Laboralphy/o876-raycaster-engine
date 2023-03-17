@@ -12,7 +12,7 @@ class StaticTangibleThinker extends TangibleThinker {
     processForces() {
     }
 
-    s_move() {
+    $move() {
     }
 }
 

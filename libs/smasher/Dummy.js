@@ -11,17 +11,25 @@ class Dummy {
     constructor() {
         this._entity = 0;
         this._position = new Vector();
-        this._dead = false; // les mobile noté "dead" doivent être retiré du jeu
+        this._dead = false; // les mobiles noté "dead" doivent être retiré du jeu
         this._radius = 0;
         this._mass = 1;
         this._tangibility = {
             self: 1,
             hitmask: 1
         };
-        this.colliderSector = null;
+        this._colliderSector = null;
         this._smashers = [];
         this.forceField = new ForceField();
         this._force = new Vector();
+    }
+
+    set colliderSector(value) {
+        this._colliderSector = value
+    }
+
+    get colliderSector() {
+        return this._colliderSector
     }
 
     setSmashers(a) {
@@ -106,6 +114,16 @@ class Dummy {
     }
 
     /**
+     *
+     * @param oOther {Dummy}
+     */
+    distanceTo(oOther) {
+        let p1 = this.position;
+        let p2 = oOther.position;
+        return Math.sqrt(Geometry.squareDistance(p1.x, p1.y, p2.x, p2.y));
+    }
+
+    /**
      * Renvoi l'angle entre les deux mobile (this et oOther) et l'axe X
      * @param oOther {Dummy}
      * @returns {number}
@@ -122,8 +140,7 @@ class Dummy {
      * @returns {boolean}
      */
     hits(oOther) {
-        const a = this.tangibleWith(oOther) && this.nearerThan(oOther, this._radius + oOther.radius);
-        return a;
+        return this.tangibleWith(oOther) && this.nearerThan(oOther, this._radius + oOther.radius);
     }
 }
 

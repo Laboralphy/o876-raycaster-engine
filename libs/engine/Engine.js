@@ -415,8 +415,10 @@ class Engine {
                 this._scheduler.schedule(this._time);
                 this._doorProcess();
                 // entity management
-                //this._camera.think(this); // visor is now in the entity list : indx 0
+                // this._camera.think(this); // visor is now in the entity list : indx 0
                 this._horde.process(this);
+                // Seuls les thinker qui exploite les dummy (comme Tangible)
+                // peuvent faire usage des secteurs et du collisionneur
                 this._smasher.process();
                 this
                     ._horde
@@ -889,6 +891,7 @@ class Engine {
             oThinker._context = this._thinkerContext;
             return oThinker;
         } catch (e) {
+            console.error(e)
             throw new Error('could not instanciate thinker class "' + sThinker + '"');
         }
     }
@@ -1048,6 +1051,7 @@ class Engine {
         }
 
         this._horde.linkEntity(entity);
+        this._smasher.updateEntity(entity)
         this.events.emit('entity.created', {entity});
         return entity;
     }

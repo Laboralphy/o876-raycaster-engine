@@ -1,0 +1,14 @@
+{
+  "description": "a test-action",
+  "type": "object",
+  "require": [
+    "test"
+  ],
+  "allowAdditionalProperties": false,
+  "properties": {
+    "test": {
+      "description": "a test definition",
+      "type": "string"
+    }
+  }
+}

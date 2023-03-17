@@ -15,9 +15,12 @@ class MoverThinker extends Thinker {
         this._cwc = null;
         this._xSector = -1;
         this._ySector = -1;
-        this.transitions = {
-            "s_move": []
-        };
+        this.automaton.defineStates({
+            main: {
+                loop: ['$move']
+            }
+        })
+        this.automaton.initialState = "main";
     }
 
     /**
@@ -126,7 +129,7 @@ class MoverThinker extends Thinker {
     /**
      * thinker main method
      */
-    s_move() {
+    $move() {
         let m = this.entity;
         m.inertia.set(0, 0);
         this.slide(this._speed);

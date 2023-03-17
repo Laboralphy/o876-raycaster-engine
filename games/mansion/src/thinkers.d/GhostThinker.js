@@ -9,38 +9,34 @@ const PULSE_MAP = [2 ,3, 4, 3];
 
 
 class GhostThinker extends MoverThinker {
-
     constructor() {
         super();
         this._nOpacity = 0; // indice de transparence 0 = invisible, 1 = 25% alpha ... 4 = 100% opacity
         this._nTime = 0;
         this._nTimeOut = 0;
         this._target = null; // cible designée
-        this.transitions = {
-            "s_init": [
-                ["1", "s_spawn"]
-            ],
-
-            // faire varier l'opacité pour apparition
-            "s_spawn": [
-                // lorsque la full opacity est atteinte ...
-                ["t_full_opacity", "s_idle"]
-            ],
-
-            // diminuer l'opacité
-            "s_despawn": [
-                // lorsque l'opacité est à 0 on dead
-                ["t_zero_opacity", "s_dead"]
-            ]
-        };
-    }
-
-    set transitions(value) {
-        super.transitions = {
-            ...this.automaton._transitions,
-            ...value
-        };
-        this.automaton.state = 's_init';
+        this.automaton.defineStates({
+            spawn: {
+                init: ['$init', '$spawn'],
+                loop: ['$incAlphaToFull'],
+                jump: [{
+                    test: '$isAlphaFull',
+                    state: 'idle'
+                }]
+            },
+            idle: {},
+            despawn: {
+                loop: ['$decAlphaToZero'],
+                jump: [{
+                    test: '$isAlphaZero',
+                    state: 'dead'
+                }]
+            },
+            dead: {
+                init: ['$dead']
+            }
+        });
+        this.automaton.initialState = 'spawn'
     }
 
     get target() {
@@ -141,10 +137,10 @@ class GhostThinker extends MoverThinker {
         return this.vectorToTarget().length();
     }
 
-    moveForward() {
+    $move() {
         this.pulse();
         this.updateVisibilityData();
-        this.s_move();
+        super.$move();
     }
 
     rebuke() {
@@ -155,12 +151,24 @@ class GhostThinker extends MoverThinker {
         this._speed.scale(0.9);
     }
 
-    setTimeOut(n) {
-        this._nTimeOut = this.engine.getTime() + n;
+    /**
+     * définit le timer de l'état automate spécifié
+     * @param n {number}
+     * @param scd {{timeOut: number}}
+     */
+    setTimeOut(scd, n) {
+        scd.timeOut = this.engine.getTime() + n;
     }
 
-    isTimeOut() {
-        return this._nTimeOut <= this.engine.getTime();
+    /**
+     * renvoie true si le timer interne de l'etat automate spécifié est dépassé
+     * @return {boolean}
+     * @param scd {{timeOut: number}}
+     */
+    isTimeOut(scd) {
+        const nEngineTime = this.engine.getTime()
+        const nTimeOut = scd.timeOut || Infinity
+        return nTimeOut <= nEngineTime
     }
 
     /**
@@ -237,7 +245,10 @@ class GhostThinker extends MoverThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
 
-    s_init() {
+    $init() {
+    }
+
+    $spawn() {
         // décider de la marche à suivre
         // un spectre va toujours se déplacer en ligne droite, ou bien rester immobile
         // - déterminer le point d'apparition et le point de destination
@@ -253,7 +264,7 @@ class GhostThinker extends MoverThinker {
     /**
      * The ghost is spawning, the alpha prop is increasing
      */
-    s_spawn() {
+    $incAlphaToFull() {
         this._nOpacity += 0.5;
         this.setOpacityFlags();
     }
@@ -261,7 +272,7 @@ class GhostThinker extends MoverThinker {
     /**
      * The ghost is vanishing
      */
-    s_despawn() {
+    $decAlphaToZero() {
         this._nOpacity -= 0.5;
         this.setOpacityFlags();
     }
@@ -269,26 +280,14 @@ class GhostThinker extends MoverThinker {
     /**
      * The ghost will cease to exist
      */
-    s_dead() {
+    $dead() {
         if (!this.entity.dead) {
             this.entity.dead = true;
         }
     }
 
-    s_time_1000() {
-        this.setTimeOut(1000);
-    }
-
-    s_time_750() {
-        this.setTimeOut(750);
-    }
-
-    s_time_500() {
-        this.setTimeOut(500);
-    }
-
-    s_time_250() {
-        this.setTimeOut(250);
+    $setTimeOut(n) {
+        this.setTimeOut(this.automaton.currentStateContext.data, n)
     }
 
     ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS ////// TRANSITIONS //////
@@ -299,11 +298,11 @@ class GhostThinker extends MoverThinker {
      * tests if sprite has reach full opacity
      * @returns {boolean}
      */
-    t_full_opacity() {
+    $isAlphaFull() {
         return this._nOpacity >= 4;
     }
 
-    t_zero_opacity() {
+    $isAlphaZero() {
         return this._nOpacity <= 0;
     }
 
@@ -311,8 +310,8 @@ class GhostThinker extends MoverThinker {
      * returns true if the time is out
      * @returns {boolean}
      */
-    t_time_out() {
-        return this.engine.getTime() >= this._nTimeOut;
+    $isTimeOut() {
+        return this.isTimeOut(this.automaton.currentStateContext.data)
     }
 }
 
