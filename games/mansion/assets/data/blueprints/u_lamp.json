@@ -1,0 +1,8 @@
+{
+  "tileset": "u_lamp",
+  "scale": 1,
+  "size": 0,
+  "fx": [
+    "@FX_LIGHT_SOURCE"
+  ]
+}

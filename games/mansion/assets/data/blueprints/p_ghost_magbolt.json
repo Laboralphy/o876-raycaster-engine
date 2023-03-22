@@ -1,0 +1,10 @@
+{
+  "tileset": "p_raging_spirit",
+  "scale": 1,
+  "size": 8,
+  "thinker": "HomingBoltThinker",
+  "fx": [
+    "@FX_LIGHT_ADD",
+    "@FX_LIGHT_SOURCE"
+  ]
+}

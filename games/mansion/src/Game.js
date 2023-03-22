@@ -128,8 +128,8 @@ class Game extends GameAbstract {
         }
         if ('extends' in gi) {
             gi = Object.assign({}, this.getOneGhostData(oData, gi.extends), gi)
+            delete gi.extends
         }
-        delete gi.extends
         return gi
     }
 
@@ -137,24 +137,22 @@ class Game extends GameAbstract {
         if (this._compiledBlueprints) {
             return this._compiledBlueprints;
         }
-        const bp = DATA.BLUEPRINTS;
+        const bp = DATA.BLUEPRINTS
         const oGhosts = DATA.GHOSTS;
         // patch blueprints
-        for (let sGhostId in oGhosts) {
-            let gi = this.getOneGhostData(oGhosts, sGhostId)
-            const oGhostBlueprint = {
-                id: sGhostId,
-                ref: sGhostId,
-                tileset: gi.tileset,
-                scale: 3,
-                size: 24,
-                fx: ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"],
-                thinker: gi.thinker,
-                data: { ...gi, type: 'v' }
-            };
-            delete oGhostBlueprint.data.thinker;
-            bp.push(oGhostBlueprint);
-        }
+        Object.entries(oGhosts).forEach(([id, g]) => {
+            let gi = this.getOneGhostData(oGhosts, id)
+            g.id = id
+            g.ref = id
+            g.tileset = gi.tileset
+            g.thinker = gi.thinker
+            g.scale = 3
+            g.size = 24
+            g.fx = ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
+            g.data = { ...gi, type: 'v' }
+            delete g.data.thinker
+            bp.push(g)
+        })
         this._compiledBlueprints = bp;
         return bp;
     }
@@ -1069,7 +1067,6 @@ class Game extends GameAbstract {
             case AUDIO_EVENT_GHOST_SPAWN: {
                 const oGhost = params.entity
                 if (('sounds' in oGhost.data) && ('spawn' in oGhost.data.sounds)) {
-                    console.log(oGhost.data.sounds.spawn)
                     am.playAmbiance(oGhost.data.sounds.spawn).then(({ sound }) => {
                         console.log('play ghost sound', oGhost.data.sounds.spawn)
                         const p = oGhost.position

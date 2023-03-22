@@ -1,0 +1,24 @@
+{
+  "src": "assets/sprites/o_flame.png",
+  "width": 62,
+  "height": 96,
+  "animations": [
+    {
+      "id": "burn",
+      "start": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "length": 17,
+      "duration": 80,
+      "loop": "@LOOP_FORWARD",
+      "iterations": 1
+    }
+  ]
+}

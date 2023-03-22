@@ -1,0 +1,13 @@
+{
+  "extends": "g_test",
+  "power": 6,
+  "score": 600,
+  "missile": [
+    {
+      "speed": 10,
+      "resref": "p_firebolt_yellow",
+      "effect": "confusion",
+      "duration": 5000
+    }
+  ]
+}

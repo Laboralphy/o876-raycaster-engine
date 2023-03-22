@@ -1,0 +1,41 @@
+{
+  "src": "assets/sprites/p_fireball_yellow.png",
+  "width": 64,
+  "height": 64,
+  "animations": [
+    {
+      "id": "fly",
+      "start": [
+        0,
+        3,
+        6,
+        9,
+        12,
+        15,
+        18,
+        21
+      ],
+      "length": 3,
+      "duration": 80,
+      "loop": "@LOOP_FORWARD",
+      "iterations": null
+    },
+    {
+      "id": "explode",
+      "start": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "length": 5,
+      "duration": 40,
+      "loop": "@LOOP_FORWARD",
+      "iterations": 1
+    }
+  ]
+}

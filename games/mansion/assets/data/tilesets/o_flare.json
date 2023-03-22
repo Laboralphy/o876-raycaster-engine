@@ -1,0 +1,24 @@
+{
+  "src": "assets/sprites/o_flare.png",
+  "width": 96,
+  "height": 96,
+  "animations": [
+    {
+      "id": "flare",
+      "start": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "length": 5,
+      "duration": 64,
+      "loop": "@LOOP_YOYO",
+      "iterations": 2
+    }
+  ]
+}

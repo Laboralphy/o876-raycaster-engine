@@ -1,0 +1,10 @@
+{
+  "tileset": "o_flame",
+  "scale": 1,
+  "thinker": "AnimThinker",
+  "size": 0,
+  "fx": [
+    "@FX_LIGHT_ADD",
+    "@FX_LIGHT_SOURCE"
+  ]
+}
