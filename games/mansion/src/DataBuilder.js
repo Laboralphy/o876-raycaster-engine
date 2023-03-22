@@ -17,7 +17,6 @@ class DataBuilder {
     static buildGhostBlueprints(aGhosts, data) {
         return aGhosts
             .map(id => {
-                console.log(data)
                 return data.find(d => d.id == id);
             })
             .map(({id, thinker, speed, vitality, power, score, level, missile, soundset}) => ({

@@ -1,7 +1,7 @@
 function scandir (r) {
   const m = {};
   r.keys().forEach(file => {
-    const key = file.match(/^\.\/(.+)\.js$/).pop();
+    const key = file.match(/^\.\/(.+)\.js[on]*$/).pop();
     let oLastBranch = null;
     let oBranch = m;
     let sLastKey = '';

@@ -1,0 +1,41 @@
+{
+  "src": "assets/sprites/p_blastbolt.png",
+  "width": 66,
+  "height": 64,
+  "animations": [
+    {
+      "id": "fly",
+      "start": [
+        21,
+        12,
+        15,
+        18,
+        0,
+        3,
+        6,
+        9
+      ],
+      "length": 3,
+      "duration": 80,
+      "loop": "@LOOP_FORWARD",
+      "iterations": null
+    },
+    {
+      "id": "explode",
+      "start": [
+        24,
+        24,
+        24,
+        24,
+        24,
+        24,
+        24,
+        24
+      ],
+      "length": 6,
+      "duration": 40,
+      "loop": "@LOOP_FORWARD",
+      "iterations": 1
+    }
+  ]
+}

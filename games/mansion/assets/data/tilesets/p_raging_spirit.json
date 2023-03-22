@@ -1,0 +1,41 @@
+{
+  "src": "assets/sprites/p_ecto_3.png",
+  "width": 80,
+  "height": 64,
+  "animations": [
+    {
+      "id": "fly",
+      "start": [
+        14,
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12
+      ],
+      "length": 2,
+      "duration": 200,
+      "loop": "@LOOP_FORWARD",
+      "iterations": null
+    },
+    {
+      "id": "explode",
+      "start": [
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16,
+        16
+      ],
+      "length": 6,
+      "duration": 80,
+      "loop": "@LOOP_FORWARD",
+      "iterations": 1
+    }
+  ]
+}

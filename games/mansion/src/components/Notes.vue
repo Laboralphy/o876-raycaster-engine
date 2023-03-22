@@ -36,7 +36,6 @@ export default {
   mixins: [strings, ui, logic],
   computed: {
     getNoteTypes: function () {
-      console.log(this.STRINGS.NOTES)
       return [
         {
           ref: 'journal',

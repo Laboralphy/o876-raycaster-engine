@@ -1,0 +1,17 @@
+{
+  "ref": "w_cowled_skull",
+  "tileset": "w_cowled_skull",
+  "scale": 3,
+  "thinker": "WraithThinker",
+  "size": 24,
+  "fx": [
+    "@FX_LIGHT_ADD",
+    "@FX_LIGHT_SOURCE"
+  ],
+  "data": {
+    "type": "w",
+    "sounds": {
+      "spawn": "apparitions/mournful"
+    }
+  }
+}
