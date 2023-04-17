@@ -1,7 +1,7 @@
 {
   "title": "Camera Obscura",
   "description": [
-    "Vous disposez d'un {u appareil photo} et vous pouvez l'utilisez pour prendre des clichés de tout un tas de choses par ici. En fait tout ce qui vous paraît {u anormal} pourrait être photographié car cela {u augmentera votre score}.",
-    "Le lieu a la réputation d'être hanté ? Pas grave ! Profitez-en pour tirer le portrait de tout {u ectoplasme} que vous rencontrerez. Les photos pourront bien intérésser quelqu'un quand vous retournerez à la civilisation."
+    "Vous disposez d'un <u>appareil photo</u> que vous pouvez l'utilisez pour prendre des clichés de tout un tas de choses par ici. En fait tout ce qui vous paraît <u>anormal</u> pourrait être photographié car cela <u>augmentera votre score</u>.",
+    "Le lieu a la réputation d'être hanté ? Pas grave ! Profitez-en pour tirer le portrait de tout <u>ectoplasme</u> que vous rencontrerez. Les photos pourront bien intéresser quelqu'un quand vous retournerez à la civilisation."
   ]
 }

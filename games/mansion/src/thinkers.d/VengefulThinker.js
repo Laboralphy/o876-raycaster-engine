@@ -1,6 +1,6 @@
 import GhostThinker from "./GhostThinker";
 import * as CONSTS from "../consts";
-import Automaton from "libs/automaton/v2";
+import Automaton from "libs/automaton";
 import Geometry from 'libs/geometry'
 import * as RC_CONSTS from 'libs/raycaster/consts'
 

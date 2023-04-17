@@ -1,12 +1,12 @@
 <template>
-  <RichText class="description" :text="text"></RichText>
+  <section class="description">
+    <p v-for="s in text" v-html="s"></p>
+  </section>
 </template>
 
 <script>
-import RichText from "./RichText.vue";
 export default {
 name: "Description",
-  components: {RichText},
   props: {
     text: {
       type: Array,

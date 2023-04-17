@@ -1,4 +1,4 @@
-import Automaton from "../../automaton/v2";
+import Automaton from "../../automaton";
 
 /**
  * a class with basic mechanism to manage states.

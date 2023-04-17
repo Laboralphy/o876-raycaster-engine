@@ -34,7 +34,11 @@ class TagGrid extends Grid {
         };
 
         this.iterate((x, y, value) => {
-            oState.cells.push({x, y, tags: [...value]});
+            if (value.size) {
+                oState
+                    .cells
+                    .push({x, y, tags: [...value]});
+            }
         });
 
         return oState;

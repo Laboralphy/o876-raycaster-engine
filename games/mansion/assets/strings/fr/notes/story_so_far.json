@@ -1,7 +1,7 @@
 {
   "title": "Votre histoire...",
   "description": [
-    "Vous venez d'atteindre le village abandonné. Vous pouvez y faire ce que vous voulez mais, pour faire grimper votre prestige vous devrez faire ceci : {li Récolter d'anciens grimoires rares et précieux.}{li Photographier des tableaux étranges disséminés dans le coin.}{li Photographier tout phénomène surnaturel dont vous serez témoin.}",
+    "Vous venez d'atteindre le village abandonné. Vous pouvez y faire ce que vous voulez mais, pour faire grimper votre prestige vous devrez faire ceci : <ul><li>Récolter d'anciens grimoires rares et précieux.</li><li>Photographier des tableaux étranges disséminés dans le coin.</li><li>Photographier tout phénomène surnaturel dont vous serez témoin.</li>",
     "En effet la rumeur dit que ce village contiendrait de nombreux ouvrages insolites que des collectionneurs fortunés pourraient s'arracher à prix d'or. Mais vous avez été également mis en garde : Le lieu serait hanté..."
   ]
 }
