@@ -1,8 +1,8 @@
 {
   "name": "Les Glyphes d'interdiction",
   "description": [
-    "Une porte sur laquelle est tracé un {u glyphe d'interdiction}, restera fermée tant que le glyphe n'est pas dissipé.",
-    "Un examen attentif du glyphe permet de {u localiser l'esprit tourmenté} qui alimente le glyphe et qui condamne la porte.",
-    "La {u capture} ou la {u révocation} de l'esprit tourmenté permet la dissipation du glyphe et {u l'ouverture de la porte}."
+    "Une porte sur laquelle est tracé un <u>glyphe d'interdiction</u>, restera fermée tant que le glyphe n'est pas dissipé.",
+    "Un examen attentif du glyphe permet de <u>localiser l'esprit tourmenté</u> qui alimente le glyphe et qui condamne la porte.",
+    "La <u>capture</u> ou la <u>révocation</u> de l'esprit tourmenté permet la dissipation du glyphe et <u>l'ouverture de la porte</u>."
   ]
 }
