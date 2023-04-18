@@ -456,6 +456,22 @@
         "width": 64,
         "height": 96,
         "animation": null
+      },
+      {
+        "id": 114,
+        "type": "wall",
+        "content": "0077f569ae34a5bde847f3e815e688e3.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 115,
+        "type": "wall",
+        "content": "8c65a86bee05e8ba96f5a84be6ee9fe9.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
       }
     ],
     "flats": [
@@ -914,6 +930,42 @@
         "type": "sprite",
         "content": "9b576abf8d5ef76545ca5c27cf411235.png",
         "width": 21,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 116,
+        "type": "sprite",
+        "content": "261c46546197af7d594d62f4b7eedcf7.png",
+        "width": 32,
+        "height": 96,
+        "animation": {
+          "duration": "160",
+          "frames": "4",
+          "loop": 1
+        }
+      },
+      {
+        "id": 117,
+        "type": "sprite",
+        "content": "28fdb1302b4cd83e5f68eb9e0ce88330.png",
+        "width": 32,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 118,
+        "type": "sprite",
+        "content": "e6fa21399a1b34f67eb4799d52f0aa20.png",
+        "width": 32,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 119,
+        "type": "sprite",
+        "content": "8dd8fedf9124077a356842669072711a.png",
+        "width": 32,
         "height": 96,
         "animation": null
       }
@@ -2074,6 +2126,27 @@
         "f": 78,
         "c": 77
       }
+    },
+    {
+      "id": 56,
+      "ref": "",
+      "phys": 10,
+      "offs": 0,
+      "preview": "d5115200a3d92df3c401ce7945ac5ec0.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": 115,
+        "e": 114,
+        "w": 114,
+        "s": 115,
+        "f": null,
+        "c": null
+      }
     }
   ],
   "things": [
@@ -2376,69 +2449,90 @@
         "outer": "128"
       },
       "tile": 106
+    },
+    {
+      "id": 22,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": true,
+        "value": "0.5",
+        "inner": "32",
+        "outer": "192"
+      },
+      "tile": 116
     }
   ],
   "grid": [
     [
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
         "block": 4,
@@ -2757,64 +2851,70 @@
     ],
     [
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
         "block": 4,
@@ -2952,74 +3052,81 @@
         "things": []
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
-        "block": 4,
+        "block": 1,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 7
       },
       {
         "block": 2,
@@ -3044,7 +3151,7 @@
         "things": []
       },
       {
-        "block": 8,
+        "block": 26,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -3156,7 +3263,7 @@
     ],
     [
       {
-        "block": 1,
+        "block": 2,
         "upperblock": 7,
         "tags": [],
         "mark": {
@@ -3167,8 +3274,25 @@
         "things": []
       },
       {
-        "block": 1,
-        "upperblock": 7,
+        "block": 4,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": [
+          {
+            "x": 0,
+            "y": 0,
+            "id": 6
+          }
+        ]
+      },
+      {
+        "block": 4,
+        "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3178,8 +3302,8 @@
         "things": []
       },
       {
-        "block": 1,
-        "upperblock": 7,
+        "block": 4,
+        "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3189,26 +3313,21 @@
         "things": []
       },
       {
-        "block": 1,
-        "upperblock": 7,
+        "block": 4,
+        "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
-      },
-      {
-        "block": 1,
-        "upperblock": 7,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 4
+          }
+        ]
       },
       {
         "block": 1,
@@ -3369,8 +3488,8 @@
         "things": []
       },
       {
-        "block": 1,
-        "upperblock": 7,
+        "block": 26,
+        "upperblock": 24,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3391,8 +3510,8 @@
         "things": []
       },
       {
-        "block": 1,
-        "upperblock": 7,
+        "block": 26,
+        "upperblock": 24,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3443,7 +3562,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 0,
+            "id": 3
+          }
+        ]
       },
       {
         "block": 3,
@@ -3572,7 +3697,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 22
+          }
+        ]
       },
       {
         "block": 4,
@@ -3597,8 +3728,8 @@
         "things": []
       },
       {
-        "block": 4,
-        "upperblock": 0,
+        "block": 1,
+        "upperblock": 7,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3701,7 +3832,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 3
+          }
+        ]
       },
       {
         "block": 2,
@@ -3796,7 +3933,7 @@
       },
       {
         "block": 3,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3847,7 +3984,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 5
+          }
+        ]
       },
       {
         "block": 36,
@@ -3951,6 +4094,17 @@
         "things": []
       },
       {
+        "block": 56,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
+      },
+      {
         "block": 4,
         "upperblock": 0,
         "tags": [],
@@ -3963,20 +4117,9 @@
           {
             "x": 0,
             "y": 0,
-            "id": 8
+            "id": 5
           }
         ]
-      },
-      {
-        "block": 4,
-        "upperblock": 0,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
       },
       {
         "block": 4,
@@ -4195,7 +4338,7 @@
       },
       {
         "block": 3,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -4224,7 +4367,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 2,
+            "id": 13
+          }
+        ]
       },
       {
         "block": 3,
@@ -4359,18 +4508,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
-      },
-      {
-        "block": 4,
-        "upperblock": 0,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 2,
+            "id": 11
+          }
+        ]
       },
       {
         "block": 4,
@@ -4385,9 +4529,20 @@
           {
             "x": 1,
             "y": 1,
-            "id": 15
+            "id": 22
           }
         ]
+      },
+      {
+        "block": 4,
+        "upperblock": 0,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
       },
       {
         "block": 4,
@@ -4511,13 +4666,7 @@
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 2,
-            "y": 1,
-            "id": 15
-          }
-        ]
+        "things": []
       },
       {
         "block": 4,
@@ -4624,7 +4773,7 @@
       },
       {
         "block": 8,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -4776,7 +4925,18 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 2,
+            "id": 12
+          },
+          {
+            "x": 2,
+            "y": 2,
+            "id": 14
+          }
+        ]
       },
       {
         "block": 4,
@@ -4809,7 +4969,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 2,
+            "id": 9
+          }
+        ]
       },
       {
         "block": 1,
@@ -4906,11 +5072,6 @@
         },
         "modified": true,
         "things": [
-          {
-            "x": 0,
-            "y": 2,
-            "id": 13
-          },
           {
             "x": 2,
             "y": 1,
@@ -5037,7 +5198,7 @@
       },
       {
         "block": 8,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5066,7 +5227,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 10
+          }
+        ]
       },
       {
         "block": 3,
@@ -5447,7 +5614,7 @@
       },
       {
         "block": 3,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5837,7 +6004,7 @@
       },
       {
         "block": 3,
-        "upperblock": 7,
+        "upperblock": 5,
         "tags": [],
         "mark": {
           "color": 0,
@@ -5888,7 +6055,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 2,
+            "id": 4
+          }
+        ]
       },
       {
         "block": 36,
@@ -6544,7 +6717,7 @@
       },
       {
         "block": 2,
-        "upperblock": 7,
+        "upperblock": 29,
         "tags": [],
         "mark": {
           "color": 0,
@@ -6567,7 +6740,8 @@
             "y": 0,
             "id": 2
           }
-        ]
+        ],
+        "upperblock": 24
       },
       {
         "block": 2,
@@ -6956,7 +7130,7 @@
       },
       {
         "block": 1,
-        "upperblock": 7,
+        "upperblock": 29,
         "tags": [],
         "mark": {
           "color": 0,
@@ -6999,7 +7173,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 29
       },
       {
         "block": 4,
@@ -14225,7 +14400,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 5
       },
       {
         "block": 10,
@@ -14626,7 +14802,8 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [],
+        "upperblock": 5
       },
       {
         "block": 4,
@@ -16546,5 +16723,5 @@
       "angle": 0
     }
   ],
-  "preview": "67e1ded9656eeec37af65d3d27e58151.jpg"
+  "preview": "fa602907379aecc4681ebdfb4b12b37e.jpg"
 }
