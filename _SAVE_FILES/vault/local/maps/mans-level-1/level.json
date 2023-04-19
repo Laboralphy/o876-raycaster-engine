@@ -74,14 +74,6 @@
         "animation": null
       },
       {
-        "id": 48,
-        "type": "wall",
-        "content": "d3f5c7a927f8a2040256cd2b8f0dfc30.png",
-        "width": 64,
-        "height": 96,
-        "animation": null
-      },
-      {
         "id": 49,
         "type": "wall",
         "content": "c532e09bbb54e1ddff837ce8005f025b.png",
@@ -93,14 +85,6 @@
         "id": 50,
         "type": "wall",
         "content": "9b4ee5b803dd354d275068b0908a788f.png",
-        "width": 64,
-        "height": 96,
-        "animation": null
-      },
-      {
-        "id": 51,
-        "type": "wall",
-        "content": "55c100451908d75112b99f8be2f9d3d8.png",
         "width": 64,
         "height": 96,
         "animation": null
@@ -469,6 +453,30 @@
         "id": 115,
         "type": "wall",
         "content": "8c65a86bee05e8ba96f5a84be6ee9fe9.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 120,
+        "type": "wall",
+        "content": "b70935f11618c941f41e051035dfb244.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 121,
+        "type": "wall",
+        "content": "ae1968ecaaf245bf7fab3953ad4fda58.png",
+        "width": 64,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 122,
+        "type": "wall",
+        "content": "f786e3a11410b20410dfe6ec4c12993b.png",
         "width": 64,
         "height": 96,
         "animation": null
@@ -1708,27 +1716,6 @@
       }
     },
     {
-      "id": 50,
-      "ref": "",
-      "phys": 1,
-      "offs": 0,
-      "preview": "ca8860abf198cb7f73fee3dfe7e88ea3.png",
-      "light": {
-        "enabled": false,
-        "value": 0,
-        "inner": 0,
-        "outer": 0
-      },
-      "faces": {
-        "n": 48,
-        "e": 51,
-        "w": 51,
-        "s": 48,
-        "f": null,
-        "c": null
-      }
-    },
-    {
       "id": 51,
       "ref": "",
       "phys": 1,
@@ -1808,6 +1795,27 @@
         "e": 113,
         "w": 113,
         "s": 110,
+        "f": null,
+        "c": null
+      }
+    },
+    {
+      "id": 57,
+      "ref": "",
+      "phys": 1,
+      "offs": 0,
+      "preview": "a932a29bf44584f1b2e72a4673b35b95.png",
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "faces": {
+        "n": 122,
+        "e": 122,
+        "w": 122,
+        "s": 122,
         "f": null,
         "c": null
       }
@@ -1936,27 +1944,6 @@
         "s": 1,
         "f": 5,
         "c": 5
-      }
-    },
-    {
-      "id": 23,
-      "ref": "",
-      "phys": 10,
-      "offs": 0,
-      "preview": "f7456740903c3cc2aa8990d9d3ee86ed.png",
-      "light": {
-        "enabled": false,
-        "value": 0,
-        "inner": 0,
-        "outer": 0
-      },
-      "faces": {
-        "n": 51,
-        "e": 48,
-        "w": 48,
-        "s": 51,
-        "f": null,
-        "c": null
       }
     },
     {
@@ -2739,7 +2726,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -3052,7 +3039,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3063,7 +3050,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3074,7 +3061,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3085,7 +3072,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3096,7 +3083,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3107,7 +3094,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3118,7 +3105,7 @@
         "upperblock": 7
       },
       {
-        "block": 1,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -3444,7 +3431,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 26,
         "upperblock": 7,
         "tags": [],
         "mark": {
@@ -3842,7 +3829,7 @@
       },
       {
         "block": 2,
-        "upperblock": 50,
+        "upperblock": 24,
         "tags": [],
         "mark": {
           "color": 0,
@@ -7113,20 +7100,15 @@
         "things": []
       },
       {
-        "block": 4,
+        "block": 26,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 1,
-            "y": 1,
-            "id": 3
-          }
-        ]
+        "things": [],
+        "upperblock": 29
       },
       {
         "block": 1,
@@ -7221,7 +7203,7 @@
       },
       {
         "block": 1,
-        "upperblock": 50,
+        "upperblock": 7,
         "tags": [],
         "mark": {
           "color": 0,
@@ -7513,7 +7495,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 29,
         "tags": [],
         "mark": {
@@ -10547,7 +10529,7 @@
         ]
       },
       {
-        "block": 23,
+        "block": 24,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -11782,13 +11764,7 @@
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 2,
-            "y": 2,
-            "id": 15
-          }
-        ]
+        "things": []
       },
       {
         "block": 4,
@@ -12862,7 +12838,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 2,
+            "id": 15
+          }
+        ]
       },
       {
         "block": 4,
@@ -12989,13 +12971,7 @@
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 1,
-            "y": 1,
-            "id": 15
-          }
-        ]
+        "things": []
       },
       {
         "block": 18,
@@ -13236,7 +13212,8 @@
         },
         "modified": true,
         "things": [],
-        "block": 4
+        "block": 2,
+        "upperblock": 7
       },
       {
         "tags": [],
@@ -13246,7 +13223,8 @@
         },
         "modified": true,
         "things": [],
-        "block": 4
+        "block": 1,
+        "upperblock": 7
       },
       {
         "tags": [],
@@ -13256,28 +13234,12 @@
         },
         "modified": true,
         "things": [],
-        "block": 4
+        "block": 2,
+        "upperblock": 7
       },
       {
-        "block": 4,
-        "upperblock": 0,
-        "tags": [],
-        "mark": {
-          "color": 0,
-          "shape": 0
-        },
-        "modified": true,
-        "things": [
-          {
-            "x": 1,
-            "y": 1,
-            "id": 15
-          }
-        ]
-      },
-      {
-        "block": 4,
-        "upperblock": 0,
+        "block": 1,
+        "upperblock": 7,
         "tags": [],
         "mark": {
           "color": 0,
@@ -13287,21 +13249,26 @@
         "things": []
       },
       {
-        "block": 4,
-        "upperblock": 0,
+        "block": 2,
+        "upperblock": 7,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": [
-          {
-            "x": 1,
-            "y": 1,
-            "id": 15
-          }
-        ]
+        "things": []
+      },
+      {
+        "block": 1,
+        "upperblock": 7,
+        "tags": [],
+        "mark": {
+          "color": 0,
+          "shape": 0
+        },
+        "modified": true,
+        "things": []
       },
       {
         "block": 1,
@@ -13855,14 +13822,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -14280,14 +14247,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -14671,7 +14638,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 26,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -14682,14 +14649,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -15100,14 +15067,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -15516,14 +15483,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -15890,14 +15857,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -16128,7 +16095,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16139,7 +16106,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16150,7 +16117,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16161,7 +16128,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16172,7 +16139,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16183,7 +16150,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16194,7 +16161,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16205,7 +16172,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16216,7 +16183,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16227,7 +16194,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16238,7 +16205,7 @@
         "things": []
       },
       {
-        "block": 2,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16249,7 +16216,7 @@
         "things": []
       },
       {
-        "block": 1,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
@@ -16260,14 +16227,14 @@
         "things": []
       },
       {
-        "block": 0,
+        "block": 57,
         "upperblock": 0,
         "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
         },
-        "modified": false,
+        "modified": true,
         "things": []
       },
       {
@@ -16383,7 +16350,7 @@
         "things": []
       },
       {
-        "block": 8,
+        "block": 57,
         "tags": [],
         "mark": {
           "color": 0,
@@ -16723,5 +16690,5 @@
       "angle": 0
     }
   ],
-  "preview": "fa602907379aecc4681ebdfb4b12b37e.jpg"
+  "preview": "fb00d13f71a71517b34ce54433dfa7f2.jpg"
 }
