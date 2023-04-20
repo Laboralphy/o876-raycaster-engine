@@ -3,6 +3,7 @@
     <TitleAndCo title="Notes">
       <TypeList
           :types="getNoteTypes"
+          :value="getNoteActiveTab"
           @selected="({ref}) => noteTypeSelected(ref)"
       ></TypeList>
     </TitleAndCo>

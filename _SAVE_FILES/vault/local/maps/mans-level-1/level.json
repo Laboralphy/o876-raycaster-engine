@@ -8784,7 +8784,9 @@
       },
       {
         "block": 4,
-        "tags": [],
+        "tags": [
+          "locator clue_m1_secret_pass"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -10418,7 +10420,9 @@
       {
         "block": 3,
         "upperblock": 24,
-        "tags": [],
+        "tags": [
+          "locator clue_m1_secret_pass_target"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -10829,7 +10833,9 @@
       },
       {
         "block": 27,
-        "tags": [],
+        "tags": [
+          "archive clue_m1_secret_pass"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11285,7 +11291,9 @@
       {
         "block": 28,
         "upperblock": 7,
-        "tags": [],
+        "tags": [
+          "photo m1_secret_pass"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11335,7 +11343,9 @@
       {
         "block": 26,
         "upperblock": 5,
-        "tags": [],
+        "tags": [
+          "sense m1_secret_pass"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -16684,7 +16694,7 @@
   "flags": {
     "smooth": false,
     "stretch": false,
-    "export": false
+    "export": true
   },
   "time": {
     "interval": 40
@@ -16713,5 +16723,5 @@
       "angle": 0
     }
   ],
-  "preview": "db524cee331ec022b0693e51fa54e16c.jpg"
+  "preview": "1d95228b4b4abd58b42e56bcbe9a00b4.jpg"
 }

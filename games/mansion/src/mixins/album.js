@@ -7,9 +7,11 @@ export default {
     computed: {
         ...mapGetters([
           'getPhotos',
+          'getPhotoCount',
           'getPhotoTypes',
           'getActiveType',
-          'getAlbumTotalScore'
+          'getAlbumTotalScore',
+          'getFirstWorthyActiveType'
         ])
     },
 

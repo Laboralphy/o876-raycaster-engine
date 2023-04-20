@@ -33,24 +33,27 @@
         mixins: [STRINGS, ui, album],
         components: {TitleAndCo, Photo, PhotoTypes},
 
+        mounted: function () {
+            this.setActiveType({value: this.getFirstWorthyActiveType})
+        },
         methods: {
-            photoClicked: function(id) {
-                const {ref, value, content} = this.getPhotos.find(p => p.id === id);
-                const oPhotoData = this.STRINGS.PHOTOS[ref];
-                if (ref === undefined) {
-                    throw new Error('this photo is unknown : id ' + id + ' - ref ' + ref);
-                }
-                const title = oPhotoData.title;
-                const description = oPhotoData.description;
-                this.setPhotoDetails({
-                    title,
-                    description,
-                    content,
-                    value,
-                    visible: true
-                });
-            }
-        }
+              photoClicked: function(id) {
+                  const {ref, value, content} = this.getPhotos.find(p => p.id === id);
+                  const oPhotoData = this.STRINGS.PHOTOS[ref];
+                  if (ref === undefined) {
+                      throw new Error('this photo is unknown : id ' + id + ' - ref ' + ref);
+                  }
+                  const title = oPhotoData.title;
+                  const description = oPhotoData.description;
+                  this.setPhotoDetails({
+                      title,
+                      description,
+                      content,
+                      value,
+                      visible: true
+                  });
+              }
+          }
     }
 </script>
 

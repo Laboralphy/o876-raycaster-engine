@@ -6,10 +6,10 @@
   "browser": {},
   "esm": true,
   "scripts": {
-    "test": "$NODE -r esm node_modules/.bin/jasmine tests/*.js",
-    "build": "$NODE node_modules/.bin/webpack",
-    "watch": "$NODE node_modules/.bin/webpack --watch",
-    "serve": "$NODE srv/index"
+    "test": "node -r esm node_modules/.bin/jasmine tests/*.js",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "serve": "node srv/index"
   },
   "keywords": [
     "HTML5",

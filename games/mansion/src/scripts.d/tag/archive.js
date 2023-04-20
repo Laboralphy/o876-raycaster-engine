@@ -12,8 +12,11 @@
 export function push(game, remove, x, y, ref) {
     if (!game.engine.isDoorLocked(x, y)) {
         if (game.album.hasTakenPhoto(ref)) {
-          game.ui.popup('EVENT_PHOTO_ARCHIVED', 'album', 'PHOTOS.' + ref + '.title');
-          game.album.archivePhoto(ref);
+            console.info('archiving', ref)
+            game.ui.popup('EVENT_PHOTO_ARCHIVED', 'album', 'PHOTOS.' + ref + '.title');
+            game.album.archivePhoto(ref);
+        } else {
+            console.warn('could not archive', ref, '(photo not taken)')
         }
         remove();
     }
