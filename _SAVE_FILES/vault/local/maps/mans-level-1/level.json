@@ -976,6 +976,50 @@
         "width": 32,
         "height": 96,
         "animation": null
+      },
+      {
+        "id": 126,
+        "type": "sprite",
+        "content": "d6f95049dfdc64010960c3a08a487271.png",
+        "width": 9,
+        "height": 96,
+        "animation": {
+          "duration": "120",
+          "frames": "4",
+          "loop": 1
+        }
+      },
+      {
+        "id": 125,
+        "type": "sprite",
+        "content": "c2b8db286447ac4112733c0cf1771404.png",
+        "width": 9,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 124,
+        "type": "sprite",
+        "content": "2a5a9e00e7002f86eae14c55bada685e.png",
+        "width": 9,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 123,
+        "type": "sprite",
+        "content": "f4d5e1fd2ae542ad8820c464700ec496.png",
+        "width": 9,
+        "height": 96,
+        "animation": null
+      },
+      {
+        "id": 128,
+        "type": "sprite",
+        "content": "ec5aeba84dda1b3fe74c32f4efb660b6.png",
+        "width": 50,
+        "height": 96,
+        "animation": null
       }
     ]
   },
@@ -2451,6 +2495,36 @@
         "outer": "192"
       },
       "tile": 116
+    },
+    {
+      "id": 23,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": true,
+        "value": "0.3",
+        "inner": "24",
+        "outer": "66"
+      },
+      "tile": 126
+    },
+    {
+      "id": 24,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 128
     }
   ],
   "grid": [
@@ -7312,15 +7386,23 @@
         ]
       },
       {
-        "block": 4,
+        "block": 13,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "item note_m1_ritual_notes"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 24
+          }
+        ]
       },
       {
         "block": 26,
@@ -7713,7 +7795,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 2,
+            "y": 0,
+            "id": 23
+          }
+        ]
       },
       {
         "block": 4,
@@ -7724,7 +7812,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 1,
+            "id": 23
+          }
+        ]
       },
       {
         "block": 1,
@@ -16723,5 +16817,5 @@
       "angle": 0
     }
   ],
-  "preview": "1d95228b4b4abd58b42e56bcbe9a00b4.jpg"
+  "preview": "00ed1f0da1f751ebb6c69b3989799809.jpg"
 }

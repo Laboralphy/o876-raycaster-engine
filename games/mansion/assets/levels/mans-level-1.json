@@ -296,6 +296,58 @@
       "width": 32,
       "height": 96,
       "animations": []
+    },
+    {
+      "id": 126,
+      "src": "assets/textures/5077308ed33251b91c87ad03590f3011.png",
+      "width": 9,
+      "height": 96,
+      "animations": [
+        {
+          "id": "default",
+          "start": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "length": 4,
+          "duration": 120,
+          "loop": "@LOOP_FORWARD"
+        }
+      ]
+    },
+    {
+      "id": 125,
+      "src": "assets/textures/487746d3bb767b57f4fd72649b782718.png",
+      "width": 9,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 124,
+      "src": "assets/textures/bbc5dd1753886ecd49959290a37a6c5e.png",
+      "width": 9,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 123,
+      "src": "assets/textures/1a4f94eac2eb1829f51b61cc0e7fe806.png",
+      "width": 9,
+      "height": 96,
+      "animations": []
+    },
+    {
+      "id": 128,
+      "src": "assets/textures/79e59f520dd7fed31fb97190551d29f9.png",
+      "width": 50,
+      "height": 96,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -487,6 +539,29 @@
         "r1": 192,
         "v": 0.5
       }
+    },
+    {
+      "id": 23,
+      "tileset": 126,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": [
+        "@FX_LIGHT_SOURCE"
+      ],
+      "lightsource": {
+        "r0": 24,
+        "r1": 66,
+        "v": 0.3
+      }
+    },
+    {
+      "id": 24,
+      "tileset": 128,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
+      "fx": []
     }
   ],
   "level": {
@@ -929,7 +1004,7 @@
         4,
         4,
         4,
-        4,
+        13,
         26,
         57,
         0,
@@ -4348,6 +4423,14 @@
       "animation": null
     },
     {
+      "x": 1952,
+      "y": 736,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 24,
+      "animation": null
+    },
+    {
       "x": 1639,
       "y": 800,
       "z": 0,
@@ -4370,6 +4453,22 @@
       "angle": 0,
       "blueprint": 11,
       "animation": null
+    },
+    {
+      "x": 1916,
+      "y": 772,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 23,
+      "animation": "default"
+    },
+    {
+      "x": 1952,
+      "y": 800,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 23,
+      "animation": "default"
     },
     {
       "x": 544,
@@ -5223,6 +5322,13 @@
   },
   "tags": [
     {
+      "x": 30,
+      "y": 11,
+      "tags": [
+        "item note_m1_ritual_notes"
+      ]
+    },
+    {
       "x": 18,
       "y": 15,
       "tags": [
@@ -5259,5 +5365,5 @@
     }
   ],
   "lightsources": [],
-  "preview": "assets/textures/632322755bfc5c7e9ab4d82a456674e2.jpg"
+  "preview": "assets/textures/93b5275beb527da795e33c836be2ad0d.jpg"
 }
