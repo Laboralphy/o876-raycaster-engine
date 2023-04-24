@@ -37,7 +37,19 @@ export default {
     isStoryPageDisplayed: state => state.mainmenu.phase === state.mainmenu.phases.todo,
     isGameRunning: state => state.mainmenu.phase === state.mainmenu.phases.game,
 
-    getNotes: state => state.notes.filter(n => n.type === state.uiframe.activeNoteTab),
+    getNotes: state => state
+        .notes
+        .filter(n => n.type === state.uiframe.activeNoteTab)
+        .sort((a, b) => {
+            const ar = a.read ? 1 : 0
+            const br = b.read ? 1 : 0
+            if (ar !== br) {
+                return ar - br
+            }
+            const ad = a.date
+            const bd = b.date
+            return bd - ad
+        }),
     getNoteActiveTab: state => state.uiframe.activeNoteTab,
 
     getSettingMouseFactor: state => state.settings.mouseFactor,

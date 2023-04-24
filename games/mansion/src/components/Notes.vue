@@ -1,12 +1,14 @@
 <template>
   <div class="ui-panel-window ui-size-60-90">
-    <TitleAndCo title="Notes">
+    <TitleAndCo :title="STRINGS.MAIN_TAB_NOTES">
       <TypeList
           :types="getNoteTypes"
           :value="getNoteActiveTab"
           @selected="({ref}) => noteTypeSelected(ref)"
       ></TypeList>
     </TitleAndCo>
+    <section class="description"><p>{{ STRINGS.HINT_UI_DOCUMENTS[getNoteActiveTab] }}</p></section>
+    <hr />
     <div v-if="getNotes.length > 0">
       <Item
         v-for="note in getNotes"
@@ -38,6 +40,10 @@ export default {
   computed: {
     getNoteTypes: function () {
       return [
+        {
+          ref: 'note',
+          caption: this.STRINGS.NOTE_TYPES_NOTE
+        },
         {
           ref: 'journal',
           caption: this.STRINGS.NOTE_TYPES_JOURNAL

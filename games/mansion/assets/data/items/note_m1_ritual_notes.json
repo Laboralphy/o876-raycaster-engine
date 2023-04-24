@@ -1,6 +1,6 @@
 {
-  "type": "book",
+  "type": "note",
   "icon": "note",
-  "thumbnail": "note-generic-diary-notebook",
-  "value": 100
+  "thumbnail": "",
+  "value": 0
 }

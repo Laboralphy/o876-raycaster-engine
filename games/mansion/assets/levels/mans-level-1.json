@@ -560,7 +560,7 @@
       "tileset": 128,
       "thinker": "StaticThinker",
       "size": 1,
-      "ref": "",
+      "ref": "note_m1_ritual_notes",
       "fx": []
     }
   ],

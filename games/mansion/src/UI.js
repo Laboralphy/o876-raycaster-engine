@@ -106,6 +106,15 @@ class UI extends StoreAbstract {
     hideFirstPage() {
         this.commit(UI_MUTATIONS.SHOW_FIRST_PAGE, {value: false});
     }
+
+    /**
+     *
+     * @param ref
+     * @param sType {string} voir components.Notes.getNoteTypes
+     */
+    addNote (ref, sType = 'note') {
+        this.commit(UI_MUTATIONS.ADD_NOTE_ENTRY, { ref, type: sType })
+    }
 }
 
 export default UI;
