@@ -48,10 +48,13 @@ Will emit an ambient sound when player walks in.
 Will continuously play a localized ambiant sound.
 
 ## photo
-- usage : photo <photo-ref>
+- usage 1 : photo <photo-script-ref>
+- usage 2 : photo <type> <photo-ref> <score-ref>
 - block tag
 
-Will spawn a photo in player's album when shoot at.
+Usage 1 : Will run a photo script.
+Usage 2 : Will store a photo in ambient/art tab with the corresponding score.
+
 
 ## locator
 - usage : locator <ref>

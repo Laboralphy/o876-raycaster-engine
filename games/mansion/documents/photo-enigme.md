@@ -1,6 +1,6 @@
 1) Ajouter un tag photo <photo-ref>
 2) Ajouter un tag sense <photo-ref>
-3) copier les script suivant dans le fichier photo-ref.js (dossier script.d/photo)
+3) copier les scripts suivant dans le fichier photo-ref.js (dossier script.d/photo)
 ```js
 const CONSTS = require('../../consts')
 

@@ -3,6 +3,8 @@
         <TitleAndCo :title="STRINGS.MAIN_TAB_ALBUM">
             <PhotoTypes></PhotoTypes>
         </TitleAndCo>
+        <section class="description"><p>{{ STRINGS.HINT_UI_ALBUM[getActiveType] }}</p></section>
+        <hr />
         <div class="photo-container" v-if="getPhotos.length > 0">
             <Photo
                 v-for="photo in getPhotos"
@@ -63,7 +65,6 @@
         padding: 1%;
         margin: 0;
         width: 98%;
-        height: 90%;
     }
 
     div.photo-details {

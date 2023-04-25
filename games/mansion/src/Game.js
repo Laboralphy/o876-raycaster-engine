@@ -517,12 +517,12 @@ class Game extends GameAbstract {
                 const aTags = tagGrid.cell(x, y);
                 aTags.forEach(id => {
                     const tags = tagGrid.getTagCommand(id);
-                    const [command, ref] = tags;
+                    const [command, ref, ...args] = tags;
                     if (command === 'photo') {
                         if (aPhotos === null) {
                             aPhotos = [];
                         }
-                        aPhotos.push({ref, id, x, y});
+                        aPhotos.push({args, ref, id, x, y});
                     }
                 });
             }
@@ -579,11 +579,9 @@ class Game extends GameAbstract {
             return;
         }
         const oPhotoScripts = Scripts.photo;
-        aPhotos.forEach(({ref, id, x, y}) => {
+        aPhotos.forEach(({args, ref, id, x, y}) => {
             const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
-            if (ref in oPhotoScripts) {
-                oPhotoScripts[ref].main(this, remove, x, y);
-            }
+            oPhotoScripts[ref].main(this, remove, x, y, ...args);
         });
     }
 

@@ -39,6 +39,14 @@
     "hint": "Quelques informations importantes sur la manière de jouer et de remplir les objectifs."
   },
 
+  "HINT_UI_ALBUM": {
+    "art": "Photos de peintures ou tableaux trouvés lors de vos pérégrinations.",
+    "clue": "Photos étranges indiquant un lieu secret ou lié à un mystère.",
+    "ambient": "Photos d'ambiance qui permettent de documenter votre progression.",
+    "wraith": "Photos de manifestations surnaturelles, généralement sous forme de spectre.",
+    "archive": "Photos utilisées en tant qu'indice et qui ont permit de résoudre un mystère."
+  },
+
   "COMMAND_CAPTION_NEXT": "Suivant",
   "COMMAND_CAPTION_PREV": "Précédent",
   "COMMAND_CAPTION_START": "Démarrer",

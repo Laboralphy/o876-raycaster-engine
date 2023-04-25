@@ -3444,7 +3444,9 @@
       },
       {
         "block": 49,
-        "tags": [],
+        "tags": [
+          "photo ambient m1_lake_view common"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -4677,7 +4679,9 @@
       },
       {
         "block": 18,
-        "tags": [],
+        "tags": [
+          "sense m1_lake_view"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -16811,10 +16815,10 @@
   },
   "startpoints": [
     {
-      "x": 22,
-      "y": 29,
+      "x": 10,
+      "y": 9,
       "z": 1,
-      "angle": 0
+      "angle": 1.5
     }
   ],
   "preview": "00ed1f0da1f751ebb6c69b3989799809.jpg"

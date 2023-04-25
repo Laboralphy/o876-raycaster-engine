@@ -5311,16 +5311,30 @@
   ],
   "startpoints": [
     {
-      "x": 22,
-      "y": 29,
+      "x": 10,
+      "y": 9,
       "z": 1,
-      "angle": 0
+      "angle": 4.71238898038469
     }
   ],
   "camera": {
     "thinker": ""
   },
   "tags": [
+    {
+      "x": 10,
+      "y": 2,
+      "tags": [
+        "photo ambient m1_lake_view common"
+      ]
+    },
+    {
+      "x": 10,
+      "y": 5,
+      "tags": [
+        "sense m1_lake_view"
+      ]
+    },
     {
       "x": 30,
       "y": 11,
