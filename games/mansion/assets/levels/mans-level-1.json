@@ -348,6 +348,13 @@
       "width": 50,
       "height": 96,
       "animations": []
+    },
+    {
+      "id": 129,
+      "src": "assets/textures/8e9acea400cdb8aa9bd4151943358e1a.png",
+      "width": 64,
+      "height": 64,
+      "animations": []
     }
   ],
   "blueprints": [
@@ -561,6 +568,14 @@
       "thinker": "StaticThinker",
       "size": 1,
       "ref": "note_m1_ritual_notes",
+      "fx": []
+    },
+    {
+      "id": 25,
+      "tileset": 129,
+      "thinker": "StaticThinker",
+      "size": 1,
+      "ref": "",
       "fx": []
     }
   ],
@@ -5241,10 +5256,34 @@
       }
     },
     {
+      "x": 11,
+      "y": 22,
+      "n": {
+        "tileset": 129,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 11,
+      "y": 22,
+      "s": {
+        "tileset": 129,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
       "x": 19,
       "y": 22,
       "n": {
         "tileset": 56,
+        "align": "@DECAL_ALIGN_CENTER"
+      }
+    },
+    {
+      "x": 11,
+      "y": 23,
+      "n": {
+        "tileset": 83,
         "align": "@DECAL_ALIGN_CENTER"
       }
     },
@@ -5336,6 +5375,13 @@
       ]
     },
     {
+      "x": 6,
+      "y": 9,
+      "tags": [
+        "locator w_spy_hiding"
+      ]
+    },
+    {
       "x": 30,
       "y": 11,
       "tags": [
@@ -5347,6 +5393,13 @@
       "y": 15,
       "tags": [
         "locator clue_m1_secret_pass"
+      ]
+    },
+    {
+      "x": 4,
+      "y": 19,
+      "tags": [
+        "event m1_exiting_remise"
       ]
     },
     {
@@ -5375,6 +5428,13 @@
       "y": 21,
       "tags": [
         "sense m1_secret_pass"
+      ]
+    },
+    {
+      "x": 11,
+      "y": 22,
+      "tags": [
+        "locator remise_exit_door"
       ]
     }
   ],

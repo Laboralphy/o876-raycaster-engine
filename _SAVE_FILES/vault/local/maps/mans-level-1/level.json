@@ -1020,6 +1020,14 @@
         "width": 50,
         "height": 96,
         "animation": null
+      },
+      {
+        "id": 129,
+        "type": "sprite",
+        "content": "0453e97c2f9c71c6026ad830b9dac7dd.png",
+        "width": 64,
+        "height": 64,
+        "animation": null
       }
     ]
   },
@@ -2525,6 +2533,21 @@
         "outer": 0
       },
       "tile": 128
+    },
+    {
+      "id": 25,
+      "ref": "",
+      "size": 1,
+      "opacity": 0,
+      "ghost": false,
+      "tangible": false,
+      "light": {
+        "enabled": false,
+        "value": 0,
+        "inner": 0,
+        "outer": 0
+      },
+      "tile": 129
     }
   ],
   "grid": [
@@ -6320,7 +6343,9 @@
       },
       {
         "block": 4,
-        "tags": [],
+        "tags": [
+          "locator w_spy_hiding"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -10341,7 +10366,9 @@
       {
         "block": 44,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event m1_exiting_remise"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11710,13 +11737,26 @@
       {
         "block": 37,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator remise_exit_door"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 0,
+            "id": 25
+          },
+          {
+            "x": 1,
+            "y": 2,
+            "id": 25
+          }
+        ]
       },
       {
         "block": 36,
@@ -12132,7 +12172,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 1,
+            "y": 0,
+            "id": 19
+          }
+        ]
       },
       {
         "block": 36,
