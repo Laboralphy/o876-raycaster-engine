@@ -294,7 +294,7 @@ class GameAbstract {
      */
     async buildLevel(data, extra = {}) {
         const engine = this._engine;
-        this.log('loading level');
+        this.log('building level');
         engine.stopDoomLoop();
         await engine.buildLevel(data, extra);
         this.log('data successfuly loaded and parsed');

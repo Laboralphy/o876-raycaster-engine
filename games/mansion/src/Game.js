@@ -176,7 +176,8 @@ class Game extends GameAbstract {
         extra.blueprints = this.getCompiledBlueprints();
         this._mutations.decals = [];
         this._mutations.level = sLevel;
-        const oLevelData = require(__dirname + '/../assets/levels/' + sLevel + '.json');
+        const oFetch = await fetch('assets/levels/' + sLevel + '.json')
+        const oLevelData = await oFetch.json()
         await this.buildLevel(oLevelData, extra);
         this._cameraFilter.assignAssets({
             visor: this.engine.getTileSet('u_visor'),
@@ -1031,6 +1032,7 @@ class Game extends GameAbstract {
         const {doors, locks, tags, time} = this.engine.getEngineState();
         const decals = this.getDecalState();
         const senses = this._senseMap.state;
+        const audio = this._audioManager.state
         return {
             time,
             tags,
