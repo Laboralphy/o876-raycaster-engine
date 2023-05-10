@@ -4173,8 +4173,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": []
@@ -5877,8 +5877,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": []
@@ -6318,8 +6318,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": [
@@ -7421,8 +7421,8 @@
           "item note_m1_ritual_notes"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": [
@@ -7944,8 +7944,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": []
@@ -9435,8 +9435,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 1
         },
         "modified": true,
         "things": []
@@ -10549,8 +10549,8 @@
           "locator clue_m1_secret_pass_target"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 3
         },
         "modified": true,
         "things": [
@@ -11420,8 +11420,8 @@
           "photo m1_secret_pass"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "yellow",
+          "shape": 5
         },
         "modified": true,
         "things": []
@@ -11741,8 +11741,8 @@
           "locator remise_exit_door"
         ],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "red",
+          "shape": 1
         },
         "modified": true,
         "things": [
@@ -14712,8 +14712,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 1
         },
         "modified": true,
         "things": []
@@ -14795,8 +14795,8 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
-          "shape": 0
+          "color": "cyan",
+          "shape": 4
         },
         "modified": true,
         "things": []
@@ -15224,7 +15224,7 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
+          "color": "cyan",
           "shape": 0
         },
         "modified": true,
