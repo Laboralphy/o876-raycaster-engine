@@ -1007,12 +1007,21 @@ class Game extends GameAbstract {
     }
 
     /**
+     * Returns true if the locator has been placed on map
+     * @param sRef {string}
+     * @return {boolean}
+     */
+    isLocatorDefined(sRef) {
+        return sRef in this._locators
+    }
+
+    /**
      * Retrieves a locator by its reference
      * @param sRef {string}
      * @return {*}
      */
     getLocator(sRef) {
-        if (sRef in this._locators) {
+        if (this.isLocatorDefined(sRef)) {
             return this._locators[sRef];
         } else {
             throw new Error('invalid locator reference : "' + sRef + '"');

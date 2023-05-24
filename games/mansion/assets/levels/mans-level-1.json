@@ -5350,10 +5350,10 @@
   ],
   "startpoints": [
     {
-      "x": 10,
-      "y": 9,
+      "x": 3,
+      "y": 29,
       "z": 1,
-      "angle": 4.71238898038469
+      "angle": 0
     }
   ],
   "camera": {
@@ -5385,7 +5385,8 @@
       "x": 30,
       "y": 11,
       "tags": [
-        "item note_m1_ritual_notes"
+        "item note_m1_ritual_notes",
+        "locator wraith_cultist_lootbag"
       ]
     },
     {
@@ -5393,6 +5394,13 @@
       "y": 15,
       "tags": [
         "locator clue_m1_secret_pass"
+      ]
+    },
+    {
+      "x": 27,
+      "y": 16,
+      "tags": [
+        "event m1_wraith_cultist_lootbag"
       ]
     },
     {
@@ -5436,8 +5444,36 @@
       "tags": [
         "locator remise_exit_door"
       ]
+    },
+    {
+      "x": 27,
+      "y": 27,
+      "tags": [
+        "locator wraith_investigator_1_target"
+      ]
+    },
+    {
+      "x": 3,
+      "y": 29,
+      "tags": [
+        "bgm music/forest"
+      ]
+    },
+    {
+      "x": 20,
+      "y": 29,
+      "tags": [
+        "event m1_wraith_investigator_1"
+      ]
+    },
+    {
+      "x": 27,
+      "y": 30,
+      "tags": [
+        "locator wraith_investigator_1"
+      ]
     }
   ],
   "lightsources": [],
-  "preview": "assets/textures/93b5275beb527da795e33c836be2ad0d.jpg"
+  "preview": "assets/textures/dc2077b827eadbd9fe524d0824ff19d6.jpg"
 }

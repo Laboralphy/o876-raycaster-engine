@@ -1,6 +1,6 @@
 {
-  "ref": "w_walkingaway_cultist",
-  "tileset": "w_walkingaway_cultist",
+  "ref": "w_cowled_skull",
+  "tileset": "w_cowled_skull",
   "scale": 3,
   "thinker": "WraithThinker",
   "size": 24,
@@ -11,7 +11,7 @@
   "data": {
     "type": "w",
     "sounds": {
-      "spawn": "apparitions/mournful"
+      "spawn": "events/stress6"
     }
   }
 }

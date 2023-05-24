@@ -7418,7 +7418,8 @@
         "block": 13,
         "upperblock": 0,
         "tags": [
-          "item note_m1_ritual_notes"
+          "item note_m1_ritual_notes",
+          "locator wraith_cultist_lootbag"
         ],
         "mark": {
           "color": "cyan",
@@ -9433,7 +9434,9 @@
       {
         "block": 19,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event m1_wraith_cultist_lootbag"
+        ],
         "mark": {
           "color": "cyan",
           "shape": 1
@@ -13966,7 +13969,9 @@
       {
         "block": 21,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator wraith_investigator_1_target"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -14516,7 +14521,9 @@
       },
       {
         "block": 15,
-        "tags": [],
+        "tags": [
+          "bgm music/forest"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -14710,7 +14717,9 @@
       {
         "block": 15,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event m1_wraith_investigator_1"
+        ],
         "mark": {
           "color": "cyan",
           "shape": 1
@@ -15211,7 +15220,9 @@
       {
         "block": 3,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator wraith_investigator_1"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -16861,11 +16872,11 @@
   },
   "startpoints": [
     {
-      "x": 10,
-      "y": 9,
+      "x": 3,
+      "y": 29,
       "z": 1,
-      "angle": 1.5
+      "angle": 0
     }
   ],
-  "preview": "00ed1f0da1f751ebb6c69b3989799809.jpg"
+  "preview": "09af79bf550029f2e9ad2d0a3848ab43.jpg"
 }

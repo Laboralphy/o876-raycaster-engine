@@ -1,6 +1,6 @@
 {
-  "ref": "w_walkingaway_cultist",
-  "tileset": "w_walkingaway_cultist",
+  "ref": "w_watching_cultist",
+  "tileset": "w_watching_cultist",
   "scale": 3,
   "thinker": "WraithThinker",
   "size": 24,

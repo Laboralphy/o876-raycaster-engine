@@ -1,15 +1,24 @@
 import * as CONSTS from '../../consts';
 
+/**
+ * Apparition d'un wraith
+ * @param game {Game}
+ * @param ref {string}
+ * @param locator {string} référence du locator du point d'apparition
+ * @param duration {number} durée de l'apparition
+ * @param score {number} point attribué lorsque le spectre est pris en photo
+ * @returns {Entity}
+ */
 export function main(game, ref, locator, duration, score = 0) {
     const oWraith = game.spawnGhost(ref, locator);
-    const oLocator = game.getLocator(locator + '_target');
-    if (!oLocator) {
-        throw new Error(locator + '_target: is not a valid spawn point for the wraith ' + ref);
-    }
+    const sTargetLocator = locator + '_target'
+    const destination = game.isLocatorDefined(sTargetLocator)
+        ? game.getLocator(sTargetLocator).position
+        : oWraith.position
     oWraith
         .data
         .wraith = {
-            destination: game.getLocator(locator + '_target').position,
+            destination,
             duration,
             score
         };

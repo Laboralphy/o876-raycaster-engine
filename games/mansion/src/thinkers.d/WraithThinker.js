@@ -10,6 +10,7 @@ import Geometry from "libs/geometry";
 class WraithThinker extends GhostThinker {
     constructor() {
         super();
+        this._startMoveTime = 0
         this._easing = {
             x: new Easing(),
             y: new Easing()
@@ -17,6 +18,7 @@ class WraithThinker extends GhostThinker {
         this.automaton.defineStates({
             // déplacement vers l'avant
             idle: {
+                init: ['$startTimer'],
                 loop: ['$moveAndPulse'],
                 jump: [{
                     test: '$isShot',
@@ -32,6 +34,9 @@ class WraithThinker extends GhostThinker {
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
     ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES ////// STATES //////
+    $startTimer() {
+        this._startMoveTime = this.elapsedTime
+    }
 
     $spawn() {
         // décider de la marche à suivre
@@ -65,7 +70,7 @@ class WraithThinker extends GhostThinker {
     $moveAndPulse() {
         // displacement
         const entity = this.entity;
-        const t = this.elapsedTime;
+        const t = this.elapsedTime - this._startMoveTime;
         const x = this._easing.x.compute(t).y;
         const y = this._easing.y.compute(t).y;
         entity.position.set({x, y});
