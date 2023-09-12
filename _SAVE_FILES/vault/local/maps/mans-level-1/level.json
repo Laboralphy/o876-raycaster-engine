@@ -6344,7 +6344,7 @@
       {
         "block": 4,
         "tags": [
-          "locator w_spy_hiding"
+          "locator wraith_spy_hiding"
         ],
         "mark": {
           "color": 0,
@@ -11741,7 +11741,7 @@
         "block": 37,
         "upperblock": 0,
         "tags": [
-          "locator remise_exit_door"
+          "locator lock_remise_exit"
         ],
         "mark": {
           "color": "red",
@@ -13101,9 +13101,9 @@
         "modified": true,
         "things": [
           {
-            "x": 1,
+            "x": 0,
             "y": 1,
-            "id": 15
+            "id": 8
           }
         ]
       },
@@ -13116,7 +13116,13 @@
           "shape": 0
         },
         "modified": true,
-        "things": []
+        "things": [
+          {
+            "x": 0,
+            "y": 1,
+            "id": 15
+          }
+        ]
       },
       {
         "block": 1,

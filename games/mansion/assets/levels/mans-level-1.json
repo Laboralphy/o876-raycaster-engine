@@ -4886,7 +4886,15 @@
       "animation": null
     },
     {
-      "x": 1440,
+      "x": 1424,
+      "y": 1632,
+      "z": 0,
+      "angle": 0,
+      "blueprint": 8,
+      "animation": null
+    },
+    {
+      "x": 1507,
       "y": 1632,
       "z": 0,
       "angle": 0,
@@ -5378,7 +5386,7 @@
       "x": 6,
       "y": 9,
       "tags": [
-        "locator w_spy_hiding"
+        "locator wraith_spy_hiding"
       ]
     },
     {
@@ -5442,7 +5450,7 @@
       "x": 11,
       "y": 22,
       "tags": [
-        "locator remise_exit_door"
+        "locator lock_remise_exit"
       ]
     },
     {

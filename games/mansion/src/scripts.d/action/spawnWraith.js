@@ -3,8 +3,8 @@ import * as CONSTS from '../../consts';
 /**
  * Apparition d'un wraith
  * @param game {Game}
- * @param ref {string}
- * @param locator {string} référence du locator du point d'apparition
+ * @param ref {string} référence du sprite à faire apparaitre
+ * @param locator {string} référence du locator du point d'apparition du sprite
  * @param duration {number} durée de l'apparition
  * @param score {number} point attribué lorsque le spectre est pris en photo
  * @returns {Entity}
