@@ -3,12 +3,12 @@ class StateContext {
     constructor(oDefinition = {}) {
         const { back = [], call = [], data = {}, init = [], loop = [], done = [], jump = [] } = oDefinition
         this._data = typeof data === 'function' ? data(this) : { ...data }
-        this._init = Array.isArray(init) ? init : [init]
-        this._loop = Array.isArray(loop) ? loop : [loop]
-        this._done = Array.isArray(done) ? done : [done]
-        this._call = Array.isArray(call) ? call : [call]
-        this._back = Array.isArray(back) ? back : [back]
-        this._jump = Array.isArray(jump) ? jump : [jump]
+        this._init = Array.isArray(init) ? init : [init] // liste des actions effectuées au début de l'état
+        this._loop = Array.isArray(loop) ? loop : [loop] // liste des actions effectuées en boucle
+        this._done = Array.isArray(done) ? done : [done] // liste des actions effectuées lorsque l'état change
+        this._call = Array.isArray(call) ? call : [call] // appel d'un autre état
+        this._back = Array.isArray(back) ? back : [back] // retourne à l'état qui a invoqué call
+        this._jump = Array.isArray(jump) ? jump : [jump] // changement d'état
         this._events = new Events
     }
 
