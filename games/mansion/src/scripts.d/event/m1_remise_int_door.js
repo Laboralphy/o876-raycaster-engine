@@ -8,7 +8,7 @@ export function main(game, remove, x, y) {
         // pas du bon coté du tag
         return;
     }
-    game.runScript('action.lockDoor', 'lock_remise_exit')
+    game.runScript('action.lockDoor', 'door_remise')
     game.runScript('action.spawnWraith', 'w_cowled_skull', 'wraith_skull_face', 5000, 1000);
     remove();
 }

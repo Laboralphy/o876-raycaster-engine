@@ -5,6 +5,13 @@ import Link from "libs/engine/filters/Link";
 
 const FADE_STYLE = 'rgba(0, 0, 0, 0.75)';
 
+/**
+ *
+ * @param game
+ * @param p0
+ * @param p1
+ * @returns {Promise<unknown>}
+ */
 function doMogrify(game, p0, p1) {
     return new Promise((resolve, reject) => {
         const oFadeOut = new FadeOut({color: FADE_STYLE, duration: 300});

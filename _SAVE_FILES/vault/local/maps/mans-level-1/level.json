@@ -10370,7 +10370,7 @@
         "block": 44,
         "upperblock": 0,
         "tags": [
-          "event m1_exiting_remise"
+          "event m1_remise_int_door"
         ],
         "mark": {
           "color": 0,
@@ -11741,7 +11741,7 @@
         "block": 37,
         "upperblock": 0,
         "tags": [
-          "locator lock_remise_exit"
+          "locator door_remise"
         ],
         "mark": {
           "color": "red",

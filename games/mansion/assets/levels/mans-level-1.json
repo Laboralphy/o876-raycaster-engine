@@ -5415,7 +5415,7 @@
       "x": 4,
       "y": 19,
       "tags": [
-        "event m1_exiting_remise"
+        "event m1_remise_int_door"
       ]
     },
     {
@@ -5450,7 +5450,7 @@
       "x": 11,
       "y": 22,
       "tags": [
-        "locator lock_remise_exit"
+        "locator door_remise"
       ]
     },
     {
