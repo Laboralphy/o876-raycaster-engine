@@ -4174,7 +4174,7 @@
         "tags": [],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": []
@@ -5878,7 +5878,7 @@
         "tags": [],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": []
@@ -6319,7 +6319,7 @@
         "tags": [],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": [
@@ -6946,7 +6946,7 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
+          "color": "blue",
           "shape": 0
         },
         "modified": true,
@@ -7123,7 +7123,9 @@
       {
         "block": 4,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event remise_window_look_inside"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -7423,7 +7425,7 @@
         ],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": [
@@ -7943,10 +7945,12 @@
       {
         "block": 36,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event remise_window_look_outside"
+        ],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": []
@@ -9435,11 +9439,11 @@
         "block": 19,
         "upperblock": 0,
         "tags": [
-          "event m1_wraith_cultist_lootbag"
+          "event m1_enter_east_glade"
         ],
         "mark": {
           "color": "cyan",
-          "shape": 1
+          "shape": 0
         },
         "modified": true,
         "things": []
@@ -10641,7 +10645,7 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
+          "color": "yellow",
           "shape": 0
         },
         "modified": true,
@@ -11381,7 +11385,9 @@
       },
       {
         "block": 10,
-        "tags": [],
+        "tags": [
+          "event m1_enter_hidden_garden"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11495,7 +11501,9 @@
       {
         "block": 4,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator wraith_investigator_2_target"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11718,7 +11726,9 @@
       {
         "block": 35,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator spawn_remise_ghost"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11745,7 +11755,7 @@
         ],
         "mark": {
           "color": "red",
-          "shape": 1
+          "shape": 0
         },
         "modified": true,
         "things": [
@@ -11775,7 +11785,9 @@
       {
         "block": 11,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator spawn_hidden_garden_ghost"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11952,7 +11964,9 @@
       {
         "block": 13,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "locator wraith_investigator_2"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -13160,7 +13174,9 @@
       {
         "block": 18,
         "upperblock": 0,
-        "tags": [],
+        "tags": [
+          "event m1_enter_south_east_glade"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -13714,7 +13730,7 @@
         "block": 4,
         "tags": [],
         "mark": {
-          "color": 0,
+          "color": "red",
           "shape": 0
         },
         "modified": true,
@@ -13882,7 +13898,7 @@
         "upperblock": 0,
         "tags": [],
         "mark": {
-          "color": 0,
+          "color": "lime",
           "shape": 0
         },
         "modified": true,
@@ -14724,11 +14740,11 @@
         "block": 15,
         "upperblock": 0,
         "tags": [
-          "event m1_wraith_investigator_1"
+          "event m1_enter_dark_grove"
         ],
         "mark": {
           "color": "cyan",
-          "shape": 1
+          "shape": 0
         },
         "modified": true,
         "things": []
@@ -14811,7 +14827,7 @@
         "tags": [],
         "mark": {
           "color": "cyan",
-          "shape": 4
+          "shape": 0
         },
         "modified": true,
         "things": []

@@ -59,10 +59,12 @@ export function push(game, remove, x, y, item) {
     switch (d.type) {
         case 'note': {
             pickupNoteWall(game, x, y, item)
+            pickupNoteFloor(game, x, y, item)
             break
         }
         default: {
             pickupItemWall(game, x, y, item)
+            pickupItemFloor(game, x, y, item)
             break
         }
     }

@@ -5390,11 +5390,25 @@
       ]
     },
     {
+      "x": 4,
+      "y": 11,
+      "tags": [
+        "event remise_window_look_inside"
+      ]
+    },
+    {
       "x": 30,
       "y": 11,
       "tags": [
         "item note_m1_ritual_notes",
         "locator wraith_cultist_lootbag"
+      ]
+    },
+    {
+      "x": 4,
+      "y": 13,
+      "tags": [
+        "event remise_window_look_outside"
       ]
     },
     {
@@ -5408,7 +5422,7 @@
       "x": 27,
       "y": 16,
       "tags": [
-        "event m1_wraith_cultist_lootbag"
+        "event m1_enter_east_glade"
       ]
     },
     {
@@ -5433,6 +5447,13 @@
       ]
     },
     {
+      "x": 17,
+      "y": 21,
+      "tags": [
+        "event m1_enter_hidden_garden"
+      ]
+    },
+    {
       "x": 20,
       "y": 21,
       "tags": [
@@ -5447,10 +5468,45 @@
       ]
     },
     {
+      "x": 25,
+      "y": 21,
+      "tags": [
+        "locator wraith_investigator_2_target"
+      ]
+    },
+    {
+      "x": 9,
+      "y": 22,
+      "tags": [
+        "locator spawn_remise_ghost"
+      ]
+    },
+    {
       "x": 11,
       "y": 22,
       "tags": [
         "locator door_remise"
+      ]
+    },
+    {
+      "x": 13,
+      "y": 22,
+      "tags": [
+        "locator spawn_hidden_garden_ghost"
+      ]
+    },
+    {
+      "x": 27,
+      "y": 22,
+      "tags": [
+        "locator wraith_investigator_2"
+      ]
+    },
+    {
+      "x": 27,
+      "y": 25,
+      "tags": [
+        "event m1_enter_south_east_glade"
       ]
     },
     {
@@ -5471,7 +5527,7 @@
       "x": 20,
       "y": 29,
       "tags": [
-        "event m1_wraith_investigator_1"
+        "event m1_enter_dark_grove"
       ]
     },
     {
