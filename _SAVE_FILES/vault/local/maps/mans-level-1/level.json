@@ -8117,7 +8117,9 @@
       },
       {
         "block": 17,
-        "tags": [],
+        "tags": [
+          "event m1_enter_central_glade"
+        ],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11501,9 +11503,7 @@
       {
         "block": 4,
         "upperblock": 0,
-        "tags": [
-          "locator wraith_investigator_2_target"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0
@@ -11964,9 +11964,7 @@
       {
         "block": 13,
         "upperblock": 0,
-        "tags": [
-          "locator wraith_investigator_2"
-        ],
+        "tags": [],
         "mark": {
           "color": 0,
           "shape": 0

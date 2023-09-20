@@ -5412,6 +5412,13 @@
       ]
     },
     {
+      "x": 19,
+      "y": 13,
+      "tags": [
+        "event m1_enter_central_glade"
+      ]
+    },
+    {
       "x": 18,
       "y": 15,
       "tags": [
@@ -5468,13 +5475,6 @@
       ]
     },
     {
-      "x": 25,
-      "y": 21,
-      "tags": [
-        "locator wraith_investigator_2_target"
-      ]
-    },
-    {
       "x": 9,
       "y": 22,
       "tags": [
@@ -5493,13 +5493,6 @@
       "y": 22,
       "tags": [
         "locator spawn_hidden_garden_ghost"
-      ]
-    },
-    {
-      "x": 27,
-      "y": 22,
-      "tags": [
-        "locator wraith_investigator_2"
       ]
     },
     {
