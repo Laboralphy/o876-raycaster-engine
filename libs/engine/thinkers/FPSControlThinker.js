@@ -82,6 +82,10 @@ class FPSControlThinker extends TangibleThinker {
         }
     }
 
+    get frozen () {
+        return this._frozen
+    }
+
     getKey(key) {
         const k = this._commands;
         for (let sKey in k) {

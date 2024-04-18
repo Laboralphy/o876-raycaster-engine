@@ -1268,8 +1268,10 @@ class Engine {
         }
         showProgress('loading textures');
         rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.textures.walls));
+
         showProgress('loading textures');
         rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.textures.flats));
+
 
 
         // creates blueprints

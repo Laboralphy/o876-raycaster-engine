@@ -24,6 +24,7 @@ import SenseMap from "./SenseMap";
 
 import DATA from '../assets/data';
 import GameOver from './filters/GameOver'
+import Serializer from "./Serializer";
 
 const {
     AUDIO_EVENT_CAMERA_SHOOT,
@@ -111,6 +112,15 @@ class Game extends GameAbstract {
                 this._audioManager.setSoundVolume(newValue / 100)
             }
         )
+    }
+
+    get state () {
+        const save = {
+            level: Serializer.saveLevelState(this),
+            player: Serializer.saveAlbumLogicState(this)
+        }
+        console.log('saved state', JSON.stringify(save).length, 'bytes')
+        return save
     }
 
     async initAsync() {
@@ -596,7 +606,7 @@ class Game extends GameAbstract {
      */
     storePhoto(type, value, ref, oPosition = null) {
         const oPhoto = this.capture(oPosition);
-        this.album.storePhoto(oPhoto.toDataURL('image/jpeg'), type, value, ref);
+        this.album.storePhoto(oPhoto.toDataURL('image/webp', 0.85), type, value, ref);
         this.ui.displayPhotoScore(value);
         return oPhoto;
     }
@@ -611,12 +621,15 @@ class Game extends GameAbstract {
      * shoot a photo
      */
     triggerCamera() {
+        if (this.isPlayerFrozen()) {
+            return
+        }
         if (this.hasRecentlyShot()) {
             // trop peu de temps depuis la dernière photo
             return;
         }
         // capture screenshot
-        this.engine.raycaster.screenshot();
+        // this.engine.raycaster.screenshot(null, null, 'image/jpeg');
         this.engine.filters.link(new Flash({
             duration: CONSTS.FLASH_DURATION * 2,
             strength: 6
@@ -727,7 +740,9 @@ class Game extends GameAbstract {
         if (this.isCameraRaised()) {
             this.dropCamera();
         } else {
-            this.raiseCamera();
+            if (!this.isPlayerFrozen()) {
+                this.raiseCamera();
+            }
         }
     }
 
@@ -737,7 +752,7 @@ class Game extends GameAbstract {
     raiseCamera() {
         if (this.isCameraRaisable()) {
             this.visor.depleteEnergy();
-            const oCamera = this.engine.camera;
+            const oCamera = this.player;
             oCamera.data.camera = true;
             oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_CAMERA_SPEED);
             this._cameraFilter.show();
@@ -749,7 +764,7 @@ class Game extends GameAbstract {
      * hide visor interface and go back to game navigation mode
      */
     dropCamera() {
-        const oCamera = this.engine.camera;
+        const oCamera = this.player;
         oCamera.data.camera = false;
         oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
         this._cameraFilter.hide();
@@ -785,7 +800,7 @@ class Game extends GameAbstract {
     capture(pos = null) {
         // creation d'une capture
         if (pos === null) {
-            pos = this.engine.camera.position;
+            pos = this.player.position;
         }
         const oScreenShot = this.engine.screenshot(pos.x, pos.y, pos.angle, pos.z);
         const photo = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
@@ -810,14 +825,14 @@ class Game extends GameAbstract {
      * Freeze all player actions and movement
      */
     freezePlayer() {
-        this.engine.camera.thinker.frozen = true;
+        this.player.thinker.frozen = true;
     }
 
     /**
      * unfreeze player
      */
     thawPlayer() {
-        this.engine.camera.thinker.frozen = false;
+        this.player.thinker.frozen = false;
     }
 
     /**
@@ -825,7 +840,7 @@ class Game extends GameAbstract {
      * @return {boolean}
      */
     isPlayerFrozen() {
-        return this.engine.camera.thinker.frozen;
+        return this.player.thinker.frozen;
     }
 
     get player() {

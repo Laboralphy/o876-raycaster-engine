@@ -32,7 +32,7 @@ class Entity {
 
     get debugString () {
         const sDead = this._dead ? 'DEAD': ''
-        return `#${this._id}:${this._ref} ${sDead} pos(${this._position.x}, ${this._position.y}`
+        return `#${this._id}:${this._ref} ${sDead} pos(${this._position.x}, ${this._position.y})`
     }
 
     /**
@@ -67,8 +67,13 @@ class Entity {
     }
 
     think(engine) {
-        const thinker = this._thinker;
-        thinker.think(this, engine);
+        try {
+            const thinker = this._thinker;
+            thinker.think(this, engine);
+        } catch (e) {
+            console.debug(this.debugString)
+            throw e
+        }
     }
 
     get size() {

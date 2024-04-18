@@ -141,6 +141,7 @@ function getLevel() {
             {
                 "id": "o-bluedisc",
                 "tileset": "o-bluedisc",
+                "thinker": 'StaticTangibleThinker',
                 "size": 24
             },
 
@@ -149,6 +150,7 @@ function getLevel() {
                 "tileset": "o-twisted",
                 "scale": 2,
                 "size": 24,
+                "thinker": 'StaticTangibleThinker',
                 "fx": ["@FX_LIGHT_ADD", "@FX_LIGHT_SOURCE"]
             },
 
