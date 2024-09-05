@@ -55,6 +55,16 @@ class VaultService {
 		});
 	}
 
+	/**
+	 * Return a list of structure that describe a published level
+	 * @typedef PublishedLevelStruct {object}
+	 * @property name {string} level name
+	 * @property date {number} date of last modification
+	 * @property preview {string} location of preview image filename
+	 *
+	 * @param sUser
+	 * @returns {Promise<PublishedLevelStruct[]>}
+	 */
 	async listLevels(sUser) {
 		const vault = this.getUserVault(sUser);
 		const aList = await vault.ls('.');
