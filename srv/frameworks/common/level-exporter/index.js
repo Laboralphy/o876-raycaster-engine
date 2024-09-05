@@ -5,10 +5,8 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const util = require('util');
-const mkdirp = require('mkdirp');
 const generate = require('../generate');
 const appendImages = require('../append-images');
-const archiver = require('archiver');
 
 const wf = util.promisify(fs.writeFile);
 
@@ -118,77 +116,10 @@ function buildImageRegistry(data, sImagePath = '') {
     return aImageEntries;
 }
 
-/**
- * creates an archive and its content, out of a level-save-file
- * @param name {string} name of the archive
- * @param data {*} data loaded from save file (map edit)
- * @param zipPath {string} path where to save the archive
- * @returns {Promise<{filename, bytes}>} info about the archive file
- */
-async function generateZipPackage(name, data, zipPath) {
-    return new Promise((resolve, reject) => {
-        try {
-            // ZIP CREATION
-            const filename = path.resolve(zipPath, name + '.zip');
-            const output = fs.createWriteStream(filename);
-            const archive = archiver('zip', {
-                zlib: {level: 9}
-            });
-
-            // good practice to catch this error explicitly
-            archive.on('error', function (err) {
-                reject(err);
-            });
-
-            // pipe archive data to the file
-            archive.pipe(output);
-
-            // listen for all archive data to be written
-            // 'close' event is fired only when a file descriptor is involved
-            output.on('close', function () {
-                resolve({
-                    filename,
-                    bytes: archive.pointer()
-                });
-            });
-
-            // get all tiles
-            const aImageEntries = buildImageRegistry(data);
-
-            // aImageEntries in an array of imageEntries
-            for (let i = 0, l = aImageEntries.length; i < l; ++i) {
-                const t = aImageEntries[i];
-                archive.append(t.data, { name: t.filename });
-            }
-
-            archive.append(JSON.stringify(data, null, '  '), { name: 'level.json'});
-            archive.finalize();
-        } catch (e) {
-            console.error(e);
-            reject(e);
-        }
-    });
-}
-
 // 1) generate JSON from save file, use the node version of "append-images"
 // 2) nous avons un JSON pret à l'emploi pour du raycasting
 // 3) nous allons extraire les images base64  dans des fichiers
 // 4) il faut préparer la structure des répertoire
-
-
-/**
- * Zips a project
- * @param sPath {string} dossier de destination
- * @param name {string} name of the project to be zipped
- * @param dataME {*} data content
- * @returns {Promise<{filename, bytes}>} will be resolve when the archive is fully built
- */
-async function buildZip(sPath, name, dataME) {
-    const ZIP_PATH = sPath;
-    await mkdirp(ZIP_PATH);
-    const dataENG = await generate(dataME, appendImages);
-    return generateZipPackage(name, dataENG, ZIP_PATH);
-}
 
 /**
  * Export a level from Map Editor to the Game Project Directory
@@ -210,6 +141,5 @@ async function exportLevel(name, dataME, {textures, level, game}) {
 }
 
 module.exports = {
-    buildZip,
     exportLevel
 };

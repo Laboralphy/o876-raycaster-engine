@@ -1,7 +1,4 @@
 class GameInteractor {
-    buildZipBundle(name, data) {
-        throw new Error('ERR_NOT_IMPLEMENTED')
-    }
     publishLevel(name, data) {
         throw new Error('ERR_NOT_IMPLEMENTED')
     }

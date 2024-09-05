@@ -1,6 +1,6 @@
 {
-  "ref": "w_cowled_skull",
-  "tileset": "w_cowled_skull",
+  "ref": "w_unfortunate_investigator",
+  "tileset": "w_unfortunate_investigator",
   "scale": 3,
   "thinker": "WraithThinker",
   "size": 24,

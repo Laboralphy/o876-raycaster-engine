@@ -1,5 +1,5 @@
 /**
- * Chargement des données d'un niveau
+ * Publishes a level
  */
 class PublishLevel {
     constructor ({ GameInteractor, LevelRepository }) {

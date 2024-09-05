@@ -1,5 +1,5 @@
 const path = require('path');
-const promfs = require('../../../../libs/prom-fs');
+const promfs = require('libs/prom-fs');
 
 const RCGDK_SAVE_FILES_PATH = '.';
 

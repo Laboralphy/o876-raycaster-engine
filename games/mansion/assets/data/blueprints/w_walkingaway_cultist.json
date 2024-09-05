@@ -1,6 +1,6 @@
 {
-  "ref": "w_cowled_skull",
-  "tileset": "w_cowled_skull",
+  "ref": "w_walkingaway_cultist",
+  "tileset": "w_walkingaway_cultist",
   "scale": 3,
   "thinker": "WraithThinker",
   "size": 24,
@@ -11,7 +11,7 @@
   "data": {
     "type": "w",
     "sounds": {
-      "spawn": "events/chimes-sourdine"
+      "spawn": "apparitions/mournful"
     }
   }
 }
