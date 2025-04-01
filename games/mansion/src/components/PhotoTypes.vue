@@ -1,6 +1,7 @@
 <template>
   <TypeList
       :types="getTypeList"
+      :value="getActiveType"
       @selected="({ref}) => selected(ref)"
   >
   </TypeList>
@@ -15,14 +16,6 @@ export default {
   name: "PhotoTypes",
   components: {TypeList},
   mixins: [STRINGS, album],
-
-  props: {
-    active: {
-      type: Boolean,
-      required: false,
-      default: false
-    }
-  },
 
   computed: {
     getTypeList: function () {

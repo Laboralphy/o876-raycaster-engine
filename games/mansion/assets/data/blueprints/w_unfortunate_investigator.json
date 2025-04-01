@@ -1,0 +1,17 @@
+{
+  "ref": "w_unfortunate_investigator",
+  "tileset": "w_unfortunate_investigator",
+  "scale": 3,
+  "thinker": "WraithThinker",
+  "size": 24,
+  "fx": [
+    "@FX_LIGHT_ADD",
+    "@FX_LIGHT_SOURCE"
+  ],
+  "data": {
+    "type": "w",
+    "sounds": {
+      "spawn": "events/stress6"
+    }
+  }
+}

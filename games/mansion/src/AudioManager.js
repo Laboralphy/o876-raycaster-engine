@@ -14,9 +14,23 @@ class AudioManager {
         this._bgm = null
         this._ovrBgm = false
         this._saveBgm = ''
+        this._lastBgm = ''
         this._registry = {}
         this.BGM_VOLUME = 0.5
         this.SND_VOLUME = 0.5
+    }
+
+    get state () {
+        return {
+            bgm: this._lastBgm
+        }
+    }
+
+    set state (value) {
+        const { bgm } = value
+        if (bgm) {
+            this.playBGM(bgm)
+        }
     }
 
     buildFileLoadingArray (sFile) {
@@ -76,6 +90,9 @@ class AudioManager {
      * Arret général de tous les sons
      */
     stop() {
+        this._bgm = null
+        this._ovrBgm = false
+        this._saveBgm = ''
         Howler.stop()
     }
 
@@ -105,6 +122,8 @@ class AudioManager {
     }
 
     async playBGM (sFile) {
+        console.log('[a] now playing', sFile)
+        this._lastBgm = sFile
         if (this._ovrBgm) {
             console.log('[a] during override, stacking: %s', sFile)
             this._saveBgm = sFile
@@ -117,9 +136,12 @@ class AudioManager {
                     autoplay: true,
                     volume: this.BGM_VOLUME
                 })
+            } else {
+                console.warn('[a] music file name evaluating as empty : ignoring')
             }
         } else {
             if (this._bgm.filename === sFile && !this._bgm.next) {
+                console.log('[a] same music filename %s : ignored', sFile)
                 return
             }
             // fadeout le BGM actuel

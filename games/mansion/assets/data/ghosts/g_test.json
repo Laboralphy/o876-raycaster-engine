@@ -5,7 +5,7 @@
   "vitality": 100,
   "power": 2,
   "score": 100,
-  "thinker": "ZigZagTeleChaserThinker",
+  "thinker": "ZigZagShooterThinker",
   "soundset": "b40",
   "missile": [
     {

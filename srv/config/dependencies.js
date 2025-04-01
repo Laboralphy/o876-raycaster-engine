@@ -10,7 +10,6 @@ function createContainer() {
             'srv/controllers/*.js',
             'srv/frameworks/persistance/File/*.js',
             'srv/frameworks/persistance/InMemory/*.js',
-            'srv/frameworks/persistance/Database/*.js',
             'srv/frameworks/external-services/*.js'
         ],
         {

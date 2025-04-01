@@ -6,10 +6,10 @@
   "browser": {},
   "esm": true,
   "scripts": {
-    "test": "$NODE -r esm node_modules/.bin/jasmine tests/*.js",
-    "build": "$NODE node_modules/.bin/webpack",
-    "watch": "$NODE node_modules/.bin/webpack --watch",
-    "serve": "$NODE srv/index"
+    "test": "node -r esm node_modules/.bin/jasmine tests/*.js",
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "serve": "node srv/index"
   },
   "keywords": [
     "HTML5",
@@ -46,7 +46,6 @@
   },
   "dependencies": {
     "@laboralphy/grid": "^1.0.0",
-    "archiver": "^3.1.1",
     "awilix": "^6.0.0",
     "debug": "^4.3.3",
     "dotenv": "^8.2.0",
@@ -61,8 +60,8 @@
     "uniqid": "^5.2.0",
     "url": "^0.11.0",
     "vue": "^2.7.0",
+    "vue-material-design-icons": "^3.4.0",
     "vue-router": "^3.4.8",
-    "vuex": "^3.5.1",
-    "vue-material-design-icons": "^3.4.0"
+    "vuex": "^3.5.1"
   }
 }

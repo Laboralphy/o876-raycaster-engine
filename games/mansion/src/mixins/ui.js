@@ -35,7 +35,7 @@ export default {
             'isUIFrameFullyVisible',
             'isUIFrameVisible',
             'getNotes',
-            'getActiveNoteTab',
+            'getNoteActiveTab',
             'isGameOverPromptVisible',
             'isEndOfGameVisible',
             'getSettingMouseFactor',

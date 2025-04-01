@@ -16,7 +16,10 @@ export const PHOTO_ALBUM_WIDTH = 240;
 export const PHOTO_ALBUM_HEIGHT = 240;
 export const PLAYER_SENSE_DISTANCE = 4;
 
-export const ITEM_TYPE_DISCARDABLE_KEY = 'ITEM_TYPE_DISCARDABLE_KEY';
+export const ITEM_TYPE_KEY = 'ITEM_TYPE_KEY';
+export const ITEM_TYPE_NOTE = 'ITEM_TYPE_NOTE';
+export const ITEM_TYPE_BOOK = 'ITEM_TYPE_BOOK';
+export const ITEM_TYPE_SCROLL = 'ITEM_TYPE_SCROLL';
 
 export const PHOTO_TYPE_ARCHIVE = 'archive';
 export const PHOTO_TYPE_CLUE = 'clue';

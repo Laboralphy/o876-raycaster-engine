@@ -1,6 +1,7 @@
 <template>
   <TypeList
     :types="getTypeList"
+    :value="getInventoryActiveTab"
     @selected="({ref}) => selected(ref)"
   ></TypeList>
 </template>

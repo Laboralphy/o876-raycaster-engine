@@ -24,6 +24,7 @@ import SenseMap from "./SenseMap";
 
 import DATA from '../assets/data';
 import GameOver from './filters/GameOver'
+import Serializer from "./Serializer";
 
 const {
     AUDIO_EVENT_CAMERA_SHOOT,
@@ -113,6 +114,15 @@ class Game extends GameAbstract {
         )
     }
 
+    get state () {
+        const save = {
+            level: Serializer.saveLevelState(this),
+            player: Serializer.saveAlbumLogicState(this)
+        }
+        console.log('saved state', JSON.stringify(save).length, 'bytes')
+        return save
+    }
+
     async initAsync() {
         await super.initAsync();
         await this._audioManager.init();
@@ -176,7 +186,8 @@ class Game extends GameAbstract {
         extra.blueprints = this.getCompiledBlueprints();
         this._mutations.decals = [];
         this._mutations.level = sLevel;
-        const oLevelData = require(__dirname + '/../assets/levels/' + sLevel + '.json');
+        const oFetch = await fetch('assets/levels/' + sLevel + '.json')
+        const oLevelData = await oFetch.json()
         await this.buildLevel(oLevelData, extra);
         this._cameraFilter.assignAssets({
             visor: this.engine.getTileSet('u_visor'),
@@ -263,6 +274,24 @@ class Game extends GameAbstract {
                 csm.setDecal(x, y, i, oDecal.getImage());
             }
         }
+    }
+
+//
+//                   _ _                                                                     _
+//    ___ _ __  _ __(_) |_ ___   _ __ ___   __ _ _ __   __ _  __ _  ___ _ __ ___   ___ _ __ | |_
+//   / __| '_ \| '__| | __/ _ \ | '_ ` _ \ / _` | '_ \ / _` |/ _` |/ _ \ '_ ` _ \ / _ \ '_ \| __|
+//   \__ \ |_) | |  | | ||  __/ | | | | | | (_| | | | | (_| | (_| |  __/ | | | | |  __/ | | | |_
+//   |___/ .__/|_|  |_|\__\___| |_| |_| |_|\__,_|_| |_|\__,_|\__, |\___|_| |_| |_|\___|_| |_|\__|
+//       |_|                                                 |___/
+
+
+    /**
+     * Supprime le sprite posé au sol à cet endroit
+     * @param x
+     * @param y
+     */
+    removeSprite (x, y) {
+
     }
 
 
@@ -499,12 +528,12 @@ class Game extends GameAbstract {
                 const aTags = tagGrid.cell(x, y);
                 aTags.forEach(id => {
                     const tags = tagGrid.getTagCommand(id);
-                    const [command, ref] = tags;
+                    const [command, ref, ...args] = tags;
                     if (command === 'photo') {
                         if (aPhotos === null) {
                             aPhotos = [];
                         }
-                        aPhotos.push({ref, id, x, y});
+                        aPhotos.push({args, ref, id, x, y});
                     }
                 });
             }
@@ -561,11 +590,9 @@ class Game extends GameAbstract {
             return;
         }
         const oPhotoScripts = Scripts.photo;
-        aPhotos.forEach(({ref, id, x, y}) => {
+        aPhotos.forEach(({args, ref, id, x, y}) => {
             const remove = () => this.engine.tagManager.grid.removeTag(x, y, id);
-            if (ref in oPhotoScripts) {
-                oPhotoScripts[ref].main(this, remove, x, y);
-            }
+            oPhotoScripts[ref].main(this, remove, x, y, ...args);
         });
     }
 
@@ -579,7 +606,7 @@ class Game extends GameAbstract {
      */
     storePhoto(type, value, ref, oPosition = null) {
         const oPhoto = this.capture(oPosition);
-        this.album.storePhoto(oPhoto.toDataURL('image/jpeg'), type, value, ref);
+        this.album.storePhoto(oPhoto.toDataURL('image/webp', 0.85), type, value, ref);
         this.ui.displayPhotoScore(value);
         return oPhoto;
     }
@@ -594,12 +621,15 @@ class Game extends GameAbstract {
      * shoot a photo
      */
     triggerCamera() {
+        if (this.isPlayerFrozen()) {
+            return
+        }
         if (this.hasRecentlyShot()) {
             // trop peu de temps depuis la dernière photo
             return;
         }
         // capture screenshot
-        this.engine.raycaster.screenshot();
+        // this.engine.raycaster.screenshot(null, null, 'image/jpeg');
         this.engine.filters.link(new Flash({
             duration: CONSTS.FLASH_DURATION * 2,
             strength: 6
@@ -710,7 +740,9 @@ class Game extends GameAbstract {
         if (this.isCameraRaised()) {
             this.dropCamera();
         } else {
-            this.raiseCamera();
+            if (!this.isPlayerFrozen()) {
+                this.raiseCamera();
+            }
         }
     }
 
@@ -720,7 +752,7 @@ class Game extends GameAbstract {
     raiseCamera() {
         if (this.isCameraRaisable()) {
             this.visor.depleteEnergy();
-            const oCamera = this.engine.camera;
+            const oCamera = this.player;
             oCamera.data.camera = true;
             oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_CAMERA_SPEED);
             this._cameraFilter.show();
@@ -732,7 +764,7 @@ class Game extends GameAbstract {
      * hide visor interface and go back to game navigation mode
      */
     dropCamera() {
-        const oCamera = this.engine.camera;
+        const oCamera = this.player;
         oCamera.data.camera = false;
         oCamera.thinker.setWalkingSpeed(CONSTS.PLAYER_FULL_SPEED);
         this._cameraFilter.hide();
@@ -768,7 +800,7 @@ class Game extends GameAbstract {
     capture(pos = null) {
         // creation d'une capture
         if (pos === null) {
-            pos = this.engine.camera.position;
+            pos = this.player.position;
         }
         const oScreenShot = this.engine.screenshot(pos.x, pos.y, pos.angle, pos.z);
         const photo = CanvasHelper.createCanvas(CONSTS.PHOTO_ALBUM_WIDTH, CONSTS.PHOTO_ALBUM_HEIGHT);
@@ -793,14 +825,14 @@ class Game extends GameAbstract {
      * Freeze all player actions and movement
      */
     freezePlayer() {
-        this.engine.camera.thinker.frozen = true;
+        this.player.thinker.frozen = true;
     }
 
     /**
      * unfreeze player
      */
     thawPlayer() {
-        this.engine.camera.thinker.frozen = false;
+        this.player.thinker.frozen = false;
     }
 
     /**
@@ -808,7 +840,7 @@ class Game extends GameAbstract {
      * @return {boolean}
      */
     isPlayerFrozen() {
-        return this.engine.camera.thinker.frozen;
+        return this.player.thinker.frozen;
     }
 
     get player() {
@@ -990,12 +1022,21 @@ class Game extends GameAbstract {
     }
 
     /**
+     * Returns true if the locator has been placed on map
+     * @param sRef {string}
+     * @return {boolean}
+     */
+    isLocatorDefined(sRef) {
+        return sRef in this._locators
+    }
+
+    /**
      * Retrieves a locator by its reference
      * @param sRef {string}
      * @return {*}
      */
     getLocator(sRef) {
-        if (sRef in this._locators) {
+        if (this.isLocatorDefined(sRef)) {
             return this._locators[sRef];
         } else {
             throw new Error('invalid locator reference : "' + sRef + '"');
@@ -1015,6 +1056,7 @@ class Game extends GameAbstract {
         const {doors, locks, tags, time} = this.engine.getEngineState();
         const decals = this.getDecalState();
         const senses = this._senseMap.state;
+        const audio = this._audioManager.state
         return {
             time,
             tags,

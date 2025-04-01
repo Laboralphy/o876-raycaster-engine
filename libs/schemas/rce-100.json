@@ -239,8 +239,12 @@
                   "description": "Animation duration in millliseconds"
                 },
                 "iterations": {
-                  "type": "integer",
-                  "description": "A number of iterations after which the animation is suspended"
+                  "description": "A number of iterations after which the animation is suspended",
+                  "anyOf": [{
+                    "type": "integer"
+                  }, {
+                    "type": "null"
+                  }]
                 }
               },
               "required": [

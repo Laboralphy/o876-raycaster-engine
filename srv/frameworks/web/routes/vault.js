@@ -1,5 +1,4 @@
 const express = require('express')
-const bodyParser = require('body-parser')
 
 function main (container) {
     const VaultController = container.resolve('VaultController')

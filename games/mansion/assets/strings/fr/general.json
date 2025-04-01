@@ -24,13 +24,28 @@
   "ITEM_TYPES_KEY": "Clés",
   "ITEM_TYPES_BOOK": "Livres",
 
+  "NOTE_TYPES_NOTE": "Notes",
   "NOTE_TYPES_JOURNAL": "Journal",
   "NOTE_TYPES_HINT": "Infos",
 
   "MAIN_TAB_ALBUM": "Album",
   "MAIN_TAB_INV": "Inventaire",
-  "MAIN_TAB_NOTES": "Notes",
+  "MAIN_TAB_NOTES": "Documents",
   "MAIN_TAB_SETTINGS": "Réglages",
+
+  "HINT_UI_DOCUMENTS": {
+    "note": "Les notes, écrits, ou autres documents trouvés au hasard lors de votre enquête.",
+    "journal": "Ces articles vous permette de résumer la progression de votre enquête.",
+    "hint": "Quelques informations importantes sur la manière de jouer et de remplir les objectifs."
+  },
+
+  "HINT_UI_ALBUM": {
+    "art": "Photos de peintures ou tableaux trouvés lors de vos pérégrinations.",
+    "clue": "Photos étranges indiquant un lieu secret ou lié à un mystère.",
+    "ambient": "Photos d'ambiance qui permettent de documenter votre progression.",
+    "wraith": "Photos de manifestations surnaturelles, généralement sous forme de spectre.",
+    "archive": "Photos utilisées en tant qu'indice et qui ont permit de résoudre un mystère."
+  },
 
   "COMMAND_CAPTION_NEXT": "Suivant",
   "COMMAND_CAPTION_PREV": "Précédent",
@@ -76,6 +91,7 @@
   "EVENT_PHOTO_NAMED_STORED": "\"%s\" stockée dans l'album.",
   "EVENT_PHOTO_ARCHIVED": "Photo \"%s\" déplacée dans l'onglet \"Archives\".",
   "EVENT_ITEM_ACQUIRED": "Vous obtenez : %s.",
+  "EVENT_NOTE_ACQUIRED": "Vous trouvez un document : %s.",
   "EVENT_DOOR_LOCKED": "Cette porte est verrouillée.",
   "EVENT_DOOR_UNLOCKED": "Vous déverrouillez la porte avec : %s.",
 

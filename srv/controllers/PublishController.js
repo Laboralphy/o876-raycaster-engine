@@ -13,6 +13,12 @@ class PublishController {
     this.RCGDK_MAP_EDITOR = RCGDK_MAP_EDITOR
   }
 
+  /**
+   * Will return a list of published levels
+   * @param req
+   * @param res
+   * @returns {Promise<void>}
+   */
   async getPublishedLevelList (req, res) {
     res.send.ok(await this.GetPublishedLevelList.execute())
   }

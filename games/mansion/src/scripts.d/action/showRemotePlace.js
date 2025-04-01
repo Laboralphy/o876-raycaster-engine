@@ -1,6 +1,6 @@
 /**
  * Révélation d'un l'endroit ou se trouve un indice secret.
- * il faut un tag clue_* et un tag clue_*_target
+ * il faut un tag locator clue_* et un tag locator clue_*_target
  * La visor sera placée sur clue_* et fixera le point du locator clue_*_target
  * @param game
  * @param ref {string}

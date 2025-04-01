@@ -11,7 +11,7 @@
   "data": {
     "type": "w",
     "sounds": {
-      "spawn": "apparitions/mournful"
+      "spawn": "events/chimes-sourdine"
     }
   }
 }

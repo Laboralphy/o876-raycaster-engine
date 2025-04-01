@@ -138,9 +138,9 @@ class DevKbdThinker extends TangibleThinker {
         }
     }
 
-    s_move() {
+    $move() {
         this.computeSpeedVector();
-        super.s_move();
+        super.$move();
     }
 }
 

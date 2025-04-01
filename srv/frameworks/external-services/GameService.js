@@ -1,22 +1,19 @@
 const debug = require('debug')
 const {
-    buildZip,
     exportLevel
-} = require('./level-zip')
-const os = require('os');
+} = require('../common/level-exporter')
 const promFS = require('../../../libs/prom-fs')
 const path = require('path')
-const {homeAliasPath} = require('../../../libs/home-alias-path');
+const {homeAliasPath} = require('../../../libs/home-alias-path')
 const log = debug('serv:gs')
+const GameInteractor = require('../../application/interfaces/GameInteractor')
+const PublishedLevelMetaData = require('../../entities/PublishedLevelMetaData')
 
-class GameService {
+class GameService extends GameInteractor {
     constructor () {
+        super()
         this._gamePath = homeAliasPath(process.env.RCGDK_GAME_PATH)
         log('game path : %s', this._gamePath)
-    }
-
-    buildZipBundle(name, data) {
-        return buildZip(name, data)
     }
 
     /**
@@ -70,7 +67,7 @@ class GameService {
 
     /**
      * Liste des textures inutilisées (référencée par aucun niveau)
-     * @returns {Promise<*>}
+     * @returns {Promise<string[]>}
      */
     async getUnusedTextureList () {
         const aExtentions = new Set([
@@ -131,14 +128,16 @@ class GameService {
     }
 
     /**
-     * Renvoie le nom de la préview d'un niveau
+     * Extract preview location from published level data and returns it.
+     * The returned reference will likely begin with /game/ to lead to the game static directory
      * @param name {string}
-     * @return {string}
+     * @return {Promise<string>}
      */
     async getLevelPreviewURL(name) {
         // déterminer le fichier previe du niveau
         const oLevel = await this.loadPublishedLevel(name)
         const sPreview = oLevel.preview
+        // "game" is the name of the route leading to the static assets
         return '/game/' + sPreview
     }
 
@@ -154,6 +153,7 @@ class GameService {
 
     /**
      * List of all published level in the game
+     * @return {PublishedLevelMetaData[]}
      */
     async getPublishedLevelList() {
         // déterminer le dossier ou se trouve les levels
@@ -165,12 +165,12 @@ class GameService {
         for (const s of aLevelList) {
             const sName = path.basename(s.name, '.json')
             if (path.extname(s.name) === '.json' && !s.dir) {
-                const o = {
+                const o = new PublishedLevelMetaData({
                     name: sName,
                     date: await this.getPublishedLevelDate(sName),
                     preview: await this.getLevelPreviewURL(sName),
                     textures: await this.getPublishedLevelTextureList(sName)
-                }
+                })
                 aOutput.push(o)
             }
         }

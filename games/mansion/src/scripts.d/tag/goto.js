@@ -1,5 +1,3 @@
-import { SET_END_OF_GAME_VISIBLE } from "../../store/modules/ui/mutation-types";
-
 /**
  * Transition vers un autre niveau
  * @param game {Game} instance du jeu

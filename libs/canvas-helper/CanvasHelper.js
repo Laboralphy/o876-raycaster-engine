@@ -134,7 +134,16 @@ class CanvasHelper {
 		}
 		oCtx.putImageData(oImgData, 0, 0);
 	}
-	
+
+	/**
+	 * Loads a bunch of canvases
+	 * @param aUrls {string[]}
+	 */
+	static loadCanvases (aUrls) {
+		const aProms = aUrls.map(s => CanvasHelper.loadCanvas(s))
+		return Promise.all(aProms)
+	}
+
 	/**
 	 * Loads an image and converts it in a canvas
 	 * @param sUrl {string} image url

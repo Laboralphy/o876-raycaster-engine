@@ -1,7 +1,8 @@
 /**
- * Verouillage d'une porte avec apparition du décal représentant la sérrure
+ * Verrouillage d'une porte avec rotation du décal représentant la serrure
+ * Paramètre action : <locator>
  * @param game
- * @param locator
+ * @param locator {string} locator de la porte à vérrouiller
  */
 export function main(game, locator) {
     const pos = game.getLocator(locator).cell;

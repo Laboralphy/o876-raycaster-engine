@@ -3,6 +3,8 @@
         <TitleAndCo :title="STRINGS.MAIN_TAB_ALBUM">
             <PhotoTypes></PhotoTypes>
         </TitleAndCo>
+        <section class="description"><p>{{ STRINGS.HINT_UI_ALBUM[getActiveType] }}</p></section>
+        <hr />
         <div class="photo-container" v-if="getPhotos.length > 0">
             <Photo
                 v-for="photo in getPhotos"
@@ -33,24 +35,27 @@
         mixins: [STRINGS, ui, album],
         components: {TitleAndCo, Photo, PhotoTypes},
 
+        mounted: function () {
+            this.setActiveType({value: this.getFirstWorthyActiveType})
+        },
         methods: {
-            photoClicked: function(id) {
-                const {ref, value, content} = this.getPhotos.find(p => p.id === id);
-                const oPhotoData = this.STRINGS.PHOTOS[ref];
-                if (ref === undefined) {
-                    throw new Error('this photo is unknown : id ' + id + ' - ref ' + ref);
-                }
-                const title = oPhotoData.title;
-                const description = oPhotoData.description;
-                this.setPhotoDetails({
-                    title,
-                    description,
-                    content,
-                    value,
-                    visible: true
-                });
-            }
-        }
+              photoClicked: function(id) {
+                  const {ref, value, content} = this.getPhotos.find(p => p.id === id);
+                  const oPhotoData = this.STRINGS.PHOTOS[ref];
+                  if (ref === undefined) {
+                      throw new Error('this photo is unknown : id ' + id + ' - ref ' + ref);
+                  }
+                  const title = oPhotoData.title;
+                  const description = oPhotoData.description;
+                  this.setPhotoDetails({
+                      title,
+                      description,
+                      content,
+                      value,
+                      visible: true
+                  });
+              }
+          }
     }
 </script>
 
@@ -60,7 +65,6 @@
         padding: 1%;
         margin: 0;
         width: 98%;
-        height: 90%;
     }
 
     div.photo-details {

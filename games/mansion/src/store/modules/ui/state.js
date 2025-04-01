@@ -66,32 +66,37 @@ export default {
         {
             ref: "story_so_far",
             type: 'journal',
-            read: false
+            read: false,
+            date: 0
         },
         {
             ref: "commands",
             type: "hint",
-            read: false
+            read: false,
+            date: 1
         },
         {
             ref: "how_to_hunt_ghosts",
             type: 'hint',
-            read: false
+            read: false,
+            date: 2
         },
         {
             ref: "look_for_books",
             type: 'hint',
-            read: false
+            read: false,
+            date: 3
         },
         {
             ref: "look_for_paintings",
             type: 'hint',
-            read: false
+            read: false,
+            date: 4
         }
     ],
     settings: {
         mouseFactor: 50,
-        musicVolume: 1,
-        sfxVolume: 1
+        musicVolume: 50,
+        sfxVolume: 50
     }
 };

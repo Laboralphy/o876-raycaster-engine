@@ -166,7 +166,6 @@ class Engine {
         return this._time;
     }
 
-
 //            __
 //  _ __ ___ / _| ___ _ __ ___ _ __   ___ ___  ___
 // | '__/ _ \ |_ / _ \ '__/ _ \ '_ \ / __/ _ \/ __|
@@ -1160,7 +1159,12 @@ class Engine {
         if (extra === null) {
             extra = {startpoint: 0, blueprints: [], tilesets: []};
         }
-        jsonValidate(data, SCHEMA_RCE_100);
+        try {
+            jsonValidate(data, SCHEMA_RCE_100);
+        } catch (e) {
+            console.error(data)
+            throw e
+        }
 
         this._refs = {};
 
@@ -1264,8 +1268,10 @@ class Engine {
         }
         showProgress('loading textures');
         rc.setWallTextures(await CanvasHelper.loadCanvas(data.level.textures.walls));
+
         showProgress('loading textures');
         rc.setFlatTextures(await CanvasHelper.loadCanvas(data.level.textures.flats));
+
 
 
         // creates blueprints

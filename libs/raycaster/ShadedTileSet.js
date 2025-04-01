@@ -195,7 +195,7 @@ class ShadedTileSet {
     /**
 	 * extract a fragment (containing only one tile) of the shaded tileset into a new one
 	 * @param iTile {number}
-	 * @param nLevel {number} level of lightness (if ommittted all levels are cloned)
+	 * @param nLevel {number} level of lightness (if ommittted all levels are cloned)
      * @param oFragment {HTMLCanvasElement} an optional canvas
 	 * @return {HTMLCanvasElement}
      */

@@ -3,7 +3,7 @@
     <li
         v-for="t in types"
         :key="t.ref"
-        :class="activeType === t.ref ? 'selected' : ''" @click="setActiveType(t.ref)">{{ t.caption }}</li>
+        :class="value === t.ref ? 'selected' : ''" @click="setActiveType(t.ref)">{{ t.caption }}</li>
   </ul>
 </template>
 
@@ -14,17 +14,16 @@ export default {
     types: {
       type: Array,
       required: true
-    }
-  },
-  data: function() {
-    return {
-      activeType: ''
+    },
+    value: {
+      type: String,
+      required: false,
+      default: ''
     }
   },
 
   methods: {
     setActiveType: function(ref) {
-      this.activeType = ref;
       this.$emit('selected', {ref});
     }
   }

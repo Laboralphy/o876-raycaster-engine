@@ -114,5 +114,14 @@ export default {
 
     [TYPES.SET_SFX_VOLUME]: function (state, { value }) {
         state.settings.sfxVolume = value
+    },
+
+    [TYPES.ADD_NOTE_ENTRY]: function (state, { ref, type }) {
+        state.notes.push({
+            ref,
+            type,
+            read: false,
+            date: Date.now()
+        })
     }
 }
