@@ -38,8 +38,8 @@ class Server {
 
       // Services
       logServ('database : service initialization')
-      const DatabaseService = container.resolve('DatabaseService')
-      await DatabaseService.init()
+      // const DatabaseService = container.resolve('DatabaseService')
+      // await DatabaseService.init()
 
       logServ('vault : service initialization')
       const VaultService = container.resolve('VaultService')
